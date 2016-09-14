@@ -6,7 +6,7 @@ import pandas as pd
 # Title - Re-projects union raster into projection by region
 # in and out location
 inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
-outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\SpCompRaster_byProjection'
+outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection'
 regional_acres_table ='C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\R_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
 # inGDB = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\Clipped_MaxArea.gdb'
 # outfolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpCompRaster_byProjection'
