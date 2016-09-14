@@ -5,37 +5,37 @@ import arcpy
 import pandas as pd
 # Title - Re-projects union raster into projection by region
 # in and out location
-inGDB = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
-outfolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection'
-regional_acres_table ='C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\R_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
+inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
+outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\SpCompRaster_byProjection'
+regional_acres_table ='C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\R_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
 # inGDB = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\Clipped_MaxArea.gdb'
 # outfolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpCompRaster_byProjection'
 
 midGBD = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\scratch.gdb'
 
 # projection folder
-prjFolder = "J:\Workspace\projections\FinalBE"
+prjFolder = "C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 # TODO UPDATE SNAP RASTER
 RegionalProjection_Dict = {
-    'CONUS': r'J:\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
-    'HI': r'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'AK': r'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AK_Developed_euc',
-    'AS': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AS_OSD_euc',
-    'CNMI': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\CNMI_OSD_euc',
-    'GU': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\GU_Developed_euc',
-    'PR': 'J:\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\PR_OtherCrops_euc',
-    'VI': 'J:\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\VI_Ag_euc',
-    'Howland': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Johnston': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Laysan': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Mona': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Necker': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Nihoa': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'NorthwesternHI': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Palmyra': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Wake': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc'
+    'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
+    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AK_Developed_euc',
+    'AS': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AS_OSD_euc',
+    'CNMI': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\CNMI_OSD_euc',
+    'GU': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\GU_Developed_euc',
+    'PR': 'JC:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\PR_OtherCrops_euc',
+    'VI': 'JC:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\VI_Ag_euc',
+    'Howland': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Johnston': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Laysan': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Mona': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Necker': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Nihoa': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'NorthwesternHI': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Palmyra': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'Wake': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc'
 }
 
 Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
