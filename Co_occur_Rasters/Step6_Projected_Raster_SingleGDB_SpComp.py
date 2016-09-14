@@ -67,10 +67,11 @@ def create_gdb(out_folder, out_name, outpath):
 
 
 # loop through use raster and projections into final regional project
-def raster_project(prj_current,inraster,in_gdb, prj_folder, out_folder,c_region):
+def raster_project(prj_current,inraster,in_gdb, prj_folder, out_folder,c_region,):
     start_raster = datetime.datetime.now()
     print "\n"
     print inraster
+
     in_raster = Raster(in_gdb + os.sep + str(inraster))
     prj_name = prj_current.replace('.prj', '')
     out_gdb_name = prj_current.replace('.prj', '.gdb')
@@ -167,12 +168,14 @@ for region in list_regions:
     print sp_group_region
     regional_prj = Region_Dict[region]
     for raster in raster_list:
-        try:
-            raster_project(regional_prj, raster,inGDB, prjFolder, outfolder, region)
-
-
-        except Exception as error:
-            print(error.args[0])
+        sp_group = (raster.split)("_")[1]
+        if sp_group not in sp_group_region:
+            continue
+        else:
+            try:
+                raster_project(regional_prj, raster,inGDB, prjFolder, outfolder, region)
+            except Exception as error:
+                print(error.args[0])
 
 
 end = datetime.datetime.now()
