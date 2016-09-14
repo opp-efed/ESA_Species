@@ -127,7 +127,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
         prj_raster = out_gdb + os.sep + prj_raster_name
         if not arcpy.Exists(prj_raster):
                 print 'Copying {0}'.format(inraster)
-                arcpy.Copy_management(in_raster, prj_raster)
+                arcpy.CopyRaster_management(in_raster, prj_raster)
         else:
             print str(prj_raster) + " already exists"
 
