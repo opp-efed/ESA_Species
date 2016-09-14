@@ -11,7 +11,7 @@ regional_acres_table ='C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalB
 # inGDB = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\Clipped_MaxArea.gdb'
 # outfolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpCompRaster_byProjection'
 
-midGBD = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\scratch.gdb'
+midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\scratch.gdb'
 
 # projection folder
 prjFolder = "C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE"
