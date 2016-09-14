@@ -77,7 +77,11 @@ def ask_user_entity_id(col_from_master):
 # pull information from the columns in the col_included list from the master list and saves into a df
 # to be used in output
 def extract_species_info(master_in_table, col_from_master):
-    master_list_df = pd.read_excel(master_in_table)
+    check_extention = (master_in_table.split('.'))[1]
+    if check_extention == 'xlsx':
+        master_list_df = pd.read_excel(master_in_table)
+    else:
+        master_list_df = pd.read_csv(master_in_table)
     master_list_df['EntityID'] = master_list_df['EntityID'].astype(str)
     ent_list_included = master_list_df['EntityID'].values.tolist()
     sp_info_df = pd.DataFrame(master_list_df, columns=col_from_master)
