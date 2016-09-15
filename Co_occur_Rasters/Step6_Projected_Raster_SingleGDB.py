@@ -121,6 +121,8 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
     prj_datum = prj_sr.GCS.datumName
     prj_name = prj_file.replace('.prj', '')
 
+    arcpy.MakeRasterLayer_management
+
 
     if prj_sr == current_sr:
         prj_raster_name = prj_name + "_" + str(inraster)
@@ -145,7 +147,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
             if not arcpy.Exists(prj_raster):
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management(out_other_raster, prj_raster, prj_file_path)
+                arcpy.ProjectRaster_management(out_other_raster, prj_raster,snap_raster)
 
             else:
                 print str(prj_raster_name) + " already exists"
@@ -155,7 +157,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
             if not arcpy.Exists(prj_raster):
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management(in_raster, prj_raster, prj_file_path)
+                arcpy.ProjectRaster_management(in_raster, prj_raster, snap_raster)
 
             else:
                 print str(prj_raster) + " already exists"
@@ -175,7 +177,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
                 if not arcpy.Exists(prj_raster):
                     print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                    arcpy.ProjectRaster_management(out_other_raster, prj_raster, prj_file_path)
+                    arcpy.ProjectRaster_management(out_other_raster, prj_raster, snap_raster)
 
                 else:
                     print str(prj_raster_name) + " already exists"
@@ -185,23 +187,12 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
                 if not arcpy.Exists(prj_raster):
                     print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                    arcpy.ProjectRaster_management(in_raster, prj_raster, prj_file_path)
+                    arcpy.ProjectRaster_management(in_raster, prj_raster, snap_raster)
 
                 else:
                     print str(prj_raster) + " already exists"
-        else:
-            if current_sr == prj_sr:
-                prj_raster_name = prj_name + "_" + str(inraster)
-                prj_raster = out_gdb + os.sep + prj_raster_name
 
-                if not arcpy.Exists(prj_raster):
-                    print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                    arcpy.ProjectRaster_management(in_raster, prj_raster, prj_file_path)
 
-                else:
-                    print str(prj_raster) + " already exists"
-            else:
-                print "Could not project {0} into {1}".format(inraster, prj_name)
     print 'Completed projection of {0} in: {1}'.format(prj_name, (datetime.datetime.now() - start_raster))
 
 
