@@ -3,6 +3,7 @@ from arcpy import env
 from arcpy.sa import *
 
 
+
 def call_zonal_hist(sp_file, zone, use_r, outtable, symbologyLayer, snap_raster, scratchpath, outpath_final,sp_group,use):
     print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use))
     arcpy.env.scratchWorkspace = scratchpath
@@ -14,23 +15,24 @@ def call_zonal_hist(sp_file, zone, use_r, outtable, symbologyLayer, snap_raster,
 
     arcpy.MakeRasterLayer_management(snap_raster, snap)
     arcpy.env.snapRaster = snap_raster
-    #
-    # arcpy.Delete_management("rdlayer")
-    # arcpy.Delete_management("fc_lyr")
-
-    raster_lyr = "raster_lyr"
-
-
-    arcpy.MakeRasterLayer_management(use_r, raster_lyr, "#", snap, '#')
+    arcpy.MakeRasterLayer_management(use_r, "raster_lyr", "#", snap, '#')
     symbology_layer = symbologyLayer
-    arcpy.ApplySymbologyFromLayer_management(raster_lyr, symbology_layer)
+    arcpy.ApplySymbologyFromLayer_management("raster_lyr", symbology_layer)
 
-    sp_lyr = "sp_lyr"
-    arcpy.MakeRasterLayer_management(sp_file, sp_lyr)
+    arcpy.MakeRasterLayer_management(sp_file, "sp_lyr")
+    try:
 
-    arcpy.sa.ZonalHistogram(sp_lyr, zone, raster_lyr, outtable)
+        arcpy.gp.ZonalHistogram_sa("sp_lyr", zone, "raster_lyr", outtable)
 
-    del sp_file,raster_lyr, snap
+        print 'Final file can be found at {0}'.format(outtable)
+
+
+
+    except Exception as error:
+        print 'Error in loop'
+        print(error.args[0])
+
+    del snap
 
 
 

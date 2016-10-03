@@ -11,38 +11,88 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-in_folder = 'C:\Workspace\ESA_Species\FinalBE_ForCoOccur\Results_Clipped\Range\CSV'
-union_gdb = r'C:\WorkSpace\ESA_Species\FinalBE_ForCoOccur\projectedCLipped.gdb'
+in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\test_result'
+union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpGroup_Union_final_20160907.gdb'
 # zoneID and the speices found in each zone
 union_fields = ['OBJECTID', 'ZoneSpecies']
+regions = ['AK','GU','HI','AS','PR','VI','CONUS','CNMI']
 # master list
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\April2016\csv' \
-              '\input20160801_MasterListESA_June2016_20160725.xlsx'
-temp_folder = r'C:\Workspace\ESA_Species\FinalBE_ForCoOccur\Results_Clipped\Range\outputs\SpeciesGroupsTranspose2'
+master_list = 'C:\Users\Admin\Documents\Jen\Workspace\MasterLists\MasterListESA_June2016_20160907.xlsx'
+temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace'
 out_csv = temp_folder + os.sep + 'PracticeOverlap_all.csv'
 
 col_start = 1
 labelCol = 0
 interval_step = 30
 max_dis = 1501
-use_index = 2  # place to extract use from tablename this is not in a standard position
+use_index = 1  # place to extract use from tablename this is not in a standard position
+cdl_index = 3
 # TODO set up a dict to read in the use index base on layer name
-group_index = 4  # place to extract species group from tablename
+group_index = 1  # place to extract species group from tablename
 SkipUses = []
 # TODO add lookup for all use based on use file name
 
-useLookup = {'10': 'Corn',
-             '20': 'Cotton',
-             '30': 'Rice',
-             '40': 'Soybean',
-             '50': 'Wheat',
-             '60': 'Veg Ground Fruit',
-             '70': 'Other trees',
-             '80': 'Other grains',
-             '90': 'Other row crops',
-             '100': 'Other crops',
-             '110': 'Pasture/Hay/Forage'
+useLookup = {'10x2': 'Corn',
+             '20x2': 'Cotton',
+             '30x2': 'Rice',
+             '40x2': 'Soybean',
+             '50x2': 'Wheat',
+             '60x2': 'Veg Ground Fruit',
+             '70x2': 'Orchards and vineyards',
+             '80x2': 'Other grains',
+             '90x2': 'Other row crops',
+             '100x2': 'Other crops',
+             '110x2': 'Pasture/Hay/Forage',
+             'Ag': 'Ag',
+             'CattleEarTag': 'Cattle Eartag',
+             'Developed': 'Developed',
+             'ManagedForests': 'Managed Forest',
+             'Nurseries': 'Nurseries',
+             'OSD': 'OSD',
+             'ROW': 'ROW',
+             'Rangeland': 'Cattle Eartag',
+             'CullPiles': 'Cull Piles',
+             'Cultivated': 'Cultivated',
+             'NonCultivated': 'Non Cultivated',
+             'PineSeedOrchards': 'Pineseed Orchards',
+             'XmasTrees': 'Xmas Tree',
+             'OrchardsVineyards': 'Orchards and vineyards',
+             'OtherCrops': 'Other crops',
+             'OtherGrains': 'Other grains',
+             'Pasture': 'Pasture/Hay/Forage',
+             'VegetablesGroundFruit': 'Veg Ground Fruit'
              }
+
+regionLookup = {'10x2': ['CONUS'],
+             '20x2': ['CONUS'],
+             '30x2': ['CONUS'],
+             '40x2': ['CONUS'],
+             '50x2': ['CONUS'],
+             '60x2': ['CONUS'],
+             '70x2': ['CONUS'],
+             '80x2': ['CONUS'],
+             '90x2': ['CONUS'],
+             '100x2': ['CONUS'],
+             '110x2': ['CONUS'],
+             'Ag': ['AK','AS','CNMI','GU','HI','PR','VI'],
+             'CattleEarTag': ['CONUS','AK'],
+             'Developed': ['CONUS','AK','AS','CNMI','GU','HI','PR','VI'],
+             'ManagedForests': ['CONUS','AK','CNMI','GU','HI','PR','VI'],
+             'Nurseries': ['CONUS','AK','PR','HI','VI'],
+             'OSD': ['CONUS','AK','AS','CNMI','GU','VI'],
+             'ROW': ['CONUS','AK','AS','CNMI','GU','HI','PR','VI'],
+             'Rangeland': ['CONUS','AS','CNMI','GU','HI','PR','VI'],
+             'CullPiles': ['CONUS'],
+             'Cultivated': ['CONUS'],
+             'NonCultivated': ['CONUS'],
+             'PineSeedOrchards': ['CONUS'],
+             'XmasTrees': ['CONUS'],
+             'OrchardsVineyards': ['HI','PR']
+             'OtherCrops': ['HI','PR'],
+             'OtherGrains': ['HI','PR'],
+             'Pasture': ['HI'],
+             'VegetablesGroundFruit': ['HI','PR']}
+
 # cols to include from master
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text']
 # species groups that can be skipped
@@ -109,6 +159,10 @@ def set_up_intervals(use_int, bins_set_up_interval, out_header_int, use_interval
 
 # Sums the output to the intervals from input but zoneID and saves it as a DF # By species group
 def sum_by_interval(in_df, use_sum, bins_loop_sum, out_header_sum):
+
+    in_df.drop('OID', axis=1, inplace=True)
+
+    #in_df.drop('TableID', axis=1, inplace=True)
     cnt_cha = len(use_sum)
     transposed_header = [word for word in out_header_sum if word[:cnt_cha] == use_sum]
     binned_df = in_df.groupby(pd.cut(in_df['LABEL'], bins_loop_sum)).sum()  # breaks out into binned intervals
@@ -116,32 +170,36 @@ def sum_by_interval(in_df, use_sum, bins_loop_sum, out_header_sum):
     group_df_by_zone_sum = binned_df.transpose()  # transposes so it is Zones by interval and not interval by zone
     group_df_by_zone_sum = group_df_by_zone_sum.ix[1:]  # removed the summed interval row that is added when binned
     group_df_by_zone_sum.columns = transposed_header
-    group_df_by_zone_sum['ZoneID'] = group_df_by_zone_sum.index
-    group_df_by_zone_sum['ZoneID'] = group_df_by_zone_sum['ZoneID'].map(lambda x: x.replace('Value_', '')).astype(str)
+    group_df_by_zone_sum['TableID'] = group_df_by_zone_sum.index
+    group_df_by_zone_sum['TableID'] = group_df_by_zone_sum['TableID'].map(lambda x: x.replace('Value_', '')).astype(str)
+
 
     return group_df_by_zone_sum
 
 
 # loops through all of the output table and by species group and runs the  sum_by_interval
 def loop_out_tables(in_path, in_folder_loop, current_group, use_group_loop, grouped_df, bins_loop, out_header_loop):
-    grouped_df['ZoneID'] = grouped_df['ZoneID'].astype(str)
+    grouped_df['TableID'] = grouped_df['TableID'].astype(str)
     list_table = os.listdir(in_path + os.sep + in_folder_loop)
-    [list_table.remove(word) for word in list_table if word[-3:].lower() != 'csv']
+    list_table = [v for v in list_table  if v.endswith('.csv')]
     completed = False
     for table in list_table:
-        if table[-3:].lower() != 'csv':
-            continue
         parse_fc = table.split("_")
-        group = parse_fc[group_index]
-        if group in group_skip:
-            continue
-        elif group == current_group:
-            use_result_df = pd.read_csv(in_path + os.sep + in_folder_loop + os.sep + table)
-            use_result_df['LABEL'] = use_result_df['LABEL'].map(lambda x: x.replace(',', '')).astype(long)
-            grouped_df_loop = sum_by_interval(use_result_df, use_group_loop, bins_loop, out_header_loop)
-            grouped_df = pd.merge(grouped_df, grouped_df_loop, on='ZoneID', how='left')
-            completed = True
+        trunc_group = (parse_fc[group_index]).title()
+        if current_group.startswith(trunc_group):
+            print'{0} table with sp trun name {1}'.format(table, trunc_group)
+            group = current_group
+            if group in group_skip:
+                continue
+            else:
+                use_result_df = pd.read_csv(in_path + os.sep + in_folder_loop + os.sep + table)
+                use_result_df['LABEL'] = use_result_df['LABEL'].map(lambda x: x.replace(',', '')).astype(long)
+                grouped_df_loop = sum_by_interval(use_result_df, use_group_loop, bins_loop, out_header_loop)
+
+                grouped_df = pd.merge(grouped_df, grouped_df_loop, on='TableID', how='left')
+                completed = True
         else:
+            list_table.remove(table)
             continue
 
     return grouped_df, completed
@@ -152,13 +210,13 @@ def error_code_out_table(error_code_fun, grouped_df, use_error, all_zone_error, 
     cnt_cha = len(use_error)
     col_header_loop = [word for word in out_header_error if word[:cnt_cha] == use_error]
 
-    grouped_df['ZoneID'] = grouped_df['ZoneID'].astype(str)
+    grouped_df['TableID'] = grouped_df['TableID'].astype(str)
 
     df_error = pd.DataFrame(columns=col_header_loop)
-    df_error.insert(0, 'ZoneID', all_zone_error)
+    df_error.insert(0, 'TableID', all_zone_error)
     df_error = df_error.fillna(error_code_fun)
 
-    group_df_by_zone_error = pd.merge(grouped_df, df_error, on='ZoneID', how='left')
+    group_df_by_zone_error = pd.merge(grouped_df, df_error, on='TableID', how='left')
 
     return group_df_by_zone_error
 
@@ -210,7 +268,7 @@ def add_species_info_overlap(species_info_df, group_df_by_zone_add_sp, ent_list_
     # TODO Poss errors 2) it is a sliver or not overlap and should be 0 3) species does don't occur in this region
     species_info_df = species_info_df.loc[species_info_df['EntityID'].isin(ent_list_fc_add_sp_info)]
     not_in_master = []
-    group_df_by_zone_add_sp['ZoneID'] = group_df_by_zone_add_sp['ZoneID'].astype(str)
+    group_df_by_zone_add_sp['TableID'] = group_df_by_zone_add_sp['TableID'].astype(str)
     counter_total = len(ent_list_fc_add_sp_info)
     counter = 0
 
@@ -229,7 +287,7 @@ def add_species_info_overlap(species_info_df, group_df_by_zone_add_sp, ent_list_
                 zones = zone_species_occurs_add_sp_info[v]
 
                 # these  two takes the longest when there are many zone a species flips between which one
-                zone_df = group_df_by_zone_add_sp[group_df_by_zone_add_sp['ZoneID'].isin(zones) == True]
+                zone_df = group_df_by_zone_add_sp[group_df_by_zone_add_sp['TableID'].isin(zones) == True]
                 sum_zone = zone_df.sum(axis=0)
 
                 df_sum = pd.DataFrame(data=sum_zone).T  # The T transforms so this is in wide format
@@ -264,7 +322,7 @@ def add_species_info_overlap(species_info_df, group_df_by_zone_add_sp, ent_list_
 # add error code if a speices has not been run or only some of the use have been run
 def add_species_info_error(ent_list_fc_error_loop, zone_species_occurs_error_loop,
                            error_code_error_loop, sp_header_error_loop, group_df_by_zone_add_sp, group, df_sum_overlap):
-    group_df_by_zone_add_sp['ZoneID'] = group_df_by_zone_add_sp['ZoneID'].astype(str)
+    group_df_by_zone_add_sp['TableID'] = group_df_by_zone_add_sp['TableID'].astype(str)
     counter_total = len(ent_list_fc_error_loop)
     counter = 0
     while counter < counter_total:
@@ -279,7 +337,7 @@ def add_species_info_error(ent_list_fc_error_loop, zone_species_occurs_error_loo
             df_species = df_species.fillna(error_code_error_loop)
 
             zones = zone_species_occurs_error_loop[v]
-            zone_df = group_df_by_zone_add_sp[group_df_by_zone_add_sp['ZoneID'].isin(zones) == True]
+            zone_df = group_df_by_zone_add_sp[group_df_by_zone_add_sp['TableID'].isin(zones) == True]
             sum_zone = zone_df.sum(axis=0)
             df_sum = pd.DataFrame(data=sum_zone).T  # The T transforms so this is in wide format
             df_sum['EntityID'] = v
@@ -318,27 +376,47 @@ main_out_header.extend(main_sp_header)
 
 
 # Sets up the intervals that are of interests for each of the uses
-uses = sorted(useLookup.values())
+uses = sorted(useLookup.keys())
 use_intervals = {}
 for use in uses:
-    use_intervals, main_out_header = set_up_intervals(use, bins, main_out_header, use_intervals)
+    if use.endswith('x2'):
+        use_final = 'CDL_1015_' + use
+    else:
+        use_final= use
+
+    for region in regions:
+        check_region = regionLookup[use]
+        if region not in check_region:
+            continue
+        else:
+            regional_use = region+"_"+use_final
+            use_intervals, main_out_header = set_up_intervals(regional_use, bins, main_out_header, use_intervals)
 
 # Looks for folders of the uses that have been run and generates a list of use that have run
 
 completedUses = {}
 main_list_folder = os.listdir(in_folder)
+main_list_folder = [v for v in main_list_folder if not v.endswith('.gdb')]
+
 for folder in main_list_folder:
     parse_folder = folder.split("_")
+    region = parse_folder[0]
     use = parse_folder[use_index]
     # use_value =use[:-2]
-    main_use_value = use.replace('x2', '')
-    use_group = useLookup[main_use_value]
-    completedUses[use_group] = folder
+    if use =='CDL':
+        use = parse_folder[cdl_index]
+        use_group = useLookup[use]
+    else:
+        use_group = useLookup[use]
+    folder= folder.replace('_euc','')
+    completedUses[folder] = region +"_"+ use_group
+
+
+
 
 # Generates the list of union FC so that the ZoneSpecies and ZoneCode can be extracted
 arcpy.env.workspace = union_gdb
 fc_list = arcpy.ListFeatureClasses()
-print fc_list
 # print(fc_list)
 
 
@@ -350,8 +428,9 @@ df_sumOverlap = pd.DataFrame(columns=main_out_header)
 for fc in fc_list:
     start_loop = datetime.datetime.now()
     sp_group = fc.split('_')
-    sp_group = str(sp_group[0])
-    print sp_group
+
+    sp_group = str(sp_group[1])
+    print "\nWorking on species group {0}".format(sp_group)
     union_id_dict, zone_species_occurs, current_species_occurs = extract_union_if_from_shapes(union_gdb, fc,
                                                                                               union_fields,
                                                                                               zone_species_dict)
@@ -363,25 +442,38 @@ for fc in fc_list:
     del union_id_dict, current_species_occurs
 
     all_zones_list = sorted(list(map(str, list_zones)))
-    group_df_by_zone = pd.DataFrame(all_zones_list, columns=['ZoneID'])
+    group_df_by_zone = pd.DataFrame(all_zones_list, columns=['TableID'])
+
 
     # Summarize by zone
     for use in uses:
-        print use
-        if use in (completedUses.keys()):
-            folder = completedUses[use]
-            group_df_by_zone, completed_run = loop_out_tables(in_folder, folder, sp_group, use, group_df_by_zone, bins,
-                                                              main_out_header)
-            if completed_run is False:
-                main_error_code = -55555
-                group_df_by_zone = error_code_out_table(main_error_code, group_df_by_zone, use, all_zones_list,
-                                                        main_out_header)
-            else:
-                continue
+        if use.endswith('x2'):
+            use_final = 'CDL_1015_' + use
         else:
-            main_error_code = -99999
-            group_df_by_zone = error_code_out_table(main_error_code, group_df_by_zone, use, all_zones_list,
-                                                    main_out_header)
+            use_final = use
+
+        for region in regions:
+            check_region = regionLookup[use]
+            if region not in check_region:
+                continue
+            else:
+                regional_use = region +"_"+use
+                if regional_use in (completedUses.keys()):
+                    folder = regional_use+'_euc'
+                    print 'FOLDER IS ' + folder
+                    group_df_by_zone, completed_run = loop_out_tables(in_folder, folder, sp_group, regional_use, group_df_by_zone, bins,
+                                                                      main_out_header)
+                    print "{0} has status {1}".format(regional_use,completed_run)
+                    if completed_run is False:
+                        main_error_code = -55555
+                        group_df_by_zone = error_code_out_table(main_error_code, group_df_by_zone, regional_use, all_zones_list,
+                                                                main_out_header)
+                    else:
+                        continue
+                else:
+                    main_error_code = -99999
+                    group_df_by_zone = error_code_out_table(main_error_code, group_df_by_zone, regional_use, all_zones_list,
+                                                            main_out_header)
 
     group_df_by_zone = group_df_by_zone.fillna(0)  # zone that are outside use, or drop out because sliver will be
     # updated to a value of 0
@@ -403,8 +495,19 @@ for fc in fc_list:
     print 'Start adding Export information'
     group_csv = temp_folder + os.sep + str(fc) + "_groupbyzone.csv"
     group_overlap_csv = temp_folder + os.sep + str(fc) + "_groupbyspecies.csv"
-    group_df_by_zone.to_csv(group_csv)
-    df_sumOverlap.to_csv(group_overlap_csv)
+
+    if os.path.exists(group_csv):
+        previous_df = pd.read_csv(group_csv)
+        group_df_by_zone = pd.merge(previous_df, group_df_by_zone, on='TableID', how='left')
+
+    else:
+        group_df_by_zone.to_csv(group_csv)
+
+    if os.path.exists(group_overlap_csv):
+        previous_sp_df =pd.read_csv(group_overlap_csv)
+        df_sumOverlap = pd.merge(previous_sp_df , df_sumOverlap, on='EntityID', how='left')
+    else:
+        df_sumOverlap.to_csv(group_overlap_csv)
 
     end_loop = datetime.datetime.now()
     print "Elapse time {0}".format(end_loop - start_loop)
@@ -420,6 +523,7 @@ num = final_df._get_numeric_data()
 num[num < -99999] = -55555
 
 final_df.to_csv(out_csv)
+print 'Saved output file {0}'.format(out_csv)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

@@ -28,15 +28,15 @@ out_location = 'C:\Workspace\ESA_Species\FinalBE_ForCoOccur\Results_Clipped\Rang
 # List of regions that are completed and should be included
 regions = ['CONUS']
 
-# Dictionary that provides a list of cell size found in the suite of uses by region
+# Dictionary that provides a list of cell size found in the suite of uses by region, previouls CNMI and VI
 use_cell_size = {'AK': [30],
                  'AS': [30],
                  'CNMI': [30],
                  'CONUS': [30],
-                 'GU': [2.4, 30],
+                 'GU': [30],
                  'HI': [30],
                  'PR': [30],
-                 'VI': [2.4, 30]
+                 'VI': [30]
                  }
 
 
