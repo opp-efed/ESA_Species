@@ -87,7 +87,7 @@ regionLookup = {'10x2': ['CONUS'],
              'NonCultivated': ['CONUS'],
              'PineSeedOrchards': ['CONUS'],
              'XmasTrees': ['CONUS'],
-             'OrchardsVineyards': ['HI','PR']
+             'OrchardsVineyards': ['HI','PR'],
              'OtherCrops': ['HI','PR'],
              'OtherGrains': ['HI','PR'],
              'Pasture': ['HI'],
