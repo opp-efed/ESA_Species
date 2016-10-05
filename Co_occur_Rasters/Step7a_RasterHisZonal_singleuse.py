@@ -11,13 +11,13 @@ from arcpy.sa import *
 # inlocation_species = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
 
 # 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\Albers_Conical_Equal_Area'
-inlocation_species = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\WGS_1984_UTM_Zone_55N\GU'
+inlocation_species = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
 #
     #'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
 #
-region = 'GU'
+region = 'CONUS'
 
-Range = True
+Range = False
 temp_file = "temp_table2"
 
 # set to a no zero number to skip x raster in the inlocation
@@ -87,6 +87,7 @@ def zone(zone, raster, temp_table, extent):
         arcpy.CalculateField_management(temp, "TableID", "!OBJECTID!", "PYTHON_9.3", "")
     except:
         pass
+    print "Completed Zonal Histogram"
 
     return temp, start_zone
 

@@ -5,21 +5,30 @@ import arcpy
 import numpy as np
 import pandas as pd
 
-# Title - Transforms out results by zone and summarize totals by species - final output is a master sum table of results
-# by use and interval for each species
+# Title - summarizes by speceis group by species and adds species info to tables
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
+# date= 20161003
+# in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byzone'
+# union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_Clipped_UnionRange_20160907.gdb'
+# # zoneID and the speices found in each zone
+# union_fields = ['OBJECTID', 'ZoneSpecies']
+#
+# # master list
+# master_list = 'C:\Users\Admin\Documents\Jen\Workspace\MasterLists\MasterListESA_June2016_20160907.xlsx'
+# temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\byspecies'
+
 # inlocation
 date= 20161003
-in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\byzone'
-union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpGroup_Union_final_20160907.gdb'
+in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byzone'
+union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
 # zoneID and the speices found in each zone
 union_fields = ['OBJECTID', 'ZoneSpecies']
 
 # master list
 master_list = 'C:\Users\Admin\Documents\Jen\Workspace\MasterLists\MasterListESA_June2016_20160907.xlsx'
-temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\byspecies'
-
+temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byspecies'
+group_skip = ['Amphibians','Clams','Corals','Crustaceans','Ferns','Fishes','Flowering']
 
 
 # TODO set up a dict to read in the use index base on layer name
@@ -29,10 +38,8 @@ SkipUses = []
 # cols to include from master
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text','Des_CH',	'CH_GIS']
 # species groups that can be skipped
-group_skip = []
+
 # breaks out the intervals into bin
-
-
 
 # #####FUNCTIONS
 # Not using this function yet but need to include to make sure EntityID is preserved
@@ -226,53 +233,55 @@ arcpy.env.workspace = union_gdb
 fc_list = arcpy.ListFeatureClasses()
 # print(fc_list)
 
-
 zoneID_dict = {}
 zone_species_dict = {}
 
 for fc in fc_list:
     start_loop = datetime.datetime.now()
-    sp_group = fc.split('_')
+    sp_group_list = fc.split('_')
 
-    sp_group = str(sp_group[1])
-    print "\nWorking on species group {0}".format(sp_group)
-    union_id_dict, zone_species_occurs, current_species_occurs = extract_union_if_from_shapes(union_gdb, fc,
-                                                                                              union_fields,
-                                                                                              zone_species_dict)
+    sp_group = str(sp_group_list[1])
 
-    ent_list_fc = current_species_occurs.keys()
-    zoneID_dict[fc] = union_id_dict
-    list_current_zones = union_id_dict.keys()
+    if sp_group in group_skip:
+        continue
+    else:
+        print "\nWorking on species group {0}".format(sp_group)
+        union_id_dict, zone_species_occurs, current_species_occurs = extract_union_if_from_shapes(union_gdb, fc,
+                                                                                                  union_fields,
+                                                                                                  zone_species_dict)
+        ent_list_fc = current_species_occurs.keys()
+        zoneID_dict[fc] = union_id_dict
+        list_current_zones = union_id_dict.keys()
 
-    del union_id_dict, current_species_occurs
+        del union_id_dict, current_species_occurs
 
-    current_zones_list = sorted(list(map(str, list_current_zones)))
-    sp_table = in_folder + os.sep + sp_table_dict[sp_group]
-    sp_table_df = pd.read_csv(sp_table)
+        current_zones_list = sorted(list(map(str, list_current_zones)))
+        sp_table = in_folder + os.sep + sp_table_dict[sp_group]
+        sp_table_df = pd.read_csv(sp_table)
 
-    df_sumOverlap, not_in_Master = add_species_info_overlap(sp_table_df, ent_list_fc, zone_species_occurs,
-                                                            ent_list_master)
+        df_sumOverlap, not_in_Master = add_species_info_overlap(sp_table_df, ent_list_fc, zone_species_occurs,
+                                                                ent_list_master)
 
-    ent_df = df_sumOverlap['EntityID']
-    df_sumOverlap.drop(labels=['EntityID'], axis=1, inplace=True)
-    df_sumOverlap.insert(0, 'EntityID', ent_df)
+        ent_df = df_sumOverlap['EntityID']
+        df_sumOverlap.drop(labels=['EntityID'], axis=1, inplace=True)
+        df_sumOverlap.insert(0, 'EntityID', ent_df)
 
-    df_sumOverlap = pd.merge(main_species_infoDF, df_sumOverlap, on='EntityID', how='inner')
+        df_sumOverlap = pd.merge(main_species_infoDF, df_sumOverlap, on='EntityID', how='inner')
 
-    print 'Species missing from masters list: {0}'.format(not_in_Master)
+        print 'Species missing from masters list: {0}'.format(not_in_Master)
 
-    error_code = -77777
-    print 'Start adding species information for missing species'
-    # check for any species with range file but entID not matching to master list
-    if len(not_in_Master) >0:
-        df_sumOverlap = add_species_info_error(not_in_Master, zone_species_occurs, error_code,main_sp_header, sp_table_df, sp_group)
+        error_code = -77777
+        print 'Start adding species information for missing species'
+        # check for any species with range file but entID not matching to master list
+        if len(not_in_Master) >0:
+            df_sumOverlap = add_species_info_error(not_in_Master, zone_species_occurs, error_code,main_sp_header, sp_table_df, sp_group)
 
-    group_overlap_csv = temp_folder + os.sep + str(fc) + "_groupbyspecies_{0}.csv".format(date)
-    df_sumOverlap.to_csv(group_overlap_csv)
+        group_overlap_csv = temp_folder + os.sep + str(fc) + "_groupbyspecies_{0}.csv".format(date)
+        df_sumOverlap.to_csv(group_overlap_csv)
 
-    end_loop = datetime.datetime.now()
-    print "Elapse time {0}".format(end_loop - start_loop)
-    del not_in_Master, ent_list_fc, group_overlap_csv
+        end_loop = datetime.datetime.now()
+        print "Elapse time {0}".format(end_loop - start_loop)
+        del not_in_Master, ent_list_fc, group_overlap_csv
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

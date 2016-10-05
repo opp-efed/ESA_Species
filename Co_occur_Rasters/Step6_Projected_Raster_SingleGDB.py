@@ -4,35 +4,28 @@ from arcpy.sa import *
 import arcpy
 # Title - Re-projects union raster into projection by region
 # in and out location
-inGDB = 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb'
-outfolder = 'J:\Workspace\UseSites\ByProject'
+inGDB = 'H:\Workspace\UseSites\ActionAreas\AK_AA.gdb'
+outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject'
 
-midGBD = 'J:\Workspace\UseSites\scratch.gdb'
+midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\scratch.gdb'
 
 # projection folder
-prjFolder = "J:\Workspace\projections\FinalBE"
+prjFolder = "H:\Workspace\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 # TODO UPDATE SNAP RASTER
 RegionalProjection_Dict = {
-    'CONUS': r'J:\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
-    'HI': r'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'AK': r'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AK_Developed_euc',
-    'AS': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AS_OSD_euc',
-    'CNMI': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\CNMI_OSD_euc',
-    'GU': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\GU_Developed_euc',
-    'PR': 'J:\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\PR_OtherCrops_euc',
-    'VI': 'J:\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\VI_Ag_euc',
-    'Howland': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Johnston': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Laysan': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Mona': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Necker': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Nihoa': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'NorthwesternHI': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Palmyra': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'Wake': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc'
+    'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
+    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
+    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AK_UseLayer.gdb\WGS_1984_Albers_AK_Developed_euc',
+    'AS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_OSD_euc',
+    'CNMI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Developed_euc',
+    'GU': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
+    'PR': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
+    'VI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
 }
+
+# Had to shorted the file name fo the PR prj file in order to me file path charater limits
 
 Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'HI': 'NAD_1983_UTM_Zone__4N.prj',
@@ -205,12 +198,16 @@ print "Start Time: " + start_time.ctime()
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
 for raster in raster_list:
+
+    split_name = raster.split("_")
+    if split_name[(len(split_name)-1)]!= 'euc':
+        continue
     try:
         raster_project(raster, inGDB, prjFolder, Region_Dict, outGDBdict, outfolder)
     except Exception as error:
             print(error.args[0])
 
 end = datetime.datetime.now()
-print "End Time: " + end.ctime()
+print "\nEnd Time: " + end.ctime()
 elapsed = end - start_time
 print "Elapsed  Time: " + str(elapsed)

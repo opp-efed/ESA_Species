@@ -22,7 +22,7 @@ prjFolder = "C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 
-skip_region = ['CONUS','HI','AK','AS','CNMI','PR','VI']
+skip_region = ['CONUS', 'AK', 'AS', 'CNMI', 'HI', 'PR', 'VI']
 
 RegionalProjection_Dict = {
     'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
@@ -34,6 +34,7 @@ RegionalProjection_Dict = {
     'PR': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
     'VI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
 }
+
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
 Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'HI': 'NAD_1983_UTM_Zone__4N.prj',
@@ -61,7 +62,7 @@ def create_gdb(out_folder, out_name, outpath):
 
 
 # loop through use raster and projections into final regional project
-def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_region, ):
+def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_region):
     start_raster = datetime.datetime.now()
     print "\n"
     print inraster
@@ -161,6 +162,7 @@ print "Start Time: " + start_time.ctime()
 list_regions = sorted(RegionalProjection_Dict.keys())
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
+print raster_list
 for region in list_regions:
     if region in skip_region:
         continue
@@ -172,11 +174,12 @@ for region in list_regions:
             split_group = v.split(" ")
             final_sp_group_region.append(split_group[0])
 
-
         print final_sp_group_region
         regional_prj = Region_Dict[region]
         for raster in raster_list:
             sp_group = (raster.split)("_")[1]
+            if sp_group == 'Missing':
+                sp_group = (raster.split)("_")[2]
             if sp_group not in final_sp_group_region:
                 continue
             else:

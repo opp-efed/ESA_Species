@@ -5,22 +5,20 @@ import arcpy
 import numpy as np
 import pandas as pd
 
-# Title - Transforms out results by zone and summarize totals by species - final output is a master sum table of results
-# by use and interval for each species
+# Title - summarizes overlap results by speceis group and the zoneID
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
 date= 20161003
-in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\results'
-union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat' \
-            r'\CH_SpGroup_Union_final_20160907.gdb'
-regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_AssignSpeciesRegions_all_20160908.csv'
+in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\results'
+union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
+regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\Range_AssignSpeciesRegions_all_20160908.csv'
 # zoneID and the speices found in each zone
 union_fields = ['OBJECTID', 'ZoneSpecies']
 regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CONUS', 'CNMI']
 skip_regions = []
 # master list
-temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\byzone'
+temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byzone'
 
 col_start = 1
 labelCol = 0
@@ -61,7 +59,13 @@ useLookup = {'10x2': 'Corn',
              'OtherCrops': 'Other crops',
              'OtherGrains': 'Other grains',
              'Pasture': 'Pasture/Hay/Forage',
-             'VegetablesGroundFruit': 'Veg Ground Fruit'
+             'VegetablesGroundFruit': 'Veg Ground Fruit',
+             'Diazinon' : 'Diazinon_AA',
+             'Carbaryl': 'Carbaryl_AA',
+             'Chlorpyrifos':'Chlorpyrifos_AA',
+             'Methomyl':'Methomyl_AA',
+             'Malathion':'Malathion_AA'
+
              }
 
 regionLookup = {'10x2': ['CONUS'],
@@ -92,12 +96,18 @@ regionLookup = {'10x2': ['CONUS'],
                 'OtherCrops': ['HI', 'PR'],
                 'OtherGrains': ['HI', 'PR'],
                 'Pasture': ['HI'],
-                'VegetablesGroundFruit': ['HI', 'PR']}
+                'VegetablesGroundFruit': ['HI', 'PR'],
+                'Diazinon': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
+                'Carbaryl': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
+                'Chlorpyrifos': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
+                'Methomyl': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
+                'Malathion': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI']
+                }
 
 # cols to include from master
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # species groups that can be skipped
-group_skip = []
+group_skip = ['Amphibians','Clams','Corals','Crustaceans','Ferns','Fishes','Flowering']
 # breaks out the intervals into bin
 bins = np.arange((0 - interval_step), max_dis, interval_step)
 
@@ -156,6 +166,7 @@ def loop_out_tables(in_path, in_folder_loop, current_group, use_group_loop, grou
         trunc_group = (parse_fc[group_index]).title()
 
         if current_group.startswith(trunc_group):
+            print table
 
             # print'{0} table with sp trun name {1}'.format(table, trunc_group)
             group = current_group
@@ -165,8 +176,10 @@ def loop_out_tables(in_path, in_folder_loop, current_group, use_group_loop, grou
             else:
                 completed = True
                 use_result_df = pd.read_csv(in_path + os.sep + in_folder_loop + os.sep + table)
-                use_result_df['LABEL'] = use_result_df['LABEL'].map(lambda x: x.replace(',', '')).astype(long)
                 use_result_df.drop('OID', axis=1, inplace=True)
+
+                use_result_df['LABEL'] = use_result_df['LABEL'].astype(str)
+                use_result_df['LABEL'] = use_result_df['LABEL'].map(lambda x: x.replace(',', '')).astype(long)
 
                 # print use_result_df
 
@@ -311,6 +324,8 @@ for fc in fc_list:
     sp_group = fc.split('_')
 
     sp_group = str(sp_group[1])
+    if sp_group in group_skip:
+        continue
     print "\nWorking on species group {0}".format(sp_group)
     union_id_dict, sp_ent_in_fc = extract_union_if_from_shapes(union_gdb, fc, union_fields)
 

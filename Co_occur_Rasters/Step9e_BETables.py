@@ -8,7 +8,7 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-in_table = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\CH_Use_byinterval_20160929.csv'
+in_table = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\CH_Use_byinterval_20161003.csv'
 
 # master list
 temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results'

@@ -4,17 +4,24 @@ import os
 import numpy as np
 import pandas as pd
 
-# Title - Transforms out results by zone and summarize totals by species - final output is a master sum table of results
-# by use and interval for each species
+# Title - adds any missing use intervfals with the correct index; all of the use intervals are in every table,
+# not just the uses the species group come in contact with
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
+# # inlocation
+# in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\byspecies'
+#
+# # master list
+# master_list = 'C:\Users\Admin\Documents\Jen\Workspace\MasterLists\MasterListESA_June2016_20160907.xlsx'
+# temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\Master'
+
+
 # inlocation
-in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\byspecies'
+in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byspecies'
 
 # master list
 master_list = 'C:\Users\Admin\Documents\Jen\Workspace\MasterLists\MasterListESA_June2016_20160907.xlsx'
-temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\Master'
-
+temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\Master'
 # TODO set up a dict to read in the use index base on layer name
 group_index = 1  # place to extract species group from tablename
 SkipUses = []
@@ -181,10 +188,6 @@ for table in main_list_table:
 
     df_final = sp_table_df.reindex(columns=final_col)
     df_final = df_final.fillna(-33333)
-
-
-
-    #df_final = pd.merge(sp_info_df, num, on='EntityID',how='outer')
 
 
     group_overlap_csv = temp_folder + os.sep + str(table)

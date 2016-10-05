@@ -6,11 +6,11 @@ import arcpy
 # Title- converts all polygons in the inlocation to raster to be used in zonal historgram
 
 # in and out location
-inlocation = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
-outlocation = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
+inlocation = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
+outlocation = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
 
 # snap raster for convesion
-snapRaster = r"J:\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
+snapRaster = r"C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
 
 
 # ###Functions

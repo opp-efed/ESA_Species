@@ -8,11 +8,17 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\Master'
+in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\Master'
 
-temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results'
+temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results'
 
-out_csv = temp_folder + os.sep + 'CH_Use_byinterval_20161003.csv'
+out_csv = temp_folder + os.sep + 'Range_Use_byinterval_20161003.csv'
+
+# in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\Master'
+#
+# temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results'
+#
+# out_csv = temp_folder + os.sep + 'CH_Use_byinterval_20161003.csv'
 
 # TODO set up a dict to read in the use index base on layer name
 group_index = 1  # place to extract species group from tablename
