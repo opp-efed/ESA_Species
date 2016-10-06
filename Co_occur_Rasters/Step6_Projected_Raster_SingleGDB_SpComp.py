@@ -8,31 +8,33 @@ import pandas as pd
 # in and out location
 
 inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
-outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection'
+outfolder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\New Folder'
 regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\R_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
 midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\scratch.gdb'
 
-# inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\Clipped_MaxArea.gdb'
-# outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpCompRaster_byProjection'
+# inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\Clipped_MaxArea.gdb'
+# outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection'
 # regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
-# midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\scratch.gdb'
+# midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\scratch.gdb'
 
 # projection folder
 prjFolder = "C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 
-skip_region = ['CONUS','AK','AS','CNMI','GU','PR','VI']
+skip_region = ['CONUS', 'AK', 'AS', 'CNMI', 'HI', 'PR', 'VI']
+
 RegionalProjection_Dict = {
     'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
-    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AK_Developed_euc',
-    'AS': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AS_OSD_euc',
-    'CNMI': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\CNMI_OSD_euc',
-    'GU': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\GU_Developed_euc',
-    'PR': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_OtherGrains_euc',
-    'VI': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\VI_Ag_euc'
+    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
+    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AK_UseLayer.gdb\WGS_1984_Albers_AK_Developed_euc',
+    'AS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_OSD_euc',
+    'CNMI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Developed_euc',
+    'GU': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
+    'PR': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
+    'VI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
 }
+
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
 Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'HI': 'NAD_1983_UTM_Zone__4N.prj',
@@ -60,7 +62,7 @@ def create_gdb(out_folder, out_name, outpath):
 
 
 # loop through use raster and projections into final regional project
-def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_region, ):
+def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_region):
     start_raster = datetime.datetime.now()
     print "\n"
     print inraster
@@ -160,17 +162,25 @@ print "Start Time: " + start_time.ctime()
 list_regions = sorted(RegionalProjection_Dict.keys())
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
+print raster_list
 for region in list_regions:
     if region in skip_region:
         continue
     else:
         print region
         sp_group_region = sp_group_in_region(regional_acres_table, region)
-        print sp_group_region
+        final_sp_group_region = []
+        for v in sp_group_region:
+            split_group = v.split(" ")
+            final_sp_group_region.append(split_group[0])
+
+        print final_sp_group_region
         regional_prj = Region_Dict[region]
         for raster in raster_list:
             sp_group = (raster.split)("_")[1]
-            if sp_group not in sp_group_region:
+            if sp_group == 'Missing':
+                sp_group = (raster.split)("_")[2]
+            if sp_group not in final_sp_group_region:
                 continue
             else:
                 try:

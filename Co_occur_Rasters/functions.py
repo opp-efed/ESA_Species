@@ -3,29 +3,34 @@ from arcpy import env
 from arcpy.sa import *
 
 
-def zonHist(symbologyLayer,in_use_raster,inlocation_species,outpath_csv, raster,use_folder ):
-        import arcpy
-        arcpy.CheckOutExtension("Spatial")
-        arcpy.env.workspace = use_folder
-        arcpy.env.overwriteOutput = True
+def call_zonal_hist(sp_file, zone, use_r, outtable, symbologyLayer, snap_raster, scratchpath, outpath_final,sp_group,use):
+    print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use))
+    arcpy.env.scratchWorkspace = scratchpath
+    arcpy.env.workspace = outpath_final
+
+    arcpy.CheckOutExtension("Spatial")
+    snap_raster = Raster(snap_raster)
+    snap ="snap"
+
+    arcpy.MakeRasterLayer_management(snap_raster, snap)
+    arcpy.env.snapRaster = snap_raster
+    #
+    # arcpy.Delete_management("rdlayer")
+    # arcpy.Delete_management("fc_lyr")
+
+    raster_lyr = "raster_lyr"
 
 
-        arcpy.management.CreateTable('in_memory', 'temptable')
-        arcpy.MakeRasterLayer_management(in_use_raster, "in_memory\\raster_lyr" )
-        arcpy.ApplySymbologyFromLayer_management("in_memory\\raster_lyr" , symbologyLayer)
-        arcpy.MakeRasterLayer_management(inlocation_species,"in_memory\\sp_lyr")
+    arcpy.MakeRasterLayer_management(use_r, raster_lyr, "#", snap, '#')
+    symbology_layer = symbologyLayer
+    arcpy.ApplySymbologyFromLayer_management(raster_lyr, symbology_layer)
 
-        arcpy.gp.ZonalHistogram_sa("in_memory\\sp_lyr", 'Value', "in_memory\\raster_lyr", 'temptable')
-        arcpy.TableToTable_conversion('temptable', outpath_csv, (raster + '.csv'))
+    sp_lyr = "sp_lyr"
+    arcpy.MakeRasterLayer_management(sp_file, sp_lyr)
 
+    arcpy.sa.ZonalHistogram(sp_lyr, zone, raster_lyr, outtable)
 
-        arcpy.Delete_management("in_memory\\raster_lyr")
-        arcpy.Delete_management("in_memory\\sp_lyr")
-        arcpy.Delete_management('temptable')
-
-        # arcpy.gp.ZonalStatisticsAsTable_sa(sp_lyr, zoneField, raster_lyr, 'temptable')
-        del arcpy
-
+    del sp_file,raster_lyr, snap
 
 
 

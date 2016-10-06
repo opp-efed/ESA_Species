@@ -7,46 +7,72 @@ import datetime
 # User defined variables:
 
 # date in YYYYMMDD
-date = 20160808
+date = 20161004
 # Master use list by region and cell size
-Co_update = 'J:\Workspace\ESA_Species\FinalBE_ForCoOccur\Dicts\CoUpdate.csv'
+Co_update = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\ForCoOccur\Dicts\CoUpdate_all30meter.csv'
 # TODO extract this from he master use table and add in what to do with the feature layers to the functions
 # Use layer type Raster or Feature
 type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
-in_raw_sum_overlap = 'C:\Workspace\ESA_Species\FinalBE_ForCoOccur\Results_Clipped\Range\outputs' \
-                     '\SpeciesGroupsTranspose2\PracticeOverlap_all.csv'
-sp_col_count = 4  # number of cols with species info  base 0 found in the sum overlap table
+in_raw_sum_overlap = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\Sum_CoOccur_SprayDriftIntervals_20161003_787.csv'
+sp_col_count = 5  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
-in_acres_table = 'J:\Workspace\MasterOverlap\Acres\Range_Acres_20151207.csv'
+in_acres_table = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_Acres_by_region_20160910_786_zeros.csv'
 
 # Location where output and temp files will be saved
-out_location = 'C:\Workspace\ESA_Species\FinalBE_ForCoOccur\Results_Clipped\Range\outputs\SpeciesGroupsTranspose2'
+out_location = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\tabulated_results\PercentOverlap'
+out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
+out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'
 
+out_csv_region2 = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion2_' + str(date) + '.csv'
+out_csv2 = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull2_' + str(date) + '.csv'
 # List of regions that are completed and should be included
-regions = ['CONUS']
+regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
+# regions = ['CONUS']
 
-# Dictionary that provides a list of cell size found in the suite of uses by region
+# Dictionary that provides a list of cell size found in the suite of uses by region, previouls CNMI and VI
 use_cell_size = {'AK': [30],
                  'AS': [30],
                  'CNMI': [30],
                  'CONUS': [30],
-                 'GU': [2.4, 30],
+                 'GU': [30],
                  'HI': [30],
                  'PR': [30],
-                 'VI': [2.4, 30]
+                 'VI': [30]
                  }
 
 
 # TODO ADD IN VECTOR OVERLAP
 def calculation(typefc, range_acres, in_sum_df, cell_size):
+    range_acres = range_acres.map(lambda x: x).astype(float).map(lambda x: x).astype(float)
+    # print in_sum_df
+    # group_df_by_zone_sum.ix[1:]
+    # print in_sum_df.ix[38, 3]
+    # print in_sum_df.ix[39, 3]
+
+
     if typefc == "Raster":
         msq_conversion = cell_size * cell_size
         msq_overlap = in_sum_df[in_sum_df.select_dtypes(include=['number']).columns].multiply(msq_conversion)
+
         acres_overlap = msq_overlap.multiply(0.000247)
-        percent_overlap = (acres_overlap.div(range_acres.ix[0], axis='columns')) * 100
+        print acres_overlap.ix[38, 3]
+        print acres_overlap.ix[39, 3]
+        # print range_acres.ix[38, 0]
+        # print range_acres.ix[39, 0]
+
+
+        # print range_acres.ix[38, 0]
+        # print range_acres.ix[39, 0]
+        print range_acres.dtypes
+
+        # percent_overlap = (acres_overlap.div(range_acres.ix[0], axis='columns')) * 100 # dived everything by value at location ix[0]
+        percent_overlap = (acres_overlap.div(range_acres, axis=0)) * 100
+        print percent_overlap.ix[38, 3]
+        print percent_overlap.ix[39, 3]
+
         return percent_overlap
     else:
         print "ERROR ERROR"
@@ -70,7 +96,7 @@ species_info_df = sum_df.iloc[:, :sp_col_count]
 
 sum_df = sum_df.iloc[:, (sp_col_count + 1):(len(header_sp))].apply(pd.to_numeric)  # convert all use values to numeric
 sum_df = pd.concat([species_info_df, sum_df], axis=1)  # concat back to sp df
-range_unaccounted_for = sum_df.loc[sum_df['CONUS_Corn_0'] < 0]  # Ranges not run error code -88888
+range_unaccounted_for = sum_df.loc[sum_df['CONUS_Corn_0'] < -999999999999]  # Ranges not run error code -88888
 # TODO Take out this hard wire to column name
 
 # read master acres for all species by region
@@ -112,19 +138,30 @@ filter_species_info = species_info_df[species_info_df['EntityID'].isin(sum_df_fo
 
 # filter_species_info used back bone of the final data frame,
 # data frame with all of the species and species info common to both tables (removes sp not started -88888)
-final_df = filter_species_info
+final_df_region = filter_species_info
+final_df_full = filter_species_info
 
 # 4) Run percent overlap by region, by use and cell size
 for region in regions:
+    total_acres = acres_in_sum[('TotalAcresOnLand')].map(lambda x: x).astype(float)
+
     cnt_cha = len(region)
     # Extracts all cols from acres table for current region and sets the values to float
     # NOTE NOTE error will occur if value in acres table is NAN or not numeric
-    acres_col = acres_in_sum[('Acres_' + str(region))].map(lambda x: x).astype(float)
+    acres_col = acres_in_sum[('Acres_' + str(region))].map(lambda x: x).fillna(-1)
+
+    # print acres_col.ix[38,0]
+    # print acres_col.ix[39,0]
+
+    # print acres_col.ix[38,0]
+    # print acres_col.ix[39,0]
+
     cells_list = use_cell_size[region]
     # list of all uses for the current region from master use table
     filter_regions = co_update_lookup.loc[co_update_lookup['Region'] == region]
     for cell in cells_list:
-        region_csv = out_location + os.sep + str(region) + '_' + str(cell) + '_' + str(date) + '.csv'
+        region_csv = out_location + os.sep + str(region) + '_' + str(cell) + '_RegionalAcres_' + str(date) + '.csv'
+        full_csv = out_location + os.sep + str(region) + '_' + str(cell) + '_FullRangeAcres_' + str(date) + '.csv'
         print 'Working on Region {0} with use cell size {1}\nTemp file will be saved at {2}'.format(region, cell,
                                                                                                     region_csv)
         # List of uses for current region with the current cell size
@@ -148,36 +185,58 @@ for region in regions:
 
         # sub_sets sum df to only those columns appened to cell_region_uses in the above loop
         region_use_df = sum_df_found_in_acres[cell_region_uses]
+        region_use_df = region_use_df.fillna(-1)
 
         # Runs percent overlap calculation
-        percent_overlap_df = calculation(type_use, acres_col, region_use_df, cell)
+        percent_overlap_df_region = calculation(type_use, acres_col, region_use_df, cell)
+        # print percent_overlap_df_region.ix[38, 3]
+        # print percent_overlap_df_region.ix[39, 3]
+
+        percent_overlap_df_full = calculation(type_use, total_acres, region_use_df, cell)
         # Neg values indicated a species that are partially complete, or error code -55555 from the sum table
         # all neg values are updated to the -55555 errror code
 
-        num = percent_overlap_df._get_numeric_data()
-        num[num < 0] = -55555
+        num_region = percent_overlap_df_region._get_numeric_data()
+        # num_region[num_region < 0] = -55555
+        num_region[num_region > 100] = 'Not in Region'
 
+        num_full = percent_overlap_df_full._get_numeric_data()
+        num_full[num_full < 0] = -55555
+        num_full[num_full > 100] = 'Not in Region'
         # Appends the current percent overlap_df to the final_df across columns
         # See Note above if rows are not lining up correctly
 
-        final_df = pd.concat([final_df, percent_overlap_df], axis=1)
-        final_df.to_csv(region_csv)
+        final_df_region = pd.concat([final_df_region, num_region], axis=1)
+        final_df_region_col = final_df_region.columns.values.tolist()
 
+        regional_cols = [region_use for region_use in final_df_region_col if region_use.startswith(region)]
+        regional_cols.insert(0, 'EntityID')
+        regional_df = final_df_region[regional_cols]
+        final_df_full = pd.concat([final_df_full, num_full], axis=1)
+        regional_df.to_csv(region_csv)
+        final_df_full.to_csv(full_csv)
+
+final_df_region.to_csv(out_csv_region)
+final_df_full.to_csv(out_csv)
 
 # add the species that have not been start back to the final df ie error code -88888
-final_df_neg_88888 = pd.concat([final_df, range_unaccounted_for])
+final_df_region_neg_88888 = pd.concat([final_df_region, range_unaccounted_for], axis=1)
+final_df_full_neg_88888 = pd.concat([final_df_full, range_unaccounted_for], axis=1)
 
 # cross checks the list of species not found acres table to the species not run yet (-88888)
 # Will only export species that have been run but are missing from the acres table
-missing_acres_table = missing_from_acres[missing_from_acres['EntityID'].isin(final_df_neg_88888['EntityID']) == False]
+
+missing_acres_table_full = missing_from_acres[
+    missing_from_acres['EntityID'].isin(final_df_full_neg_88888['EntityID']) == False]
 
 # 5)  Export Table
 
-out_csv = out_location + os.sep + 'Percent_Overlap_all_Intervals_' + str(date) + '.csv'
-final_df_neg_88888.to_csv(out_csv)
+
+final_df_region_neg_88888.to_csv(out_csv_region2)
+final_df_full_neg_88888.to_csv(out_csv2)
 
 need_add_acres_table = out_location + os.sep + 'add_to_acres_' + str(date) + '.csv'
-missing_acres_table.to_csv(need_add_acres_table)
+missing_acres_table_full.to_csv(need_add_acres_table)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

@@ -2,6 +2,7 @@ import os
 import datetime
 
 import arcpy
+
 # Title - Generate master union file by sp groups using the gdb in the spatial library
 
 # NOTE NOTE if process interrupted by user incomplete file will be generated; try except loop deletes incomplete if
@@ -17,15 +18,18 @@ import arcpy
 # TODO the columns of interest to a new file?
 # This can be done in arcmap by turning off fields then exporting, need to see if it can be done in a script
 
+# TODO SET UP TO ADD ZONEID SO OBJECTID IS NOT USED- to prevent  objectID from change when clipped
 Range = True
 if Range:
-    # Spatial library being used for union IE CritHab or Range; will loop by species group, or use can id a specific species
-    inlocation = r'J:\Workspace\ESA_Species\Range\NAD83'
+    # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
+    inlocation = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\Range\NAD83\Flowering Plants.gdb'
     filetype = 'R_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_spGroup_Union_inter_20160907.gdb'
-    finalfc = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroup_Union_final_20160907.gdb'
+    out_inter_location = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat' \
+                         r'\inter.gdb'
+    finalfc = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range' \
+              r'\R_SpGroup_Union_final_20160907.gdb'
     # NOTE NOTE if process interrupted incomplete file will be generated
 
     start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
@@ -35,11 +39,57 @@ if Range:
     skipgroup = []
 
     # if True will only union entid listed in ent list if false will union all entid in gdb
-    subset_group = False
+    subset_group = True
     # filename sub set comp
-    enlistfc_name = 'SubInsects_'
+    enlistfc_name = 'R_Flowering_Plants_Missing_20161004'
     # list of entid to be include subset comp
-    entlist = []
+    entlist = ['513',
+               '558',
+               '569',
+               '615',
+               '624',
+               '643',
+               '705',
+               '763',
+               '798',
+               '807',
+               '817',
+               '831',
+               '836',
+               '837',
+               '852',
+               '872',
+               '960',
+               '996',
+               '1029',
+               '1038',
+               '1045',
+               '1077',
+               '1189',
+               '1264',
+               '1265',
+               '1266',
+               '1400',
+               '3999',
+               '6617',
+               '6782',
+               '7264',
+               '7840',
+               '9951',
+               '9956',
+               '9957',
+               '10719',
+               '10720',
+               '10721',
+               '10722',
+               '10723',
+               '10724',
+               '10725',
+               '10726',
+               '10727',
+               '10728',
+               '11340'
+               ]
 
 else:
     inlocation = r'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
@@ -67,7 +117,6 @@ else:
 # Static variable
 file_suffix = '_Union_inter'
 file_suffix_clean = '_Union_Final_20160907'
-unionlist = []
 
 
 # Create a new GDB
@@ -78,28 +127,32 @@ def create_gdb(out_folder, out_name, out_path):
 
 
 # runs union on spatial library indicate by user or subset of species to generate union file by sp group
-def union_sp_files(in_ws, out_inter, subset_group_bool, union_list, ent_list):
+def union_sp_files(in_ws, out_inter, subset_group_bool, ent_list):
+    unionlist = []
     if subset_group:
-        out_inter = enlistfc_name + '_inter'
+        out_inter = out_inter_location+os.sep+enlistfc_name + '_inter'
+        print out_inter
     if not arcpy.Exists(out_inter):
-        start_union = datetime.datetime.now()
-        print "\nStarting {0} at {1}".format(out_inter, start_union)
+        start_union_time = datetime.datetime.now()
+        print "\nStarting {0} at {1}".format(out_inter, start_union_time)
         arcpy.env.workspace = in_ws
         fc_list = arcpy.ListFeatureClasses()
         if subset_group_bool:
-            for fc in fc_list:
-                entid = fc.split('_')
-                entid = str(entid[2])
+            for fcs in fc_list:
+                entid = fcs.split('_')
+                entid = str(entid[1])
+
                 if entid in ent_list:
-                    union_list.append(str(in_ws + os.sep + str(out_inter)))
+                    unionlist.append(str(in_ws + os.sep + str(fcs)))
+
         else:
-            union_list = fc_list
+            unionlist = fc_list
         try:
-            arcpy.Union_analysis(union_list, out_inter, "ALL")
+            arcpy.Union_analysis(unionlist, out_inter, "ALL")
         except Exception as error:
             print(error.args[0])
             arcpy.Delete_management(out_inter)
-        print "\nCreated output {0} in {1}".format(out_inter, (datetime.datetime.now() - start_union))
+        print "\nCreated output {0} in {1}".format(out_inter, (datetime.datetime.now() - start_union_time))
     else:
         print '\nAlready union {0}'.format(out_inter)
 
@@ -107,28 +160,27 @@ def union_sp_files(in_ws, out_inter, subset_group_bool, union_list, ent_list):
 # remove all the extra cols generated by union; NOTE if files has hundreds of file can turn off all fields expect the
 # zone species and zoneid and export in arcmap; this is much faster look into coding this
 def clean_unionfiles(outfc, final):
-
     listfields = [f.name for f in arcpy.ListFields(outfc)]
 
-    entFields = []
+    ent_fields = []
 
     arcpy.Delete_management("out")
     arcpy.MakeFeatureLayer_management(outfc, "out")
 
     for field in listfields:
         if field.startswith('EntityID'):
-            entFields.append(field)
-    entFields.append('OBJECTID')
-    print entFields
+            ent_fields.append(field)
+    ent_fields.append('OBJECTID')
+    print ent_fields
 
     arcpy.AddField_management("out", 'ZoneSpecies', "TEXT", "", "", "1000", "", "NULLABLE", "NON_REQUIRED", "")
 
     zonesp = {}
-    with arcpy.da.SearchCursor(outfc, entFields) as cursor:
+    with arcpy.da.SearchCursor(outfc, ent_fields) as cursor:
         for row in cursor:
             listsp = []
-            for field in entFields:
-                index_f = entFields.index(field)
+            for field in ent_fields:
+                index_f = ent_fields.index(field)
                 if field == 'OBJECTID':
                     zoneid = row[index_f]
                 else:
@@ -163,6 +215,7 @@ def clean_unionfiles(outfc, final):
     arcpy.Delete_management("final")
     print 'cleaned {0}\n'.format(final)
 
+
 # TODO update to loops to functions
 
 start_time = datetime.datetime.now()
@@ -188,7 +241,7 @@ if start_union:
         ingdb = inlocation
         outfc_inter = out_inter_location + os.sep + filetype + sp_group + file_suffix
         if not arcpy.Exists(outfc_inter):
-            union_sp_files(ingdb, outfc_inter, subset_group, unionlist, entlist)
+            union_sp_files(ingdb, outfc_inter, subset_group, entlist)
     else:
         list_ws = os.listdir(inlocation)
         print list_ws
@@ -201,13 +254,13 @@ if start_union:
                     outfc_inter = out_inter_location + os.sep + filetype + sp_group + file_suffix
                     # print outfc_inter
                     if not arcpy.Exists(outfc_inter):
-                        union_sp_files(ingdb, outfc_inter, subset_group, unionlist, entlist)
+                        union_sp_files(ingdb, outfc_inter, subset_group, entlist)
                 else:
                     continue
 
     arcpy.env.workspace = out_inter_location
-    fc_list = arcpy.ListFeatureClasses()
-    for fc in fc_list:
+    fclist = arcpy.ListFeatureClasses()
+    for fc in fclist:
         sp_group = fc.split('_')
         sp_group = sp_group[1]
         print sp_group
@@ -223,8 +276,8 @@ if start_union:
             continue
 else:
     arcpy.env.workspace = out_inter_location
-    fc_list = arcpy.ListFeatureClasses()
-    for fc in fc_list:
+    fclist = arcpy.ListFeatureClasses()
+    for fc in fclist:
         sp_group = fc.split('_')
         sp_group = sp_group[1]
         print sp_group
