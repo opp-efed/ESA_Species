@@ -1,38 +1,38 @@
 import os
 import datetime
-import functions
 
+#rom arcpy.sa import *
 import arcpy
 
 # Title- runs Zonal Histogram for all sp union file against each use
 
 # in folder with many gdbs or a single gdb
-inlocation_species = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpCompRaster_byProjection\StatePlane_Puerto_Rico.gdb'
-use_folder = 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject'
+inlocation_species = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpCompRaster_byProjection_2\NAD_1983_UTM_Zone__4N.gdb'
+use_folder = 'J:\Workspace\UseSites\ByProject'
 skip_sp_gdb = ['']
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
 # raster must be set to unique values as symbology to run raster histogram
-symbologyLayer = "C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\CDL_1015_100x2_euc.lyr"
+symbologyLayer = "J:\Workspace\EDM_2015\CDL_1015_100x2_euc.lyr"
 # Use sites
 
 region_skip = []
 # out_results = r'C:\WorkSpace\ESA_Species\FinalBE_ForCoOccur\CriticalHabitat\Results'
-out_results = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\results'
-scratchpath = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\results\scratch.gdb'
+out_results = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\results'
+scratchpath = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\results\scratch.gdb'
 
 # Dictionary of all projections needed for raster and the snap raster snap raster must be in desired
 # projection with the desired cell size
 # TODO UPDATE SNAP RASTER
 RegionalProjection_Dict = {
-    'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
-    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
-    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AK_Developed_euc',
-    'AS': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AS_OSD_euc',
-    'CNMI': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\CNMI_OSD_euc',
-    'GU': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\GU_Developed_euc',
-    'PR': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_OtherGrains_euc',
-    'VI': 'C:\Users\Admin\Documents\Jen\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\VI_Ag_euc'
+    'CONUS': r'J:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
+    'HI': r'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\HI_ManagedForests_euc',
+    'AK': r'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AK_Developed_euc',
+    'AS': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\AS_OSD_euc',
+    'CNMI': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\CNMI_OSD_euc',
+    'GU': 'J:\Workspace\EDM_2015\Euclidean\NonAg_euc_151103.gdb\GU_Developed_euc',
+    'PR': 'J:\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_OSD_euc',
+    'VI': 'J:\Workspace\EDM_2015\Euclidean\NonCONUS_Ag_euc_151109.gdb\VI_Ag_euc'
 }
 
 UseGDBdict = {'CONUS': 'Conus_UseLayer.gdb',
@@ -98,7 +98,7 @@ def ZonalHist(inZoneData, inValueRaster, scratchpath, set_raster_symbology, snap
         else:
             break_bool = True
         if break_bool:
-            if v== region_c:
+            if v == region_c:
                 continue
             use_nm = use_nm + "_" + v
     print use_nm
@@ -118,13 +118,39 @@ def ZonalHist(inZoneData, inValueRaster, scratchpath, set_raster_symbology, snap
         print ("Already completed run for {0}".format(runID))
     else:
         try:
+            #snap_raster = Raster(snap)
+            snap_raster= snap
+            snap_lyr = "snap"
+            arcpy.MakeRasterLayer_management(snap_raster, snap_lyr)
 
-            functions.call_zonal_hist(inZoneData, zoneField, inValueRaster, dbf, set_raster_symbology, snap,
-                                      scratchpath, outpath_final, sp_group,use_nm)
-            print "Completed in {0}\n".format((datetime.datetime.now() - start_zone))
+            # arcpy.Delete_management("rdlayer")
+            # arcpy.Delete_management("fc_lyr")
+
+            raster_lyr = "raster_lyr"
+
+            arcpy.MakeRasterLayer_management(inValueRaster, raster_lyr, "#", snap, '#')
+
+            arcpy.ApplySymbologyFromLayer_management(raster_lyr, set_raster_symbology)
+
+            sp_lyr = "sp_lyr"
+            arcpy.MakeRasterLayer_management(inZoneData, sp_lyr)
+            call_zonal_hist(sp_lyr, zoneField, raster_lyr, dbf,
+                            scratchpath, outpath_final, sp_group, use_nm)
+            complete = datetime.datetime.now() - start_zone
+            print "Completed in {0}\n".format(complete)
+            del sp_lyr, raster_lyr, snap
+
         except Exception as error:
             print(error.args[0])
             arcpy.Delete_management(dbf)  # delete partial results if a run results in a error
+
+
+
+def call_zonal_hist(sp_lyr, zone, raster_lyr, outtable, scratchpath, outpath_final, sp_group, use):
+    print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use))
+
+    arcpy.CheckOutExtension("Spatial")
+    arcpy.gp.ZonalHistogram_sa(sp_lyr, zone, raster_lyr, outtable)
 
 
 start_time = datetime.datetime.now()

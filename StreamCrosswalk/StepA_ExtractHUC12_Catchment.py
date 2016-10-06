@@ -17,7 +17,7 @@ arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
 arcpy.env.parallelProcessingFactor = "100%"
 extractfiles = 'catchment'
-ws = r"J:\Workspace\ESA_Species\CriticalHabitat" + os.sep + extractfiles
+ws = r"L:\Workspace\ESA_Species\Range\HUC12\NMFS" + os.sep + extractfiles
 name_dir = "GDB"
 out_location = ws + os.sep + name_dir
 
@@ -26,88 +26,171 @@ out_location = ws + os.sep + name_dir
 noNHDCSV = extractfiles + "_noNHD_20160907"
 
 # GDB with all Composites to Run
-MasterSpeFC = r"C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\zCriticalHabitat\CH_SpGroupComposite.gdb"
+MasterSpeFC = r"L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite.gdb"
 # MasterSpeFC = r"C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpGroupComposite.gdb"
 
 HUC2Field = "VPU_ID"
-HUC2_lwr48 = "C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\VPU_Final"
+HUC2_lwr48 = "C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\VPU_Final"
 
-FWSaqu_species = ['7', '11262', '209', '210', '211', '212', '213', '214', '215', '216', '217', '218',
-                  '219', '220', '221', '222', '223', '224', '225', '226', '227', '228', '229', '230', '231', '232',
-                  '233', '234', '235', '236', '237', '238', '239', '240', '241', '242', '243', '244', '245', '246',
-                  '247', '248', '249', '250', '251', '252', '253', '254', '255', '256', '257', '258', '259', '260',
-                  '261', '262', '263', '264', '265', '266', '267', '268', '269', '270', '271', '272', '273', '274',
-                  '275', '276', '277', '278', '279', '280', '281', '282', '283', '284', '285', '287', '288', '290',
-                  '291', '292', '293', '294', '295', '296', '297', '298', '299', '300', '301', '303', '305', '306',
-                  '307', '308', '309', '311', '312', '313', '314', '315', '316', '317', '318', '319', '320', '321',
-                  '322', '323', '324', '325', '326', '327', '328', '329', '330', '331', '332', '333', '334', '335',
-                  '336', '337', '338', '339', '340', '341', '342', '343', '344', '345', '346', '347', '348', '349',
-                  '350', '351', '352', '353', '354', '355', '356', '357', '358', '359', '360', '361', '392', '396',
-                  '402', '407', '411', '414', '415', '416', '417', '441', '468', '478', '479', '362', '363', '364',
-                  '365', '366', '367', '368', '369', '370', '371', '372', '373', '374', '375', '2561', '376', '377',
-                  '378', '379', '380', '381', '3364', '382', '383', '384', '385', '386', '1369', '1559', '3842', '1680',
-                  '1897', '1905', '1934', '2142', '2192', '2308', '2316', '2599', '2917', '2956', '3226', '3280',
-                  '3497', '3525',
-                  '5065', '3596', '3645', '3833', '3879', '4042', '4086', '4210', '4248', '4411', '4431', '4490',
-                  '4496', '5281',
-                  '5715', '5718', '5719', '5833', '5856', '5981', '6062', '6223', '6297', '6503', '6534', '6557',
-                  '6662', '6841',
-                  '7091', '7150', '7177', '7332', '7349', '7847', '7363', '7372', '7512', '7670', '7816', '7949',
-                  '8349', '8434',
-                  '8356', '8389', '8442', '8561', '8921', '9061', '9220', '9487', '9488', '9489', '9490', '9491',
-                  '9492', '9493',
-                  '9494', '9495', '9496', '9497', '9498', '9499', '9500', '9501', '9502', '9503', '9504', '9505',
-                  '9507', '9506',
-                  '9967', '9968', '9969', '10037', '10038', '10039', '10052', '10060', '10910']
+FWSaqu_species = ['153',
+'154',
+'155',
+'160',
+'286',
+'1509',
+'1769',
+'2448',
+'2510',
+'2514',
+'2528',
+'2842',
+'2891',
+'3096',
+'3133',
+'3199',
+'3318',
+'3398',
+'3654',
+'4093',
+'4112',
+'4274',
+'4300',
+'4330',
+'4719',
+'4799',
+'4881',
+'4992',
+'5180',
+'5265',
+'5623',
+'5658',
+'5815',
+'5989',
+'6220',
+'6578',
+'6843',
+'6966',
+'7115',
+'7590',
+'7834',
+'7855',
+'7989',
+'8181',
+'8241',
+'8278',
+'8462',
+'9021',
+'9126',
+'9382',
+'9384',
+'9432',
+'9707',
+'9941',
+'10013',
+'10077',
+'10142',
+'10144',
+'10145',
+'10150',
+'10151',
+'10153',
+'10297',
+'10298',
+'10299',
+'10300',
+'10301',
+'10310',
+'10311',
+'10312',
+'10314',
+'10319',
+'10323',
+'10326',
+'10332',
+'10340',
+'10341',
+'10370',
+'10381',
+'10485',
+'10700',
+'10733',
+'10734',
+'10736',
+'10903',
+'10908',
+'11175',
+'11176',
+'11191',
+'11192',
+'11193',
+'NMFS125',
+'NMFS134',
+'NMFS137',
+'NMFS138',
+'NMFS139',
+'NMFS159',
+'NMFS166',
+'NMFS173',
+'NMFS174',
+'NMFS175',
+'NMFS176',
+'NMFS177',
+'NMFS178',
+'NMFS179',
+'NMFS180',
+'NMFS181',
+
+
+]
 
 
 # NHD files
 # NOTE UPDATE THESE PATHS IF YOU WANT TO EXTRACT CATCHMENT
 #
-# huc1 = "J:\NHDPlusV2\NHDPlus01\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc2 = "J:\NHDPlusV2\NHDPlus02\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc3N = "J:\NHDPlusV2\NHDPlus03N\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc3S = "J:\NHDPlusV2\NHDPlus03S\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc3W = "J:\NHDPlusV2\NHDPlus03W\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc4 = "J:\NHDPlusV2\NHDPlus04\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc5 = "J:\NHDPlusV2\NHDPlus05\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc6 = "J:\NHDPlusV2\NHDPlus06\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc7 = "J:\NHDPlusV2\NHDPlus07\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc8 = "J:\NHDPlusV2\NHDPlus08\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc9 = "J:\NHDPlusV2\NHDPlus09\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc10L = "J:\NHDPlusV2\NHDPlus10L\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc10U = "J:\NHDPlusV2\NHDPlus10U\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc11 = "J:\NHDPlusV2\NHDPlus11\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc12 = "J:\NHDPlusV2\NHDPlus12\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc13 = "J:\NHDPlusV2\NHDPlus13\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc14 = "J:\NHDPlusV2\NHDPlus14\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc15 = "J:\NHDPlusV2\NHDPlus15\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc16 = "J:\NHDPlusV2\NHDPlus16\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc17 = "J:\NHDPlusV2\NHDPlus17\WBDSnapshot\WBD\WBD_Subwatershed.shp"
-# huc18 = "J:\NHDPlusV2\NHDPlus18\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc1 = "L:\NHDPlusV2\NHDPlus01\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc2 = "L:\NHDPlusV2\NHDPlus02\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc3N = "L:\NHDPlusV2\NHDPlus03N\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc3S = "L:\NHDPlusV2\NHDPlus03S\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc3W = "L:\NHDPlusV2\NHDPlus03W\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc4 = "L:\NHDPlusV2\NHDPlus04\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc5 = "L:\NHDPlusV2\NHDPlus05\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc6 = "L:\NHDPlusV2\NHDPlus06\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc7 = "L:\NHDPlusV2\NHDPlus07\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc8 = "L:\NHDPlusV2\NHDPlus08\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc9 = "L:\NHDPlusV2\NHDPlus09\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc10L = "L:\NHDPlusV2\NHDPlus10L\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc10U = "L:\NHDPlusV2\NHDPlus10U\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc11 = "L:\NHDPlusV2\NHDPlus11\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc12 = "L:\NHDPlusV2\NHDPlus12\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc13 = "L:\NHDPlusV2\NHDPlus13\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc14 = "L:\NHDPlusV2\NHDPlus14\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc15 = "L:\NHDPlusV2\NHDPlus15\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc16 = "L:\NHDPlusV2\NHDPlus16\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc17 = "L:\NHDPlusV2\NHDPlus17\WBDSnapshot\WBD\WBD_Subwatershed.shp"
+# huc18 = "L:\NHDPlusV2\NHDPlus18\WBDSnapshot\WBD\WBD_Subwatershed.shp"
 
-
-huc1 = "J:\NHDPlusV2\NHDPlus01\NHDPlusCatchment\Catchment.shp"
-huc2 = "J:\NHDPlusV2\NHDPlus02\NHDPlusCatchment\Catchment.shp"
-huc3N = "J:\NHDPlusV2\NHDPlus03N\NHDPlusCatchment\Catchment.shp"
-huc3S = "J:\NHDPlusV2\NHDPlus03S\NHDPlusCatchment\Catchment.shp"
-huc3W = "J:\NHDPlusV2\NHDPlus03W\NHDPlusCatchment\Catchment.shp"
-huc4 = "J:\NHDPlusV2\NHDPlus04\NHDPlusCatchment\Catchment.shp"
-huc5 = "J:\NHDPlusV2\NHDPlus05\NHDPlusCatchment\Catchment.shp"
-huc6 = "J:\NHDPlusV2\NHDPlus06\NHDPlusCatchment\Catchment.shp"
-huc7 = "J:\NHDPlusV2\NHDPlus07\NHDPlusCatchment\Catchment.shp"
-huc8 = "J:\NHDPlusV2\NHDPlus08\NHDPlusCatchment\Catchment.shp"
-huc9 = "J:\NHDPlusV2\NHDPlus09\NHDPlusCatchment\Catchment.shp"
-huc10L = "J:\NHDPlusV2\NHDPlus10L\NHDPlusCatchment\Catchment.shp"
-huc10U = "J:\NHDPlusV2\NHDPlus10U\NHDPlusCatchment\Catchment.shp"
-huc11 = "J:\NHDPlusV2\NHDPlus11\NHDPlusCatchment\Catchment.shp"
-huc12 = "J:\NHDPlusV2\NHDPlus12\NHDPlusCatchment\Catchment.shp"
-huc13 = "J:\NHDPlusV2\NHDPlus13\NHDPlusCatchment\Catchment.shp"
-huc14 = "J:\NHDPlusV2\NHDPlus14\NHDPlusCatchment\Catchment.shp"
-huc15 = "J:\NHDPlusV2\NHDPlus15\NHDPlusCatchment\Catchment.shp"
-huc16 = "J:\NHDPlusV2\NHDPlus16\NHDPlusCatchment\Catchment.shp"
-huc17 = "J:\NHDPlusV2\NHDPlus17\NHDPlusCatchment\Catchment.shp"
-huc18 = "J:\NHDPlusV2\NHDPlus18\NHDPlusCatchment\Catchment.shp"
+#
+huc1 = "L:\NHDPlusV2\NHDPlus01\NHDPlusCatchment\Catchment.shp"
+huc2 = "L:\NHDPlusV2\NHDPlus02\NHDPlusCatchment\Catchment.shp"
+huc3N = "L:\NHDPlusV2\NHDPlus03N\NHDPlusCatchment\Catchment.shp"
+huc3S = "L:\NHDPlusV2\NHDPlus03S\NHDPlusCatchment\Catchment.shp"
+huc3W = "L:\NHDPlusV2\NHDPlus03W\NHDPlusCatchment\Catchment.shp"
+huc4 = "L:\NHDPlusV2\NHDPlus04\NHDPlusCatchment\Catchment.shp"
+huc5 = "L:\NHDPlusV2\NHDPlus05\NHDPlusCatchment\Catchment.shp"
+huc6 = "L:\NHDPlusV2\NHDPlus06\NHDPlusCatchment\Catchment.shp"
+huc7 = "L:\NHDPlusV2\NHDPlus07\NHDPlusCatchment\Catchment.shp"
+huc8 = "L:\NHDPlusV2\NHDPlus08\NHDPlusCatchment\Catchment.shp"
+huc9 = "L:\NHDPlusV2\NHDPlus09\NHDPlusCatchment\Catchment.shp"
+huc10L = "L:\NHDPlusV2\NHDPlus10L\NHDPlusCatchment\Catchment.shp"
+huc10U = "L:\NHDPlusV2\NHDPlus10U\NHDPlusCatchment\Catchment.shp"
+huc11 = "L:\NHDPlusV2\NHDPlus11\NHDPlusCatchment\Catchment.shp"
+huc12 = "L:\NHDPlusV2\NHDPlus12\NHDPlusCatchment\Catchment.shp"
+huc13 = "L:\NHDPlusV2\NHDPlus13\NHDPlusCatchment\Catchment.shp"
+huc14 = "L:\NHDPlusV2\NHDPlus14\NHDPlusCatchment\Catchment.shp"
+huc15 = "L:\NHDPlusV2\NHDPlus15\NHDPlusCatchment\Catchment.shp"
+huc16 = "L:\NHDPlusV2\NHDPlus16\NHDPlusCatchment\Catchment.shp"
+huc17 = "L:\NHDPlusV2\NHDPlus17\NHDPlusCatchment\Catchment.shp"
+huc18 = "L:\NHDPlusV2\NHDPlus18\NHDPlusCatchment\Catchment.shp"
 
 
 def start_times(startclock):

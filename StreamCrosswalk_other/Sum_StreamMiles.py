@@ -4,11 +4,11 @@ import pandas as pd
 import datetime
 
 #inFolder = 'C:\Workspace\DD_Species_StreamCross_UpdateMarch2016\CSVExport'
-masterlist =''
-inFolder = 'J:\Workspace\ESA_Species\StreamCrosswalk\CSV'
-outlocation = 'C:\Workspace\DD_Species_StreamCross_UpdateMarch2016'
+masterlist =r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160909.csv'
+inFolder = 'C:\Workspace\FinalBE_EucDis_CoOccur\SteamCrosswalk\All_species_inaBin_Master_20160819\CSV'
+outlocation = 'C:\Workspace\FinalBE_EucDis_CoOccur\SteamCrosswalk\StreamMilesByHUC12'
 # outlocation ='C:\Workspace\ESA_Species\StreamCrosswalk'
-outfile = 'StreamMilesHUCDDOnly_OrginalStreamsALL' + '.csv'
+outfile = 'StreamMilesHUCDDOnly_OrginalStreamsALL_2' + '.csv'
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Range_Filename', 'Des_CH', 'CH_GIS',
                 'CH_Filename']
 start_script = datetime.datetime.now()
@@ -17,38 +17,7 @@ print "Script started at: {0}".format(start_script)
 filelist = os.listdir(inFolder)
 
 results = []
-DDspecies = ['2', '7', '19', '26', '58', '67', '69', '70', '76', '84', '88', '91', '103', '104', '108', '124', '125',
-             '130', '131', '132', '134', '135', '136', '139', '147', '152', '157', '158', '167', '168', '169', '171',
-             '172', '173', '176', '180', '182', '187', '189', '191', '194', '196', '197', '202', '204', '205', '206',
-             '207', '209', '210', '211', '212', '213', '214', '215', '216', '218', '219', '220', '221', '222', '223',
-             '224', '226', '227', '228', '229', '230', '231', '232', '233', '234', '235', '237', '238', '239', '240',
-             '241', '242', '243', '244', '245', '246', '247', '248', '249', '250', '251', '252', '254', '255', '256',
-             '257', '258', '259', '260', '262', '263', '264', '265', '266', '267', '268', '269', '270', '271', '272',
-             '273', '274', '275', '276', '277', '278', '279', '280', '281', '282', '283', '284', '285', '287',
-             '288', '290', '291', '292', '293', '294', '295', '296', '297', '298', '299', '300', '301', '303', '305',
-             '306', '307', '308', '309', '311', '312', '313', '314', '315', '316', '317', '318', '319', '320', '321',
-             '322', '323', '324', '325', '326', '327', '328', '329', '330', '331', '332', '333', '334', '335', '336',
-             '337', '338', '339', '340', '341', '342', '343', '344', '345', '346', '347', '348', '349', '350', '351',
-             '352', '353', '354', '355', '356', '357', '358', '359', '360', '361', '362', '363', '364', '365', '366',
-             '367', '368', '369', '370', '371', '372', '373', '374', '375', '376', '377', '378', '379', '380', '381',
-             '382', '383', '384', '385', '386', '396', '398', '399', '401', '402', '403', '404', '406', '407', '408',
-             '409', '411', '412', '413', '414', '415', '416', '417', '418', '435', '439', '441', '445', '453', '454',
-             '475', '477', '478', '479', '480', '481', '482', '484', '486', '487', '489', '517', '580', '677', '807',
-             '870', '1064', '1199', '1247', '1261', '1302', '1358', '1361', '1369', '1380', '1509', '1559', '1680',
-             '1707', '1740', '1783', '1849', '1897', '1905', '1934', '1953', '2142', '2144', '2192', '2308', '2316',
-             '2448', '2514', '2528', '2561', '2599', '2767', '2842', '2917', '2956', '3226', '3271', '3280', '3364',
-             '3398', '3497', '3525', '3596', '3628', '3645', '3654', '3833', '3842', '3879', '4042', '4086', '4093',
-             '4110', '4112', '4162', '4210', '4248', '4274', '4300', '4326', '4330', '4411', '4431', '4437', '4479',
-             '4490', '4496', '4679', '4766', '4799', '4881', '4910', '4992', '5065', '5180', '5232', '5265', '5281',
-             '5362', '5434', '5658', '5714', '5715', '5718', '5719', '5815', '5833', '5856', '5981', '6062', '6138',
-             '6220', '6223', '6231', '6297', '6346', '6416', '6503', '6534', '6557', '6578', '6596', '6620', '6654',
-             '6662', '6739', '6841', '6843', '6966', '7091', '7150', '7177', '7332', '7342', '7349', '7363', '7512',
-             '7590', '7610', '7670', '7753', '7800', '7816', '7834', '7847', '7855', '7949', '7989', '8172', '8231',
-             '8241', '8278', '8349', '8356', '8389', '8434', '8442', '8561', '8621', '8765', '8861', '8921', '8962',
-             '9021', '9061', '9220', '9487', '9488', '9489', '9490', '9491', '9492', '9493', '9494', '9495', '9496',
-             '9497', '9498', '9499', '9500', '9501', '9502', '9503', '9504', '9505', '9506', '9507', '9694', '9967',
-             '9968', '9969', '10037', '10038', '10039', '10052', '10060', '10077', '10124', '10130', '10150', '10297',
-             '10298', '10299', '10300', '10301', '10517', '10910', 'NMFS166', 'NMFS88', '286']
+DDspecies = ['273','8278','4881','4411']
 for value in filelist:
     print '\n {0}'.format(value)
     CHcheck = value[:2]
@@ -75,14 +44,19 @@ for value in filelist:
             reach = str(reach)
 
             if len(reach) == 13:
-                HUC = reach[0:1]
+                #HUC = reach[0:1]# HUC2
+                HUC = reach[0:6]
+                print HUC
                 listHUCs = HUCdictkm.keys()
                 if HUC not in listHUCs:
                     HUCdictkm[HUC] = 0
                     print 'updating dict'
 
             elif len(reach) == 14:
-                HUC = reach[0:2]
+                #HUC = reach[0:2] #HUC2
+                HUC = reach[0:7]
+                print HUC
+
                 listHUCs = HUCdictkm.keys()
                 if HUC not in listHUCs:
                     HUCdictkm[HUC] = 0
@@ -108,7 +82,7 @@ for value in filelist:
             print "Species {0} hsd total stream KMs of {1}".format(ent, streamkm)
     else:
         ent = value.split("_")
-        ent = str(ent[1])
+        ent = str(ent[2])
         ent = ent.strip('.csv')
         if ent not in DDspecies:
             continue
@@ -128,14 +102,19 @@ for value in filelist:
             reach = str(reach)
 
             if len(reach) == 13:
-                HUC = reach[0:1]
+                #HUC = reach[0:1]#HUC2
+                HUC = reach[0:6]  # HUC8
+                print HUC
+
                 listHUCs = HUCdictkm.keys()
                 if HUC not in listHUCs:
                     HUCdictkm[HUC] = 0
                     print 'updating dict'
 
             elif len(reach) == 14:
-                HUC = reach[0:2]
+                #HUC = reach[0:2] #HUC2
+                HUC = reach[0:7]
+                print HUC
                 listHUCs = HUCdictkm.keys()
                 if HUC not in listHUCs:
                     HUCdictkm[HUC] = 0
@@ -176,7 +155,10 @@ outheader =['EntityID','filetype','HUC','KMHUC', 'MilesHUC', 'FullKM', 'FullMile
 outDF = pd.DataFrame(results, columns=outheader)
 # print outDF
 
-master_list_df = pd.read_excel(masterlist)
+if masterlist.split('.')[1]== 'csv':
+    master_list_df = pd.read_csv(masterlist)
+else:
+    master_list_df = pd.read_excel(masterlist)
 master_list_df['EntityID'] = master_list_df['EntityID'].astype(str)
 sp_info_df = pd.DataFrame(master_list_df, columns=col_included)
 sp_info_included = sp_info_df[sp_info_df['EntityID'].isin(outDF['EntityID']) == True]
