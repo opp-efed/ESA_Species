@@ -14,7 +14,8 @@ import arcpy
 # Runs union on complete spatial library by species group  use identify species list for use in co-occur
 
 
-# TODO look for a way to that make deleting field easier, can field mapping be used to copy only
+# TODO look for a way to that make deleting field easier, can field mapping be used to copy only - check fieldinfo visiable url below
+#http://pro.arcgis.com/en/pro-app/arcpy/classes/fieldinfo.htm
 # TODO the columns of interest to a new file?
 # This can be done in arcmap by turning off fields then exporting, need to see if it can be done in a script
 

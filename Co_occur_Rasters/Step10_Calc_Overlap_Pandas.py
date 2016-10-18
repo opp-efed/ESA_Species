@@ -150,11 +150,7 @@ for region in regions:
     # NOTE NOTE error will occur if value in acres table is NAN or not numeric
     acres_col = acres_in_sum[('Acres_' + str(region))].map(lambda x: x).fillna(-1)
 
-    # print acres_col.ix[38,0]
-    # print acres_col.ix[39,0]
 
-    # print acres_col.ix[38,0]
-    # print acres_col.ix[39,0]
 
     cells_list = use_cell_size[region]
     # list of all uses for the current region from master use table
