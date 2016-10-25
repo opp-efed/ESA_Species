@@ -10,21 +10,23 @@ import arcpy
 
 # Spatial library being used for union IE CritHab or Range; will loop by species group, or use can id a specific species
 # GDB
-inlocation = 'J:\Workspace\ESA_Species\Range\NAD83'
+inlocation = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat'
 
 # CH for critical habitat or R for R
-filetype = 'R_'
 
-if inlocation == 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final':
-    out_location = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpGroupComposite.gdb'
+
+if inlocation == 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat':
+    out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite.gdb'
+    filetype = 'CH_'
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = ['Conifers_and_Cycads', 'Lichens']
+    skipgroup = []
 else:
-    out_location = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite.gdb'
+    out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'
+    filetype = 'R_'
     skipgroup = []
 
 # file suffix that will be added to fc name
-file_suffix = '_Composite_20160908'
+file_suffix = '_Composite_MAG_20161018'
 
 # if True will only union entid listed in ent list if false will union all entid in gdb
 subset_group = False
@@ -101,6 +103,7 @@ else:
             sp_group = sp_group.replace(" ", "_")
             if sp_group not in skipgroup:
                 ingdb = inlocation + os.sep + v
+
                 outfc_inter = out_location + os.sep + filetype + sp_group + file_suffix
                 # print outfc_inter
                 if not arcpy.Exists(outfc_inter):

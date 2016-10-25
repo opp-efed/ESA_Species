@@ -23,14 +23,12 @@ import arcpy
 Range = True
 if Range:
     # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
-    inlocation = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\Range\NAD83\Flowering Plants.gdb'
+    inlocation = r'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
     filetype = 'R_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat' \
-                         r'\inter.gdb'
-    finalfc = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range' \
-              r'\R_SpGroup_Union_final_20160907.gdb'
+    out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\inter.gdb'
+    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_SpGroup_Union_final_20161018.gdb'
     # NOTE NOTE if process interrupted incomplete file will be generated
 
     start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
@@ -40,66 +38,20 @@ if Range:
     skipgroup = []
 
     # if True will only union entid listed in ent list if false will union all entid in gdb
-    subset_group = True
+    subset_group = False
     # filename sub set comp
     enlistfc_name = 'R_Flowering_Plants_Missing_20161004'
     # list of entid to be include subset comp
-    entlist = ['513',
-               '558',
-               '569',
-               '615',
-               '624',
-               '643',
-               '705',
-               '763',
-               '798',
-               '807',
-               '817',
-               '831',
-               '836',
-               '837',
-               '852',
-               '872',
-               '960',
-               '996',
-               '1029',
-               '1038',
-               '1045',
-               '1077',
-               '1189',
-               '1264',
-               '1265',
-               '1266',
-               '1400',
-               '3999',
-               '6617',
-               '6782',
-               '7264',
-               '7840',
-               '9951',
-               '9956',
-               '9957',
-               '10719',
-               '10720',
-               '10721',
-               '10722',
-               '10723',
-               '10724',
-               '10725',
-               '10726',
-               '10727',
-               '10728',
-               '11340'
+    entlist = [
                ]
 
 else:
-    inlocation = r'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
+    inlocation = r'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat'
     filetype = 'CH_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat' \
-                         r'\CH_spGroup_Union_inter_201600907.gdb'
-    finalfc = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpGroup_Union_final_20160907.gdb'
+    out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_spGroup_Union_inter_201600907.gdb'
+    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_SpGroup_Union_final_20160907.gdb'
     # NOTE NOTE if process interupted incomplete file will be generated
 
     start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
@@ -116,8 +68,8 @@ else:
     entlist = []
 
 # Static variable
-file_suffix = '_Union_inter'
-file_suffix_clean = '_Union_Final_20160907'
+file_suffix = '_Union_MAG_inter'
+file_suffix_clean = '_Union_MAG_Final_20160907'
 
 
 # Create a new GDB

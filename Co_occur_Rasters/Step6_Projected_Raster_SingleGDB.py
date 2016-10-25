@@ -2,27 +2,28 @@ import os
 import datetime
 from arcpy.sa import *
 import arcpy
+
 # Title - Re-projects union raster into projection by region
 # in and out location
-inGDB = 'H:\Workspace\UseSites\ActionAreas\AK_AA.gdb'
-outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject'
+inGDB = 'L:\Workspace\UseSites\golfCourse.gdb'
+outfolder = 'L:\Workspace\UseSites\ByProject'
 
-midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\scratch.gdb'
+midGBD = 'L:\Workspace\UseSites\scratch.gdb'
 
 # projection folder
-prjFolder = "H:\Workspace\projections\FinalBE"
+prjFolder = "L:\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
-# TODO UPDATE SNAP RASTER
+skip_region = ['CONUS', 'AK', ]
 RegionalProjection_Dict = {
-    'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
-    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
-    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AK_UseLayer.gdb\WGS_1984_Albers_AK_Developed_euc',
-    'AS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_OSD_euc',
-    'CNMI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Developed_euc',
-    'GU': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
-    'PR': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
-    'VI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
+    'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
+    'HI': r'L:\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
+    'AK': r'L:\Workspace\UseSites\ByProject\AK_UseLayer.gdb\WGS_1984_Albers_AK_Developed_euc',
+    'AS': r'L:\Workspace\UseSites\ByProject\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_OSD_euc',
+    'CNMI': r'L:\Workspace\UseSites\ByProject\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Developed_euc',
+    'GU': r'L:\Workspace\UseSites\ByProject\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
+    'PR': r'L:\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
+    'VI': r'L:\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
 }
 
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
@@ -78,6 +79,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
     print inraster
     in_raster = Raster(in_gdb + os.sep + str(inraster))
     region = (raster.split('_'))[0]
+
     out_gdb_name = out_gdb_dict[region]
     out_gdb = out_folder + os.sep + out_gdb_name
     create_gdb(out_folder, out_gdb_name, out_gdb)
@@ -93,6 +95,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
     # extract snap raster for region
 
     # location prj files
+
     wgs_coord_file = prj_folder + os.sep + 'WGS_1984.prj'
     nad83_coord_file = prj_folder + os.sep + 'NAD_1983.prj'
     prj_file_path = prj_folder + os.sep + prj_file
@@ -116,13 +119,12 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
     arcpy.MakeRasterLayer_management
 
-
     if prj_sr == current_sr:
         prj_raster_name = prj_name + "_" + str(inraster)
         prj_raster = out_gdb + os.sep + prj_raster_name
         if not arcpy.Exists(prj_raster):
-                print 'Copying {0}'.format(inraster)
-                arcpy.CopyRaster_management(in_raster, prj_raster)
+            print 'Copying {0}'.format(inraster)
+            arcpy.CopyRaster_management(in_raster, prj_raster)
         else:
             print str(prj_raster) + " already exists"
 
@@ -140,7 +142,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
             if not arcpy.Exists(prj_raster):
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management(out_other_raster, prj_raster,snap_raster)
+                arcpy.ProjectRaster_management(out_other_raster, prj_raster, snap_raster)
 
             else:
                 print str(prj_raster_name) + " already exists"
@@ -185,7 +187,6 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
                 else:
                     print str(prj_raster) + " already exists"
 
-
     print 'Completed projection of {0} in: {1}'.format(prj_name, (datetime.datetime.now() - start_raster))
 
 
@@ -197,15 +198,21 @@ print "Start Time: " + start_time.ctime()
 
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
+
+
 for raster in raster_list:
 
     split_name = raster.split("_")
-    if split_name[(len(split_name)-1)]!= 'euc':
-        continue
+    if split_name[(len(split_name) - 1)] != 'euc':
+        pass
     try:
-        raster_project(raster, inGDB, prjFolder, Region_Dict, outGDBdict, outfolder)
+        region = (raster.split('_'))[0]
+        if region in skip_region:
+            continue
+        else:
+            raster_project(raster, inGDB, prjFolder, Region_Dict, outGDBdict, outfolder)
     except Exception as error:
-            print(error.args[0])
+        print(error.args[0])
 
 end = datetime.datetime.now()
 print "\nEnd Time: " + end.ctime()

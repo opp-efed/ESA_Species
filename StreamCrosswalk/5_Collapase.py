@@ -13,33 +13,36 @@ def createdirectory(new_dir):
 
 
 collapse_dict = {
-    'CattleEarTag': ['CattleEarTag'],
+    'Cattle Ear Tag': ['CattleEarTag'],
     'Corn': ['Corn', 'Corn/soybeans', 'Corn/wheat', 'Corn/grains'],
     'Cotton': ['Cotton', 'Cotton/wheat', 'Cotton/vegetables'],
     'Cultivated': ['Cultivated'],
     'Developed': ['Developed'],
     'NonCultivated': ['NonCultivated'],
     'Nurseries': ['Nurseries'],
-    'Orch_Grapes': ['Orchards and grapes'],
-    'OSD': ['OSD'],
+    'Orchards and Vineyards': ['Orchards and grapes'],
+    'Open Space Developed': ['OSD'],
     'Other Crops': ['Other crops'],
     'Other Grains': ['Other grains'],
-    'Other Row Crops': ['Other row crops'],
+    'Other RowCrops': ['Other row crops'],
     'Pasture': ['Pasture/hay/forage'],
     'Rice': ['Rice'],
-    'ROW': ['ROW'],
+    'Right of Way': ['ROW'],
     'Soybeans': ['Soybeans', 'Soybeans/cotton', 'Soybeans/wheat', 'Soybeans/grains'],
-    'Veg_Ground_Fruit': ['Vegetables and ground fruit', '(ground fruit)', 'Vegetables/grains'],
+    'Vegetables and Ground Fruit': ['Vegetables and ground fruit', '(ground fruit)', 'Vegetables/grains'],
     'Wheat': ['Wheat', 'Wheat/vegetables', 'Wheat/grains'],
     'Pine seed orchards': ['PineSeedOrchards'],
-    'XmasTree': ['XmasTrees'],
-    'ManagedForest': ['ManagedForests'],
-    'CullPiles': ['CullPiles']
+    'Christmas Trees': ['XmasTrees'],
+    'Managed Forest': ['ManagedForests'],
+    'CullPiles': ['CullPiles'],
+    'Golfcourses':['usa']
 }
 
-final_cols = ['HUC12', 'Acres', 'Corn', 'Cotton', 'Rice', 'Soybeans', 'Wheat', 'Veg_Ground_Fruit', 'Orch_Grapes',
-              'Other Grains', 'Other Row Crops', 'Other Crops', 'Pasture', 'CattleEarTag', 'Developed', 'ManagedForest',
-              'Nurseries', 'OSD', 'ROW', 'CullPiles', 'Cultivated', 'NonCultivated', 'Pine seed orchards', 'XmasTree']
+final_cols = ['HUC12', 'Acres', 'Corn', 'Cotton', 'Rice', 'Soybeans', 'Wheat','Vegetables and Ground Fruit',
+              'Orchards and Vineyards','Other Grains', 'Other RowCrops', 'Other Crops', 'Pasture', 'Cattle Ear Tag',
+              'Developed','Managed Forests', 'Nurseries','Open Space Developed', 'Right of Way', 'CullPiles',
+              'Cultivated', 'NonCultivated','Pine seed orchards', 'Christmas Trees','Golfcourses', 'Mosquito Control',
+              'Wide Area Use']
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
@@ -64,6 +67,8 @@ for csv in list_csv:
 
         out_df[group] = current_df.sum(axis=1)
     out_df = out_df.reindex(columns=final_cols)
+    out_df['Mosquito Control'] = out_df['Mosquito Control'].map(lambda x: 100)
+    out_df['Wide Area Use'] = out_df['Wide Area Use'].map(lambda x: 100)
     out_df.to_csv(out_csv)
 
 end = datetime.datetime.now()

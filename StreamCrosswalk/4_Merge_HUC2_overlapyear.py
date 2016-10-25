@@ -15,8 +15,6 @@ def createdirectory(DBF_dir):
         print "created directory {0}".format(DBF_dir)
 
 
-
-
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
@@ -32,22 +30,26 @@ for folder in list_folder_nonag:
     csvFolder = inFolder_NonAG+os.sep+folder
     list_csv = os.listdir(csvFolder)
     list_csv = [csv for csv in list_csv if csv.endswith('csv')]
-
     list_csv = [csv for csv in list_csv if csv.startswith('Albers')]
-    for csv in list_csv:
-        in_csv = csvFolder + os.sep + csv
 
+    for csv in list_csv:
+
+        in_csv = csvFolder + os.sep + csv
         in_df = pd.read_csv(in_csv)
         in_df.drop('Unnamed: 0', axis=1,inplace=True)
+        in_df['HUC12'] = in_df['HUC12'].map(lambda x: x ).astype(str)
+        in_df['HUC12'] = in_df['HUC12'].map(lambda x: '0'+x if len(x)==11 else x).astype(str)
         cols = huc2_df.columns.values.tolist()
         if 'Acres_prj' not in cols:
             new_cols = in_df.columns.values.tolist()
+            print new_cols
             [final_cols.append(x) for x in new_cols if x not in final_cols]
             huc2_df = pd.concat([huc2_df, in_df],axis=1)
             huc2_df= huc2_df.fillna(0)
         else:
             in_df.drop('Acres_prj',axis=1,inplace=True)
             new_cols = in_df.columns.values.tolist()
+            print new_cols
             [final_cols.append(x) for x in new_cols if x not in final_cols]
             huc2_df = pd.merge(huc2_df, in_df, on='HUC12', how='left')
             huc2_df= huc2_df.fillna(0)
@@ -58,6 +60,10 @@ for folder in list_folder_nonag:
 print final_cols
 final_df = final_df.reindex(columns=final_cols)
 final_df = final_df.fillna(0)
+
+final_df= final_df.groupby(by=['HUC12','Acres_prj']).sum()
+final_df.reset_index( inplace=True)
+
 final_csv = outFolder+os.sep+'NonAg.csv'
 final_df.to_csv(final_csv)
 
@@ -75,6 +81,8 @@ for year in years:
         for csv in list_csv:
             in_csv = csvFolder + os.sep + csv
             in_df = pd.read_csv(in_csv)
+            in_df['HUC12'] = in_df['HUC12'].map(lambda x: x ).astype(str)
+            in_df['HUC12'] = in_df['HUC12'].map(lambda x: '0'+x if len(x)==11 else x).astype(str)
             try:
                 in_df.drop('Unnamed: 0', axis=1,inplace=True)
                 in_df.drop('Unnamed: 0.1',axis=1,inplace=True)
@@ -91,7 +99,17 @@ for year in years:
             break
     outcsv = outFolder +os.sep+ 'CDL_{0}.csv'.format(year)
     final_ag_year.to_csv(outcsv)
+
     final_year = pd.merge(final_df, final_ag_year, on='HUC12', how='left')
+    final_year = final_year.groupby(by=['HUC12','Acres_prj_x']).sum()
+    final_year.reset_index( inplace=True)
+    dups = final_year.set_index('HUC12').index.get_duplicates()
+    print dups
+    for v in dups:
+        v= str(v)
+        print final_year.loc[final_year['HUC12'].isin([v])]
+
+
     out_merge =outFolder +os.sep+ 'CDL_{0}_withNonAG.csv'.format(year)
     final_year.to_csv(out_merge)
 

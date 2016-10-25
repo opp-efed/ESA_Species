@@ -12,7 +12,7 @@ inlocation_use = r'L:\Workspace\UseSites\ByProject\Conus_UseLayer.gdb'
 in_HUC_base = 'L:\NHDPlusV2'
 out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
 
-symbologyLayer = 'L:\Workspace\UseSites\CDL_Reclass\Albers_Conical_Equal_Area_CONUS_Developed_euc.lyr'
+symbologyLayer = 'L:\Workspace\UseSites\CDL_Reclass\Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse.lyr'
 
 print inlocation_use
 arcpy.env.workspace = inlocation_use
@@ -24,9 +24,9 @@ print list_raster_use
 
 
 # Create a new GDB
-def create_gdb(out_folder, out_name, out_path):
+def create_gdb(outfolder, out_name, out_path):
     if not arcpy.Exists(out_path):
-        arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
+        arcpy.CreateFileGDB_management(outfolder, out_name, "CURRENT")
 
 
 def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, use_nm, results_folder, HUC12):

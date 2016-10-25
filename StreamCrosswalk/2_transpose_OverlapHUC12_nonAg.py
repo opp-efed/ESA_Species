@@ -33,6 +33,7 @@ for folder in list_folder:
         if not os.path.exists(out_csv):
             split_name = csv.split("_")
             use = split_name[5]
+            print use
 
             dbf = csv.replace('.csv', '')
             gdb = dbf.replace(HUC2, '')

@@ -5,12 +5,12 @@ import datetime
 # Title- clip fc found in in_location by the clip_fc
 
 # ingdb and file to be use as clip
-inlocation = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroup_Union_final_20160907.gdb'
-clip_fc = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
+inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_SpGroup_Union_final_20160907.gdb'
+clip_fc = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
 
 # outlocation and suffix to be added to fc filename
-outlocation = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
-Clipped_suffix = "_ClippedRegions_20160907"
+outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_Clipped_Union_MAG_20161019.gdb'
+Clipped_suffix = "_ClippedRegions_MAG_20161019"
 
 
 # ###Functions

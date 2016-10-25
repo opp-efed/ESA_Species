@@ -11,14 +11,14 @@ from arcpy.sa import *
 # inlocation_species = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
 
 # 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\Albers_Conical_Equal_Area'
-inlocation_species = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
+inlocation_species = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\Albers_Conical_Equal_Area.gdb'
 #
     #'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
 #
 region = 'CONUS'
 
-Range = False
-temp_file = "temp_table2"
+Range = True
+temp_file = "temp_table"
 
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
@@ -26,7 +26,7 @@ start_file = 0
 
 # Use sites
 
-use_location_base = 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject'
+use_location_base = 'L:\Workspace\UseSites\ByProject'
 if Range:
     out_results = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\results'
 

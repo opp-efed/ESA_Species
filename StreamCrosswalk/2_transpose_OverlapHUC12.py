@@ -77,7 +77,6 @@ for folder in list_folder:
             in_dbf = in_dbf_folder + os.sep + folder + os.sep + gdb + os.sep + dbf
             in_df = pd.read_csv(in_csv, dtype=object)
             in_df.drop('Unnamed: 0', axis=1, inplace=True)
-
             listfields = [f.name for f in arcpy.ListFields(in_dbf)]
 
             cols = in_df.columns.values.tolist()
@@ -86,8 +85,10 @@ for folder in list_folder:
 
             else:
                 print 'Columns do  not match for csv {0} df has {1} and cols list have {2}'.format(csv, len(cols), len(listfields))
+                print in_df.columns.values.tolist()
                 print listfields
                 print cols
+
 
             in_df.drop('OBJECTID', axis=1, inplace=True)
 
