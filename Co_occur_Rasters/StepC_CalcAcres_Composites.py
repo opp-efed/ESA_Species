@@ -3,7 +3,8 @@ import datetime
 
 # Title - add acres to compfile in new field
 
-ingdb = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite_WebMercator.gdb'
+#r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite_WebMercator.gdb'
+ingdb = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite_WebMercator.gdb'
 # field name to load acres value
 field = "TotalAcres"
 

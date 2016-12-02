@@ -3,7 +3,7 @@ import os
 import datetime
 import arcpy
 
-inFolder_AG = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_transposed'
+inFolder_AG = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\YearlyCDL\HUC12_transposed'
 outFolder_AG = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_percentOverlap'
 
 inFolder_NonAG = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_transposed_NonAG'

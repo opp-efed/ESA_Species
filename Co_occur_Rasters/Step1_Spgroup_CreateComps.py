@@ -10,7 +10,7 @@ import arcpy
 
 # Spatial library being used for union IE CritHab or Range; will loop by species group, or use can id a specific species
 # GDB
-inlocation = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat'
+inlocation = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
 
 # CH for critical habitat or R for R
 
@@ -26,7 +26,7 @@ else:
     skipgroup = []
 
 # file suffix that will be added to fc name
-file_suffix = '_Composite_MAG_20161018'
+file_suffix = '_Composite_MAG_20161102'
 
 # if True will only union entid listed in ent list if false will union all entid in gdb
 subset_group = False

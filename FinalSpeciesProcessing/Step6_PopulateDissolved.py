@@ -20,17 +20,17 @@ import arcpy
 ################################################################Varibles to be set by user
 
 # Input File Locations
-InGDB = r"C:\Workspace\Processed_20160906\FWS_Ranges_20160906\GDB\STD_ReNmFWS20160906_2016-09-06.gdb"
+InGDB = r""
 # Table will all information to be added to the att table
-JoinTable = r"C:\Workspace\Processed_20160906\FWS_Ranges_20160906\CSV\STD_Atts.csv"
+JoinTable = r"L:\NewFWS_RangesStep_20161017\FinalShapes\NewRanges_Step3_FWS_20161031\CSV\std_att.csv"
 
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "NewRanges_Step3_FWS_20161031"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20161017'
 
 # Column headers for join Names
 JoinFieldFC = "FileName"

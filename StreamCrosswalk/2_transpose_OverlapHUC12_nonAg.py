@@ -3,11 +3,10 @@ import os
 import datetime
 import arcpy
 
-inFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
-csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_csv'
-outFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_transposed_NonAG'
-in_dbf_folder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
-
+inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\NonAg'
+csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\YearlyCDL\NonAg\HUC12_csv'
+outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\Agg_layers\HUC12_transposed'
+in_dbf_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\NonAg'
 
 def createdirectory(DBF_dir):
     if not os.path.exists(DBF_dir):

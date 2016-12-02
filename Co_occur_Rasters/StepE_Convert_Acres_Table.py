@@ -5,7 +5,7 @@ import datetime
 
 # User defined variables:
 # date in YYYYMMDD
-date = 20160910
+date = 20161102
 
 # Conversion value
 conversion = 0.0015625
@@ -14,8 +14,8 @@ sci_notation = str("{:.4E}".format(conversion))
 
 
 # Master table of acres
-in_table = 'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_Acres_by_region_20160910.csv'
-out_csv = 'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_ConvertedAcres_SqMiles_' + str(
+in_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102.csv'
+out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_ConvertedAcres_SqMiles_' + str(
     sci_notation) + '_byregion' + str(date) + '.csv'
 # number of cols with species info  base 0 found in the Acres table, these col do not need to be converted
 sp_col_count = 9

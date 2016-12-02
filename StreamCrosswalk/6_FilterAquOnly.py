@@ -22,13 +22,11 @@ in_aqu.drop_duplicates()
 in_aqu['HUC12'] = in_aqu['HUC12'].map(lambda x: '0'+x if len(x)==11 else x).astype(str)
 huc_12 = in_aqu['HUC12'].values.tolist()
 in_aqu.drop_duplicates()
-print in_aqu.sort_values(['HUC12'])
+
 
 list_csv = os.listdir(in_folder)
 all_huc12_df = pd.read_csv(in_all_Huc12)
-all_huc12_df['HUC12'] = all_huc12_df['HUC_12'].map(lambda x: '0'+x if len(x)==11 else x).astype(str)
-all_huc12_df.drop('HUC_12', axis=1,inplace=True)
-
+all_huc12_df['HUC12'] = all_huc12_df['HUC12'].map(lambda x: '0'+x if len(x)==11 else x).astype(str)
 
 for csv in list_csv:
     out_csv = out_folder +os.sep+csv
@@ -44,6 +42,7 @@ for csv in list_csv:
     nooverlap_huc_list = (in_aqu[in_aqu['HUC12'].isin(huc_w_overlap) == False])
     nooverlap_huc_list =nooverlap_huc_list['HUC12'].values.tolist()
     nooverlap_huc_list = list(set(nooverlap_huc_list))
+    print nooverlap_huc_list
 
     nooverlap_huc_df = all_huc12_df [all_huc12_df ['HUC12'].isin(nooverlap_huc_list) == True]
     nooverlap_huc_df =pd.DataFrame(data= nooverlap_huc_df,columns= in_df.columns.values.tolist())

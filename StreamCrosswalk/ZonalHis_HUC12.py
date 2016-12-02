@@ -7,19 +7,18 @@ from arcpy.sa import *
 
 # Title- runs Zonal Histogram for all sp union file against each use
 
-inlocation_use = r'L:\Workspace\UseSites\ByProject\Conus_UseLayer.gdb'
-
+inlocation_use =r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb'
 in_HUC_base = 'L:\NHDPlusV2'
-out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
+#out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\NonAg'
+out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\AAs'
+symbologyLayer = 'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr'
+#symbologyLayer = r'L:\Workspace\UseSites\CDL_Reclass\CDL_2014_rec.lyr'
 
-symbologyLayer = 'L:\Workspace\UseSites\CDL_Reclass\Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse.lyr'
-
-print inlocation_use
 arcpy.env.workspace = inlocation_use
 count_use = len(arcpy.ListRasters())
 current_use = 1
 list_raster_use = (arcpy.ListRasters())
-list_raster_use = [raster for raster in list_raster_use if not raster.startswith('zAlbers')]
+list_raster_use = [raster for raster in list_raster_use if not raster.startswith('z')]
 print list_raster_use
 
 
@@ -68,7 +67,7 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, use_nm, results_f
 
 
 start_time = datetime.datetime.now()
-print "Start Time: " + start_time.ctime()
+# print "Start Time: " + start_time.ctime()
 
 count_use = len(list_raster_use)
 list_dir = os.listdir(in_HUC_base)

@@ -13,16 +13,16 @@ import arcpy
 
 
 # Input File Locations
-InGDB = r"J:\Workspace\ESA_Species\CriticalHabitat\catchment\GDB\Fishes_catchment.gdb"
+InGDB = r""
 abb = "FWS"
 
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "NewRanges_Step3_FWS_20161031"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20161017'
 
 # Field names to be added that will be used to dissolve to a single multipart polygon (Dissolve) and the join column to
 # add other attributes (Filename)

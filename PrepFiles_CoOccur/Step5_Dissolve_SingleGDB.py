@@ -11,9 +11,9 @@ import arcpy
 # Final fields to be kept
 #dissolveFields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID','Status', 'Pop_Abb']
 dissolveFields = ['FileName']
-ingdb = 'J:\Workspace\ESA_Species\CriticalHabitat\catchment\GDB\Fishes_catchment.gdb'
+ingdb = 'L:\Workspace\ESA_Species\Range\HUC12\GDB\Clams_HUC12.gdb'
 
-outGDB = 'J:\Workspace\ESA_Species\CriticalHabitat\catchment\Fishes_catchment_Dissolve.gdb'
+outGDB = 'L:\Workspace\ESA_Species\Range\HUC12\Clams_HUC12_Dissolve.gdb'
 # sp groups to skip
 skipgroup = []
 

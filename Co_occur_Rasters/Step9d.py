@@ -8,9 +8,9 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\Master'
+in_folder = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\results_20161027\tabulated_results\Master'
 
-temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results'
+temp_folder = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\results_20161027\tabulated_results\PercentOverlap'
 
 out_csv = temp_folder + os.sep + 'Range_Use_byinterval_20161003.csv'
 

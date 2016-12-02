@@ -5,45 +5,19 @@ import arcpy
 # line files before executing.
 
 # User input variable
-masterlist = 'J:\Workspace\ESA_Species\ForCoOccur\Documents_FinalBE\MasterListESA_June2016_20160725.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 
-infolder = 'J:\Workspace\ESA_Species\Range\NAD83'
-archivefolder = 'J:\Workspace\ESA_Species\Range\NAD83\ArchivedRange'
+infolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
+archivefolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range\ArchivedRange'
 
-skipgroup = ['Birds', 'Clams', 'Conifers and Cycads', 'Corals',
-             'Lichens', 'Reptiles']
+skipgroup = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans',
+             'Ferns and Allies', 'Flowering Plants', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 
-# infolder = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
-# archivefolder = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final\Archived'
-
-# skipgroup = ['Amphibians', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans',
-#             'Ferns and Allies', 'Insects', 'Lichens', 'Mammals', 'Reptiles']
+# all groups
+# ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans','Ferns and Allies',
+# 'Flowering Plants', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 # list of species with updated from from the Check Duplicates script
-species_dulplicate_file = ['7847', '5065', '468', '7512', '9490', '8356', '320', '6223', '321', '5856', '322', '2316',
-                           '8349', '324', '7091', '9487', '5718', '9492', '9488', '333', '2192', '9493', '3226', '9499',
-                           '5833', '9500', '9496', '9498', '1897', '5715', '9491', '1905', '9497', '2308', '9489',
-                           '362', '9494', '325', '326', '329', '347', '4411', '4210', '369', '318', '327', '330', '351',
-                           '360', '7363', '376', '379', '381', '382', '383', '3833', '1680', '336', '349', '350', '354',
-                           '7177', '7349', '385', '319', '323', '4042', '9495', '7816', '356', '386', '334', '339',
-                           '344', '346', '355', '359', '364', '375', '348', '365', '1369', '342', '337', '370', '1559',
-                           '2917', '317', '328', '331', '353', '357', '358', '361', '366', '367', '368', '371', '372',
-                           '373', '374', '378', '380', '332', '335', '338', '340', '341', '345', '384', '4086', '352',
-                           '4490', '377', '5281', '3645', '6062', '6534', '6841', '7949', '363', '343', '479', '478',
-                           '10586', '10594', '10587', '2142', '231', '2599', '1934', '9061', '9505', '245', '9504',
-                           '4496', '2956', '9506', '5981', '9503', '8921', '305', '6503', '9502', '236', '242', '244',
-                           '253', '254', '264', '269', '274', '276', '277', '280', '293', '297', '300', '307', '7150',
-                           '220', '210', '211', '212', '8389', '216', '217', '223', '224', '225', '226', '227', '228',
-                           '229', '232', '6557', '241', '243', '235', '238', '239', '6662', '246', '247', '248', '251',
-                           '255', '259', '263', '266', '268', '271', '272', '278', '285', '294', '316', '4248', '10060',
-                           '284', '282', '281', '308', '312', '313', '315', '3525', '4431', '9220', '219', '279', '214',
-                           '250', '256', '262', '292', '10037', '215', '283', '298', '258', '261', '265', '267', '295',
-                           '306', '3596', '3879', '314', '8442', '10910', '218', '275', '288', '291', '5719', '7332',
-                           '230', '290', '10052', '213', '221', '222', '209', '270', '273', '296', '299', '301', '233',
-                           '240', '309', '3280', '249', '7670', '8561', '311', '6297', '287', '234', '237', '257',
-                           '260', '252', '3497', '303', '10588', '10583', '10592', '10593', '10590', '10584', '10591',
-                           '10585', '3999', '1266', '921', '4308', '5168', '441', '8166', '7731', '1862', '2364',
-                           '7907', '3842', '9507', '396', '402', '392', '3364', '414', '416', '2561', '411', '415',
-                           '417', '8434', '407']
+species_dulplicate_file = ['305', '11262']
 
 
 # Create a new GDB

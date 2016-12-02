@@ -5,7 +5,7 @@ import arcpy
 import pandas as pd
 # TODO This can be optimize by att  loading data into an array rather than dicts
 
-masterlist = 'J:\Workspace\ESA_Species\ForCoOccur\Documents_FinalBE\MasterListESA_June2016_20160725.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 infolder = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final\Mammals.gdb'  # folder or GDB
 
 # Species groups that do not need to be run

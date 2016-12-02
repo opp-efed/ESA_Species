@@ -9,18 +9,35 @@
 # Import arcpy module
 import arcpy
 import os
-import functions
 
+inlocation_species = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_GAP_pilotSpecies.gdb'
 
-inlocation_species='C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject'
-
-workspaces = os.listdir(inlocation_species)
-gdb_workspaces = [v for v in workspaces if v.endswith('.gdb')]
-for i in gdb_workspaces:
-        in_gdb = inlocation_species + os.sep + i
-        print "\nWorking on geodatabase {0}".format(in_gdb)
-        arcpy.env.workspace = in_gdb
-        rast_list = arcpy.ListRasters()
-        for raster_in in rast_list:
-            arcpy.BuildRasterAttributeTable_management(raster_in, "Overwrite")
-            print 'Build Attribute table completed for {0}'.format(raster_in)
+if inlocation_species[-3:] != 'gdb':
+    workspaces = os.listdir(inlocation_species)
+    gdb_workspaces = [v for v in workspaces if v.endswith('.gdb')]
+    if len(gdb_workspaces) == 0:
+        workspaces = os.listdir(inlocation_species)
+        for i in workspaces:
+            print "\nWorking on geodatabase {0}".format(i)
+            arcpy.env.workspace = inlocation_species + os.sep + i
+            rast_list = arcpy.ListRasters()
+            for raster_in in rast_list:
+                arcpy.BuildRasterAttributeTable_management(raster_in, "Overwrite")
+                print 'Build Attribute table completed for {0}'.format(raster_in)
+    else:
+        for i in gdb_workspaces:
+            in_gdb = inlocation_species + os.sep + i
+            print "\nWorking on geodatabase {0}".format(in_gdb)
+            arcpy.env.workspace = in_gdb
+            rast_list = arcpy.ListRasters()
+            for raster_in in rast_list:
+                arcpy.BuildRasterAttributeTable_management(raster_in, "Overwrite")
+                print 'Build Attribute table completed for {0}'.format(raster_in)
+else:
+    in_gdb = inlocation_species
+    print "\nWorking on geodatabase {0}".format(in_gdb)
+    arcpy.env.workspace = in_gdb
+    rast_list = arcpy.ListRasters()
+    for raster_in in rast_list:
+        arcpy.BuildRasterAttributeTable_management(raster_in, "Overwrite")
+        print 'Build Attribute table completed for {0}'.format(raster_in)

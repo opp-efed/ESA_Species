@@ -33,7 +33,7 @@ collapse_dict = {
     'Wheat': ['Wheat', 'Wheat/vegetables', 'Wheat/grains'],
     'Pine seed orchards': ['PineSeedOrchards'],
     'Christmas Trees': ['XmasTrees'],
-    'Managed Forest': ['ManagedForests'],
+    'Managed Forests': ['ManagedForests'],
     'CullPiles': ['CullPiles'],
     'Golfcourses':['usa']
 }

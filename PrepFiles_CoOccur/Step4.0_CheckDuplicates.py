@@ -5,23 +5,15 @@ import datetime
 # Tile: Checks for species with duplicate files in spatial library; this indicated that files has been updated, or a
 # species has two files that need to be merged
 
-### Make sure all commas are removed the get accurate results!
+# ## Make sure all commas are removed the get accurate results!
 # User input variable
 # input table
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
-# in spatial library
-infolder = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
 
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
+# Spatial Library for range files
+infolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
 
 # #########Functions
-# recursively checks workspaces found within the inFileLocation and makes list of all feature class
-def fcs_in_workspace(workspace):
-    arcpy.env.workspace = workspace
-    for fc in arcpy.ListFeatureClasses():
-        yield (fc)
-    for ws in arcpy.ListWorkspaces():
-        for fc in fcs_in_workspace(ws):
-            yield fc
 
 # generates a list of sp groups from masterlist
 def get_group_list(master_list):
@@ -39,13 +31,14 @@ def get_group_list(master_list):
     print sorted_group
     del header, grouplist
     return sorted_group
+
+
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-
 alpha_group = get_group_list(masterlist)
 
-duplicate_files =[]
+duplicate_files = []
 for group in alpha_group:
 
     print "\nWorking on {0}".format(group)
@@ -74,4 +67,3 @@ print "End Time: " + end.ctime()
 
 elapsed = end - start_time
 print "Elapsed  Time: " + str(elapsed)
-

@@ -7,32 +7,34 @@ import pandas as pd
 # Title - Re-projects union raster into projection by region
 # in and out location
 
-inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\Clipped_MaxArea.gdb'
-outfolder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\New Folder'
-regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\R_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
-midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\scratch.gdb'
+inGDB = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Clipped_MaxArea.gdb'
+outfolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection'
+regional_acres_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161102.csv'
+midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\temp.gdb'
 
-# inGDB = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\Clipped_MaxArea.gdb'
-# outfolder = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection'
-# regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_ConvertedAcres_SqMiles_1.5625E-03_byregion20160910.csv'
-# midGBD = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\scratch.gdb'
 
+# inGDB = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Clipped_MaxArea.gdb'
+# outfolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection'
+# regional_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102.csv'
+# midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\temp_2.gdb'
+
+skip_group = []
 # projection folder
-prjFolder = "C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE"
+prjFolder = "L:\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 
-skip_region = ['CONUS', 'AK', 'AS', 'CNMI', 'HI', 'PR', 'VI']
+skip_region = ['CONUS', 'PR', 'HI', 'AS','AK','GU','VI']
 
 RegionalProjection_Dict = {
-    'CONUS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
-    'HI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
-    'AK': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AK_UseLayer.gdb\WGS_1984_Albers_AK_Developed_euc',
-    'AS': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_OSD_euc',
-    'CNMI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Developed_euc',
-    'GU': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
-    'PR': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
-    'VI': r'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
+    'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
+    'HI': r'L:\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
+    'AK': r'L:\Workspace\UseSites\ByProject\AK_UseLayer.gdb\WGS_1984_Albers_AK_Developed_euc',
+    'AS': r'L:\Workspace\UseSites\ByProject\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_OSD_euc',
+    'CNMI': r'L:\Workspace\UseSites\ByProject\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Developed_euc',
+    'GU': r'L:\Workspace\UseSites\ByProject\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
+    'PR': r'L:\Workspace\UseSites\ByProject\PR_UseLayer.gdb\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
+    'VI': r'L:\Workspace\UseSites\ByProject\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'
 }
 
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
@@ -45,6 +47,8 @@ Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'PR': 'StatePlane_Puerto_Rico.prj',
                'VI': 'WGS_1984_UTM_Zone_20N.prj'
                }
+
+
 # Regions outside of use extent
 # 'Howland_Baker_Jarvis': 'NAD_1983_Albers.prj',
 # 'Johnston': 'NAD_1983_Albers.prj',
@@ -68,6 +72,7 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
     print inraster
 
     in_raster = Raster(in_gdb + os.sep + str(inraster))
+
     prj_name = prj_current.replace('.prj', '')
     out_gdb_name = prj_current.replace('.prj', '.gdb')
     out_gdb_name = out_gdb_name.replace(" ", "_")
@@ -97,10 +102,12 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
     try:
         if prj_datum == "D_WGS_1984":
             arcpy.Delete_management("inital_r_lyr")
+            print in_raster
             arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
 
             raster_other_geo = str(inraster) + "_WGS84"
             out_other_raster = midGBD + os.sep + raster_other_geo
+            print out_other_raster
 
             prj_raster_name = raster_other_geo + "_" + prj_name
             prj_raster = out_gdb + os.sep + prj_raster_name
@@ -113,7 +120,8 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
                 arcpy.Delete_management("WGS_lyr")
                 arcpy.MakeRasterLayer_management(out_other_raster, "WGS_lyr", "#", snap_raster, '#')
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management("WGS_lyr", prj_raster, snap_raster)
+                arcpy.ProjectRaster_management("WGS_lyr", prj_raster, "snap", 'NEAREST', "30")
+
 
             else:
                 print str(prj_raster_name) + " already exists"
@@ -128,12 +136,12 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
                 arcpy.Delete_management("inital_r_lyr")
                 arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr", "#", snap_raster, '#')
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, snap_raster)
+                arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, "snap", 'NEAREST', "30")
 
             else:
                 print str(prj_raster) + " already exists"
 
-        print 'Completed projection of {0} in: {1}'.format(prj_name, (datetime.datetime.now() - start_raster))
+        print 'Completed projection of {0} in: {1}\n'.format(prj_name, (datetime.datetime.now() - start_raster))
     except Exception as error:
         print 'Error in loop'
         print(error.args[0])
@@ -178,6 +186,8 @@ for region in list_regions:
         regional_prj = Region_Dict[region]
         for raster in raster_list:
             sp_group = (raster.split)("_")[1]
+            if sp_group in skip_group:
+                continue
             if sp_group == 'Missing':
                 sp_group = (raster.split)("_")[2]
             if sp_group not in final_sp_group_region:

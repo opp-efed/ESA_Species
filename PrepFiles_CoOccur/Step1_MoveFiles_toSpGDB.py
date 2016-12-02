@@ -8,15 +8,14 @@ import pandas as pd
 
 # Tile: Moves Range files found in the current update gdb and moves them to the corresponding group gdb in the
 # the spatial library found at the outfolder location
-#
-# NOTE HARD CODE TO WORK WITH CH files
+
 
 # master species list
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # the location of the spatial library
-outfolder = 'J:\Workspace\ESA_Species\Range\NAD83'
+outfolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
-file_dict = 'J:\Workspace\ESA_Species\ForCoOccur\Dicts\Move_Files_SpatialLibrary.csv'
+file_dict = 'L:\Workspace\ESA_Species\ForCoOccur\Dicts\Move_Files_SpatialLibrary.csv'
 # col index from master
 group_colindex = 7
 entid_colindex = 0

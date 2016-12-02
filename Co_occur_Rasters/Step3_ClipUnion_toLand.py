@@ -5,12 +5,14 @@ import datetime
 # Title- clip fc found in in_location by the clip_fc
 
 # ingdb and file to be use as clip
-inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_SpGroup_Union_final_20160907.gdb'
+inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_SpGroup_Union_final_20161102.gdb'
+
 clip_fc = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
 
 # outlocation and suffix to be added to fc filename
-outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_Clipped_Union_MAG_20161019.gdb'
-Clipped_suffix = "_ClippedRegions_MAG_20161019"
+outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range' \
+              '\R_Clipped_Union_MAG_20161102.gdb'
+Clipped_suffix = "_ClippedRegions_MAG_20161102"
 
 
 # ###Functions
@@ -31,7 +33,7 @@ def clip_feature(in_location, clip_fc_in, out_location, clipped_suffix):
     fclist = arcpy.ListFeatureClasses()
     # loop through all files and run intersect
     for fc in fclist:
-        print fc
+        print "\n {0}".format(fc)
         out_feature = out_location + os.sep + fc + clipped_suffix
         in_features = in_location + os.sep + fc
         arcpy.Delete_management("inFeatures")

@@ -3,10 +3,10 @@ import os
 import datetime
 import arcpy
 
-inFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
-csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_csv'
-outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_transposed'
-in_dbf_folder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
+inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\5_year_agg'
+csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\Agg_layers\HUC12_csv'
+outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\Agg_layers\HUC12_transposed'
+in_dbf_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\5_year_agg'
 
 
 out_cols = ['Corn',
@@ -55,6 +55,7 @@ def createdirectory(DBF_dir):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+createdirectory(outFolder)
 list_folder = os.listdir(inFolder)
 
 for folder in list_folder:
@@ -116,3 +117,7 @@ for folder in list_folder:
         else:
             print 'Already export {0}'.format(out_csv)
 
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)

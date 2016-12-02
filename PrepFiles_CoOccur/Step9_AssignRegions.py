@@ -7,18 +7,18 @@ import arcpy
 #  Title- places species into the different regions and exports a table of species with each region it occurs in
 
 # Input files
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\MasterList_20161130.csv'
 # update the column index location in the col included dict
 
 # Spatial library to be considered can put both and get on file, or one at a time for a list of just range or crithab
 # locations
-inlocation = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
+inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
 
 # region fc
-regionsfc = r'J:\Workspace\ESA_Species\ForCoOccur\Composites\GDB\ArchivedComposites\20160503\CompositesForClip\Boundaries.gdb\State_territories_NAD83'
+regionsfc = r'L:\Workspace\ESA_Species\ForCoOccur\Composites\GDB\ArchivedComposites\20160503\CompositesForClip\Boundaries.gdb\State_territories_NAD83'
 
 # output files
-outfile = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\CH_SpeciesRegions_all_20160908.csv'
+outfile = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_SpeciesRegions_all_20161130.csv'
 
 # TODO split this so that it generates one file for the Range and one for the Critical habitat in one run
 # TODO clean up code to be more streamlined see acres table

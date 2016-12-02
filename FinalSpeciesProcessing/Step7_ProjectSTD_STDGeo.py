@@ -13,32 +13,32 @@ import arcpy
 # TODO see script Step3_ProjectRegionalFiles
 
 # User define variables
-InGDB =r"C:\Workspace\Processed_20160906\FWS_Ranges_20160906\GDB\STD_ReNmFWS20160906_2016-09-06.gdb"
+InGDB = r""
 
 # Location of prj files
-proj_Folder = 'J:\Workspace\projections'
+proj_Folder = 'L:\projections\FinalBE'
 
 # Temp GDB for geo transformations
-middlegdb = r'C:\WorkSpace\temp.gdb'
+middlegdb = r'L:\projections\FinalBE\temp.gdb'
 
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "NewRanges_Step3_FWS_20161031"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20161017'
 
-ReProjectGDB = "R_polygon_20160906_Reprojected"
-CSVName = "R_polygon_20160906_Reprojected"
+ReProjectGDB = "R_polygon_20161017_Reprojected"
+CSVName = "R_polygon_20161017_Reprojected"
 
 NADabb = 'NAD83'
 Unknowncsv = 'Unknown'
 
 # Geo projections that have been see previously NOTE if a new project turns up then it will  need to be added to the
 # projection folder and added to this script
-coordFile = proj_Folder + os.sep + 'NAD 1983.prj'
-WGScoordFile = proj_Folder + os.sep + 'WGS 1984.prj'
+coordFile = proj_Folder + os.sep + 'NAD_1983.prj'
+WGScoordFile = proj_Folder + os.sep + 'WGS_1984.prj'
 Nad83HarncoordFile = proj_Folder + os.sep + 'NAD 1983 HARN.prj'
 
 
@@ -122,7 +122,6 @@ outWorkspaceOtherGeo = OtherGeoGDBpath
 arcpy.env.overwriteOutput = True
 arcpy.env.workspace = OutFolderGDB
 
-
 # Empty list to store information about each of the feature classes
 
 OrgGeoList = []
@@ -156,7 +155,6 @@ create_directory(path_dir, outLocationCSV, OutFolderGDB)
 
 create_gdb(OutFolderGDB, otherGeoGDB, OtherGeoGDBpath)
 outgdb = OtherGeoGDBpath
-
 
 # Extracts spatial information from prj files
 dsc = arcpy.Describe(coordFile)
@@ -289,7 +287,7 @@ for fc in fc_list:
 
 print "Failed fcs {0}".format(unknownprj)
 
-create_out_table(unknownprj, (outLocationCSV) +os.sep +'Unknown_projection.csv')
+create_out_table(unknownprj, (outLocationCSV) + os.sep + 'Unknown_projection.csv')
 
 # #End clock time script
 end = datetime.datetime.now()

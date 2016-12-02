@@ -15,8 +15,8 @@ import pandas as pd
 
 
 # inputs
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
-infolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite.gdb'  # folder or GDB
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
+infolder = 'L:\Workspace\ESA_Species\Range\NAD83\Clams.gdb'  # folder or GDB
 addition_gdb_filename = ''  # if the gdbs are not just the species group
 # Species groups that do not need to be run
 skiplist = []

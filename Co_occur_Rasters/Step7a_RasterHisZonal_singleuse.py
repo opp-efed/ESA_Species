@@ -6,18 +6,16 @@ import arcpy
 from arcpy.sa import *
 
 # Title- runs Zonal Histogram for all sp union file against each use
-
+# TODO add snap layer to zonal histogram
 # in folder with many gdbs or a single gdb
-# inlocation_species = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
 
-# 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\Albers_Conical_Equal_Area'
-inlocation_species = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\SpCompRaster_byProjection\Albers_Conical_Equal_Area.gdb'
-#
-    #'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpCompRaster_byProjection\Albers_Conical_Equal_Area'
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Clipped_GAP.gdb'
+#L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_Albers
 #
 region = 'CONUS'
 
-Range = True
+#, CONUS, PR,AS,VI,CNMI,
+Range = False
 temp_file = "temp_table"
 
 # set to a no zero number to skip x raster in the inlocation
@@ -28,20 +26,21 @@ start_file = 0
 
 use_location_base = 'L:\Workspace\UseSites\ByProject'
 if Range:
-    out_results = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\results'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\Range'
 
 else:
-    out_results = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\results'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Results_Fall2016\Agg_layers\Ag'
 
 symbology_dict = {
-    'CONUS': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CattleEarTag_euc.lyr',
-    'HI': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
-    'AK': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_Albers_AK_Ag_euc.lyr',
-    'AS': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
-    'CNMI': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
-    'GU': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
-    'PR': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc.lyr',
-    'VI': 'C:\Users\Admin\Documents\Jen\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr'}
+    'CONUS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr',
+    #'CONUS':r'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse.lyr',
+    'HI': r'L:\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
+    'AK': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_Albers_AK_CattleEarTag_euc.lyr',
+    'AS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
+    'CNMI': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
+    'GU': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
+    'PR': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc.lyr',
+    'VI': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr'}
 
 symbologyLayer = symbology_dict[region]
 use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
@@ -50,18 +49,11 @@ arcpy.env.workspace = use_location
 count_use = len(arcpy.ListRasters())
 current_use = 1
 list_raster_use = (arcpy.ListRasters())
+list_raster_use = [raster for raster in list_raster_use if not raster.startswith('z')]
 print list_raster_use
 
 
 # recursively looks for all raster in workspace
-def rasters_in_workspace(workspace):
-    arcpy.env.workspace = workspace
-    for raster in arcpy.ListRasters():
-        yield (raster)
-    for ws in arcpy.ListWorkspaces():
-        for raster in rasters_in_workspace(ws):
-            yield raster
-
 
 # Create a new GDB
 def create_gdb(out_folder, out_name, out_path):
@@ -178,6 +170,37 @@ if inlocation_species[-3:] != 'gdb':
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
                 current_use += 1
             current_use =1
+else:
+    path, gdb = os.path.split(inlocation_species)
+
+    arcpy.env.workspace = inlocation_species
+    count_sp = len(arcpy.ListRasters())
+    count = 0
+    list_raster = (arcpy.ListRasters())
+    for raster_in in list_raster:
+        count += 1
+        in_sp = inlocation_species + os.sep + raster_in
+        if count < start_file:
+            print in_sp
+            continue
+        else:
+            print raster_in
+            raster_file = Raster(in_sp)
+            sp_extent = raster_file.extent
+            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin),str(sp_extent.XMax),str(sp_extent.YMax))
+            print extent
+            print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
+            for use_nm in list_raster_use:
+                use_path = use_location + os.sep + use_nm
+                print 'Starting use layer {0}, use {1} of {2}'.format(use_path,current_use, count_use)
+                try:
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file,extent)
+                except Exception as error:
+                    print(error.args[0])
+                    print "Failed on {0} with use {1}".format(raster_in, use_nm)
+                current_use += 1
+            current_use =1
+
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

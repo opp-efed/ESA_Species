@@ -4,7 +4,6 @@ import datetime
 
 import arcpy
 
-
 # #Tile: Copy shapefiles to a geodatabase and rename to a standard naming convention.
 
 # NOTE prior to running the NmChange check the the concatenated specode and vipcode on the FWS file name and the
@@ -18,66 +17,44 @@ import arcpy
 # Set the workspace for the ListFeatureClass function
 #
 
-
-InGDB = r"C:\WorkSpace\Processed_20160906\FWS_Ranges_20160906\GDB\FWS_poly_20160906_2016-09-06.gdb"
+InGDB = r""
 abb = "FWS"  # FWS or NMFS
 
+
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "NewRanges_Step3_FWS_20161031"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20161017'
 
 # NOTE prior to running the NmChange check the the concatenated specode and vipcode on the FWS file name and the
 # sci names match the master list.  Files were sometime received with typos
 
 # #DICT for name change original file to EPA Std
-NmChangeDICT = {'usfws_C00S_V12_Chelonia_mydas_area_of_influence': 'R_11192_poly_20160906',
-                'usfws_I0T7_I01_Euchloe_ausonides_insulanus_area_of_influence': 'R_5610_poly_20160906',
-                'usfws_K03K_I01_Cambarus_callainus_area_of_influence': 'R_5153_poly_20160906',
-                'usfws_K08X_I01_Cambarus_veteranus_area_of_influence': 'R_11201_poly_20160906',
-                'Q28N_P01_Daphnopsis_hellerana': 'R_921_poly_20160906',
-                'Asplenium_diellaciniatum': 'R_10586_poly_20160906',
-                'Bulbophyllum_guamense': 'R_10719_poly_20160906',
-                'Cyanea_kauaulaensis': 'R_10588_poly_20160906',
-                'Cycas_micronesica': 'R_10729_poly_20160906',
-                'Dendrobium_guamense': 'R_10720_poly_20160906',
-                'Deparia_kaalaana': 'R_10587_poly_20160906',
-                'Emballonura_semicaudata_rotensis': 'R_8166_poly_20160906',
-                'Emoia_slevini': 'R_10732_poly_20160906',
-                'Eugenia_bryanii': 'R_10721_poly_20160906',
-                'Exocarpos_menziesii': 'R_10583_poly_20160906',
-                'Hedyotis_megalantha': 'R_10722_poly_20160906',
-                'Hemignathus_affinis': 'R_11333_poly_20160906',
-                'Heritiera_longipetiolata': 'R_3999_poly_20160906',
-                'Hypolepis_hawaiiensis_mauiensis': 'R_10594_poly_20160906',
-                'Hypolimnas_octocula_marianensis': 'R_4308_poly_20160906',
-                'Ischnura_luta': 'R_9282_poly_20160906',
-                'Kadua_haupuensis': 'R_10592_poly_20160906',
-                'Labordia_lorenciana': 'R_10599_poly_20160906',
-                'Lepidium_orbiculare': 'R_10593_poly_20160906',
-                'Maesa_walkeri': 'R_10723_poly_20160906',
-                'Nervilia_jacksoniae': 'R_10724_poly_20160906',
-                'Partula_gibba': 'R_2364_poly_20160906',
-                'Partula_langfordi': 'R_7731_poly_20160906',
-                'Partula_radiolata': 'R_7907_poly_20160906',
-                'Phyllanthus_saffordii': 'R_10725_poly_20160906',
-                'Prittchardia_bakeri': 'R_10590_poly_20160906',
-                'Pritchardia_lanigera': 'R_3054_poly_20160906',
-                'Psychotria_malaspinae': 'R_10726_poly_20160906',
-                'Samoana_fragilis': 'R_1862_poly_20160906',
-                'Santalum_involutum': 'R_10584_poly_20160906',
-                'Schiedea_diffusa_diffusa': 'R_10591_poly_20160906',
-                'Sicyos_lanceoloideus': 'R_10585_poly_20160906',
-                'Solanum_guamense': 'R_10727_poly_20160906',
-                'Tabernaemontana_rotensis': 'R_1266_poly_20160906',
-                'Tinospora_homosepala': 'R_11340_poly_20160906',
-                'Tuberolabium_guamense': 'R_10728_poly_20160906',
-                'Vagrans_egistina': 'R_5168_poly_20160906',
-                'Miami_tiger_beetle': 'R_10909_poly_20160906',
-                'Suwannee_moccasinshell_': 'R_7372_poly_20160906',
+
+
+NmChangeDICT = {'odo_vir_wtdec': 'R_4_GAP_20161017',
+                'pan_onc_r_18': 'R_18_GAP_20161017',
+                'mupdox_r_20': 'R_20_GAP_20161017',
+                'per_lon_r_51': 'R_51_GAP_20161017',
+                'tym_cup_grpca': 'R_83_GAP_20161017',
+                'amp_bel_r_116': 'R_116_GAP_20161017',
+                'str_occ_spowl': 'R_129_GAP_20161017',
+                'vir_atr_bcvix': 'R_138_GAP_20161017',
+                'den_chr_gcwax': 'R_139_GAP_20161017',
+                'aph_coe_flsjx': 'R_140_GAP_20161017',
+                'str_occ_142_r': 'R_142_GAP_20161017',
+                'gam_sil_151': 'R_151_GAP_20161017',
+                'reisnx': 'R_173_GAP_20161017',
+                'uma_r_175': 'R_175_GAP_20161017',
+                'pha_hub_r_192': 'R_192_GAP_20161017',
+                'ple_she_r_200': 'R_200_GAP_20161017',
+                'E070_V01_Hypomesus_transpacificus_new': 'R_305_poly_20161017',
+                'bra_id_py_aoi': 'R_1240_GAP_20161017',
+                'CountyRange_11260_poly_20161031': 'R_11260_CountyRange_20161017',
+                'E088_V01_Spirinchus_thaleichthys_new': 'R_11262_poly_20161017',
 
                 }
 

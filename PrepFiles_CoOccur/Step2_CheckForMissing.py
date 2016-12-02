@@ -11,9 +11,9 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 
 # User input variable
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # Spatial Library for range files
-infolder = 'J:\Workspace\ESA_Species\Range\NAD83'
+infolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
 # also need to set the hard code to the index number for the cols reference in loop species
 
 group_colindex = 7
@@ -148,7 +148,7 @@ for group in alpha_group:
         if len(archivedfiles) > 0:
             print "But Received files for species that have to be archived {0}".format(sorted(archivedfiles))
         if len(removed) > 0:
-            print "species {0} where removed before receiving a shape".format(removed)
+            print "species {0} where removed before receiving a Range".format(removed)
 
         if len(cntylist) > 0:
             print "Used county for species {0} while refined range under development".format(sorted(cntylist))

@@ -6,12 +6,21 @@ import arcpy
 # Title- converts all polygons in the inlocation to raster to be used in zonal historgram
 
 # in and out location
-inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_Clipped_Union_MAG_20161019.gdb'
-outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Clipped_MaxArea.gdb'
+# inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat' \
+#              '\CH_Clipped_Union_MAG_20161102.gdb'
+# outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat' \
+#               '\Clipped_MaxArea.gdb'
 
-# snap raster for convesion
-snapRaster = r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
 
+inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb' \
+
+outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range' \
+              '\Clipped_MaxArea.gdb'
+skip_group =[]
+# snap raster for conversion
+snapRaster = r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb" \
+             r"\cultmask_2015_NAD83"
+#
 
 # ###Functions
 # Create a new GDB
@@ -33,7 +42,7 @@ def polygon_to_raster(in_fc, out_location, snap_raster, in_location):
     # Set local variables
     inFeatures = in_location + os.sep + in_fc
 
-    valField = "OBJECTID"
+    valField = "ZoneID"
     outRaster = out_location + os.sep + in_fc
     # variable that sets raster type; using max area so no matter how small the range a cell is generated
     assignmentType = "MAXIMUM_AREA"
@@ -68,7 +77,13 @@ if inlocation[-3:] == 'gdb':
     arcpy.env.workspace = inlocation
     fclist = arcpy.ListFeatureClasses()
     for fc in fclist:
-        polygon_to_raster(fc, outlocation, snapRaster, inlocation)
+        sp_group = fc.split("_")[1]
+
+        if sp_group in skip_group:
+            continue
+        else:
+            polygon_to_raster(fc, outlocation, snapRaster, inlocation)
+
 else:
     list_ws = os.listdir(inlocation)
     print list_ws
@@ -79,7 +94,12 @@ else:
             fc_list = arcpy.ListFeatureClasses()
             for fc in fc_list:
                 print fc
-                polygon_to_raster(fc, outlocation, snapRaster, inlocation)
+                sp_group = fc.split("_")[1]
+                print sp_group
+                if sp_group in skip_group:
+                    continue
+                else:
+                    polygon_to_raster(fc, outlocation, snapRaster, inlocation)
         else:
             continue
 

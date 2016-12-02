@@ -14,7 +14,7 @@ in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_
 union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
 regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\Range_AssignSpeciesRegions_all_20160908.csv'
 # zoneID and the speices found in each zone
-union_fields = ['OBJECTID', 'ZoneSpecies']
+union_fields = ['ZoneID', 'ZoneSpecies']
 regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CONUS', 'CNMI']
 skip_regions = []
 # master list

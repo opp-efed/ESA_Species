@@ -3,15 +3,15 @@ import datetime
 
 import arcpy
 
-masterlist = 'J:\Workspace\MasterLists\April2015Lists\CSV\MasterListESA_April2015_20151015_20151124.csv'
-infolder = 'J:\Workspace\ESA_Species\ForCoOccur\Composites\GDB\April_16Composites\WebApp\ShapesForUpload_20160516'  # folder of GDB
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'  # folder of GDB
 
 # species groups to skip
 skiplist = []
 
-ColIndexDict = dict(comname=7, sciname=8, spcode=26, vipcode=27, entid=0, group=1, popabb=14)
-final_fields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID', 'PopName', 'Region']
-final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=6, EntityID=1, PopName=3)#group is in pos 2 and not being added
+ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, popabb=8,status =6)
+final_fields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID', 'Pop_Abb', 'Status']
+final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, PopName=3,Status=6)#group is in pos 2 and not being added
 singleGDB = True
 
 ########Static variables
@@ -85,6 +85,13 @@ def updateFilesloop(inGDB, final_fields, speinfodict):
 
                         index += 1
             output_update(fc, field)
+        fclist_field = [f.name for f in arcpy.ListFields(fc) if not f.required]
+        for field in fclist_field:
+                if field not in final_fields:
+                    arcpy.DeleteField_management(fc, field)
+                    print 'Deleted {0}'.format(field)
+                else:
+                    pass
 
 
 

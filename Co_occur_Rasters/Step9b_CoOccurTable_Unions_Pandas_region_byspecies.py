@@ -23,12 +23,12 @@ date= 20161003
 in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byzone'
 union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
 # zoneID and the speices found in each zone
-union_fields = ['OBJECTID', 'ZoneSpecies']
+union_fields = ['ZoneID', 'ZoneSpecies']
 
 # master list
 master_list = 'C:\Users\Admin\Documents\Jen\Workspace\MasterLists\MasterListESA_June2016_20160907.xlsx'
 temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byspecies'
-group_skip = ['Amphibians','Clams','Corals','Crustaceans','Ferns','Fishes','Flowering']
+group_skip = []
 
 
 # TODO set up a dict to read in the use index base on layer name

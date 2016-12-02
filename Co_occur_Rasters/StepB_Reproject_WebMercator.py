@@ -9,15 +9,15 @@ import shutil
 L48 = True
 FirstRun = True  # to determine if temp location was already create or should be be created
 # in and out workspace
-ingdb = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite.gdb'
-outgdb = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite_WebMercator.gdb'
+ingdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'
+outgdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite_WebMercator.gdb'
 
 # Projection location
-proj_Folder = 'J:\Workspace\projections'
-desiredProject = 'J:\Workspace\projections\WGS 1984 Web Mercator (auxiliary sphere).prj'
+proj_Folder = 'L:\projections'
+desiredProject = 'L:\projections\WGS 1984 Web Mercator (auxiliary sphere).prj'
 prjABB = 'WebMercator'
 # temp worksapce
-templocation = r'C:\Workspace\temp\temp2.gdb'
+templocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\temp6.gdb'
 
 # Index position of the sp group name within the file name
 groupindex = 1

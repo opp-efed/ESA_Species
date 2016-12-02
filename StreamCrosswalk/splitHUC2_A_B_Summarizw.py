@@ -35,7 +35,7 @@ list_csv = os.listdir(in_location)
 list_csv = [i for i in list_csv if i.endswith('csv')]
 # create output folder
 createdirectory(out_location)
-
+all_hucs = pd.DataFrame()
 # Generate summary stats (mean, max, min) for each input file;assign a/b based on values in split dict; then save output
 for csv in list_csv:
     print csv
@@ -126,4 +126,6 @@ for csv in list_csv:
     final_df = pd.merge(final_df, min_df, on='HUC_12', how='outer')
     final_df = pd.merge(final_df, mean_df, on='HUC_12', how='outer')
     final_df.to_csv(out_csv)
+    all_hucs = pd.concat([all_hucs,final_df], axis=0)
 
+all_hucs.to_csv(r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\AquModeling\SpatialJoins\Summarized_spatialJoins\AllHUC_a_b.csv')

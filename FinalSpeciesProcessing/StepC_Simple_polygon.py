@@ -4,9 +4,9 @@ import datetime
 from arcpy import env
 import arcpy.cartography as CA
 # #Tile: Will run the simplify polygon tool on files with geometry error that cannot be correct with the repair geo tool
-outgdb = r"C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\BySpeciesGroup\NAD83_SinglePartALL\Topo\Simplified_topoCorrected_singlepart.gdb"
+outgdb = r"L:\NewFWS_RangesStep_20161017\FinalShapes\Simplified.gdb"
 
-ingdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\BySpeciesGroup\NAD83\\topo\Simplified_topoCorrected.gdb'
+ingdb = r'L:\NewFWS_RangesStep_20161017\FinalShapes\FinalFeaturesClasses_neededSimply.gdb'
 
 
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
@@ -38,7 +38,7 @@ for fc in fclist:
     infile = ingdb + os.sep + fc
     outfile = outgdb + os.sep + fc
     if not arcpy.Exists(outfile):
-        print "Print trying to simplify {0}".format(fc)
+        print "Trying to simplify {0}".format(fc)
         CA.SimplifyPolygon(infile, outfile, "POINT_REMOVE", "30 Meters", "0 Unknown", "RESOLVE_ERRORS",
                            "KEEP_COLLAPSED_POINTS")
     else:

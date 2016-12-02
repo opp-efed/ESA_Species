@@ -3,8 +3,8 @@ import datetime
 import os
 import pandas as pd
 
-inFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_results'
-outFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\HUC12_csv'
+inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\NonAg'
+outFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\YearlyCDL\NonAg\HUC12_csv'
 
 
 def createdirectory(DBF_dir):
@@ -32,6 +32,7 @@ def export_dbf_to_csv(tbl_list, in_location, out_location):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+createdirectory(outFolder)
 if inFolder[-3:] != 'gdb':
     list_folder = os.listdir(inFolder)
 

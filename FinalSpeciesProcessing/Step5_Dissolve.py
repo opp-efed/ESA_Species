@@ -13,19 +13,20 @@ import arcpy
 
 # Variables to be set by user
 
-maxrow = 10000
+maxrow = 5000000
 
 # Input File Locations
-InGDB = r"C:\Workspace\Processed_20160906\FWS_Ranges_20160906\GDB\ReNm_FWS_20160906_2016-09-06.gdb"
+InGDB = r""
 abb = "FWS"
 
+
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "NewRanges_Step3_FWS_20161031"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20161017'
 
 # Field Names that will be kept in the dissolve
 Dissolve = "Dissolve"

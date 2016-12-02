@@ -8,21 +8,21 @@ import arcpy
 # row.  Species that did not copy correctly have not data and therefore no rows
 
 
-InGDB = r"C:\Workspace\Processed_20160906\FWS_Ranges_20160906\GDB\STD_ReNmFWS20160906_2016-09-06.gdb"
+InGDB = r"L:\NewFWS_RangesStep_20161017\FinalShapes\NewRanges_Step3_FWS_20161031\GDB\STD_ReNmFWS20161017_2016-10-31.gdb"
 
-QAcsv = "QA_attributes_20160906"
+QAcsv = "QA_attributes_20161017"
 
 SearchField = "EntityID"
 fileType = "R"
-fileSuffix = "_poly_20160906_STD"
+fileSuffix = "_GAP_20161017_STD"
 
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "NewRanges_Step3_FWS_20161031"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20161017'
 
 
 # ######################## FUNCTIONS

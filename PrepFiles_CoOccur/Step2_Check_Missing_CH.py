@@ -11,9 +11,9 @@ import pandas as pd
 
 
 # User input variable
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # Spatial library for critical habitat files
-infolder = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
+infolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat'
 # also need to set the hard code to the index number for the cols reference in loop species
 group_colindex = 7
 entid_colindex = 0

@@ -5,80 +5,80 @@ import datetime
 # Title - Generates regional composites in correct projection to calc area of the species file found in each region
 
 # master list and location by index number base zero of species information
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # col index values of species info cols in master list
-ColIndexDict = dict(comname=4, sciname=5, spcode=12, vipcode=13, entid=0, status=6)
+ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, popabb=8, status=6)
 
 # Index order of how the information is loaded into the species dict this is alpha order based on col name in fc
-final_fieldsindex = dict(EntityID=1, NAME=0, Name_sci=2, SPCode=3, VIPCode=5, Status=4)
+final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, Pop_Abb=3, Status=6)
 
 # input values and workspaces for range files
 Range = True
 if Range:
     # in folder with species group composite with all species unprojections and location of region feature class
-    infc_gdb = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite.gdb'
-    intersect_fc = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
+    infc_gdb = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'
+    intersect_fc = r'C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
 
     # out locations of the species group composites intersected with region
-    out_explode_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                           r'\R_SpGroupComposite_ExplodeComp_20160909.gdb'
-    out_explode_location_final = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                                 r'\R_SpGroupComposite_ExplodeCompFinal_20160909.gdb'
-    out_clip_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                        r'\R_SpGroupComposite_clipComp_20160909.gdb'
-    out_intersect_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                             r'\R_SpGroupComposite_IntersectRegion_20160909.gdb'
-    out_spatial_join_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                                r'\R_SpGroupComposite_spatialjoin_Region_20160909.gdb'
-    out_Dissolve_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                            r'\R_SpGroupComposite_DissolveRegion_20160909.gdb'
-    out_Dissolve_location_final = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                                  r'\R_SpGroupComposite_DissolveRegion_Final_20160909.gdb'
+    out_explode_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                           r'\R_SpGroupComposite_ExplodeComp_20161102.gdb'
+    out_explode_location_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                                 r'\R_SpGroupComposite_ExplodeCompFinal_20161102.gdb'
+    out_clip_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                        r'\R_SpGroupComposite_clipComp_20161102.gdb'
+    out_intersect_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                             r'\R_SpGroupComposite_IntersectRegion_20161102.gdb'
+    out_spatial_join_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                                r'\R_SpGroupComposite_spatialjoin_Region_20161102.gdb'
+    out_Dissolve_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                            r'\R_SpGroupComposite_DissolveRegion_20161102.gdb'
+    out_Dissolve_location_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                                  r'\R_SpGroupComposite_DissolveRegion_Final_20161102.gdb'
     DissolveFields = ['FileName', 'EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'Status', 'Region']
 
-    temp_regional = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                    r'\R_SpGroupComposite_Regional_STDprj_20160909.gdb'
+    temp_regional = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                    r'\R_SpGroupComposite_Regional_STDprj_20161102.gdb'
     # Projection information for the different regional projections
-    temp_prj = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-               r'\R_SpGroupComposite_InterProjection_20160909.gdb'
-    final_prj_comp = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions' \
-                     r'\R_SpGroupComposite_ProjectedtRegion_20160909.gdb'
+    temp_prj = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+               r'\R_SpGroupComposite_InterProjection_20161102.gdb'
+    final_prj_comp = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
+                     r'\R_SpGroupComposite_ProjectedtRegion_20161102.gdb'
 # input values and workspaces for critical habitat
 else:
     # in folder with species group composite with all species unprojections and location of region feature class
-    infc_gdb = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpGroupComposite.gdb'
-    intersect_fc = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
-    
+    infc_gdb = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite.gdb'
+    intersect_fc = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
+
     # out locations of the species group composites intersected with region
-    out_explode_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                           r'\CH_SpGroupComposite_ExplodeComp_20160909.gdb'
-    out_explode_location_final = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                                 r'\CH_SpGroupComposite_ExplodeCompFinal_20160909.gdb'
-    out_clip_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                        r'\CH_SpGroupComposite_clipComp_20160909.gdb'
-    out_intersect_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                             r'\CH_SpGroupComposite_IntersectRegion_20160909.gdb'
-    out_spatial_join_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                                r'\CH_SpGroupComposite_spatialjoin_Region_20160909.gdb'
-    out_Dissolve_location = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                            r'\CH_SpGroupComposite_DissolveRegion_20160909.gdb'
-    out_Dissolve_location_final = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                                  r'\CH_SpGroupComposite_DissolveRegion_Final_20160909.gdb'
+    out_explode_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                           r'\CH_SpGroupComposite_ExplodeComp_20161102.gdb'
+    out_explode_location_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                                 r'\CH_SpGroupComposite_ExplodeCompFinal_20161102.gdb'
+    out_clip_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                        r'\CH_SpGroupComposite_clipComp_20161102.gdb'
+    out_intersect_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                             r'\CH_SpGroupComposite_IntersectRegion_20161102.gdb'
+    out_spatial_join_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                                r'\CH_SpGroupComposite_spatialjoin_Region_20161102.gdb'
+    out_Dissolve_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                            r'\CH_SpGroupComposite_DissolveRegion_20161102.gdb'
+    out_Dissolve_location_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                                  r'\CH_SpGroupComposite_DissolveRegion_Final_20161102.gdb'
     DissolveFields = ['FileName', 'EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'Status', 'Region']
 
-    temp_regional = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                    r'\CH_SpGroupComposite_Regional_STDprj_20160909.gdb'
+    temp_regional = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                    r'\CH_SpGroupComposite_Regional_STDprj_20161102.gdb'
     # Projection information for the different regional projections
-    temp_prj = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-               r'\CH_SpGroupComposite_InterProjection_20160909.gdb'
-    final_prj_comp = r'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\regions' \
-                     r'\CH_SpGroupComposite_ProjectedtRegion_20160909.gdb'
+    temp_prj = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+               r'\CH_SpGroupComposite_InterProjection_20161102.gdb'
+    final_prj_comp = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
+                     r'\CH_SpGroupComposite_ProjectedtRegion_20161102.gdb'
 # file suffix for each step
-explode_suffix = '_ExplodeRegion_20160909'
-spatial_join_suffix = '_SpatialJoinRegion_20160909'
-dissolve_suffix = '_DissolveRegion_20160909'
-clipped_suffix = '_ClippedLand_Region_20160909'
-intersect_suffix = '_IntersectRegion_20160909'
+explode_suffix = '_ExplodeRegion_20161102'
+spatial_join_suffix = '_SpatialJoinRegion_20161102'
+dissolve_suffix = '_DissolveRegion_20161102'
+clipped_suffix = '_ClippedLand_Region_20161102'
+intersect_suffix = '_IntersectRegion_20161102'
 # projections for different regions
 prjFolder = "C:\Workspace\projections"
 RegionalProjection_Dict = {'L48': 'Albers_Conical_Equal_Area.prj',
@@ -102,6 +102,7 @@ RegionalProjection_Dict = {'L48': 'Albers_Conical_Equal_Area.prj',
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+
 
 # Create a new GDB
 def create_gdb(out_folder, out_name, out_path):

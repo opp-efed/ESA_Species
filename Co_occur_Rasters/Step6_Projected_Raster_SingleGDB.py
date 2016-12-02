@@ -5,16 +5,16 @@ import arcpy
 
 # Title - Re-projects union raster into projection by region
 # in and out location
-inGDB = 'L:\Workspace\UseSites\golfCourse.gdb'
-outfolder = 'L:\Workspace\UseSites\ByProject'
+inGDB = r'P:\GIS_Data\landcover\Chemicals\161006\methomyl_161006.gdb'
+outfolder = 'L:\\Workspace\\UseSites\\ByProject'
 
-midGBD = 'L:\Workspace\UseSites\scratch.gdb'
+midGBD = 'L:\\Workspace\\UseSites\\scratch.gdb'
 
 # projection folder
-prjFolder = "L:\projections\FinalBE"
+prjFolder = "L:\\projections\\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
-skip_region = ['CONUS', 'AK', ]
+skip_region = [ ]
 RegionalProjection_Dict = {
     'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
     'HI': r'L:\Workspace\UseSites\ByProject\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_VegetablesGroundFruit_euc',
@@ -103,6 +103,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
     current_raster_dsc = arcpy.Describe(in_raster)
     current_sr = current_raster_dsc.spatialReference
+    #current_sr = current_sr.replace(" ","_")
     current_datum = current_sr.GCS.datumName
 
     # extract spatial information from prj files
@@ -142,7 +143,8 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
             if not arcpy.Exists(prj_raster):
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management(out_other_raster, prj_raster, snap_raster)
+                arcpy.ProjectRaster_management(out_other_raster, prj_raster, "snap", 'NEAREST', "30")
+
 
             else:
                 print str(prj_raster_name) + " already exists"
@@ -152,7 +154,7 @@ def raster_project(inraster, in_gdb, prj_folder, region_dict, out_gdb_dict, out_
 
             if not arcpy.Exists(prj_raster):
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management(in_raster, prj_raster, snap_raster)
+                arcpy.ProjectRaster_management(in_raster, prj_raster, snap_raster,"snap", 'NEAREST', "30")
 
             else:
                 print str(prj_raster) + " already exists"
@@ -198,18 +200,19 @@ print "Start Time: " + start_time.ctime()
 
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
-
+print raster_list
 
 for raster in raster_list:
 
     split_name = raster.split("_")
     if split_name[(len(split_name) - 1)] != 'euc':
-        pass
+        continue
     try:
         region = (raster.split('_'))[0]
         if region in skip_region:
             continue
         else:
+            print raster
             raster_project(raster, inGDB, prjFolder, Region_Dict, outGDBdict, outfolder)
     except Exception as error:
         print(error.args[0])
