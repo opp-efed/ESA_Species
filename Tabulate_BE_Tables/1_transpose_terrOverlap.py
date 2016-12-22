@@ -5,8 +5,8 @@ import arcpy
 import numpy as np
 import pandas as pd
 
-csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\Agg_layers\Ag\Range'
-outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Transposed\Agg_layers\Ag\Range'
+csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\Range'
+outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\Transposed_Spray'
 
 interval_step = 30
 max_dis = 1501
@@ -20,7 +20,7 @@ def createdirectory(DBF_dir):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
-
+createdirectory(outFolder)
 
 out_folders = os.listdir(csvFolder)
 for folder in out_folders:
@@ -42,9 +42,12 @@ for folder in out_folders:
 
         in_csv = csvFolder+os.sep+folder + os.sep + csv
         in_df = pd.read_csv(in_csv)
+        try:
+            in_df.drop('OID', axis=1, inplace=True)
+            in_df.drop('TableID', axis=1, inplace=True)
+        except:
+            pass
 
-        in_df.drop('OID', axis=1, inplace=True)
-        in_df.drop('TableID', axis=1, inplace=True)
 
         in_df['LABEL'] = in_df['LABEL'].astype(str)
         in_df['LABEL'] = in_df['LABEL'].map(lambda x: x.replace(',', '')).astype(long)

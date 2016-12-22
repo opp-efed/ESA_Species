@@ -2,8 +2,8 @@ import arcpy
 import os
 from simpledbf import Dbf5
 
-DBFfolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\SteamCrosswalk\All_species_inaBin_Master_20160819\DBF'
-CSV_dir = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\SteamCrosswalk\All_species_inaBin_Master_20160819\CSV'
+DBFfolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\CriticalHabitat\AllSp_MasterList_20161124\DBF'
+CSV_dir = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\CriticalHabitat\AllSp_MasterList_20161124\CSV'
 
 arcpy.env.workspace = DBFfolder
 files = arcpy.ListTables()

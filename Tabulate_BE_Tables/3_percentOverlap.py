@@ -15,14 +15,14 @@ date = 20161004
 type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
-in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\SumBySpecies\Agg_layers\Ag\Range'
+in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\SumSpecies'
 sp_col_count = 7  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102_CONUS.csv'
+in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
 
 # Location where output and temp files will be saved
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\PercentOverlap\Agg_layers\Ag\Range'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\PercentOverlap'
 # out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
 # out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'
 
@@ -51,10 +51,10 @@ def calculation(typefc, in_sum_df, cell_size, c_region):
         msq_overlap = in_sum_df[in_sum_df.select_dtypes(include=['number']).columns].multiply(msq_conversion)
 
         acres_overlap = msq_overlap.multiply(0.000247)
-        acres_overlap[('Acres_' + str(region))] = se.values
+        acres_overlap[('Acres')] = se.values
         print acres_overlap
 
-        percent_overlap = (acres_overlap.div(acres_overlap.Acres_CONUS, axis='index')) * 100
+        percent_overlap = (acres_overlap.div(acres_overlap.Acres, axis='index')) * 100
         percent_overlap[('Acres_' + str(region))] = se.values
 
         return percent_overlap
@@ -70,6 +70,7 @@ def createdirectory(DBF_dir):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+createdirectory(out_folder)
 # 1) Read in master tables
 
 # read in master use list with cell size info for each use

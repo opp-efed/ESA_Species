@@ -1,7 +1,7 @@
 import pandas as pd
 
-in_csv = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\Range_AssignSpeciesRegions_all_20160908.csv'
-out_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\MasterTables\Range_Region_Mag.csv'
+in_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_SpeciesRegions_all_20161130.csv'
+out_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\Range_Region_Mag_20161130.csv'
 in_range = pd.read_csv(in_csv)
 out_df = pd.DataFrame(columns=['EntityID', 'Region'])
 counter = 0
@@ -9,7 +9,7 @@ row_count = len(in_range)
 print row_count
 
 while counter < row_count:
-    entid = in_range.iloc[counter,0]
+    entid = in_range.iloc[counter,1]
     l48 = in_range.ix[counter, ['L48']].values.tolist()
 
     nl48 = in_range.ix[counter, ['AK', 'AS', 'CNMI','HI', 'GU', 'PR', 'VI']].values.tolist()

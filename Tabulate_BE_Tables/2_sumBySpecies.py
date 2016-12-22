@@ -9,9 +9,10 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-date = 20161129
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Transposed\Agg_layers\Ag\Range'
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\SumBySpecies\Agg_layers\Ag\Range'
+date = 20161221
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\Transposed_Spray'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\SumSpecies'
+
 union_gdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'
 
 # zoneID and the speices found in each zone
@@ -29,15 +30,28 @@ table_sp_group = {'Amphibians': 'r_amphib',
                   'Corals': 'r_corals',
                   'Crustaceans': 'r_crusta',
                   'Ferns': 'r_ferns',
-                  'Fishes': 'r_fishes',
+                  'Fishes': 'r_fishe',
                   'Flowering': 'r_flower',
                   'Insects': 'r_insect',
                   'Lichens': 'r_lichen',
                   'Mammals': 'r_mammal',
-                  'Missing': 'r_missin',
                   'Reptiles': 'r_reptil',
                   'Snails': 'r_snails'}
-
+# table_sp_group = {'Amphibians': 'ch_amphi',
+#                   'Arachnids': 'ch_arach',
+#                   'Birds': 'ch_birds',
+#                   'Clams': 'ch_clams',
+#                   'Conifers': 'ch_conife',
+#                   'Corals': 'ch_corals',
+#                   'Crustaceans': 'ch_crust',
+#                   'Ferns': 'ch_ferns',
+#                   'Fishes': 'ch_fishes',
+#                   'Flowering': 'ch_flowe',
+#                   'Insects': 'ch_insec',
+#                   'Lichens': 'ch_lichen',
+#                   'Mammals': 'ch_mamma',
+#                   'Reptiles': 'ch_repti',
+#                   'Snails': 'ch_snail'}
 group_index = 1  # place to extract species group from tablename
 SkipUses = []
 # TODO add lookup for all use based on use file name
@@ -153,13 +167,13 @@ def extract_species_info(master_in_table, col_from_master):
     ent_list_included = master_list_df['EntityID'].values.tolist()
     sp_info_df = pd.DataFrame(master_list_df, columns=col_from_master)
     sp_info_header = sp_info_df.columns.values.tolist()
-    print ent_list_included
+    #print ent_list_included
     return sp_info_df, sp_info_header, ent_list_included
 
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
-
+createdirectory(out_folder)
 # Reads in all information for species that should considered
 main_out_header = []
 

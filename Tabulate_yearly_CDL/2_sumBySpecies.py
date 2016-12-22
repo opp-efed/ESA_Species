@@ -10,16 +10,16 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
 date = 20161201
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Indiv_Year_raw\Range\Transposed_Ag'
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Indiv_Year_raw\Range\SumBySpecies'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\Transposed_Yearly'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP species\NonAg\SumSpecies'
 union_gdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'
-regional_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_SpeciesRegions_all_20161130.csv'
+
+
 # zoneID and the species found in each zone
 union_fields = ['ZoneID', 'ZoneSpecies']
 
 # master list
-
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20160907.xlsx'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601102.xlsx'
 
 table_sp_group = {'Amphibians': 'r_amphib',
                   'Arachnids': 'r_arachn',
@@ -29,31 +29,38 @@ table_sp_group = {'Amphibians': 'r_amphib',
                   'Corals': 'r_corals',
                   'Crustaceans': 'r_crusta',
                   'Ferns': 'r_ferns',
-                  'Fishes': 'r_fishes',
+                  'Fishes': 'r_fishe',
                   'Flowering': 'r_flower',
                   'Insects': 'r_insect',
                   'Lichens': 'r_lichen',
                   'Mammals': 'r_mammal',
-                  'Missing': 'r_missin',
                   'Reptiles': 'r_reptil',
                   'Snails': 'r_snails'}
+
+# table_sp_group = {'Amphibians': 'ch_amphi',
+#                   'Arachnids': 'ch_arach',
+#                   'Birds': 'ch_birds',
+#                   'Clams': 'ch_clams',
+#                   'Conifers': 'ch_conife',
+#                   'Corals': 'ch_corals',
+#                   'Crustaceans': 'ch_crust',
+#                   'Ferns': 'ch_ferns',
+#                   'Fishes': 'ch_fishe',
+#                   'Flowering': 'ch_flowe',
+#                   'Insects': 'ch_insec',
+#                   'Lichens': 'ch_lichen',
+#                   'Mammals': 'ch_mamma',
+#                   'Reptiles': 'ch_repti',
+#                   'Snails': 'ch_snail'}
 
 group_index = 1  # place to extract species group from tablename
 SkipUses = []
 # TODO add lookup for all use based on use file name
 
-
 # cols to include from master
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # species groups that can be skipped
 group_skip = []
-
-
-
-
-
-# breaks out the intervals into bin
-
 
 # Generates diction based on union-ed file to determine which zone a species occurs in
 def extract_union_if_from_shapes(union_gdb_extract, fc_union_extract, union_fields_extract, zone_species_occurs_union):
@@ -166,6 +173,7 @@ def extract_species_info(master_in_table, col_from_master):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+createdirectory(out_folder)
 # Reads in all information for species that should considered
 main_out_header = []
 
@@ -203,8 +211,11 @@ for fc in fc_list:
         out_location = out_folder + os.sep + folder
         createdirectory(out_location)
         list_csv = os.listdir(in_folder + os.sep + folder)
+        try:
+            list_csv = [csv for csv in list_csv if csv.startswith(table_sp_group[sp_group])]
+        except:
+            continue
 
-        list_csv = [csv for csv in list_csv if csv.startswith(table_sp_group[sp_group])]
         for csv in list_csv:
             sp_table = (in_folder + os.sep + folder + os.sep + csv)
             sp_table_df = pd.read_csv(sp_table)
@@ -216,5 +227,6 @@ for fc in fc_list:
             df_sumOverlap.insert(0, 'EntityID', ent_df)
             df_sumOverlap = pd.merge(main_species_infoDF, df_sumOverlap, on='EntityID', how='inner')
             group_overlap_csv = out_location + os.sep + csv
+            print group_overlap_csv
             df_sumOverlap.to_csv(group_overlap_csv)
        # print main_species_infoDF

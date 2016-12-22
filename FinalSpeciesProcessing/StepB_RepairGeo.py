@@ -7,7 +7,7 @@ import os
 ind_sp_file = False
 masterlist = 'J:\Workspace\ESA_Species\ForCoOccur\Documents_FinalBE\MasterListESA_June2016_20160725.csv'
 
-infolder = 'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\CriticalHabitat\CH_SpGroupComposite.gdb'
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat\Fishes.gdb'
 skiplist = []
 
 # ########### Functions

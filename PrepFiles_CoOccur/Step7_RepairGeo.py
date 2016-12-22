@@ -4,11 +4,11 @@ import os
 # Set to True if running on individual species files and false if running on composite file if true in folder must be a
 # single gdb
 
-ind_sp_file = False
+ind_sp_file = True
 masterlist = 'J:\Workspace\ESA_Species\ForCoOccur\Documents_FinalBE\MasterListESA_June2016_20160725.csv'
 
-infolder = 'J:\Workspace\ESA_Species\CriticalHabitat\NAD_Final'
-skiplist = ['Fishes']
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat\Fishes.gdb'
+skiplist = []
 
 # ########### Functions
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class

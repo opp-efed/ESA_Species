@@ -13,7 +13,7 @@ import pandas as pd
 # User input variable
 masterlist ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # Spatial Library for range files
-infolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
 # also need to set the hard code to the index number for the cols reference in loop species
 
 group_colindex = 7

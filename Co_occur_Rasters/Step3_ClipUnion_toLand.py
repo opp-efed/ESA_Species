@@ -10,8 +10,7 @@ inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Unio
 clip_fc = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
 
 # outlocation and suffix to be added to fc filename
-outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range' \
-              '\R_Clipped_Union_MAG_20161102.gdb'
+outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'
 Clipped_suffix = "_ClippedRegions_MAG_20161102"
 
 

@@ -17,6 +17,7 @@ out_folder = in_folder + os.sep + 'Grids_byProjection'
 create_folder(out_folder)
 list_gdb = os.listdir(in_folder)
 list_gdb = [gdb for gdb in list_gdb if gdb.endswith('gdb')]
+print list_gdb
 
 for gdb in list_gdb:
     in_gdb = in_folder + os.sep + gdb

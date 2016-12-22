@@ -10,12 +10,12 @@ import arcpy
 
 # Spatial library being used for union IE CritHab or Range; will loop by species group, or use can id a specific species
 # GDB
-inlocation = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
+inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
 
 # CH for critical habitat or R for R
 
 
-if inlocation == 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat':
+if inlocation == 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat':
     out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite.gdb'
     filetype = 'CH_'
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens

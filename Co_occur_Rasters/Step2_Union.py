@@ -23,22 +23,22 @@ import arcpy
 # TODO SET UP TO ADD ZONEID SO OBJECTID IS NOT USED- to prevent  objectID from change when clipped
 Range = True
 out_df = pd.DataFrame(index=(list(range(0, 1000))))
-outcsv =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Species_included_inUnion_2.csv'
+outcsv =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Species_included_inUnion_20161212.csv'
 if Range:
     # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
-    inlocation = r'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
+    inlocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
     filetype = 'R_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
     out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\inter.gdb'
-    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_SpGroup_Union_final_20161018.gdb'
+    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_SpGroup_Union_final_20161102.gdb'
     # NOTE NOTE if process interrupted incomplete file will be generated
 
-    start_union = False  # True runs full union and clean up of union, false runs just the clean up of att table
+    start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
 
     # Species to include or exclude depending on if use is running all sp group or a subset of a group
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = ['Amphibians', 'Arachnids', 'Birds', 'Conifers','Corals','Ferns','Clames']
+    skipgroup = ['Amphibians','Arachnids' 'Birds', 'Conifers','Corals','Ferns','Flowering_Plants']
 
     # if True will only union entid listed in ent list if false will union all entid in gdb
     subset_group = False
@@ -49,19 +49,19 @@ if Range:
     ]
 
 else:
-    inlocation = r'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\CriticalHabitat'
+    inlocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat'
     filetype = 'CH_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_spGroup_Union_inter_201600907.gdb'
-    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_SpGroup_Union_final_20160907.gdb'
+    out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_spGroup_Union_inter_20161102.gdb'
+    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_SpGroup_Union_final_20161102.gdb'
     # NOTE NOTE if process interupted incomplete file will be generated
 
     start_union = False  # True runs full union and clean up of union, false runs just the clean up of att table
 
     # Species to include or exclude depending on if use is running all sp group or a subset of a group
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = []
+    skipgroup = ['Amphibians','Arachnids', 'Birds','Corals','Crustaceans','Flowering','Lichens','Insects','Mammals','Reptiles','Snails','Conifers','Corals','Ferns', 'Clams']
 
     # if True will only union entid listed in ent list if false will union all entid in gdb
     subset_group = False

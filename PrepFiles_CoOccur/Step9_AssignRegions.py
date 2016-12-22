@@ -12,13 +12,13 @@ masterlist = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabl
 
 # Spatial library to be considered can put both and get on file, or one at a time for a list of just range or crithab
 # locations
-inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
+inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat'
 
 # region fc
 regionsfc = r'L:\Workspace\ESA_Species\ForCoOccur\Composites\GDB\ArchivedComposites\20160503\CompositesForClip\Boundaries.gdb\State_territories_NAD83'
 
 # output files
-outfile = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_SpeciesRegions_all_20161130.csv'
+outfile = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_SpeciesRegions_all_20161208.csv'
 
 # TODO split this so that it generates one file for the Range and one for the Critical habitat in one run
 # TODO clean up code to be more streamlined see acres table

@@ -17,7 +17,7 @@ proj_Folder = 'L:\projections'
 desiredProject = 'L:\projections\WGS 1984 Web Mercator (auxiliary sphere).prj'
 prjABB = 'WebMercator'
 # temp worksapce
-templocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\temp6.gdb'
+templocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\temp4.gdb'
 
 # Index position of the sp group name within the file name
 groupindex = 1
@@ -263,27 +263,27 @@ for fc in fclist:
 
 print "Files with unknown projections {0}".format(unknownprj)
 
-while True:
-    user_input = raw_input('Do you want to delete temp files Yes or No: ')
-    if user_input in ['Yes', 'No']:
-        break
-    else:
-        print('\nThat is not a valid option! Type Yes or No')
-
-if user_input == 'Yes':
-    tempfiles = os.listdir(path)
-    for v in tempfiles:
-        delfile = os.path.join(path, v)
-        if os.path.exists(delfile):
-            shutil.rmtree(delfile)
-            print "deleting {0}".format(delfile)
-    print "deleting {0}".format(path)
-    if os.path.exists(path):
-        shutil.rmtree(path)
-elif user_input == 'No':
-    print "Temp files found at {0}".format(path)
-else:
-    print 'Del failed'
+# while True:
+#     user_input = raw_input('Do you want to delete temp files Yes or No: ')
+#     if user_input in ['Yes', 'No']:
+#         break
+#     else:
+#         print('\nThat is not a valid option! Type Yes or No')
+#
+# if user_input == 'Yes':
+#     tempfiles = os.listdir(path)
+#     for v in tempfiles:
+#         delfile = os.path.join(path, v)
+#         if os.path.exists(delfile):
+#             shutil.rmtree(delfile)
+#             print "deleting {0}".format(delfile)
+#     print "deleting {0}".format(path)
+#     if os.path.exists(path):
+#         shutil.rmtree(path)
+# elif user_input == 'No':
+#     print "Temp files found at {0}".format(path)
+# else:
+#     print 'Del failed'
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

@@ -2,8 +2,10 @@ import pandas as pd
 import os
 import datetime
 
-inFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\FinalTables\yearly'
-final_folder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\FinalTables\Collapased'
+inFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\HUC12\FinalTables' \
+           '\PercentOverlap'
+final_folder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\HUC12' \
+               '\FinalTables\Collapased'
 
 
 def createdirectory(new_dir):
@@ -35,13 +37,13 @@ collapse_dict = {
     'Christmas Trees': ['XmasTrees'],
     'Managed Forests': ['ManagedForests'],
     'CullPiles': ['CullPiles'],
-    'Golfcourses':['usa']
+    'Golfcourses': ['usa']
 }
 
-final_cols = ['HUC12', 'Acres', 'Corn', 'Cotton', 'Rice', 'Soybeans', 'Wheat','Vegetables and Ground Fruit',
-              'Orchards and Vineyards','Other Grains', 'Other RowCrops', 'Other Crops', 'Pasture', 'Cattle Ear Tag',
-              'Developed','Managed Forests', 'Nurseries','Open Space Developed', 'Right of Way', 'CullPiles',
-              'Cultivated', 'NonCultivated','Pine seed orchards', 'Christmas Trees','Golfcourses', 'Mosquito Control',
+final_cols = ['HUC12', 'Acres', 'Corn', 'Cotton', 'Rice', 'Soybeans', 'Wheat', 'Vegetables and Ground Fruit',
+              'Orchards and Vineyards', 'Other Grains', 'Other RowCrops', 'Other Crops', 'Pasture', 'Cattle Ear Tag',
+              'Developed', 'Managed Forests', 'Nurseries', 'Open Space Developed', 'Right of Way', 'CullPiles',
+              'Cultivated', 'NonCultivated', 'Pine seed orchards', 'Christmas Trees', 'Golfcourses', 'Mosquito Control',
               'Wide Area Use']
 
 start_time = datetime.datetime.now()
@@ -50,26 +52,28 @@ print "Start Time: " + start_time.ctime()
 createdirectory(final_folder)
 collapse_groups = collapse_dict.keys()
 list_csv = os.listdir(inFolder)
-
+list_csv = [csv for csv in list_csv if csv.endswith('csv')]
 for csv in list_csv:
+    print csv
     in_csv = inFolder + os.sep + csv
 
     out_csv = final_folder + os.sep + csv
     in_df = pd.read_csv(in_csv, dtype=object)
-    out_df = in_df[['HUC12', 'Acres_prj_x']]
+    out_df = in_df[['HUC12', 'Acres_prj']]
     out_df.columns = ['HUC12', 'Acres']
 
     in_df = pd.read_csv(in_csv)
     for group in collapse_groups:
-        print group
+        # print group
         current_df = in_df[collapse_dict[group]]
         current_df = current_df.iloc[:, :].apply(pd.to_numeric)
-
         out_df[group] = current_df.sum(axis=1)
+
     out_df = out_df.reindex(columns=final_cols)
     out_df['Mosquito Control'] = out_df['Mosquito Control'].map(lambda x: 100)
     out_df['Wide Area Use'] = out_df['Wide Area Use'].map(lambda x: 100)
-    out_df.to_csv(out_csv)
+    out_df = out_df.fillna(0)
+    out_df.to_csv(out_csv, index=False)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

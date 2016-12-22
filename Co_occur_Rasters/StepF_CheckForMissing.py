@@ -11,9 +11,9 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 
 # User input variable
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # Spatial Library for range files
-infolder = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite.gdb'
+infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'
 group_fc_index = 1 # location of the sp group in the file name
 # also need to set the hard code to the index number for the cols reference in loop species
 

@@ -10,7 +10,7 @@
 import arcpy
 import os
 
-inlocation_species = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_GAP_pilotSpecies.gdb'
+inlocation_species = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_GapPilotSpecies.gdb'
 
 if inlocation_species[-3:] != 'gdb':
     workspaces = os.listdir(inlocation_species)

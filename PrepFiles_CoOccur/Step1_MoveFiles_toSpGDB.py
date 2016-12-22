@@ -13,7 +13,7 @@ import pandas as pd
 # master species list
 masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
 # the location of the spatial library
-outfolder = 'L:\Workspace\ESA_Species\Range\Tool_Terrestrial\Range'
+outfolder = r'L:\Workspace\ESA_Species\Range\NAD83\RawAquatics\orginalFiles\topo\GDB\DBF'
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
 file_dict = 'L:\Workspace\ESA_Species\ForCoOccur\Dicts\Move_Files_SpatialLibrary.csv'
 # col index from master

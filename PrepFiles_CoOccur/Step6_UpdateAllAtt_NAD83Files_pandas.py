@@ -16,7 +16,7 @@ import pandas as pd
 
 # inputs
 masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
-infolder = 'L:\Workspace\ESA_Species\Range\NAD83\Clams.gdb'  # folder or GDB
+infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat\Fishes.gdb'  # folder or GDB
 addition_gdb_filename = ''  # if the gdbs are not just the species group
 # Species groups that do not need to be run
 skiplist = []

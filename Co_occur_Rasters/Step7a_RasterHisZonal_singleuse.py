@@ -1,6 +1,6 @@
 import os
 import datetime
-import functions
+import pandas as pd
 
 import arcpy
 from arcpy.sa import *
@@ -9,14 +9,62 @@ from arcpy.sa import *
 # TODO add snap layer to zonal histogram
 # in folder with many gdbs or a single gdb
 
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Clipped_GAP.gdb'
-#L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_Albers
-#
-region = 'CONUS'
+# r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
+# r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
-#, CONUS, PR,AS,VI,CNMI,
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
+
+# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_Albers
+# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area - Copy - Cnonag
+# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area - Copy_2' - aa
+# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area - Copy_3= cdl
+# [u'Albers_Conical_Equal_Area_CONUS_Nurseries_euc', u'Albers_Conical_Equal_Area_CONUS_ROW_euc',
+# u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
+# u'zAlbers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc',
+# u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc', u'Albers_Conical_Equal_Area_CONUS_CullPiles_euc',
+# u'Albers_Conical_Equal_Area_CONUS_NonCultivated_2015_euc', u'Albers_Conical_Equal_Area_CONUS_Cultivated_2015_euc',
+# u'Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc',
+# u'Albers_Conical_Equal_Area_CONUS_Carbaryl_UseFootprint_160824_euc',
+# u'Albers_Conical_Equal_Area_CONUS_Chlorpyrifos_UseFootprint_160815_euc',
+# u'Albers_Conical_Equal_Area_CONUS_Malathion_UseFootprint_160815_euc',
+# u'Albers_Conical_Equal_Area_CONUS_Methomyl_UseFootprint_160815_euc',
+# u'Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse_euc',
+# u'Albers_Conical_Equal_Area_CONUS_CattleEarTag_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_110x2_euc',
+# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc',
+# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc',
+# 'Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_50x2_euc',
+# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_70x2_euc',
+# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_80x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_90x2_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_bermudagrass2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc']
+# use_list = [u'Albers_Conical_Equal_Area_CONUS_Developed_euc']
+
+
+# use_list = [u'Albers_Conical_Equal_Area_CONUS_Nurseries_euc', u'Albers_Conical_Equal_Area_CONUS_ROW_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc', u'Albers_Conical_Equal_Area_CONUS_CullPiles_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_NonCultivated_2015_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_Cultivated_2015_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CattleEarTag_euc', u'Albers_Conical_Equal_Area_CONUS_bermudagrass2_euc']
+#
+use_list = [u'Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Carbaryl_UseFootprint_160824_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Chlorpyrifos_UseFootprint_160815_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Malathion_UseFootprint_160815_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_UseFootprint_160815_euc']
+
+# use_list = [u'Albers_Conical_Equal_Area_CONUS_CDL_1015_110x2_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_50x2_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_70x2_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_80x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_90x2_euc',
+#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc']
+# , CONUS, PR,AS,VI,CNMI,
 Range = False
-temp_file = "temp_table"
+temp_file = "temp_table25"
+region = 'CONUS'
 
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
@@ -26,14 +74,15 @@ start_file = 0
 
 use_location_base = 'L:\Workspace\UseSites\ByProject'
 if Range:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\Range'
+
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\Range'
 
 else:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Results_Fall2016\Agg_layers\Ag'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\AAs\CriticalHabitat'
 
 symbology_dict = {
     'CONUS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr',
-    #'CONUS':r'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse.lyr',
+    # 'CONUS':r'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse.lyr',
     'HI': r'L:\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
     'AK': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_Albers_AK_CattleEarTag_euc.lyr',
     'AS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
@@ -46,10 +95,11 @@ symbologyLayer = symbology_dict[region]
 use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
 print use_location
 arcpy.env.workspace = use_location
-count_use = len(arcpy.ListRasters())
+
 current_use = 1
 list_raster_use = (arcpy.ListRasters())
-list_raster_use = [raster for raster in list_raster_use if not raster.startswith('z')]
+list_raster_use = [raster for raster in list_raster_use if raster in use_list]
+count_use = len(list_raster_use)
 print list_raster_use
 
 
@@ -63,7 +113,7 @@ def create_gdb(out_folder, out_name, out_path):
 
 def zone(zone, raster, temp_table, extent):
     start_zone = datetime.datetime.now()
-    arcpy.env.extent= extent
+    arcpy.env.extent = extent
     arcpy.CreateTable_management("in_memory", temp_table)
     # temp = "in_memory\\temp_table"
     temp = "in_memory" + os.sep + temp_table
@@ -85,8 +135,7 @@ def zone(zone, raster, temp_table, extent):
 
 
 # loops runs zonal histogram for union files
-def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm, temp_table,extent):
-
+def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm, temp_table, extent):
     # In paths
     path_fc, in_species = os.path.split(inZoneData)
     sp_group = in_species.split("_")[1]
@@ -117,23 +166,33 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm,
     runID = in_species + "_" + use_nm_folder
     outpath_final = out_tables
     csv = runID + '.csv'
+    dbf = csv.replace('csv', 'dbf')
 
     if os.path.exists(outpath_final + os.sep + csv):
         print ("Already completed run for {0}".format(runID))
-    else:
+
+    elif not os.path.exists(outpath_final + os.sep + dbf):
         print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_nm))
         arcpy.CheckOutExtension("Spatial")
 
         arcpy.MakeRasterLayer_management(Raster(inZoneData), "zone")
         arcpy.MakeRasterLayer_management(Raster(inValueRaster), "rd_lyr")
         arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
-        temp_return, start_time = zone("zone", "rd_lyr", temp_table,extent)
+        temp_return, start_time = zone("zone", "rd_lyr", temp_table, extent)
 
         arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
-        dbf = csv.replace('csv', 'dbf')
+
         arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
+
         print 'Final file can be found at {0}'.format(outpath_final + os.sep + csv)
         print "Completed in {0}\n".format((datetime.datetime.now() - start_time))
+
+    elif not os.path.exists(outpath_final + os.sep + csv):
+        list_fields = [f.name for f in arcpy.ListFields(outpath_final + os.sep + dbf)]
+        att_array = arcpy.da.TableToNumPyArray((outpath_final + os.sep + dbf), list_fields)
+        att_df = pd.DataFrame(data=att_array)
+        att_df['LABEL'] = att_df['LABEL'].map(lambda x: x).astype(str)
+        att_df.to_csv(outpath_final + os.sep + csv)
 
 
 start_time = datetime.datetime.now()
@@ -157,19 +216,20 @@ if inlocation_species[-3:] != 'gdb':
             print raster_in
             raster_file = Raster(in_sp)
             sp_extent = raster_file.extent
-            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin),str(sp_extent.XMax),str(sp_extent.YMax))
+            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin), str(sp_extent.XMax),
+                                              str(sp_extent.YMax))
             print extent
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
                 use_path = use_location + os.sep + use_nm
-                print 'Starting use layer {0}, use {1} of {2}'.format(use_path,current_use, count_use)
+                print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file,extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, extent)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
                 current_use += 1
-            current_use =1
+            current_use = 1
 else:
     path, gdb = os.path.split(inlocation_species)
 
@@ -187,20 +247,20 @@ else:
             print raster_in
             raster_file = Raster(in_sp)
             sp_extent = raster_file.extent
-            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin),str(sp_extent.XMax),str(sp_extent.YMax))
+            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin), str(sp_extent.XMax),
+                                              str(sp_extent.YMax))
             print extent
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
                 use_path = use_location + os.sep + use_nm
-                print 'Starting use layer {0}, use {1} of {2}'.format(use_path,current_use, count_use)
+                print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file,extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, extent)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
                 current_use += 1
-            current_use =1
-
+            current_use = 1
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

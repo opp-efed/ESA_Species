@@ -3,10 +3,10 @@ import os
 import csv
 import pandas as pd
 
-inlocation_species = r'L:\Workspace\ESA_Species\Range\HUC12\AquWoes_FWS_NMFS\HUC12\GDB'
-out_text_cross = r'L:\Workspace\ESA_Species\Range\HUC12\AquWoes_FWS_NMFS\HUC12\GDB\R_SpAquWoE_ByHUC12.txt'
-out_text_huc12 = r'L:\Workspace\ESA_Species\Range\HUC12\AquWoes_FWS_NMFS\HUC12\GDB\R_HUC12_SpAquWoE.csv'
-out_csv_lists = r'L:\Workspace\ESA_Species\Range\HUC12\AquWoes_FWS_NMFS\HUC12\GDB\R_SpAquWoE_long.csv'
+inlocation_species = r'L:\Workspace\ESA_Species\Range\HUC12\AllSpe\HUC12\GDB'
+out_text_cross = r'L:\Workspace\ESA_Species\Range\HUC12\AllSpe\HUC12\GDB\R_AllSpe_FWS_NMFS_ByHUC12.txt'
+out_text_huc12 = r'L:\Workspace\ESA_Species\Range\HUC12\AllSpe\HUC12\GDB\R_AllSpe_FWS_NMFS.csv'
+out_csv_lists = r'L:\Workspace\ESA_Species\Range\HUC12\AllSpe\HUC12\GDB\R_AllSpe_long.csv'
 workspaces = os.listdir(inlocation_species)
 gdb_workspaces = [v for v in workspaces if v.endswith('.gdb')]
 print gdb_workspaces

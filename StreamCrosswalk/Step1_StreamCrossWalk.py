@@ -17,13 +17,13 @@ gc.enable()
 
 # NOTE NOTE if the script is stop and a table was start but not completed for a species it  must be deleted before
 # Starting the script again.  If a table has been created the script will move to the next species
-#ws = "L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\CriticalHabitat"
-ws = "L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\Range"
+ws = "L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\CriticalHabitat"
+#ws = "L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\Range"
 name_dir = 'AllSp_MasterList_20161124'
 
 # GDB with all Composites to Run
-MasterSpeFC = r"L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb"
-#MasterSpeFC = r"L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite.gdb"
+# MasterSpeFC = r"L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb"
+MasterSpeFC = r"L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite.gdb"
 # File type to flag the species with
 path, gdb = os.path.split(MasterSpeFC)
 file_type = gdb.split('_')[0]
@@ -57,7 +57,7 @@ huc15 = "L:\NHDPlusV2\NHDPlus15\NHDSnapshot\Hydrography\NHDFlowline.shp"
 huc16 = "L:\NHDPlusV2\NHDPlus16\NHDSnapshot\Hydrography\NHDFlowline.shp"
 huc17 = "L:\NHDPlusV2\NHDPlus17\NHDSnapshot\Hydrography\NHDFlowline.shp"
 huc18 = "L:\NHDPlusV2\NHDPlus18\NHDSnapshot\Hydrography\NHDFlowline.shp"
-# List of species to consider
+# List of species to consider --DD species
 species_to_run = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13', '14', '16', '17', '19', '20', '21',
                   '23', '24', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '37', '38', '39', '40', '41',
                   '42', '43', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59',
@@ -197,7 +197,9 @@ species_to_run = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13',
                   '10725', '10726', '10733', '10734', '10736', '10903', '10908', '10727', '10910', '11175', '11176',
                   '11191', '11192', '11193', '10728', '10729', '10732', '10909', '11260', '11333', 'NMFS125', 'NMFS134',
                   'NMFS137', 'NMFS139', 'NMFS159', 'NMFS166', '11340', 'FWS001', 'NMFS175', 'NMFS178', 'NMFS180'
+
                   ]
+
 
 
 # timers

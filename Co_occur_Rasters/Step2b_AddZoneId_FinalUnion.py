@@ -1,7 +1,7 @@
 import arcpy
 
 
-infolder = r'L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
+infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_SpGroup_Union_final_20161102.gdb'
 
 arcpy.env.workspace = infolder
 fclist = arcpy.ListFeatureClasses()

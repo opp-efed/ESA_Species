@@ -24,8 +24,7 @@ if Range:
                            r'\R_SpGroupComposite_ExplodeComp_20161102.gdb'
     out_explode_location_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
                                  r'\R_SpGroupComposite_ExplodeCompFinal_20161102.gdb'
-    out_clip_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
-                        r'\R_SpGroupComposite_clipComp_20161102.gdb'
+    out_clip_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional\R_SpGroupComposite_clipComp_20161102.gdb'
     out_intersect_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
                              r'\R_SpGroupComposite_IntersectRegion_20161102.gdb'
     out_spatial_join_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional' \
@@ -54,8 +53,7 @@ else:
                            r'\CH_SpGroupComposite_ExplodeComp_20161102.gdb'
     out_explode_location_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
                                  r'\CH_SpGroupComposite_ExplodeCompFinal_20161102.gdb'
-    out_clip_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
-                        r'\CH_SpGroupComposite_clipComp_20161102.gdb'
+    out_clip_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional\CH_SpGroupComposite_clipComp_20161102.gdb'
     out_intersect_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \
                              r'\CH_SpGroupComposite_IntersectRegion_20161102.gdb'
     out_spatial_join_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional' \

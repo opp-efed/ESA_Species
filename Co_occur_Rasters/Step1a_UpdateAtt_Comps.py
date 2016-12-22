@@ -72,18 +72,21 @@ def updateFilesloop(inGDB, final_fields, speinfodict):
         with arcpy.da.UpdateCursor (fc,  addedfield ) as lookup:
             for row in lookup:
                 entid = row[0]
-                listspecies = speinfodict[entid]
-                index = 1
-                for field in addedfield:
-                    if field == 'EntityID':
-                        continue
-                    else:
-                        indexfield = final_fieldsindex[field]
-                        value = listspecies[indexfield]
-                        row[index] = value
-                        lookup.updateRow(row)
+                try:
+                    listspecies = speinfodict[entid]
+                    index = 1
+                    for field in addedfield:
+                        if field == 'EntityID':
+                            continue
+                        else:
+                            indexfield = final_fieldsindex[field]
+                            value = listspecies[indexfield]
+                            row[index] = value
+                            lookup.updateRow(row)
 
-                        index += 1
+                            index += 1
+                except:
+                    print entid
             output_update(fc, field)
         fclist_field = [f.name for f in arcpy.ListFields(fc) if not f.required]
         for field in fclist_field:

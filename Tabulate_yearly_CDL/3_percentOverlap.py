@@ -7,7 +7,7 @@ import datetime
 # User defined variables:
 
 # date in YYYYMMDD
-date = 20161004
+date = 20161215
 # Master use list by region and cell size
 
 # TODO extract this from he master use table and add in what to do with the feature layers to the functions
@@ -15,14 +15,16 @@ date = 20161004
 type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
-in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Indiv_Year_raw\Range\SumBySpecies'
-sp_col_count = 7  # number of cols with species info  base 0 found in the sum overlap table
+in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP_species\YearlyCDL\SumSpecies'
+#in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\SumBySpecies_Yearly'
+sp_col_count = 2  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102_CONUS.csv'
+in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_CONUS_GAP_Species.csv'
 
 # Location where output and temp files will be saved
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Indiv_Year_raw\Range\PercentOverlap'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP_species\YearlyCDL\PercentOverlap'
+#out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\PercentOverlap'
 # out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
 # out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'
 
@@ -71,6 +73,8 @@ def createdirectory(DBF_dir):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+
+createdirectory(out_folder)
 # 1) Read in master tables
 
 # read in master use list with cell size info for each use
@@ -84,11 +88,14 @@ for folder in list_folder:
     current_folder = in_raw_sum_overlap + os.sep + folder
     list_csv = os.listdir(current_folder)
     for csv in list_csv:
+        print csv
         out_location = out_folder + os.sep + folder
         createdirectory(out_location)
         out_csv = out_location + os.sep + csv
         current_csv = in_raw_sum_overlap + os.sep + folder + os.sep + csv
         sum_df = pd.read_csv(current_csv, dtype=object)
+        print sum_df
+
         sum_df['EntityID'] = sum_df['EntityID'].astype(str)
         sum_df.sort_values(['EntityID'])
         header_sp = sum_df.columns.values.tolist()
@@ -96,7 +103,6 @@ for folder in list_folder:
 
         sum_df = sum_df.iloc[:, (sp_col_count + 1):(len(header_sp))].apply(pd.to_numeric)  # convert to numeric
         sum_df = pd.concat([species_info_df, sum_df], axis=1)  # concat back to sp df
-
 
         acres_df = pd.read_csv(in_acres_table)
         acres_df['EntityID'] = acres_df['EntityID'].astype(str)
@@ -111,23 +117,23 @@ for folder in list_folder:
         acres_in_sum = acres_df[acres_df['EntityID'].isin(sum_df_found_in_acres['EntityID']) == True]
         acres_in_sum.sort_values(['EntityID'])
 
-
         filter_species_info = species_info_df[
             species_info_df['EntityID'].isin(sum_df_found_in_acres['EntityID']) == True]
-
-
-        total_acres = acres_in_sum[('TotalAcresOnLand')].map(lambda x: x).astype(float)
         region = 'CONUS'
+        total_acres = acres_in_sum[('TotalAcresOnLand')].map(lambda x: x).astype(float)
+
 
         cnt_cha = len(region)
 
         acres_in_sum = acres_in_sum[['EntityID',('Acres_' + str(region))]]
         acres_in_sum[('Acres_' + str(region))] = acres_in_sum[('Acres_' + str(region))].map(lambda x: x).fillna(-1)
+        print acres_in_sum
 
         sum_df_acres = pd.merge(sum_df, acres_in_sum, on='EntityID', how='left')
+        #print sum_df_acres
         cells_list = use_cell_size[region]
 
-        percent_overlap_df_full = calculation(type_use, sum_df_acres, 30, region)
+        percent_overlap_df_full = calculation(type_use, sum_df_acres , 30, region)
         final_df = pd.concat([species_info_df, percent_overlap_df_full], axis=1)
 
         final_df.drop('Unnamed: 0', axis=1, inplace=True)

@@ -3,8 +3,8 @@ import datetime
 import os
 import pandas as pd
 
-inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\NonAg'
-outFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\HUC12\Tabulated\YearlyCDL\NonAg\HUC12_csv'
+inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\HUC12\NonAg'
+outFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\HUC12\NonAg\HUC12_csv'
 
 
 def createdirectory(DBF_dir):

@@ -2,9 +2,9 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\MergeByUse'
-out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps'
-out_csv = out_location + os.sep + 'CONUS_SprayInterval_20161129_c.csv'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\MergeByUse'
+out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray'
+out_csv = out_location + os.sep + 'R_CONUS_SprayInterval_20161221_Ag.csv'
 
 master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601102.xlsx'
 
@@ -65,6 +65,7 @@ for csv in list_csv:
                 pass  # column in list not in table
 
     out_df = pd.merge(out_df, in_df, on='EntityID', how='left')
+    out_df  = out_df.fillna(0)
 
     # out_df= out_df.reindex(columns=col)
     out_df.to_csv(out_csv)

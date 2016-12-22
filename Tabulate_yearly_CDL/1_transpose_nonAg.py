@@ -4,8 +4,8 @@ import datetime
 import arcpy
 
 
-csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\Agg_layers\NonAg\Range'
-outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Agg_layers\NonAg\Transposed'
+csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\PilotGAP\NonAg'
+outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP species\NonAg'
 out_folders =  os.listdir(csvFolder)
 
 

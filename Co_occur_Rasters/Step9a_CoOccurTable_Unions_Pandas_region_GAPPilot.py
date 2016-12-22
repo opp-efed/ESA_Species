@@ -6,8 +6,8 @@ import pandas as pd
 # Title - summarizes overlap results by speceis group and the zoneID
 pilot_speceis = ['4', '18', '20', '51', '83', '116', '129', '138', '139', '140', '142', '151', '173', '175', '192',
                  '200', '1240', '6097']
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\PilotGAP'
-out_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\PilotGAP\SumOverlap_2.csv'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\PilotGAP\NonAg'
+out_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\PilotGAP\NonAg\SumOverlap_2.csv'
 # master list
 
 

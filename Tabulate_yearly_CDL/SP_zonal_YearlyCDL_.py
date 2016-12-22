@@ -8,12 +8,12 @@ from arcpy.sa import *
 
 # in folder with many gdbs or a single gdb
 
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Clipped_GAP.gdb'
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_GapPilotSpecies.gdb'
 
 region = 'CONUS'
 
 Range = True
-temp_file = "temp_table1"
+temp_file_master = "temp_table11"
 
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
@@ -21,16 +21,15 @@ start_file = 0
 
 # Use sites
 
-
 if Range:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Results_Fall2016\Indiv_Year_raw'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\PilotGAP\Yearly_2'
 
 else:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\YearlyCDL\CriticalHabitat'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Indiv_Year_raw\CriticalHabitat'
 
-symbologyLayer = r'L:\Workspace\UseSites\CDL_Reclass\CDL_2014_rec.lyr'
+symbologyLayer = r'L:\Workspace\UseSites\CDL_Reclass\CDL_2010_rec.lyr'
 
-use_location = r"L:\Workspace\UseSites\CDL_Reclass\CDL_GenClass11_1015_161031_euc.gdb"
+use_location = r"L:\Workspace\UseSites\CDL_Reclass\CDL_2010.gdb"
 print use_location
 arcpy.env.workspace = use_location
 count_use = len(arcpy.ListRasters())
@@ -68,6 +67,7 @@ def zone(zone, raster, temp_table, extent):
         pass
     print "Completed Zonal Histogram"
 
+
     return temp, start_zone
 
 
@@ -100,27 +100,31 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm,
         os.mkdir(out_results + os.sep + use_nm_folder)
 
     out_tables = out_results + os.sep + use_nm_folder
-    runID = in_species + "_" + use_nm
+    print out_tables
+    runID = in_species + "_Albers_Conical_Equal_Area_" + use_nm
     print runID
+
     outpath_final = out_tables
     csv = runID + '.csv'
 
-    if os.path.exists(outpath_final + os.sep + csv):
-        print ("Already completed run for {0}".format(runID))
-    else:
-        print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_nm))
-        arcpy.CheckOutExtension("Spatial")
+    print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_nm))
+    arcpy.CheckOutExtension("Spatial")
 
-        arcpy.MakeRasterLayer_management(Raster(inZoneData), "zone")
-        arcpy.MakeRasterLayer_management(Raster(inValueRaster), "rd_lyr")
-        arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
-        temp_return, start_time = zone("zone", "rd_lyr", temp_table, extent)
+    arcpy.Delete_management("rd_lyr")
+    arcpy.Delete_management("zone")
 
-        arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
-        dbf = csv.replace('csv', 'dbf')
-        arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
-        print 'Final file can be found at {0}'.format(outpath_final + os.sep + csv)
-        print "Completed in {0}\n".format((datetime.datetime.now() - start_time))
+    arcpy.MakeRasterLayer_management(Raster(inZoneData), "zone")
+    arcpy.MakeRasterLayer_management(Raster(inValueRaster), "rd_lyr")
+    arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
+    temp_return, start_time = zone("zone", "rd_lyr", temp_table, extent)
+
+    #arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
+    dbf = csv.replace('csv', 'dbf')
+    arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
+    print 'Final file can be found at {0}'.format(outpath_final + os.sep + csv)
+    print "Completed in {0}\n".format((datetime.datetime.now() - start_time))
+
+
 
 
 start_time = datetime.datetime.now()
@@ -152,7 +156,7 @@ if inlocation_species[-3:] != 'gdb':
                 use_path = use_location + os.sep + use_nm
                 print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file_master, extent)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
@@ -180,6 +184,7 @@ else:
             print extent
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
+                temp_file = temp_file_master
                 use_path = use_location + os.sep + use_nm
                 print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
@@ -187,6 +192,7 @@ else:
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
+
                 current_use += 1
             current_use = 1
 
