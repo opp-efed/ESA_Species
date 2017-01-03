@@ -2,9 +2,9 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\MergeByUse'
-out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray'
-out_csv = out_location + os.sep + 'R_CONUS_SprayInterval_20161221_Ag.csv'
+in_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\MergeByUse'
+out_location = 'E:\Tabulated_NewComps\NL48\AG\Range'
+out_csv = out_location + os.sep + 'R_NL48_SprayInterval_20161221_All.csv'
 
 master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601102.xlsx'
 

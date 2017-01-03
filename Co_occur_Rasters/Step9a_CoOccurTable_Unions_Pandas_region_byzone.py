@@ -9,16 +9,16 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-date= 20161003
-in_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\results'
-union_gdb = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_Clipped_UnionRange_20160907.gdb'
-regional_acres_table = 'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Tables\Range_AssignSpeciesRegions_all_20160908.csv'
+date= 20161222
+in_folder = r'E:\Results_NewComps\NL48\Range'
+union_gdb = r'E:\R_Clipped_Union_MAG_20161102.gdb'
+regional_acres_table = 'E:\Tables\R_Acres_by_region_20161216.csv'
 # zoneID and the speices found in each zone
 union_fields = ['ZoneID', 'ZoneSpecies']
-regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CONUS', 'CNMI']
-skip_regions = []
+regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI']
+skip_regions = ['CONUS']
 # master list
-temp_folder = r'C:\Users\Admin\Documents\Jen\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Range\tabulated_results\byzone'
+temp_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\byzone'
 
 col_start = 1
 labelCol = 0
@@ -64,7 +64,10 @@ useLookup = {'10x2': 'Corn',
              'Carbaryl': 'Carbaryl_AA',
              'Chlorpyrifos':'Chlorpyrifos_AA',
              'Methomyl':'Methomyl_AA',
-             'Malathion':'Malathion_AA'
+             'Malathion':'Malathion_AA',
+             'usa' : 'Golf Courses',
+             'CCAP': 'Non Cultivated',
+             'NLCD':  'Non Cultivated',
 
              }
 
@@ -101,7 +104,11 @@ regionLookup = {'10x2': ['CONUS'],
                 'Carbaryl': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
                 'Chlorpyrifos': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
                 'Methomyl': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
-                'Malathion': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI']
+                'Malathion': ['AK', 'AS', 'CNMI','CONUS','GU', 'HI', 'PR', 'VI'],
+                'usa':['AK','GU','HI','PR','CONUS'],
+                'CCAP':['AS', 'CNMI', 'HI', 'PR', 'VI'], #GU, VI  Missing?
+                'NLCD': ['PR'],
+
                 }
 
 # cols to include from master
@@ -250,6 +257,7 @@ def check_species_regions (region_location_table, sp_ent_list, region , use):
 
     region_table_df['EntityID'] = region_table_df['EntityID'].astype(str)
     filterd_df = region_table_df[region_table_df['EntityID'].isin(sp_ent_list) == True]
+    print filterd_df
 
     region_df = filterd_df[['EntityID',region]]
 
@@ -343,6 +351,7 @@ for fc in fc_list:
             use_final = use
 
         for region in regions:
+            print region, use
             if region in skip_regions:
                 continue
             check_region = regionLookup[use]

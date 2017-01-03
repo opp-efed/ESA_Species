@@ -10,10 +10,10 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
 date = 20161221
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\Transposed_Spray'
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\SumSpecies'
+in_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\transposed'
+out_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\SumSpecies'
 
-union_gdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'
+union_gdb = r'E:\R_Clipped_Union_MAG_20161102.gdb'
 
 # zoneID and the speices found in each zone
 union_fields = ['ZoneID', 'ZoneSpecies']

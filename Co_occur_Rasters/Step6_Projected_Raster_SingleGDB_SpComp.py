@@ -7,10 +7,10 @@ import pandas as pd
 # Title - Re-projects union raster into projection by region
 # in and out location
 
-inGDB = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Clipped_MaxArea.gdb'
-outfolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection'
-regional_acres_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161102.csv'
-midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\temp.gdb'
+inGDB = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Clipped_MaxArea.gdb'
+outfolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection'
+regional_acres_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
+midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\temp_2.gdb'
 
 
 # inGDB = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Clipped_MaxArea.gdb'
@@ -18,13 +18,13 @@ midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\C
 # regional_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102.csv'
 # midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\temp_2.gdb'
 
-skip_group = ['Clams', 'Corals', 'Crustaceans'  'Conifers', 'Corals',  'Ferns',  'Flowering',  'Lichens', 'Mammals', 'Reptiles', ]
+skip_group = ['Clams', 'Corals',   'Conifers', 'Corals',  'Ferns',  'Flowering',  'Lichens', 'Mammals', 'Reptiles', ]
 # projection folder
 prjFolder = "L:\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 
-skip_region = [ 'CNMI','PR', 'HI', 'AS','AK','GU','VI']
+skip_region = [ 'CNMI','PR','HI', 'AK','CONUS','GU','AS']
 
 RegionalProjection_Dict = {
     'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
@@ -45,7 +45,8 @@ Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'CNMI': 'WGS_1984_UTM_Zone_55N.prj',
                'GU': 'WGS_1984_UTM_Zone_55N.prj',
                'PR': 'StatePlane_Puerto_Rico.prj',
-               'VI': 'WGS_1984_UTM_Zone_20N.prj'
+               #'VI': 'WGS_1984_UTM_Zone_20N.prj',
+               'VI': 'StatePlane_Puerto_Rico.prj'
                }
 
 

@@ -12,70 +12,29 @@ from arcpy.sa import *
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
-
-# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_Albers
-# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area - Copy - Cnonag
-# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area - Copy_2' - aa
-# L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area - Copy_3= cdl
-# [u'Albers_Conical_Equal_Area_CONUS_Nurseries_euc', u'Albers_Conical_Equal_Area_CONUS_ROW_euc',
-# u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
-# u'zAlbers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc',
-# u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc', u'Albers_Conical_Equal_Area_CONUS_CullPiles_euc',
-# u'Albers_Conical_Equal_Area_CONUS_NonCultivated_2015_euc', u'Albers_Conical_Equal_Area_CONUS_Cultivated_2015_euc',
-# u'Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc',
-# u'Albers_Conical_Equal_Area_CONUS_Carbaryl_UseFootprint_160824_euc',
-# u'Albers_Conical_Equal_Area_CONUS_Chlorpyrifos_UseFootprint_160815_euc',
-# u'Albers_Conical_Equal_Area_CONUS_Malathion_UseFootprint_160815_euc',
-# u'Albers_Conical_Equal_Area_CONUS_Methomyl_UseFootprint_160815_euc',
-# u'Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse_euc',
-# u'Albers_Conical_Equal_Area_CONUS_CattleEarTag_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_110x2_euc',
-# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc',
-# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc',
-# 'Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_50x2_euc',
-# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_70x2_euc',
-# u'Albers_Conical_Equal_Area_CONUS_CDL_1015_80x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_90x2_euc',
-#  u'Albers_Conical_Equal_Area_CONUS_bermudagrass2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc']
-# use_list = [u'Albers_Conical_Equal_Area_CONUS_Developed_euc']
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_UTM_Zone__2S'
 
 
-# use_list = [u'Albers_Conical_Equal_Area_CONUS_Nurseries_euc', u'Albers_Conical_Equal_Area_CONUS_ROW_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc', u'Albers_Conical_Equal_Area_CONUS_CullPiles_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_NonCultivated_2015_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_Cultivated_2015_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CattleEarTag_euc', u'Albers_Conical_Equal_Area_CONUS_bermudagrass2_euc']
-#
-use_list = [u'Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Carbaryl_UseFootprint_160824_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Chlorpyrifos_UseFootprint_160815_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Malathion_UseFootprint_160815_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_UseFootprint_160815_euc']
+Range = True
+temp_file = "temp_table1"
+region = 'AS'
 
-# use_list = [u'Albers_Conical_Equal_Area_CONUS_CDL_1015_110x2_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_50x2_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_70x2_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_80x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_90x2_euc',
-#             u'Albers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc']
-# , CONUS, PR,AS,VI,CNMI,
-Range = False
-temp_file = "temp_table25"
-region = 'CONUS'
+use_location_base = 'L:\Workspace\UseSites\ByProject'
+use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
+print use_location
+arcpy.env.workspace = use_location
 
+use_list = (arcpy.ListRasters())
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
 # raster must be set to unique values as symbology to run raster histogram
 
 # Use sites
 
-use_location_base = 'L:\Workspace\UseSites\ByProject'
+
 if Range:
 
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\Range'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\Range'
 
 else:
     out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\AAs\CriticalHabitat'
@@ -92,11 +51,10 @@ symbology_dict = {
     'VI': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr'}
 
 symbologyLayer = symbology_dict[region]
-use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
-print use_location
-arcpy.env.workspace = use_location
+
 
 current_use = 1
+arcpy.env.workspace = use_location
 list_raster_use = (arcpy.ListRasters())
 list_raster_use = [raster for raster in list_raster_use if raster in use_list]
 count_use = len(list_raster_use)

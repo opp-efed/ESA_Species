@@ -15,14 +15,14 @@ date = 20161004
 type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
-in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\SumSpecies'
+in_raw_sum_overlap = r'E:\Tabulated_NewComps\NL48\AG\Range\SumSpecies'
 sp_col_count = 7  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
+in_acres_table = r'E:\Tables\R_Acres_by_region_20161216.csv'
 
 # Location where output and temp files will be saved
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\PercentOverlap'
+out_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\PercentOverlap'
 # out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
 # out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'
 
@@ -33,15 +33,20 @@ out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tab
 # regions = ['CONUS']
 
 # Dictionary that provides a list of cell size found in the suite of uses by region, previouls CNMI and VI
-use_cell_size = {
-    'CONUS': [30],
-
-}
-
+use_cell_size = {'AK': [30],
+                 'AS': [30],
+                 'CNMI': [30],
+                 'CONUS': [30],
+                 'GU': [30],
+                 'HI': [30],
+                 'PR': [30],
+                 'VI': [30]
+                 }
 
 # TODO ADD IN VECTOR OVERLAP
 def calculation(typefc, in_sum_df, cell_size, c_region):
-    range_acres_float = in_sum_df[('Acres_' + str(region))].map(lambda x: x).astype(float).map(lambda x: x).astype(
+
+    range_acres_float = in_sum_df[('Acres_' + str(c_region))].map(lambda x: x).astype(float).map(lambda x: x).astype(
         float)
     list_acres = range_acres_float.values.tolist()
     se = pd.Series(list_acres)
@@ -52,7 +57,7 @@ def calculation(typefc, in_sum_df, cell_size, c_region):
 
         acres_overlap = msq_overlap.multiply(0.000247)
         acres_overlap[('Acres')] = se.values
-        print acres_overlap
+        #print acres_overlap
 
         percent_overlap = (acres_overlap.div(acres_overlap.Acres, axis='index')) * 100
         percent_overlap[('Acres_' + str(region))] = se.values
@@ -84,6 +89,10 @@ for folder in list_folder:
     current_folder = in_raw_sum_overlap + os.sep + folder
     list_csv = os.listdir(current_folder)
     for csv in list_csv:
+        region = csv.replace("__","_")
+        region = csv.split("_")[2]
+        cells_list = 30
+
         out_location = out_folder + os.sep + folder
         createdirectory(out_location)
         out_csv = out_location + os.sep + csv
@@ -98,6 +107,7 @@ for folder in list_folder:
         sum_df = pd.concat([species_info_df, sum_df], axis=1)  # concat back to sp df
 
         acres_df = pd.read_csv(in_acres_table)
+
         acres_df['EntityID'] = acres_df['EntityID'].astype(str)
         acres_df.sort_values(['EntityID'])
 
@@ -114,15 +124,15 @@ for folder in list_folder:
             species_info_df['EntityID'].isin(sum_df_found_in_acres['EntityID']) == True]
 
         total_acres = acres_in_sum[('TotalAcresOnLand')].map(lambda x: x).astype(float)
-        region = 'CONUS'
+
 
         cnt_cha = len(region)
 
-        acres_in_sum = acres_in_sum[['EntityID', ('Acres_' + str(region))]]
+        acres_in_sum = acres_in_sum.ix[:,['EntityID', ('Acres_' + str(region))]]
         acres_in_sum[('Acres_' + str(region))] = acres_in_sum[('Acres_' + str(region))].map(lambda x: x).fillna(-1)
 
         sum_df_acres = pd.merge(sum_df, acres_in_sum, on='EntityID', how='left')
-        cells_list = use_cell_size[region]
+
 
         percent_overlap_df_full = calculation(type_use, sum_df_acres, 30, region)
         final_df = pd.concat([species_info_df, percent_overlap_df_full], axis=1)

@@ -5,8 +5,8 @@ import arcpy
 import numpy as np
 import pandas as pd
 
-csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\Range'
-outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\Transposed_Spray'
+csvFolder = r'E:\Results_NewComps\NL48\CriticalHabitat'
+outFolder= r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\transposed'
 
 interval_step = 30
 max_dis = 1501
