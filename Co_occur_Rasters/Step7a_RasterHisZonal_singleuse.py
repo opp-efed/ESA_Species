@@ -12,19 +12,19 @@ from arcpy.sa import *
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_UTM_Zone__2S'
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
 
 Range = True
-temp_file = "temp_table1"
-region = 'AS'
+temp_file = "temp_table"
+region = 'CONUS'
 
 use_location_base = 'L:\Workspace\UseSites\ByProject'
 use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
 print use_location
 arcpy.env.workspace = use_location
-
-use_list = (arcpy.ListRasters())
+use_list =['Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc']
+#use_list = (arcpy.ListRasters())
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
 # raster must be set to unique values as symbology to run raster histogram
@@ -34,7 +34,7 @@ start_file = 0
 
 if Range:
 
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\Range'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\AAs\Range'
 
 else:
     out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\AAs\CriticalHabitat'
@@ -69,9 +69,9 @@ def create_gdb(out_folder, out_name, out_path):
         arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
 
 
-def zone(zone, raster, temp_table, extent):
+def zone(zone, raster, temp_table, ):
     start_zone = datetime.datetime.now()
-    arcpy.env.extent = extent
+
     arcpy.CreateTable_management("in_memory", temp_table)
     # temp = "in_memory\\temp_table"
     temp = "in_memory" + os.sep + temp_table
@@ -93,7 +93,7 @@ def zone(zone, raster, temp_table, extent):
 
 
 # loops runs zonal histogram for union files
-def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm, temp_table, extent):
+def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm, temp_table):
     # In paths
     path_fc, in_species = os.path.split(inZoneData)
     sp_group = in_species.split("_")[1]
@@ -136,7 +136,7 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm,
         arcpy.MakeRasterLayer_management(Raster(inZoneData), "zone")
         arcpy.MakeRasterLayer_management(Raster(inValueRaster), "rd_lyr")
         arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
-        temp_return, start_time = zone("zone", "rd_lyr", temp_table, extent)
+        temp_return, start_time = zone("zone", "rd_lyr", temp_table)
 
         arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
 
@@ -173,16 +173,13 @@ if inlocation_species[-3:] != 'gdb':
         else:
             print raster_in
             raster_file = Raster(in_sp)
-            sp_extent = raster_file.extent
-            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin), str(sp_extent.XMax),
-                                              str(sp_extent.YMax))
-            print extent
+
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
                 use_path = use_location + os.sep + use_nm
                 print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
@@ -204,16 +201,13 @@ else:
         else:
             print raster_in
             raster_file = Raster(in_sp)
-            sp_extent = raster_file.extent
-            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin), str(sp_extent.XMax),
-                                              str(sp_extent.YMax))
-            print extent
+
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
                 use_path = use_location + os.sep + use_nm
                 print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
