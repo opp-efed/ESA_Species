@@ -67,7 +67,8 @@ NLAA_QualReport = ['2510', '5232', '10144', '10145', '460', '474']
 
 NE_QualReport = ['472', '473']
 
-NLAA_OutsideUse = ['598', '499', '606']
+# check on last 3 that occur on Moa why did we excluded in draft
+NLAA_OutsideUse = ['598', '499', '606','153','164','165','177']
 
 CH_NotPrudent = ['11', '1090', '1236', '1237', '1238', '1239', '1525', '2211', '3194', '4248', '7332', '10226']
 

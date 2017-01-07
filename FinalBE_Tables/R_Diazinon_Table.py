@@ -9,7 +9,7 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\R_AllUses_BE_20170105.csv'
+in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\BE_intervals\R_AllUses_BE_20170105.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
 temp_folder = r'E:\Tabulated_NewComps\FinalBETables\Diazinon'
@@ -57,7 +57,7 @@ NLAA_Extinct = [
     '1302',
     '91',
 ]
-
+# check on 70 coming up with area in HI now
 NLAA_OutsideUse = ['70', '71', '72', '75', '499', '606']
 
 LAA_AA_error = ['821', '113', '965', '3020', '10228', '6303', '1129', '5956', '9403', '10233', '770', '799',
@@ -108,7 +108,7 @@ DD_Species = ['2', '7', '19', '26', '58', '67', '69', '70', '76', '84', '88', '9
               '10297', '10298', '10299', '10300', '10301', '10485', '10517', '10910', '11175', '11176', '11191',
               '11192', '11193', '11201', '11262', 'FWS001', 'NMFS166', 'NMFS175']
 
-## RANGE
+# # RANGE
 NE_DD = ['69', '70', '76', '84', '108', '147', '196', '210', '211', '220', '223', '226', '227', '231', '233', '234',
          '255', '256', '259', '263', '264', '265', '266', '268', '274', '275', '280', '281', '282', '283', '284', '285',
          '287', '401', '418', '439', '1245', '1246', '1361', '1380', '1707', '2142', '2144', '2514', '2599', '2767',
@@ -157,9 +157,9 @@ def step_1_ED(row):
     elif row['EntityID'] in NLAA_OutsideUse:
             return 'May Affect-Outside Use'
     elif row['EntityID'] in NLAA_QualReport:
-            return 'May Affect-QualReport'
+        return 'May Affect-QualReport'
     elif row['EntityID'] in LAA_QualReport:
-            return 'May Affect-QualReport'
+        return 'May Affect-QualReport'
     elif row['EntityID'] in NE_DD:
         if row['Diazinon_ActionArea'] == 0:
             if row['EntityID'] in LAA_AA_error:
