@@ -89,7 +89,7 @@ for csv in list_csv:
     in_df = in_df.fillna(0)
     in_df['HUC12'] = in_df['HUC12'].map(lambda x: x.replace('HUC_1_', '')).astype(str)
     #huc12 = in_df['HUC12'].values.tolist()
-    in_df['HUC12'] = in_df['HUC12'].map(lambda x: '0'+x if len(x) == 11 else x).astype(str)
+
     in_df = pd.merge(in_df, all_acres, on='HUC12', how='outer')
     acres_col = in_df['Acres_prj'].map(lambda x: x).astype(float)
     in_df['Acres_prj'] = in_df['Acres_prj'].map(lambda x: x).astype(float)

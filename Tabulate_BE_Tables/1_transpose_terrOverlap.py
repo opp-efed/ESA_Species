@@ -5,8 +5,8 @@ import arcpy
 import numpy as np
 import pandas as pd
 
-csvFolder = r'E:\Results_NewComps\NL48\CriticalHabitat'
-outFolder= r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\transposed'
+csvFolder = r'E:\Results_NewComps\L48\Agg_layers\NonAg\CriticalHabitat'
+outFolder= r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\Transposed_Spray'
 
 interval_step = 30
 max_dis = 1501
@@ -52,7 +52,7 @@ for folder in out_folders:
         in_df['LABEL'] = in_df['LABEL'].astype(str)
         in_df['LABEL'] = in_df['LABEL'].map(lambda x: x.replace(',', '')).astype(long)
 
-        binned_df = in_df.groupby(pd.cut(in_df['LABEL'], bins)).sum()  # breaks out into binned intervals
+        binned_df = in_df.groupby(pd.cut(in_df['LABEL'], bins)).sum()  # breaks out into binned intervals and sums
         group_df_by_zone_sum = binned_df.transpose()  # transposes so it is Zones by interval and not interval by zone
 
         group_df_by_zone_sum = group_df_by_zone_sum.ix[1:]  # removed the summed interval row that is added when binned
@@ -66,14 +66,13 @@ for folder in out_folders:
             outcol.append(col)
 
         group_df_by_zone_sum.columns = outcol
-        print group_df_by_zone_sum
+        #print group_df_by_zone_sum
 
         group_df_by_zone_sum['ZoneID'] = group_df_by_zone_sum.index
         group_df_by_zone_sum['ZoneID'] = group_df_by_zone_sum['ZoneID'].map(lambda x: x.replace('VALUE_', '')).astype(str)
-        print group_df_by_zone_sum
+        #print group_df_by_zone_sum
 
 
-        # transposed_df.columns = out_cols
         group_df_by_zone_sum.to_csv(out_csv)
 
 end = datetime.datetime.now()

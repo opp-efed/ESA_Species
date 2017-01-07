@@ -3,15 +3,15 @@ import datetime
 import os
 
 
-in_tables_nona = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\Range\Mag_Spray\R_CONUS_SprayInterval_20161221_NonAg.csv'
-in_table_ag = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\Range\Mag_Spray\R_CONUS_SprayInterval_20161221_Ag.csv'
+in_tables_nona = 'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\CH_CONUS_SprayInterval_20170106_NonAg.csv'
+in_table_ag = 'E:\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\CH_CONUS_SprayInterval_20170106_Ag.csv'
 
-outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers'
-out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\R_MagTool_SprayDrift_20161221.csv'
+outlocation = 'E:\Tabulated_NewComps\L48\Agg_layers'
+out_csv = outlocation + os.sep + 'CH_MagTool_SprayDrift_20170106.csv'
 
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601102.xlsx'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
 
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
+in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161215.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 
 region = 'CONUS'
@@ -40,7 +40,6 @@ useLookup = {'10x2': 'Corn',
              'Cultivated': 'Cultivated',
              'NonCultivated': 'Non Cultivated',
              'PineSeedOrchards': 'Pine seed orchards',
-             'XmasTrees': 'Xmas Tree',
              'OrchardsVineyards': 'Orchards and vineyards',
              'OtherCrops': 'Other crops',
              'OtherGrains': 'Other grains',

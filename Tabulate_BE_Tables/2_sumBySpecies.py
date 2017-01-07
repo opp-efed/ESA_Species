@@ -9,49 +9,49 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-date = 20161221
-in_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\transposed'
-out_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\SumSpecies'
+date = 20170103
+in_folder = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\Transposed_Spray'
+out_folder = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\SumSpecies'
 
-union_gdb = r'E:\R_Clipped_Union_MAG_20161102.gdb'
+union_gdb = r'E:\CH_Clipped_Union_MAG_20161102.gdb'
 
 # zoneID and the speices found in each zone
 union_fields = ['ZoneID', 'ZoneSpecies']
 
 # master list
 
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601102.xlsx'
-
-table_sp_group = {'Amphibians': 'r_amphib',
-                  'Arachnids': 'r_arachn',
-                  'Birds': 'r_birds',
-                  'Clams': 'r_clams',
-                  'Conifers': 'r_conife',
-                  'Corals': 'r_corals',
-                  'Crustaceans': 'r_crusta',
-                  'Ferns': 'r_ferns',
-                  'Fishes': 'r_fishe',
-                  'Flowering': 'r_flower',
-                  'Insects': 'r_insect',
-                  'Lichens': 'r_lichen',
-                  'Mammals': 'r_mammal',
-                  'Reptiles': 'r_reptil',
-                  'Snails': 'r_snails'}
-# table_sp_group = {'Amphibians': 'ch_amphi',
-#                   'Arachnids': 'ch_arach',
-#                   'Birds': 'ch_birds',
-#                   'Clams': 'ch_clams',
-#                   'Conifers': 'ch_conife',
-#                   'Corals': 'ch_corals',
-#                   'Crustaceans': 'ch_crust',
-#                   'Ferns': 'ch_ferns',
-#                   'Fishes': 'ch_fishes',
-#                   'Flowering': 'ch_flowe',
-#                   'Insects': 'ch_insec',
-#                   'Lichens': 'ch_lichen',
-#                   'Mammals': 'ch_mamma',
-#                   'Reptiles': 'ch_repti',
-#                   'Snails': 'ch_snail'}
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
+#
+# table_sp_group = {'Amphibians': 'r_amphib',
+#                   'Arachnids': 'r_arachn',
+#                   'Birds': 'r_birds',
+#                   'Clams': 'r_clams',
+#                   'Conifers': 'r_conife',
+#                   'Corals': 'r_corals',
+#                   'Crustaceans': 'r_crusta',
+#                   'Ferns': 'r_ferns',
+#                   'Fishes': 'r_fishe',
+#                   'Flowering': 'r_flower',
+#                   'Insects': 'r_insect',
+#                   'Lichens': 'r_lichen',
+#                   'Mammals': 'r_mammal',
+#                   'Reptiles': 'r_reptil',
+#                   'Snails': 'r_snails'}
+table_sp_group = {'Amphibians': 'ch_amphi',
+                  'Arachnids': 'ch_arach',
+                  'Birds': 'ch_birds',
+                  'Clams': 'ch_clams',
+                  'Conifers': 'ch_conife',
+                  'Corals': 'ch_corals',
+                  'Crustaceans': 'ch_crust',
+                  'Ferns': 'ch_ferns',
+                  'Fishes': 'ch_fishe',
+                  'Flowering': 'ch_flowe',
+                  'Insects': 'ch_insec',
+                  'Lichens': 'ch_lichen',
+                  'Mammals': 'ch_mamma',
+                  'Reptiles': 'ch_repti',
+                  'Snails': 'ch_snail'}
 group_index = 1  # place to extract species group from tablename
 SkipUses = []
 # TODO add lookup for all use based on use file name
@@ -67,6 +67,7 @@ def extract_union_if_from_shapes(union_gdb_extract, fc_union_extract, union_fiel
     union_ent_dict = {}
     current_species_occurs_union = {}
     in_fc = union_gdb_extract + os.sep + fc_union_extract
+    print in_fc
     with arcpy.da.SearchCursor(in_fc, union_fields_extract) as cursor:
         for row in cursor:
             row_id = str(row[0])
@@ -180,7 +181,7 @@ main_out_header = []
 # Generates the list of union FC so that the ZoneSpecies and TableID can be extracted
 arcpy.env.workspace = union_gdb
 fc_list = arcpy.ListFeatureClasses()
-# print(fc_list)
+print(fc_list)
 
 zoneID_dict = {}
 zone_species_dict = {}

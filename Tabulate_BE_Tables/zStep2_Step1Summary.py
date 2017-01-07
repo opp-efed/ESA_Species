@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import datetime
 
-in_table = r'E:\Sum_CoOccur_SprayDriftIntervals_20161003.csv'
+in_table = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\CH_NL48_SprayInterval_20170103_All.csv'
 out_tables =r'E:'
 regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CONUS', 'CNMI']
 

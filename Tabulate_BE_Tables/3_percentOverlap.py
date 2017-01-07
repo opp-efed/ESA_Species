@@ -7,7 +7,7 @@ import datetime
 # User defined variables:
 
 # date in YYYYMMDD
-date = 20161004
+date = 20170103
 # Master use list by region and cell size
 
 # TODO extract this from he master use table and add in what to do with the feature layers to the functions
@@ -15,14 +15,17 @@ date = 20161004
 type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
-in_raw_sum_overlap = r'E:\Tabulated_NewComps\NL48\AG\Range\SumSpecies'
+#in_raw_sum_overlap = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\SumSpecies'
+in_raw_sum_overlap = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\SumSpecies'
 sp_col_count = 7  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
-in_acres_table = r'E:\Tables\R_Acres_by_region_20161216.csv'
+#in_acres_table = r'E:\Tables\CH_Acres_by_region_20161215.csv'
+in_acres_table = r'E:\Tables\CH_Acres_by_region_20161215.csv'
 
 # Location where output and temp files will be saved
-out_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\PercentOverlap'
+#out_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\PercentOverlap'
+out_folder = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\PercentOverlap'
 # out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
 # out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'
 
@@ -89,8 +92,10 @@ for folder in list_folder:
     current_folder = in_raw_sum_overlap + os.sep + folder
     list_csv = os.listdir(current_folder)
     for csv in list_csv:
+
         region = csv.replace("__","_")
-        region = csv.split("_")[2]
+        region = region.split("_")[2]
+        print region
         cells_list = 30
 
         out_location = out_folder + os.sep + folder

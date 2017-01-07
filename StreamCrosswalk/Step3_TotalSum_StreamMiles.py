@@ -2,12 +2,12 @@ import os
 import pandas as pd
 
 import datetime
-masterlist ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20160907.xlsx'
+masterlist ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
 
 #inFolder = 'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\SteamCrosswalk\Aqu_species_MasterList20160819\CSV'
-inFolder = 'C:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\SteamCrosswalk\All_species_inaBin_Master_20160819\CSV'
-outlocation ='C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Tables'
-outfile = 'All_species_inaBin_Master_20160908' + '.csv'
+inFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\DD_streamSummary\CSV'
+outlocation ='L:\Workspace\ESA_Species\Step3\ToolDevelopment\StreamCrosswalks\DD_streamSummary'
+outfile = 'All_DD_Species_20170103' + '.csv'
 
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Range_Filename', 'Des_CH', 'CH_GIS',
                 'CH_Filename']

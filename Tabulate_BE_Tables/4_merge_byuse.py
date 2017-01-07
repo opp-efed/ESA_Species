@@ -2,8 +2,11 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'E:\Tabulated_NewComps\NL48\AG\Range\PercentOverlap'
-out_location = 'E:\Tabulated_NewComps\NL48\AG\Range\MergeByUse'
+in_folder = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\PercentOverlap'
+out_location = 'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\MergeByUse'
+
+# in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\PercentOverlap'
+# out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'
 # col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'Corn', 'Corn/soybeans', 'Corn/wheat',
 #            'Corn/grains', 'Cotton', 'Cotton/wheat', 'Cotton/vegetables', 'Rice', 'Soybeans', 'Soybeans/cotton',
 #            'Soybeans/wheat', 'Soybeans/grains', 'Wheat', 'Wheat/vegetables', 'Wheat/grains',
