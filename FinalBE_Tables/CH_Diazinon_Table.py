@@ -21,40 +21,23 @@ col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_a
                'VegetablesGroundFruit_DiazBuffer', 'OrchardsVineyards_DiazBuffer', 'Diazinon_ActionArea',
                'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED', 'Step 2 ED Comment', 'Cattle Eartag Only'
                ]
-NE_Extinct = [
-    '19',
-    '26',
-    '68',
-    '122',
-    '141',
-    '6345',
-    '9433',
-    '9435',
-    '9437',
-    '9445',
-    '9447',
-    '9451',
-    '9455',
-    '9463',
-    '9481',
-    '10582',
-]
+NE_Extinct = ['19', '26', '68', '122', '141', '6345', '9433', '9435', '9437', '9445', '9447', '9451', '9455', '9463',
+              '9481', '10582']
 
-NLAA_Extinct = [
-    '16',
-    '23',
-    '64',
-    '77',
-    '93',
-    '100',
-    '105',
-    '109',
-    '191',
-    '1953',
-    '78',
-    '1302',
-    '91',
-]
+NLAA_Extinct = ['16', '23', '64', '77', '93', '100', '105', '109', '191', '1953', '78', '1302', '91']
+
+NLAA_CattleEartag = ['34', '54', '57', '185', '199', '266', '280', '281', '282', '283', '284', '285', '406', '431',
+                     '432', '446', '496', '497', '506', '507', '514', '523', '533', '538', '548', '559', '560', '561',
+                     '576', '581', '594', '614', '621', '626', '630', '634', '635', '645', '648', '659', '660', '671',
+                     '673', '674', '685', '686', '710', '717', '767', '769', '775', '779', '780', '782', '827', '832',
+                     '840', '869', '871', '884', '888', '916', '917', '919', '928', '939', '952', '958', '961', '981',
+                     '993', '1001', '1010', '1020', '1027', '1032', '1050', '1074', '1086', '1092', '1102', '1111',
+                     '1117', '1132', '1134', '1136', '1137', '1138', '1140', '1141', '1151', '1154', '1159', '1163',
+                     '1174', '1186', '1194', '1196', '1198', '1205', '1207', '1208', '1248', '1249', '1258', '1283',
+                     '1349', '1400', '1710', '1831', '1968', '2860', '2934', '4238', '4766', '6617', '7610', '7617',
+                     '7805', '9001', '10223', '10228']
+
+LAA_CattleEartag = ['27', '79', '1707', '10517', ]
 
 LAA_AA_error = ['85', '130', '142', '490', '491', '492', '493', '494', '495', '611', '616', '684', '731', '806', '866',
                 '1052', '1058', '1126', '1129', '1189', '1202', '1233', '1250', '1256', '1257', '1261', '1989', '3385',
@@ -68,7 +51,7 @@ NLAA_QualReport = ['2510', '5232', '10144', '10145', '460', '474']
 NE_QualReport = ['472', '473']
 
 # check on last 3 that occur on Moa why did we excluded in draft
-NLAA_OutsideUse = ['598', '499', '606','153','164','165','177']
+NLAA_OutsideUse = ['598', '499', '606', '153', '164', '165', '177']
 
 CH_NotPrudent = ['11', '1090', '1236', '1237', '1238', '1239', '1525', '2211', '3194', '4248', '7332', '10226']
 
@@ -259,6 +242,16 @@ def cattle_ear_tag(row):
                 return 'Yes'
 
 
+def apply_ed_cattleeartag(row, column):
+    if row['EntityID'] in NLAA_CattleEartag:
+        return 'NLAA-Cattle Eartag and LAA-Overlap'
+    if row['EntityID'] in LAA_CattleEartag:
+        return 'LAA-Cattle Eartag and LAA-Overlap'
+    else:
+        value = row[column]
+        return value
+
+
 def clean_up_columns(row, column):
     if row['Des_CH'] == 'Not Prudent':
         return 'CritHab Found Not Prudent'
@@ -308,6 +301,8 @@ collapsed_df['Cattle Eartag Only'] = collapsed_df.apply(lambda row: cattle_ear_t
 
 collapsed_df['Step 1 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 1 ED'), axis=1)
 collapsed_df['Step 2 ED'] = collapsed_df['Step 2 ED Comment'].map(lambda x: x.split('-')[0])
+collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: apply_ed_cattleeartag(row, 'Step 2 ED Comment'),
+                                                       axis=1)
 collapsed_df['Step 2 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 2 ED'), axis=1)
 
 final_df = collapsed_df.reindex(columns=col_reindex)

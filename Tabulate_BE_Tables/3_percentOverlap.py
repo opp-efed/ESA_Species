@@ -16,7 +16,7 @@ type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
 #in_raw_sum_overlap = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\SumSpecies'
-in_raw_sum_overlap = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\SumSpecies'
+in_raw_sum_overlap = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\SumSpecies'
 sp_col_count = 7  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
@@ -25,7 +25,7 @@ in_acres_table = r'E:\Tables\CH_Acres_by_region_20161215.csv'
 
 # Location where output and temp files will be saved
 #out_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\PercentOverlap'
-out_folder = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\PercentOverlap'
+out_folder = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\PercentOverlap'
 # out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
 # out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'
 
@@ -101,6 +101,9 @@ for folder in list_folder:
         out_location = out_folder + os.sep + folder
         createdirectory(out_location)
         out_csv = out_location + os.sep + csv
+        # CHECK FOR MISSING TABLE WHEN RUN A SECOND TIME
+        # if not os.path.exists(out_csv):
+            #print '\n new table{0}'.format(out_csv)
         current_csv = in_raw_sum_overlap + os.sep + folder + os.sep + csv
         sum_df = pd.read_csv(current_csv, dtype=object)
         sum_df['EntityID'] = sum_df['EntityID'].astype(str)

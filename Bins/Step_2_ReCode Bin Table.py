@@ -2,12 +2,12 @@ import os
 import pandas as pd
 import datetime
 
-FileNew = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\Update_Fall2016\ArchivedData\UpdatedBins_20161115.xlsx'
-SheetName = 'UpdatedBins_20161115'
+FileNew = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\UpdatedBins_20170106.xlsx'
+SheetName = 'UpdatedBins_20170106'
 indexstart = 8
 indexstop = 18
-outLocation = 'C:\Users\JConno02\Documents\Projects\ESA\Bins\Update_Fall2016'
-outname = 'Recode_BinTable_asof_20161115'
+outLocation = 'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError'
+outname = 'Recode_BinTable_asof_20170106'
 
 start_script = datetime.datetime.now()
 print "Script started at: {0}".format(start_script)

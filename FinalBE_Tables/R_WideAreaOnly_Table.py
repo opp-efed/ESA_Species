@@ -24,41 +24,10 @@ col_reindex =  ['EntityID',  'comname', 'sciname','family', 'status_text','pop_a
 
                ]
 
-NE_Extinct = [
-    '19',
-    '26',
-    '68',
-    '122',
-    '141',
-    '6345',
-    '9433',
-    '9435',
-    '9437',
-    '9445',
-    '9447',
-    '9451',
-    '9455',
-    '9463',
-    '9481',
-    '10582',
-]
+NE_Extinct = ['19', '26', '68', '122', '141', '6345', '9433', '9435', '9437', '9445', '9447', '9451', '9455', '9463',
+              '9481', '10582']
 
-NLAA_Extinct = [
-    '16',
-    '23',
-    '64',
-    '77',
-    '93',
-    '100',
-    '105',
-    '109',
-    '191',
-    '1953',
-    '78',
-    '1302',
-    '91',
-]
-
+NLAA_Extinct = ['16', '23', '64', '77', '93', '100', '105', '109', '191', '1953', '78', '1302', '91']
 # check on 70 coming up with area in HI now
 NLAA_OutsideUse = ['70', '71', '72', '75', '499', '606']
 
@@ -70,13 +39,13 @@ LAA_QualReport = ['10485', '11175', '11176', '11191', '11192', '11193', '155', '
 
 NLAA_QualReport = ['1769', '2510', '3096', '3133', '3199', '4719', '5623', '10144', '10145', '10700', '10733', '10734',
                    '10736', 'NMFS137', '5232', '9709', '10381', 'NMFS175', 'NMFS176', '2862', 'NMFS182', '8861',
-                   ]
+                   'NMFS178','NMFS180','NMFS181']
 
 collapses_dict = {
     'Ag': ['AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765'],
-    'Cattle Eartag': ['AK_Cattle Eartag_765', 'AS_Cattle Eartag_765', 'CNMI_Cattle Eartag_765',
-                      'CONUS_Cattle Eartag_765', 'GU_Cattle Eartag_765', 'HI_Cattle Eartag_765',
-                      'PR_Cattle Eartag_765'],
+    'Cattle Eartag': ['AK_Cattle Eartag_0', 'AS_Cattle Eartag_0', 'CNMI_Cattle Eartag_0',
+                      'CONUS_Cattle Eartag_0', 'GU_Cattle Eartag_0', 'HI_Cattle Eartag_0',
+                      'PR_Cattle Eartag_0'],
     'Christmas Trees': ['CONUS_Christmas Trees_765'],
     'Corn': ['CONUS_Corn_765'],
     'Cotton': ['CONUS_Cotton_765'],

@@ -13,50 +13,20 @@ in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\BE_intervals\R_AllUses_BE
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
 temp_folder = r'E:\Tabulated_NewComps\FinalBETables\Diazinon'
-out_csv = temp_folder + os.sep + 'R_FinalBE_DiazinonOverlap_20170106.csv'
+out_csv = temp_folder + os.sep + 'R_FinalBE_DiazinonOverlap_20170109.csv'
 sp_index_cols = 12
 col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group', 'Des_CH',
                'Critical_Habitat_',
                'CH_GIS', 'Migratory', 'Migratory_', 'Orchards and Vineyards', 'Vegetables and Ground Fruit',
                'Cattle Eartag', 'Nurseries', 'Nurseries_DiazBuffer', 'VegetablesGroundFruit_DiazBuffer',
-               'OrchardsVineyards_DiazBuffer', 'Diazinon_ActionArea', 'Step 1 ED', 'Step 1 ED Comment','Step 2 ED',
+               'OrchardsVineyards_DiazBuffer', 'Diazinon_ActionArea', 'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED',
                'Step 2 ED Comment',
                'Cattle Eartag Only'
                ]
-NE_Extinct = [
-    '19',
-    '26',
-    '68',
-    '122',
-    '141',
-    '6345',
-    '9433',
-    '9435',
-    '9437',
-    '9445',
-    '9447',
-    '9451',
-    '9455',
-    '9463',
-    '9481',
-    '10582',
-]
+NE_Extinct = ['19', '26', '68', '122', '141', '6345', '9433', '9435', '9437', '9445', '9447', '9451', '9455', '9463',
+              '9481', '10582']
 
-NLAA_Extinct = [
-    '16',
-    '23',
-    '64',
-    '77',
-    '93',
-    '100',
-    '105',
-    '109',
-    '191',
-    '1953',
-    '78',
-    '1302',
-    '91',
-]
+NLAA_Extinct = ['16', '23', '64', '77', '93', '100', '105', '109', '191', '1953', '78', '1302', '91']
 # check on 70 coming up with area in HI now
 NLAA_OutsideUse = ['70', '71', '72', '75', '499', '606']
 
@@ -71,7 +41,22 @@ LAA_QualReport = ['10485', '11175', '11176', '11191', '11192', '11193', '155', '
 
 NLAA_QualReport = ['1769', '2510', '3096', '3133', '3199', '4719', '5623', '10144', '10145', '10700', '10733', '10734',
                    '10736', 'NMFS137', '5232', '9709', '10381', 'NMFS175', 'NMFS176', '2862', 'NMFS182', '8861',
-                   ]
+                   'NMFS178', 'NMFS180', 'NMFS181']
+
+NLAA_CattleEartag = ['57', '61', '115', '116', '146', '147', '211', '220', '226', '227', '265', '266', '268', '280',
+                     '281', '282', '283', '284', '285', '434', '488', '506', '523', '526', '533', '538', '548', '560',
+                     '561', '571', '597', '598', '605', '614', '634', '638', '640', '644', '646', '657', '664', '673',
+                     '680', '681', '685', '686', '692', '694', '704', '710', '713', '717', '735', '738', '746', '747',
+                     '760', '762', '766', '775', '776', '778', '783', '791', '793', '798', '808', '810', '812', '827',
+                     '829', '844', '861', '882', '884', '913', '925', '928', '939', '941', '952', '958', '962', '986',
+                     '1000', '1001', '1009', '1010', '1028', '1050', '1060', '1066', '1068', '1079', '1086', '1103',
+                     '1110', '1120', '1134', '1138', '1140', '1147', '1178', '1186', '1188', '1258', '1502', '1607',
+                     '1623', '1737', '2567', '2682', '2683', '2778', '2780', '2934', '3049', '3784', '3871', '4179',
+                     '4766', '5709', '6176', '6257', '6969', '7254', '8389', '9001', '10224', '10229', '10234', '10593',
+                     ]
+
+LAA_CattleEartag = ['79', '112', '198', '1707']
+
 DD_Species = ['2', '7', '19', '26', '58', '67', '69', '70', '76', '84', '88', '91', '103', '104', '108', '124',
               '125', '130', '131', '132', '134', '135', '136', '147', '152', '167', '168', '169', '171', '172',
               '173', '176', '180', '182', '187', '189', '191', '194', '196', '197', '202', '204', '205', '206',
@@ -155,7 +140,7 @@ def step_1_ED(row):
     elif row['EntityID'] in NLAA_Extinct:
         return 'May Affect-Extinct'
     elif row['EntityID'] in NLAA_OutsideUse:
-            return 'May Affect-Outside Use'
+        return 'May Affect-Outside Use'
     elif row['EntityID'] in NLAA_QualReport:
         return 'May Affect-QualReport'
     elif row['EntityID'] in LAA_QualReport:
@@ -197,9 +182,9 @@ def step_2_ED(row):
     elif row['EntityID'] in NLAA_OutsideUse:
         return 'NLAA-Outside Use'
     elif row['EntityID'] in NLAA_QualReport:
-            return 'NLAA-QualReport'
+        return 'NLAA-QualReport'
     elif row['EntityID'] in LAA_QualReport:
-            return 'LAA-QualReport'
+        return 'LAA-QualReport'
     elif row['Nurseries_DiazBuffer'] > 0.4 and row['VegetablesGroundFruit_DiazBuffer'] > 0.4 and row[
         'OrchardsVineyards_DiazBuffer'] > 0.4 and row['Cattle Eartag'] > 0.4:
         if row['EntityID'] not in DD_Species:
@@ -245,9 +230,22 @@ def cattle_ear_tag(row):
                 return 'No'
             else:
                 return 'Yes'
-def clean_up_columns(row,column):
+
+
+def apply_ed_cattleeartag(row, column):
+    if row['EntityID'] in NLAA_CattleEartag:
+        return 'NLAA-Cattle Eartag and LAA-Overlap'
+    if row['EntityID'] in LAA_CattleEartag:
+        return 'LAA-Cattle Eartag and LAA-Overlap'
+    else:
+        value = row[column]
+        return value
+
+
+def clean_up_columns(row, column):
     value = str(row[column].split('-')[0])
     return value
+
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
@@ -283,9 +281,10 @@ collapsed_df['Step 1 ED'] = collapsed_df['Step 1 ED Comment'].map(lambda x: 'NE'
 collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: step_2_ED(row), axis=1)
 collapsed_df['Cattle Eartag Only'] = collapsed_df.apply(lambda row: cattle_ear_tag(row), axis=1)
 
-collapsed_df['Step 1 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row,'Step 1 ED'), axis=1)
+collapsed_df['Step 1 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 1 ED'), axis=1)
 collapsed_df['Step 2 ED'] = collapsed_df['Step 2 ED Comment'].map(lambda x: x.split('-')[0])
-collapsed_df['Step 2 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row,'Step 2 ED'), axis=1)
+collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: apply_ed_cattleeartag(row, 'Step 2 ED Comment'), axis=1)
+collapsed_df['Step 2 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 2 ED'), axis=1)
 
 final_df = collapsed_df.reindex(columns=col_reindex)
 final_df = final_df.fillna(0)

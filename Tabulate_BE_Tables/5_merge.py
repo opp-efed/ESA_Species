@@ -2,13 +2,13 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\MergeByUse'
-out_location = r'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray'
+in_folder = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\MergeByUse'
+out_location = r'E:\Tabulated_NewComps\NL48\CriticalHabitat'
 
 # in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'
 # out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat'
 
-out_csv = out_location + os.sep + 'CONUS_SprayInterval_20170106_Ag.csv'
+out_csv = out_location + os.sep + 'NL48_SprayInterval_20170109_All.csv'
 
 master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
 
