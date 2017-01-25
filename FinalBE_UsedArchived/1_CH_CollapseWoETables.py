@@ -9,12 +9,12 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\BE_Intervals\R_AllUses_BE_20170109.csv'
+in_table = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_Intervals\CH_AllUses_BE_20170117.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
-temp_folder = r'E:\Tabulated_NewComps\FinalBETables\Range'
-out_csv = temp_folder + os.sep + 'R_Collapsed_WoE_20170109.csv'
-sp_index_cols = 12
+temp_folder = r'E:\Tabulated_NewComps\FinalBETables\DraftNewFormat'
+out_csv = temp_folder + os.sep + 'CH_Collapsed_WoE_20170117.csv'
+sp_index_cols = 15
 col_reindex = ['EntityID',  'comname', 'sciname','family', 'status_text','pop_abbrev', 'Des_CH','Critical_Habitat_',
                'Migratory','Migratory_', 'Corn', 'Cotton','Orchards and Vineyards', 'Other Crops', 'Other Grains',
                'Other RowCrops', 'Pasture', 'Rice', 'Soybeans','Vegetables and Ground Fruit', 'Wheat', 'Developed',
@@ -84,6 +84,8 @@ collapses_dict = {
                                      'PR_Orchards and vineyards_305'],
     'Diazinon_ActionArea': ['CONUS_Diazinon_AA_765', 'AK_Diazinon_AA_765', 'CNMI_Diazinon_AA_765',
                             'GU_Diazinon_AA_765', 'HI_Diazinon_AA_765', 'PR_Diazinon_AA_765', 'VI_Diazinon_AA_765'],
+
+
 
     'Federally Managed Lands': ['Federally Managed Lands'],
     'FWS Refuge': ['FWS Refuge'],

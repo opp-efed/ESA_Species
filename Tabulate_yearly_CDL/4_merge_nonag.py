@@ -19,11 +19,12 @@ for folder in list_folder:
         print csv
         csv_use =csv.replace('__','_')
         use = csv_use.split("_")[3]
+        print use
 
         out_csv = out_location + os.sep + 'Merge_'+ str(folder)+'.csv'
         current_csv = in_folder+os.sep+folder+os.sep+csv
         in_df = pd.read_csv(current_csv)
-        use = csv.split('_')[3]
+
         in_df = in_df.ix[:,['EntityID',use]]
         print in_df
 

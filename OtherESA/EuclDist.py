@@ -12,18 +12,18 @@ import datetime
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-arcpy.env.workspace = "L:\Workspace\UseSites\CDL_Reclass\CDL_GenClass11_1015_161031.gdb"
-arcpy.env.Scratchworkspace = r'L:\Workspace\UseSites\CDL_Reclass\temp5.gdb'
+arcpy.env.workspace = "L:\Workspace\UseSites\hold.gdb"
+arcpy.env.Scratchworkspace = r'L:\Workspace\UseSites\scratch.gdb'
 rast_list = arcpy.ListRasters()
 rast_list = [raster for raster in rast_list  if not raster.startswith('z')]
 rast_list =[raster for raster in rast_list if raster.split("_")[1] =='2015']
-outtemp = r'L:\Workspace\UseSites\CDL_Reclass\temp5.gdb'
-outbase = r'L:\Workspace\UseSites\CDL_Reclass\CDL_GenClass11_1015_161031_euc.gdb'
+outtemp = r'L:\Workspace\UseSites\scratch.gdb'
+outbase = r'L:\Workspace\UseSites\hold.gdb'
 arcpy.CheckOutExtension("Spatial")
 
 for raster in rast_list:
-    arcpy.env.workspace = "L:\Workspace\UseSites\CDL_Reclass\CDL_GenClass11_1015_161031.gdb"
-    in_raster = "L:\Workspace\UseSites\CDL_Reclass\CDL_GenClass11_1015_161031.gdb" +os.sep+raster
+    arcpy.env.workspace = "L:\Workspace\UseSites\hold.gdb"
+    in_raster = "L:\Workspace\UseSites\hold.gdb" +os.sep+raster
     start_loop = datetime.datetime.now()
 
     print '\nStarting: {0}'.format(raster)
@@ -40,7 +40,7 @@ for raster in rast_list:
         arcpy.gp.EucDistance_sa("in_raster", temp_raster, "1500", "in_raster")
 
     if not arcpy.Exists(out_raster):
-        arcpy.env.workspace = r"L:\Workspace\UseSites\CDL_Reclass\CDL_GenClass11_1015_161031_euc.gdb"
+        arcpy.env.workspace = r"L:\Workspace\UseSites\hold.gdb"
         print out_raster
         outraster = Int(Raster(temp_raster))
         outraster.save(out_raster)

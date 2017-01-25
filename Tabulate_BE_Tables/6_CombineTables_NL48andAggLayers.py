@@ -2,14 +2,14 @@ import pandas as pd
 import datetime
 import os
 
-in_table_ag = r'E:\Tabulated_NewComps\L48\Agg_layers\AAs\CriticalHabitat\CH_AA_SprayInterval_20170106_All.csv'
+in_table_ag = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\CH_NL48_SprayInterval_20170109_All.csv'
 
-outlocation = 'E:\Tabulated_NewComps\L48\Agg_layers\AAs\CriticalHabitat'
-out_csv = outlocation + os.sep + 'CH_AA_SprayInterval_cleaned_20170105.csv'
+outlocation = 'E:\Tabulated_NewComps\NL48\CriticalHabitat'
+out_csv = outlocation + os.sep + 'CH_NL48_SprayInterval_20170109_All_cleaned.csv'
 
 master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
 
-master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
+master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','	WoE Summary Group','Source of Call final BE-Range']
 
 regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI','AS','CONUS']
 

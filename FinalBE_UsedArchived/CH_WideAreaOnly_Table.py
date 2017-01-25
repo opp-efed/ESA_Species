@@ -9,11 +9,11 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-in_table = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_intervals\CH_AllUses_BE_20170106.csv'
+in_table = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_intervals\CH_AllUses_BE_20170109.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
 temp_folder = r'E:\Tabulated_NewComps\FinalBETables\WideArea'
-out_csv = temp_folder + os.sep + 'CH_FinalBE_WideAreaOnly_20170106.csv'
+out_csv = temp_folder + os.sep + 'CH_FinalBE_WideAreaOnly_20170109.csv'
 sp_index_cols = 12
 col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Des_CH', 'Critical_Habitat_',
                'Migratory', 'Migratory_', 'WideAreaOnly', 'Corn', 'Cotton', 'Orchards and Vineyards', 'Other Crops',
@@ -35,6 +35,44 @@ NE_QualReport = ['472', '473']
 # check on last 3 that occur on Moa why did we excluded in draft
 NLAA_OutsideUse = ['598', '499', '606','153','164','165','177']
 
+# dict for no spray drift
+# collapses_dict = {    'Ag': ['AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+#     'Cattle Eartag': ['AK_Cattle Eartag_0',  'CNMI_Cattle Eartag_0',
+#                       'CONUS_Cattle Eartag_0', 'GU_Cattle Eartag_0', 'HI_Cattle Eartag_0',
+#                       'PR_Cattle Eartag_0'],
+#     'Christmas Trees': ['CONUS_Christmas Trees_0'],
+#     'Corn': ['CONUS_Corn_0'],
+#     'Cotton': ['CONUS_Cotton_0'],
+#     'Cull Piles': ['CONUS_Cull Piles_0'],
+#     'Developed': ['AK_Developed_0',  'CNMI_Developed_0', 'CONUS_Developed_0',
+#                   'GU_Developed_0', 'HI_Developed_0', 'PR_Developed_0'],
+#     'Golf Courses': ['AK_Golf Courses_0', 'GU_Golf Courses_0', 'HI_Golf Courses_0', 'PR_Golf Courses_0',
+#                      'CONUS_Golfcourses_0'],
+#     'Managed Forest': ['CONUS_Managed Forest_0', 'AK_Managed Forests_0', 'CNMI_Managed Forests_0',
+#                        'GU_Managed Forests_0', 'HI_Managed Forests_0', 'PR_Managed Forests_0',
+#                        'VI_Managed Forests_0'],
+#     'Nurseries': ['AK_Nurseries_0', 'CONUS_Nurseries_0', 'HI_Nurseries_0', 'PR_Nurseries_0',
+#                   'VI_Nurseries_0'],
+#     'Open Space Developed': ['AK_Open Space Developed_0',
+#                              'CNMI_Open Space Developed_0', 'CONUS_Open Space Developed_0',
+#                              'GU_Open Space Developed_0', 'HI_Open Space Developed_0',
+#                              'PR_Open Space Developed_0'],
+#     'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_0', 'HI_Orchards and vineyards_0',
+#                                'PR_Orchards and vineyards_0'],
+#     'Other Crops': ['CONUS_Other Crops_0', 'HI_Other crops_0', 'PR_Other crops_0'],
+#     'Other Grains': ['CONUS_Other Grains_0', 'HI_Other grains_0', 'PR_Other grains_0'],
+#     'Other RowCrops': ['CONUS_Other RowCrops_0'],
+#     'Pasture': ['CONUS_Pasture_0', 'AK_Pasture/Hay/Forage_0', 'HI_Pasture/Hay/Forage_0', ],
+#     'Pine seed orchards': ['CONUS_Pine seed orchards_0'],
+#     'Rice': ['CONUS_Rice_0'],
+#     'Right of Way': ['AK_Right of Way_0', 'CNMI_Right of Way_0', 'CONUS_Right of Way_0',
+#                      'GU_Right of Way_0', 'HI_Right of Way_0', 'PR_Right of Way_0'],
+#     'Soybeans': ['CONUS_Soybeans_0'],
+#     'Vegetables and Ground Fruit': ['HI_Veg Ground Fruit_0', 'PR_Veg Ground Fruit_0',
+#                                     'CONUS_Vegetables and Ground Fruit_0'],
+#     'Wheat': ['CONUS_Wheat_0'],
+#     'Mosquito Control': [],
+#     'Wide Area Use': []}
 collapses_dict = {
     'Ag': ['AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765'],
     'Cattle Eartag': ['AK_Cattle Eartag_765',  'CNMI_Cattle Eartag_765',

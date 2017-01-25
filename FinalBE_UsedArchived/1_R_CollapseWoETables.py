@@ -9,12 +9,12 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\BE_Intervals\R_AllUses_BE_20170109.csv'
+in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\BE_intervals\R_AllUses_BE_20170117.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
-temp_folder = r'E:\Tabulated_NewComps\FinalBETables\Range'
-out_csv = temp_folder + os.sep + 'R_Collapsed_WoE_20170109.csv'
-sp_index_cols = 12
+temp_folder = r'E:\Tabulated_NewComps\FinalBETables\DraftNewFormat'
+out_csv = temp_folder + os.sep + 'R_Collapsed_WoE_20170117.csv'
+sp_index_cols = 15
 col_reindex = ['EntityID',  'comname', 'sciname','family', 'status_text','pop_abbrev', 'Des_CH','Critical_Habitat_',
                'Migratory','Migratory_', 'Corn', 'Cotton','Orchards and Vineyards', 'Other Crops', 'Other Grains',
                'Other RowCrops', 'Pasture', 'Rice', 'Soybeans','Vegetables and Ground Fruit', 'Wheat', 'Developed',
@@ -44,7 +44,7 @@ collapses_dict = {
     'Wheat': ['CONUS_Wheat_0'],
     'Developed': ['CONUS_Developed_0', 'AK_Developed_0', 'CNMI_Developed_0', 'GU_Developed_0',
                   'HI_Developed_0',
-                  'PR_Developed_0', 'VI_Developed_0'],
+                  'PR_Developed_0', 'VI_Developed_0','AS_Developed_0'],
     'Managed Forests': ['CONUS_Managed Forest_0', 'AK_Managed Forests_0', 'CNMI_Managed Forests_0',
                         'GU_Managed Forests_0', 'HI_Managed Forests_0', 'PR_Managed Forests_0',
                         'VI_Managed Forests_0'],
@@ -54,18 +54,18 @@ collapses_dict = {
                              'CNMI_Open Space Developed_0',
                              'GU_Open Space Developed_0', 'HI_Open Space Developed_0',
                              'PR_Open Space Developed_0',
-                             'VI_Open Space Developed_0'],
+                             'VI_Open Space Developed_0','AS_Open Space Developed_0'],
     'Pine Seed Orchards': ['CONUS_Pine seed orchards_0'],
     'Right of Way': ['CONUS_Right of Way_0', 'AK_Right of Way_0', 'CNMI_Right of Way_0',
                      'GU_Right of Way_0',
-                     'HI_Right of Way_0', 'PR_Right of Way_0', 'VI_Right of Way_0'],
+                     'HI_Right of Way_0', 'PR_Right of Way_0', 'VI_Right of Way_0','AS_Right of Way_0'],
     'Christmas Trees': ['CONUS_Christmas Trees_0'],
     'Golfcourses': ['CONUS_Golfcourses_0', 'AK_Golf Courses_0', 'GU_Golf Courses_0',
                     'HI_Golf Courses_0',
                     'PR_Golf Courses_0'],
     'Rangeland': ['CONUS_Cattle Eartag_0', 'AK_Cattle Eartag_0', 'CNMI_Cattle Eartag_0',
                   'GU_Cattle Eartag_0',
-                  'HI_Cattle Eartag_0', 'PR_Cattle Eartag_0', 'VI_Cattle Eartag_0'],
+                  'HI_Cattle Eartag_0', 'PR_Cattle Eartag_0', 'VI_Cattle Eartag_0','AS_Cattle Eartag_0'],
     'Cull Piles': ['CONUS_Cull Piles_0'],
     'Mosquito Control': [''],
     'Wide Area Use': [''],
@@ -75,6 +75,7 @@ collapses_dict = {
     'Guam': ['GU_Ag_0'],
     'Puerto Rico': ['PR_Ag_0'],
     'Virgin Islands': ['VI_Ag_0'],
+    'American Samoa':['AS_Ag_0'],
     'Commonwealth of the Northern Mariana Islands': ['CNMI_Ag_0'],
     'Nurseries_DiazBuffer': ['CONUS_Nurseries_305', 'AK_Nurseries_305', 'HI_Nurseries_305',
                              'PR_Nurseries_305', 'VI_Nurseries_305'],
@@ -83,7 +84,9 @@ collapses_dict = {
     'OrchardsVineyards_DiazBuffer': ['CONUS_Orchards and Vineyards_305', 'HI_Orchards and vineyards_305',
                                      'PR_Orchards and vineyards_305'],
     'Diazinon_ActionArea': ['CONUS_Diazinon_AA_765', 'AK_Diazinon_AA_765', 'CNMI_Diazinon_AA_765',
-                            'GU_Diazinon_AA_765', 'HI_Diazinon_AA_765', 'PR_Diazinon_AA_765', 'VI_Diazinon_AA_765'],
+                            'GU_Diazinon_AA_765', 'HI_Diazinon_AA_765', 'PR_Diazinon_AA_765', 'VI_Diazinon_AA_765','AS_Diazinon_AA_765'],
+
+
 
     'Federally Managed Lands': ['Federally Managed Lands'],
     'FWS Refuge': ['FWS Refuge'],

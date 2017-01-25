@@ -12,19 +12,19 @@ from arcpy.sa import *
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_Albers'
 
 
-Range = True
-temp_file = "temp_table"
-region = 'CONUS'
+Range = False
+temp_file = "temp_table1"
+region = 'AK'
 
 use_location_base = 'L:\Workspace\UseSites\ByProject'
 use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
 print use_location
 arcpy.env.workspace = use_location
-use_list =['Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc']
-#use_list = (arcpy.ListRasters())
+#use_list =['Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc']
+use_list = (arcpy.ListRasters())
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
 # raster must be set to unique values as symbology to run raster histogram
@@ -34,10 +34,10 @@ start_file = 0
 
 if Range:
 
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\AAs\Range'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\Range'
 
 else:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\AAs\CriticalHabitat'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\CriticalHabitat'
 
 symbology_dict = {
     'CONUS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr',

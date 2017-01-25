@@ -8,14 +8,14 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\AllIntervals\R_NL48_SprayInterval_20161221_cleaned_20170103.csv'
+in_table = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\AllIntervals\CH_NL48_SprayInterval_20170109_All_cleaned.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
-temp_folder = r'E:\Tabulated_NewComps\FinalBETables\Range'
-out_csv = temp_folder + os.sep + 'R_NL48_Ag_NonAg_BE_Sum_CoOccur_SprayDriftIntervals_20170103.csv'
-#regions = ['AK', 'GU', 'HI', 'PR', 'VI', 'CNMI']  # CritHab NL48
+temp_folder = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_intervals'
+out_csv = temp_folder + os.sep + 'CH_NL48_Ag_NonAg_BE_Sum_CoOccur_SprayDriftIntervals_20170109.csv'
+regions = ['AK', 'GU', 'HI', 'PR', 'VI', 'CNMI']  # CritHab NL48
 #regions = ['CONUS'] #CONUS
-regions = ['AK', 'GU', 'HI', 'PR', 'VI', 'CNMI','AS'] #RANGE NL48
+#regions = ['AK', 'GU', 'HI', 'PR', 'VI', 'CNMI','AS'] #RANGE NL48
 sp_index_cols = 8
 bins = [0, 305, 765]  # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5
 

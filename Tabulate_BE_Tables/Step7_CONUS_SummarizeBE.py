@@ -10,7 +10,7 @@ import pandas as pd
 AA_run = False
 # inlocation
 in_table = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\AllIntervals\CH_MagTool_SprayDrift_20170106.csv'
-master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
+master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','	WoE Summary Group','Source of Call final BE-Range']
 # master list
 temp_folder = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_Intervals'
 out_csv = temp_folder + os.sep + 'CH_CONUS_Ag_NonAg_BE_Sum_CoOccur_SprayDriftIntervals_20170106.csv'

@@ -1,10 +1,10 @@
 import pandas as pd
 import datetime
 
-in_range_table = 'E:\Tabulated_NewComps\FinalBETables\Diazinon\R_FinalBE_DiazinonOverlap_20170109.csv'
-in_ch_table = 'E:\Tabulated_NewComps\FinalBETables\Diazinon\CH_FinalBE_DiazinonOverlap_20170106.csv'
-out_csv = 'E:\Tabulated_NewComps\FinalBETables\Diazinon\Diazinon_Mismatched_EDcall_20170109.csv'
-sp_index_cols = 12
+in_range_table = 'E:\Tabulated_NewComps\FinalBETables\DraftNewFormat\R_FinalBE_DiazinonOverlap_20170117.csv'
+in_ch_table = 'E:\Tabulated_NewComps\FinalBETables\DraftNewFormat\CH_FinalBE_DiazinonOverlap_20170117.csv'
+out_csv = 'E:\Tabulated_NewComps\FinalBETables\DraftNewFormat\Diazinon_Mismatched_EDcall_20170117.csv'
+sp_index_cols = 15
 
 col_list = ['EntityID', 'comname_x', 'sciname_x', 'family_x', 'status_text_x', 'pop_abbrev_x',
             'Group_x', 'Des_CH_x', 'Critical_Habitat__x', 'CH_GIS_x', 'Migratory_x',

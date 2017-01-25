@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
-in_wide_table ='C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\Recode_BinTable_asof_20170106.csv'
-out_csv ='C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\Recode_BinTable_asof_20170106_DDspecies.csv'
+in_wide_table ='C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\UsedFinalBE_20170110.csv'
+out_csv ='C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\UsedFinalBE_20170110_DDspecies.csv'
 
 def flag_dd_species (row):
     if row['Bin 2'].startswith('Yes'):
@@ -9,6 +9,12 @@ def flag_dd_species (row):
     elif row['Bin 3'].startswith('Yes'):
         return 'Yes'
     elif row['Bin 4'].startswith('Yes'):
+        return 'Yes'
+    elif row['Bin 2'].startswith('Food item'):
+        return 'Yes'
+    elif row['Bin 3'].startswith('Food item'):
+        return 'Yes'
+    elif row['Bin 4'].startswith('Food item'):
         return 'Yes'
     else:
         return 'No'

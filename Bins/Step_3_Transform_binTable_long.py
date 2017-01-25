@@ -1,7 +1,7 @@
 import pandas as pd
 
 in_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\Recode_BinTable_asof_20170106.csv'
-out_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\LongBins_20170106.csv'
+out_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\LongBins_20170110.csv'
 in_df = pd.read_csv(in_table)
 print in_df.columns.values.tolist()
 # in_df.drop('Unnamed: 0',axis=1,inplace=True)

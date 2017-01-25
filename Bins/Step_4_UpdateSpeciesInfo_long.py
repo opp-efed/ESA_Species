@@ -4,7 +4,7 @@ import datetime
 
 # TODO move the update of species information and species that were removed to the REcode so it is updated in wide formated then here just fileter
 current_master = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\MasterList_BinUpdated_20170106.csv'
-long_bins = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\LongBins_20170106.csv'
+long_bins = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\LongBins_20170110.csv'
 woe_csv = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\species woe taxa.csv'
 col_included = ['lead_agency', 'Group', 'comname', 'EntityID', 'sciname', 'status_text']
 col_index_bins = {'lead_agency': 1, 'Group': 2, 'comname': 3, 'EntityID': 4, 'sciname': 5, 'status_text': 6}
