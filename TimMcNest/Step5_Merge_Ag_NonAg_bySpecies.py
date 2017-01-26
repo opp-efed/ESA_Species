@@ -5,7 +5,7 @@ import datetime
 in_ag_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Tables_Fall2016\Ind_year_drift\PercentOverlap'
 in_nonag_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Tables_Fall2016\Agg_layers\NonAg\PercentOverlap'
 outfolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Tables_Fall2016\merge_ag_nonag'
-date_onfile = '20170125.csv'
+
 speHabitDict = {'94': [286, 38, 97, 90],
                 '123': [39, 41, 42, 45, 56, 148, 179, 277, 278, 281, 282, 296, 297, 298, 300, 301, 302, 303, 304, 305,
                         358, 359, 360, 556, 557, 558, 559, 562, 563, 581, 582, 583],
@@ -46,15 +46,15 @@ list_nonag = os.listdir(in_nonag_folder)
 
 
 def merge_csv(outfolder, ag_list, non_ag_list):
-    if len(ag_list)>1:
+    if len(ag_list) > 1:
         print 'Multiple csv in ag list'
-    if len(non_ag_list)>1:
+    if len(non_ag_list) > 1:
         print 'Multiple csv in non ag list'
-    in_ag_df = pd.read_csv(in_ag_folder + os.sep + ag_list[0] )
-    in_nonag_df = pd.read_csv(in_nonag_folder + os.sep + non_ag_list[0] )
+    in_ag_df = pd.read_csv(in_ag_folder + os.sep + ag_list[0])
+    in_nonag_df = pd.read_csv(in_nonag_folder + os.sep + non_ag_list[0])
     out_df = pd.concat([in_ag_df, in_nonag_df], axis=0)
-    out_df .drop('Unnamed: 0', axis=1, inplace=True)
-    out_df.to_csv(outfolder + os.sep + str(ag_list[0]),index = False)
+    out_df.drop('Unnamed: 0', axis=1, inplace=True)
+    out_df.to_csv(outfolder + os.sep + str(ag_list[0]), index=False)
 
 
 def createdirectory(DBF_dir):
@@ -79,7 +79,7 @@ for entid in entlist:
                 sp_ag = [csv for csv in list_ag if csv.split("_")[2] == entid]
                 sp_nonag = [csv for csv in list_nonag if csv.split("_")[2] == entid]
 
-                sp_ag = [csv for csv in sp_ag if csv.split("_")[3]not in ['migration', 'breeding']]
+                sp_ag = [csv for csv in sp_ag if csv.split("_")[3] not in ['migration', 'breeding']]
                 sp_nonag = [csv for csv in sp_nonag if csv.split("_")[3] not in ['migration', 'breeding']]
 
                 merge_csv(outfolder, sp_ag, sp_nonag)
@@ -89,7 +89,6 @@ for entid in entlist:
                 sp_nonag = [csv for csv in list_nonag if csv.split("_")[2] == entid]
                 sp_ag = [csv for csv in sp_ag if csv.split("_")[3] == str(species_range_break)]
                 sp_nonag = [csv for csv in sp_nonag if csv.split("_")[3] == str(species_range_break)]
-
 
                 merge_csv(outfolder, sp_ag, sp_nonag)
                 print 'Exported table for species {0}, {1}'.format(entid, species_range_break)

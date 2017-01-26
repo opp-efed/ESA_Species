@@ -24,7 +24,7 @@ speHabitDict = {'94': [286, 38, 97, 90],
                          183, 184, 185, 186, 187, 188, 189, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276,
                          277, 278, 279, 280, 281, 282, 356, 357, 358, 359, 360, 361, 424, 425, 427, 555],
 
-                '10147': [333, 335, 337, 422, 424, 426],
+                '10147': [333, 335, 337, 422, 424, 426,325,334,336,416,567,572], # added 325-572 on 1/26/2017
                 '89': [539, 541, 553, 460, 461, 462, 466, 467, 468, 469, 472, 473, 474, 475, 476, 477, 358, 443, 444],
                 '139': [30, 46, 50, 51, 52, 53, 59, 65, 70, 91, 104, 188, 193, 197, 198, 200, 222, 223, 235, 240, 253,
                         281, 283, 284],
@@ -77,7 +77,7 @@ useLookup = {'10': 'Corn',
              'bermudagrass2': 'Bermuda Grass'}
 
 def summarize_species(list_all_csv, multi, multi_break, use_index):
-    out_species_df = (pd.DataFrame(columns=['Use', 'CDL Year', 'Spray Drift', 'Count_Pref', 'Count_Full']))
+    out_species_df = (pd.DataFrame(columns=['Use', 'CDL Year', 'Spray Drift', 'Count_Suit', 'Count_Full']))
     csv_list_species = [csv for csv in list_all_csv if str(csv.split("_")[5]) == entid]
     if multi:
         csv_list_species = [csv.replace("__", "_") for csv in csv_list_species]
@@ -132,7 +132,7 @@ def summarize_species(list_all_csv, multi, multi_break, use_index):
             full_sum = int(sum_bin.get('full_sum'))
             out_species_df = out_species_df.append(
                 {'Use': str(use), 'CDL Year': int(cdl_year), 'Spray Drift': str(value),
-                 'Count_Pref': int(pref_sum), 'Count_Full': int(full_sum)},
+                 'Count_Suit': int(pref_sum), 'Count_Full': int(full_sum)},
                 ignore_index=True)
     return out_species_df
 

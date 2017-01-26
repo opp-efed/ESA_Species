@@ -22,7 +22,7 @@ speHabitDict = {'94': [286, 38, 97, 90],
                          183, 184, 185, 186, 187, 188, 189, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276,
                          277, 278, 279, 280, 281, 282, 356, 357, 358, 359, 360, 361, 424, 425, 427, 555],
 
-                '10147': [333, 335, 337, 422, 424, 426],
+                '10147': [333, 335, 337, 422, 424, 426,325,334,336,416,567,572], # added 325-572 on 1/26/2017
                 '89': [539, 541, 553, 460, 461, 462, 466, 467, 468, 469, 472, 473, 474, 475, 476, 477, 358, 443, 444],
                 '139': [30, 46, 50, 51, 52, 53, 59, 65, 70, 91, 104, 188, 193, 197, 198, 200, 222, 223, 235, 240, 253,
                         281, 283, 284],
@@ -98,8 +98,8 @@ def summarize_species(listfolder, multi, multi_break, acres_pref, acres_full):
 
         in_use_df = in_use_df.reindex(
             columns=['Use', 'CDL Year', 'Spray Drift','Count_Full', 'MSQ_Full', 'Use_Acres_Full', 'Total Acres Full',
-                     'Percent Overlap Full', 'Count_Pref', 'MSQ_Pref', 'Use_Acres_Pref', 'Total Acres Preferred',
-                     'Percent Overlap Preferred'])
+                     'Percent Overlap Full', 'Count_Suit', 'MSQ_Suit', 'Use_Acres_Suit', 'Total Acres Suitable',
+                     'Percent Overlap Suitable'])
 
         # sum_df =sum_df .iloc[:, (sp_col_count + 1):(len(header_sp))].apply(pd.to_numeric)
         in_use_df['MSQ_Full'] = in_use_df['Count_Full'].multiply(900)
@@ -107,10 +107,10 @@ def summarize_species(listfolder, multi, multi_break, acres_pref, acres_full):
         in_use_df['Total Acres Full'].fillna(acres_full, inplace=True)
         in_use_df['Percent Overlap Full'] = (in_use_df['Use_Acres_Full'].div(in_use_df['Total Acres Full'])) * 100
 
-        in_use_df['MSQ_Pref'] = in_use_df['Count_Pref'].multiply(900)
-        in_use_df['Use_Acres_Pref'] = in_use_df['MSQ_Pref'].multiply(0.000247)
-        in_use_df['Total Acres Preferred'].fillna(acres_pref, inplace=True)
-        in_use_df['Percent Overlap Preferred'] = (in_use_df['Use_Acres_Pref'].div(in_use_df['Total Acres Preferred'])) * 100
+        in_use_df['MSQ_Suit'] = in_use_df['Count_Suit'].multiply(900)
+        in_use_df['Use_Acres_Suit'] = in_use_df['MSQ_Suit'].multiply(0.000247)
+        in_use_df['Total Acres Suitable'].fillna(acres_pref, inplace=True)
+        in_use_df['Percent Overlap Suitable'] = (in_use_df['Use_Acres_Suit'].div(in_use_df['Total Acres Suitable'])) * 100
     out_csv = csv.replace('Count', 'PercentOverlap')
     in_use_df.to_csv(outlocation + os.sep + out_csv)
     print 'Exported table for species {0}, {1}'.format(entid, species_range_break)

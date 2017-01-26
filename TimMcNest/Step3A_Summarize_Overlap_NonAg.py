@@ -24,7 +24,7 @@ speHabitDict = {'94': [286, 38, 97, 90],
                          183, 184, 185, 186, 187, 188, 189, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276,
                          277, 278, 279, 280, 281, 282, 356, 357, 358, 359, 360, 361, 424, 425, 427, 555],
 
-                '10147': [333, 335, 337, 422, 424, 426],
+                '10147': [333, 335, 337, 422, 424, 426,325,334,336,416,567,572], # added 325-572 on 1/26/2017
                 '89': [539, 541, 553, 460, 461, 462, 466, 467, 468, 469, 472, 473, 474, 475, 476, 477, 358, 443, 444],
                 '139': [30, 46, 50, 51, 52, 53, 59, 65, 70, 91, 104, 188, 193, 197, 198, 200, 222, 223, 235, 240, 253,
                         281, 283, 284],
@@ -77,7 +77,7 @@ useLookup = {'10': 'Corn',
              'bermudagrass2': 'Bermuda Grass'}
 
 def summarize_species(listfolder,multi,multi_break):
-    out_species_df = (pd.DataFrame(columns=['Use', 'CDL Year', 'Spray Drift', 'Count_Pref', 'Count_Full']))
+    out_species_df = (pd.DataFrame(columns=['Use', 'CDL Year', 'Spray Drift', 'Count_Suit', 'Count_Full']))
     for folder in listfolder:
         use = folder.split("_")[1]
         use = useLookup[use]
@@ -137,7 +137,7 @@ def summarize_species(listfolder,multi,multi_break):
                 pref_sum = int(sum_bin.get('preferred_sum'))
                 full_sum = int(sum_bin.get('full_sum'))
                 out_species_df = out_species_df.append({'Use': str(use), 'CDL Year': 'NAN', 'Spray Drift': str(value),
-                                                        'Count_Pref': int(pref_sum), 'Count_Full': int(full_sum)}, ignore_index=True)
+                                                        'Count_Suit': int(pref_sum), 'Count_Full': int(full_sum)}, ignore_index=True)
 
     return out_species_df
 
@@ -156,7 +156,6 @@ for entid in entList:
     if entid == '94':
         break_species = True
         for species_range_break in ['migration','breeding','']:
-            print listfolder
 
             out_df = summarize_species(listfolder,break_species,species_range_break)
             outcsv = outlocation +os.sep+ 'SummaryTable_Count_'+str(entid) +'_'+species_range_break+ "_"+str(date)+ '.csv'

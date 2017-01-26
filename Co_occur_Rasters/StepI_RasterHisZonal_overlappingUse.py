@@ -12,14 +12,17 @@ from arcpy.sa import *
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 # r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
-inlocation_use = r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb\Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc'
+inlocation_use = r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb\Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc'
 
 out_results = r'L:\Workspace\UseSites\ByProject\Overlapping_Use'
-temp_file = "temp_table"
+temp_file = "temp_table8"
 region = 'CONUS'
 previously_run = ['zAlbers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc',
-                  'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc', 'Albers_Conical_Equal_Area_CONUS_Nurseries_euc',
-                  'Albers_Conical_Equal_Area_CONUS_ROW_euc', 'Albers_Conical_Equal_Area_CONUS_OSD_euc']
+                  'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc','Albers_Conical_Equal_Area_CONUS_Nurseries_euc',
+                  'Albers_Conical_Equal_Area_CONUS_ROW_euc','Albers_Conical_Equal_Area_CONUS_OSD_euc',
+                  'Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc','Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
+                  'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc','Albers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc'
+]
 
 # ['zAlbers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc','Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc','Albers_Conical_Equal_Area_CONUS_Nurseries_euc',
 #                'Albers_Conical_Equal_Area_CONUS_ROW_euc','Albers_Conical_Equal_Area_CONUS_OSD_euc','Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc']

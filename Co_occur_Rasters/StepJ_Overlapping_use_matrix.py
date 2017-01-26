@@ -3,21 +3,23 @@ import os
 import datetime
 
 infolder = r'L:\Workspace\UseSites\ByProject\Overlapping_Use'
-out_csv = infolder+os.sep+'Overlapping_Use_Matrix_b.csv'
+out_csv_count = infolder+os.sep+'Overlapping_Use_Matrix_count.csv'
+out_csv_acres = infolder+os.sep+'Overlapping_Use_Matrix_acres.csv'
+
 list_folder= os.listdir(infolder)
-list_folder.remove('Overlapping_Use_Matrix.csv')
-list_folder.remove('Overlapping_Use_Matrix_b.csv')
-useLookup = {'10': 'Corn',
-             '20': 'Cotton',
-             '30': 'Rice',
-             '40': 'Soybeans',
-             '50': 'Wheat',
-             '60': 'Vegetables and Ground Fruit',
-             '70': 'Orchards and Vineyards',
-             '80': 'Other Grains',
-             '90': 'Other RowCrops',
-             '100': 'Other Crops',
-             '110': 'Pasture',
+list_folder.remove('Overlapping_Use_Matrix_count.csv')
+list_folder.remove('Overlapping_Use_Matrix_acres.csv')
+useLookup = {'10x2': 'Corn',
+             '20x2': 'Cotton',
+             '30x2': 'Rice',
+             '40x2': 'Soybeans',
+             '50x2': 'Wheat',
+             '60x2': 'Vegetables and Ground Fruit',
+             '70x2': 'Orchards and Vineyards',
+             '80x2': 'Other Grains',
+             '90x2': 'Other RowCrops',
+             '100x2': 'Other Crops',
+             '110x2': 'Pasture',
              'CattleEarTag': 'Cattle Eartag',
              'Developed': 'Developed',
              'ManagedForests': 'Managed Forest',
@@ -41,6 +43,7 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 list_use_raw = useLookup.keys()
+print list_use_raw
 final_uses = sorted(useLookup.values())
 out_matrix = pd.DataFrame(index=final_uses,columns=final_uses)
 
@@ -49,13 +52,15 @@ for folder in list_folder:
     list_csv = os.listdir(current_path)
     list_csv =[csv for csv in list_csv if csv.endswith('csv')]
     for csv in list_csv:
+        print csv
         current_uses =[]
         parse_name = csv.split("_")
         for use_value in parse_name:
-            if use_value in list_use_raw:
+            if use_value in list_use_raw :
                 current_uses.append(use_value)
             else:
                 parse_name
+
         in_df = pd.read_csv(current_path+os.sep+csv)
         pixel_count = int(in_df.ix[0,'Value_0'])
         use_1 = current_uses[0]
@@ -69,7 +74,10 @@ print out_matrix
 msq_overlap = out_matrix.multiply(900)
 acres_overlap = msq_overlap.multiply(0.000247)
 #out_df = acres_overlap.round(0)
-acres_overlap.to_csv(out_csv)
+
+acres_overlap.to_csv(out_csv_acres)
+out_matrix.to_csv(out_csv_count)
+
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time
