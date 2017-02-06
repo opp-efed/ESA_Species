@@ -9,53 +9,52 @@ from arcpy.sa import *
 # TODO add snap layer to zonal histogram
 # in folder with many gdbs or a single gdb
 
-# r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
-# r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
-
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_Albers'
-
-
-Range = False
-temp_file = "temp_table1"
-region = 'AK'
+#inlocation_species =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
+#
+inlocation_species =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
+Range = True
+temp_file = "temp_table"
+region = "CONUS"
 
 use_location_base = 'L:\Workspace\UseSites\ByProject'
 use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
 print use_location
 arcpy.env.workspace = use_location
-#use_list =['Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc']
+# use_list =['Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc']
 use_list = (arcpy.ListRasters())
+
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
 # raster must be set to unique values as symbology to run raster histogram
 
 # Use sites
 
-
 if Range:
 
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\Range'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\NonAg\Range'
+
 
 else:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\CriticalHabitat'
+
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\NonAg\CriticalHabitat'
 
 symbology_dict = {
     'CONUS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr',
-    # 'CONUS':r'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse.lyr',
     'HI': r'L:\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
     'AK': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_Albers_AK_CattleEarTag_euc.lyr',
     'AS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
     'CNMI': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
     'GU': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
-    'PR': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc.lyr',
+    'PR': 'L:\Workspace\UseSites\ByProject\SymblogyLayers'
+          '\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc.lyr',
     'VI': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr'}
 
 symbologyLayer = symbology_dict[region]
 
-
 current_use = 1
 arcpy.env.workspace = use_location
 list_raster_use = (arcpy.ListRasters())
+
 list_raster_use = [raster for raster in list_raster_use if raster in use_list]
 count_use = len(list_raster_use)
 print list_raster_use
@@ -69,7 +68,7 @@ def create_gdb(out_folder, out_name, out_path):
         arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
 
 
-def zone(zone, raster, temp_table, ):
+def zone(zone_lyr, raster_lyr, temp_table, ):
     start_zone = datetime.datetime.now()
 
     arcpy.CreateTable_management("in_memory", temp_table)
@@ -78,7 +77,7 @@ def zone(zone, raster, temp_table, ):
 
     arcpy.env.overwriteOutput = True
 
-    arcpy.gp.ZonalHistogram_sa(zone, "Value", raster, temp)
+    arcpy.gp.ZonalHistogram_sa(zone_lyr, "Value", raster_lyr, temp)
     try:
 
         arcpy.AddField_management(temp, 'TableID', "TEXT", "", "", "100", "", "NULLABLE",
@@ -128,6 +127,10 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm,
 
     if os.path.exists(outpath_final + os.sep + csv):
         print ("Already completed run for {0}".format(runID))
+        # if not os.path.exists(outpath_final + os.sep + dbf):
+        #     list_fields = [f.name for f in arcpy.ListFields(outpath_final + os.sep + csv)]
+        #     att_array = arcpy.da.TableToNumPyArray((outpath_final + os.sep + csv), list_fields)
+        #     arcpy.TableToTable_conversion(att_array , outpath_final, dbf)
 
     elif not os.path.exists(outpath_final + os.sep + dbf):
         print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_nm))
@@ -138,11 +141,15 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm,
         arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
         temp_return, start_time = zone("zone", "rd_lyr", temp_table)
 
-        arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
-
-        arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
-
+        list_fields = [f.name for f in arcpy.ListFields(temp_return)]
+        att_array = arcpy.da.TableToNumPyArray((temp_return), list_fields)
+        att_df = pd.DataFrame(data=att_array)
+        att_df['LABEL'] = att_df['LABEL'].map(lambda x: x).astype(str)
+        att_df.to_csv(outpath_final + os.sep + csv)
         print 'Final file can be found at {0}'.format(outpath_final + os.sep + csv)
+        # arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
+
+
         print "Completed in {0}\n".format((datetime.datetime.now() - start_time))
 
     elif not os.path.exists(outpath_final + os.sep + csv):
@@ -172,6 +179,7 @@ if inlocation_species[-3:] != 'gdb':
             continue
         else:
             print raster_in
+
             raster_file = Raster(in_sp)
 
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
@@ -200,6 +208,7 @@ else:
             continue
         else:
             print raster_in
+
             raster_file = Raster(in_sp)
 
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)

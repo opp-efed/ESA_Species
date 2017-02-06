@@ -2,10 +2,10 @@ import pandas as pd
 import os
 import datetime
 
-inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\MagTool\Raw\GAP'
-final_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\MagTool\Collapsed'
-file_type ='R_'
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_CONUS_GAP_Species.csv'
+inFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\MagTool\Raw'
+final_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\MagTool\Collapsed'
+file_type ='CH_'
+in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161215.csv'
 
 def createdirectory(new_dir):
     if not os.path.exists(new_dir):
@@ -53,6 +53,7 @@ print "Start Time: " + start_time.ctime()
 createdirectory(final_folder)
 collapse_groups = collapse_dict.keys()
 list_csv = os.listdir(inFolder)
+list_csv = [csv for csv in list_csv if csv.endswith('.csv')]
 
 final_df = pd.read_csv(in_acres_table)
 final_df['EntityID'] = final_df['EntityID'].map(lambda x: x).astype(str)

@@ -1,6 +1,6 @@
 import os
 import datetime
-
+import pandas as pd
 import arcpy
 from arcpy.sa import *
 
@@ -8,12 +8,12 @@ from arcpy.sa import *
 
 # in folder with many gdbs or a single gdb
 
-inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_GapPilotSpecies.gdb'
+inlocation_species = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 
 region = 'CONUS'
 
 Range = True
-temp_file_master = "temp_table11"
+temp_file_master = "temp_table5"
 
 # set to a no zero number to skip x raster in the inlocation
 start_file = 0
@@ -22,14 +22,15 @@ start_file = 0
 # Use sites
 
 if Range:
-    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\PilotGAP\Yearly_2'
+    out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Indiv_Year_raw\Range'
 
 else:
     out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Indiv_Year_raw\CriticalHabitat'
 
-symbologyLayer = r'L:\Workspace\UseSites\CDL_Reclass\CDL_2010_rec.lyr'
+# NOTE NOTE MAKES SURE THE SYBOLOGY LAYER HAS ALL OF THE CATEGORIES, CDL 2013 has one more than the other years
+symbologyLayer = r'L:\Workspace\UseSites\ByProject\SymblogyLayers\CDL_2013_rec.lyr'
 
-use_location = r"L:\Workspace\UseSites\CDL_Reclass\CDL_2010.gdb"
+use_location = r"L:\Workspace\UseSites\CDL_Reclass\161031\CDL_Reclass_1015_161031.gdb"
 print use_location
 arcpy.env.workspace = use_location
 count_use = len(arcpy.ListRasters())
@@ -47,9 +48,9 @@ def create_gdb(out_folder, out_name, out_path):
         arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
 
 
-def zone(zone, raster, temp_table, extent):
+def zone(zone, raster, temp_table):
     start_zone = datetime.datetime.now()
-    arcpy.env.extent = extent
+
     arcpy.CreateTable_management("in_memory", temp_table)
     # temp = "in_memory\\temp_table"
     temp = "in_memory" + os.sep + temp_table
@@ -67,12 +68,11 @@ def zone(zone, raster, temp_table, extent):
         pass
     print "Completed Zonal Histogram"
 
-
     return temp, start_zone
 
 
 # loops runs zonal histogram for union files
-def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm, temp_table, extent):
+def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm, temp_table, ):
     # In paths
     path_fc, in_species = os.path.split(inZoneData)
     sp_group = in_species.split("_")[1]
@@ -101,30 +101,45 @@ def ZonalHist(inZoneData, inValueRaster, set_raster_symbology, region_c, use_nm,
 
     out_tables = out_results + os.sep + use_nm_folder
     print out_tables
-    runID = in_species + "_Albers_Conical_Equal_Area_" + use_nm
+    runID = in_species +"_" + use_nm
     print runID
 
     outpath_final = out_tables
     csv = runID + '.csv'
-
-    print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_nm))
-    arcpy.CheckOutExtension("Spatial")
-
-    arcpy.Delete_management("rd_lyr")
-    arcpy.Delete_management("zone")
-
-    arcpy.MakeRasterLayer_management(Raster(inZoneData), "zone")
-    arcpy.MakeRasterLayer_management(Raster(inValueRaster), "rd_lyr")
-    arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
-    temp_return, start_time = zone("zone", "rd_lyr", temp_table, extent)
-
-    #arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
     dbf = csv.replace('csv', 'dbf')
-    arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
-    print 'Final file can be found at {0}'.format(outpath_final + os.sep + csv)
-    print "Completed in {0}\n".format((datetime.datetime.now() - start_time))
+    if os.path.exists(outpath_final+os.sep+csv):
+        print 'Already completed {0}'.format(csv)
+    elif arcpy.Exists(outpath_final+os.sep+dbf):
+        list_fields = [f.name for f in arcpy.ListFields(outpath_final+os.sep+dbf)]
+        att_array = arcpy.da.TableToNumPyArray((outpath_final+os.sep+dbf), list_fields)
+        att_df = pd.DataFrame(data=att_array)
+        att_df['LABEL'] = att_df['LABEL'].map(lambda x: x).astype(str)
+        att_df.to_csv(outpath_final+os.sep+ csv)
+        print 'Exported csv {0}'.format(outpath_final+os.sep+ csv)
+    else:
+        print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_nm))
+        arcpy.CheckOutExtension("Spatial")
+
+        arcpy.Delete_management("rd_lyr")
+        arcpy.Delete_management("zone")
+
+        arcpy.MakeRasterLayer_management(Raster(inZoneData), "zone")
+        arcpy.MakeRasterLayer_management(Raster(inValueRaster), "rd_lyr")
+        arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
+        temp_return, start_time = zone("zone", "rd_lyr", temp_table)
+
+        list_fields = [f.name for f in arcpy.ListFields(temp_return)]
+        att_array = arcpy.da.TableToNumPyArray((temp_return), list_fields)
+        att_df = pd.DataFrame(data=att_array)
+        att_df['LABEL'] = att_df['LABEL'].map(lambda x: x).astype(str)
+        att_df.to_csv(outpath_final+os.sep+ csv)
 
 
+        # arcpy.TableToTable_conversion(temp_return, outpath_final, csv)
+
+        arcpy.TableToTable_conversion(temp_return, outpath_final, dbf)
+        print 'Final file can be found at {0}'.format(outpath_final+ os.sep + csv)
+        print "Completed in {0}\n".format((datetime.datetime.now() - start_time))
 
 
 start_time = datetime.datetime.now()
@@ -138,6 +153,7 @@ if inlocation_species[-3:] != 'gdb':
     count_sp = len(arcpy.ListRasters())
     count = 0
     list_raster = (arcpy.ListRasters())
+
     for raster_in in list_raster:
         count += 1
         in_sp = inlocation_species + os.sep + raster_in
@@ -147,16 +163,13 @@ if inlocation_species[-3:] != 'gdb':
         else:
             print raster_in
             raster_file = Raster(in_sp)
-            sp_extent = raster_file.extent
-            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin), str(sp_extent.XMax),
-                                              str(sp_extent.YMax))
-            print extent
+
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
                 use_path = use_location + os.sep + use_nm
                 print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file_master, extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file_master)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)
@@ -169,6 +182,8 @@ else:
     count_sp = len(arcpy.ListRasters())
     count = 0
     list_raster = (arcpy.ListRasters())
+
+
     for raster_in in list_raster:
         count += 1
         in_sp = inlocation_species + os.sep + raster_in
@@ -178,17 +193,14 @@ else:
         else:
             print raster_in
             raster_file = Raster(in_sp)
-            sp_extent = raster_file.extent
-            extent = "{0} {1} {2} {3}".format(str(sp_extent.XMin), str(sp_extent.YMin), str(sp_extent.XMax),
-                                              str(sp_extent.YMax))
-            print extent
+
             print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
             for use_nm in list_raster_use:
                 temp_file = temp_file_master
                 use_path = use_location + os.sep + use_nm
                 print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
                 try:
-                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, extent)
+                    ZonalHist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file)
                 except Exception as error:
                     print(error.args[0])
                     print "Failed on {0} with use {1}".format(raster_in, use_nm)

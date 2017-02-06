@@ -9,6 +9,8 @@ out_csv_acres = infolder+os.sep+'Overlapping_Use_Matrix_acres.csv'
 list_folder= os.listdir(infolder)
 list_folder.remove('Overlapping_Use_Matrix_count.csv')
 list_folder.remove('Overlapping_Use_Matrix_acres.csv')
+list_folder.remove('Overlapping_Use_Matrix_count.xlsx')
+list_folder.remove('~$Overlapping_Use_Matrix_count.xlsx')
 useLookup = {'10x2': 'Corn',
              '20x2': 'Cotton',
              '30x2': 'Rice',
@@ -27,18 +29,18 @@ useLookup = {'10x2': 'Corn',
              'OSD': 'Open Space Developed',
              'ROW': 'Right of Way',
              'CullPiles': 'Cull Piles',
-             'Cultivated': 'Cultivated',
-             'NonCultivated': 'Non Cultivated',
+             #'Cultivated': 'Cultivated',
+             #'NonCultivated': 'Non Cultivated',
              'PineSeedOrchards': 'Pineseed Orchards',
              'XmasTrees': 'Christmas Tree',
              'Diazinon': 'Diazinon_AA',
-             'Carbaryl': 'Carbaryl_AA',
+             #'Carbaryl': 'Carbaryl_AA',
              'Chlorpyrifos': 'Chlorpyrifos_AA',
-             'Methomyl': 'Methomyl_AA',
+             #'Methomyl': 'Methomyl_AA',
              'Malathion': 'Malathion_AA',
              'usa': 'Golf Courses',
-             'bermudagrass2': 'Bermuda Grass'}
-
+             #'bermudagrass2': 'Bermuda Grass'
+             }
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
@@ -63,6 +65,10 @@ for folder in list_folder:
 
         in_df = pd.read_csv(current_path+os.sep+csv)
         pixel_count = int(in_df.ix[0,'Value_0'])
+
+        if len(current_uses) < 2:
+            print '\nUse is  not included yet for {0}'.format(csv)
+            continue
         use_1 = current_uses[0]
         use_2 = current_uses[1]
         out_use_1 = useLookup[use_1]

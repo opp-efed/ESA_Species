@@ -9,9 +9,9 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-date = 20161201
+date = 20170130
 in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\Transposed_Yearly'
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP species\NonAg\SumSpecies'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\SumSpecies'
 union_gdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'
 
 
@@ -230,3 +230,7 @@ for fc in fc_list:
             print group_overlap_csv
             df_sumOverlap.to_csv(group_overlap_csv)
        # print main_species_infoDF
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)

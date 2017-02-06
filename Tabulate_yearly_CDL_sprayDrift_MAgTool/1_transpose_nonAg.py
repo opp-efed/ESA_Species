@@ -4,8 +4,8 @@ import datetime
 import arcpy
 
 
-csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\PilotGAP\NonAg'
-outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP species\NonAg'
+csvFolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\CriticalHabitat'
+outFolder= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\Transposed_Spray'
 out_folders =  os.listdir(csvFolder)
 
 
@@ -63,3 +63,7 @@ for folder in out_folders:
 
         use_transposed_df.to_csv(out_csv)
 
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)

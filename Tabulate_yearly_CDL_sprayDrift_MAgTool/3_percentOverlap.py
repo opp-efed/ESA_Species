@@ -15,15 +15,15 @@ date = 20161215
 type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
-in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP_species\YearlyCDL\SumSpecies'
+in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\SumSpecies'
 #in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\SumBySpecies_Yearly'
-sp_col_count = 2  # number of cols with species info  base 0 found in the sum overlap table
+sp_col_count = 7 # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_CONUS_GAP_Species.csv'
+in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
 
 # Location where output and temp files will be saved
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP_species\YearlyCDL\PercentOverlap'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\PercentOverlap'
 #out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\Range\PercentOverlap'
 # out_csv_region = out_location + os.sep + 'Percent_Overlap_all_IntervalsRegion_' + str(date) + '.csv'
 # out_csv = out_location + os.sep + 'Percent_Overlap_all_IntervalsFull_' + str(date) + '.csv'

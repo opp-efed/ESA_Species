@@ -23,7 +23,7 @@ import arcpy
 # TODO SET UP TO ADD ZONEID SO OBJECTID IS NOT USED- to prevent  objectID from change when clipped
 Range = True
 out_df = pd.DataFrame(index=(list(range(0, 1000))))
-outcsv =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Species_included_inUnion_20161212.csv'
+outcsv =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Species_included_inUnion_2016020217.csv'
 if Range:
     # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
     inlocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'

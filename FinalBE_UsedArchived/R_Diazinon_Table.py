@@ -3,6 +3,10 @@ import os
 
 import pandas as pd
 
+# NOTE 2/2/2017: There will be a change moveing for to not include the crop specific layers in HI and PR as a result the
+# veg ground fruit, orchard in  vineyard and as a result the cattle ear tag species will not match the later chemicals
+
+
 # Title - Transforms out results by zone and summarize totals by species - final output is a master sum table of results
 # by use and interval for each species
 

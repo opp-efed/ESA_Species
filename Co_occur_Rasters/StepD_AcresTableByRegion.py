@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 # Title - generates acres table for all species in each region and full spatial file
 
-out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216_b.csv'
+out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20170131.csv'
 # out table
 # in GDB with projected comp files, regional and world projection for full spatial file
 inGDB_list = [

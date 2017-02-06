@@ -9,18 +9,20 @@ import pandas as pd
 
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 # inlocation
-date = 20170109
-in_folder = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\Transposed'
-out_folder = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\SumSpecies'
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
 
-union_gdb = r'E:\CH_Clipped_Union_MAG_20161102.gdb'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\Transposed_Spray'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\SumSpecies'
+
+union_gdb = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_Clipped_Union_MAG_20161102.gdb'
 
 # zoneID and the speices found in each zone
 union_fields = ['ZoneID', 'ZoneSpecies']
 
 # master list
 
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170117.xlsx'
 #
 # table_sp_group = {'Amphibians': 'r_amphib',
 #                   'Arachnids': 'r_arachn',

@@ -2,8 +2,8 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\PercentOverlap'
-out_location = 'E:\Tabulated_NewComps\NL48\CriticalHabitat\MergeByUse'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\PercentOverlap'
+out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\MergeByUse'
 
 # in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\PercentOverlap'
 # out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'

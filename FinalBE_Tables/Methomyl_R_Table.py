@@ -6,8 +6,10 @@ import pandas as pd
 # Title - Transforms out results by zone and summarize totals by species - final output is a master sum table of results
 # by use and interval for each species
 
-# TODO add cotton
+# Per conversation with Steve on 2/1/2017 the cattle ear tag layer is use to represent pasture in HI, he feels the CCAP data is more
+# Accurate than the state data
 
+# TODO UPDATE WHEAT NUMBERS
 # inlocation
 in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\FinalBETables\Range\BE_intervals\R_AllUses_BE_20170117.csv'
 temp_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Methomyl\Overlap Tables'
@@ -103,38 +105,39 @@ collapses_dict = {
     'Corn': ['AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0', 'CONUS_Corn_0'],
     'Flybait': ['AK_Developed_0', 'AS_Developed_0', 'CNMI_Developed_0', 'CONUS_Developed_0', 'GU_Developed_0',
                 'HI_Developed_0', 'PR_Developed_0', 'VI_Developed_0'],
-    'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_0', 'HI_Orchards and vineyards_0',
-                               'PR_Orchards and vineyards_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
-    'Other Crops': ['CONUS_Other Crops_0', 'HI_Other crops_0', 'PR_Other crops_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0',
+    'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_0', 'HI_Ag_0',
+                               'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
+    'Other Crops': ['CONUS_Other Crops_0', 'HI_Ag_0', 'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0',
                     'GU_Ag_0', 'VI_Ag_0'],
-    'Other Grains': ['CONUS_Other Grains_0', 'HI_Other grains_0', 'PR_Other grains_0', 'AK_Ag_0', 'AS_Ag_0',
+    'Other Grains': ['CONUS_Other Grains_0', 'HI_Ag_0', 'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0',
                      'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
     'Other RowCrops': ['AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0',
                        'CONUS_Other RowCrops_0'],
-    'Pasture': ['AK_Pasture/Hay/Forage_0', 'HI_Pasture/Hay/Forage_0', 'CONUS_Pasture_0', 'AS_Ag_0', 'CNMI_Ag_0',
-                'GU_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Pasture':['AK_Pasture/Hay/Forage_0','HI_Cattle Eartag_0','CONUS_Pasture_0','AS_Cattle Eartag_0',
+               'CNMI_Cattle Eartag_0','GU_Cattle Eartag_0','PR_Cattle Eartag_0','VI_Cattle Eartag_0'],
     'Soybeans': ['CONUS_Soybeans_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
-    'Vegetables and Ground Fruit': ['CONUS_Vegetables and Ground Fruit_0', 'HI_Veg Ground Fruit_0',
-                                    'PR_Veg Ground Fruit_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
+    'Vegetables and Ground Fruit': ['CONUS_Vegetables and Ground Fruit_0', 'HI_Ag_0',
+                                    'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
     'Wheat': ['CONUS_Wheat_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Cotton':['CONUS_Cotton_0','AK_Ag_0','AS_Ag_0','CNMI_Ag_0','GU_Ag_0','HI_Ag_0','PR_Ag_0','VI_Ag_0'],
     'Corn_Buffer': ['AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765',
                     'CONUS_Corn_765'],
-    'Orchards and Vineyards_Buffer': ['CONUS_Orchards and Vineyards_765', 'HI_Orchards and vineyards_765',
-                                      'PR_Orchards and vineyards_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765',
+    'Orchards and Vineyards_Buffer': ['CONUS_Orchards and Vineyards_765', 'HI_Ag_765',
+                                      'PR_Ag_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765',
                                       'GU_Ag_765', 'VI_Ag_765'],
-    'Other Crops_Buffer': ['CONUS_Other Crops_765', 'HI_Other crops_765', 'PR_Other crops_765', 'AK_Ag_765',
+    'Other Crops_Buffer': ['CONUS_Other Crops_765', 'HI_Ag_765', 'PR_Ag_765', 'AK_Ag_765',
                            'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'VI_Ag_765'],
-    'Other Grains_Buffer': ['CONUS_Other Grains_765', 'HI_Other grains_765', 'PR_Other grains_765', 'AK_Ag_765',
+    'Other Grains_Buffer': ['CONUS_Other Grains_765', 'HI_Ag_765', 'PR_Ag_765', 'AK_Ag_765',
                             'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'VI_Ag_765'],
     'Other RowCrops_Buffer': ['AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
                               'VI_Ag_765', 'CONUS_Other RowCrops_765'],
-    'Pasture_Buffer': ['AK_Pasture/Hay/Forage_765', 'HI_Pasture/Hay/Forage_765', 'CONUS_Pasture_765',
+    'Pasture_Buffer': ['AK_Pasture/Hay/Forage_765', 'HI_Cattle Eartag_765', 'CONUS_Pasture_765',
                        'AS_Cattle Eartag_765', 'CNMI_Cattle Eartag_765', 'GU_Cattle Eartag_765', 'PR_Cattle Eartag_765',
                        'VI_Cattle Eartag_765'],
     'Soybeans_Buffer': ['CONUS_Soybeans_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765',
                         'PR_Ag_765', 'VI_Ag_765'],
-    'Vegetables and Ground Fruit_Buffer': ['CONUS_Vegetables and Ground Fruit_765', 'HI_Veg Ground Fruit_765',
-                                           'PR_Veg Ground Fruit_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765',
+    'Vegetables and Ground Fruit_Buffer': ['CONUS_Vegetables and Ground Fruit_765', 'HI_Ag_765',
+                                           'PR_Ag_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765',
                                            'GU_Ag_765', 'VI_Ag_765'],
     'Wheat_Buffer': ['CONUS_Wheat_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
                      'VI_Ag_765'],
@@ -142,6 +145,7 @@ collapses_dict = {
     'Fly bait_Buffer': ['AK_Developed_765', 'AS_Developed_765', 'CNMI_Developed_765', 'CONUS_Developed_765',
                         'GU_Developed_765',
                         'HI_Developed_765', 'PR_Developed_765', 'VI_Developed_765'],
+    'Cotton_Buffer':['CONUS_Cotton_765','AK_Ag_765','AS_Ag_765','CNMI_Ag_765','GU_Ag_765','HI_Ag_765','PR_Ag_765','VI_Ag_765'],
     'Methomyl_ActionArea': ['AK_Methomyl_AA_765', 'AS_Methomyl_AA_765', 'CNMI_Methomyl_AA_765', 'CONUS_Methomyl_AA_765',
                             'GU_Methomyl_AA_765', 'HI_Methomyl_AA_765', 'PR_Methomyl_AA_765', 'VI_Methomyl_AA_765'],
 
@@ -227,29 +231,39 @@ def step_2_ED(row):
 
 def flybait_tag(row):
     if row['Flybait'] >= 0:
-        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row[
-            'Other Crops'] <= 0.4 and row['Other Grains'] <= 0.4 and row[
-            'Other RowCrops'] <= 0.4 and \
-                        row['Pasture'] <= 0.4 and row['Soybeans'] <= 0.4 and row[
-            'Vegetables and Ground Fruit'] <= 0.4 and row['Wheat'] <= 0.4 and row[
-            'Bermuda Grass'] <= 0.4:
+        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row['Other Crops'] <= 0.4 and row['Other Grains'] <= 0.4 and row['Other RowCrops'] <= 0.4 and row['Pasture'] <= 0.4 and row['Soybeans'] <= 0.4 and row['Vegetables and Ground Fruit'] <= 0.4 and row['Wheat'] <= 0.4 and row['Bermuda Grass'] <= 0.4:
             if row['Step 2 ED Comment'] == 'LAA-Overlap and LAA-DD' or row['Step 2 ED Comment'] == 'NE- Step 1':
-                return 'No'
+                result= 'No'
             elif row['EntityID'] in NE_Extinct:
-                return 'No'
+                result= 'No'
             elif row['EntityID'] in NLAA_Extinct:
-                return 'No'
+                result= 'No'
             elif row['EntityID'] in NLAA_OutsideUse:
-                return 'No'
+                result = 'No'
             elif row['EntityID'] in NoGIS:
-                return 'No'
+                result ='No'
             else:
-                return 'Yes'
+                result ='Yes'
+
+            if result == 'Yes':
+                if row['Corn_Buffer'] <= 0.4 and row['Orchards and Vineyards_Buffer'] <= 0.4 and row['Other Crops_Buffer'] <= 0.4 and row['Other Grains_Buffer'] <= 0.4 and row['Other RowCrops_Buffer'] <= 0.4 and row['Pasture_Buffer'] <= 0.4 and row['Soybeans_Buffer'] <= 0.4 and row['Vegetables and Ground Fruit_Buffer'] <= 0.4 and row['Wheat_Buffer'] <= 0.4 and row['Bermuda Grass_Buffer'] <= 0.4:
+                    return 'Yes'
+                else:
+                    return 'Yes- Spray Drift Only'
+            else:
+                return 'No'
+
 
 
 # TODO Removed all steps other than last else as things are completed
 def apply_ed_flaybait(row, column):
-    if row['EntityID'] in NLAA_Flybait:
+    if row['EntityID'] in NE_Extinct:
+        return 'NE-Extinct'
+    elif row['EntityID'] in NLAA_Extinct:
+        return 'NLAA-Extinct'
+    elif row['EntityID'] in NLAA_OutsideUse:
+        return 'NLAA-Outside Use'
+    elif row['EntityID'] in NLAA_Flybait:
         return 'NLAA-Fly bait'
     elif row['EntityID'] in LAA_Flybait:
         return 'LAA-Fly bait'

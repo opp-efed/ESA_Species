@@ -2,9 +2,9 @@ import pandas as pd
 import os
 import datetime
 
-in_folder_AG = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP_species\YearlyCDL\PercentOverlap\AllYears'
-in_foldernon_NonAg_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\PilotGAP_species\NonAg\PercentOverlap\AllUses\NonAg_GapSpecies_MAG.csv'
-out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\MagTool\Raw'
+in_folder_AG = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Indiv_Year_raw\CriticalHabitat\Merge_NonAg'
+in_foldernon_NonAg_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\Merge_NonAg\NonAg_Merged.csv'
+out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\MagTool\Raw'
 
 out_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'Corn', 'Corn/soybeans', 'Corn/wheat',
            'Corn/grains', 'Cotton', 'Cotton/wheat', 'Cotton/vegetables', 'Rice', 'Soybeans', 'Soybeans/cotton',

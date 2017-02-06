@@ -1,7 +1,7 @@
 import pandas as pd
 import os
-in_folder=r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\Range\Mag_RawUse\PercentOverlap'
-out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\Range\Merge_NonAg'
+in_folder=r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\PercentOverlap'
+out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\Merge_NonAg'
 
 def createdirectory(DBF_dir):
     if not os.path.exists(DBF_dir):
@@ -25,7 +25,8 @@ for folder in list_folder:
         current_csv = in_folder+os.sep+folder+os.sep+csv
         in_df = pd.read_csv(current_csv)
 
-        in_df = in_df.ix[:,['EntityID',use]]
+
+        in_df[use] = in_df.ix[:,7]
         print in_df
 
         out_df= pd.concat([out_df,in_df],axis=0)

@@ -9,27 +9,18 @@ from arcpy.sa import *
 # TODO add snap layer to zonal histogram
 # in folder with many gdbs or a single gdb
 
-# r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
-# r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
+inlocation_use = r'L:\Workspace\UseSites\CDL_Reclass\161031\CDL_Reclass_1015_161031.gdb\CDL_2015_rec'
 
-inlocation_use = r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb\Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc'
-
-out_results = r'L:\Workspace\UseSites\ByProject\Overlapping_Use'
-temp_file = "temp_table8"
+out_results = r'L:\Workspace\UseSites\ByProject\Overlapping_Yearly'
+temp_file = "temp_table5"
 region = 'CONUS'
-previously_run = ['zAlbers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc',
-                  'Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc','Albers_Conical_Equal_Area_CONUS_Nurseries_euc',
-                  'Albers_Conical_Equal_Area_CONUS_ROW_euc','Albers_Conical_Equal_Area_CONUS_OSD_euc',
-                  'Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc','Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
-                  'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc','Albers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc'
-]
+previously_run = []
 
-# ['zAlbers_Conical_Equal_Area_CONUS_CDL_1015_30x2_euc','Albers_Conical_Equal_Area_CONUS_CDL_1015_10x2_euc','Albers_Conical_Equal_Area_CONUS_Nurseries_euc',
-#                'Albers_Conical_Equal_Area_CONUS_ROW_euc','Albers_Conical_Equal_Area_CONUS_OSD_euc','Albers_Conical_Equal_Area_CONUS_CDL_1015_20x2_euc']
 run_count = 0
 
 symbology_dict = {
     'CONUS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr',
+    #'CONUS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\CDL_2013_rec.lyr',
     # 'HI': r'L:\Workspace\UseSites\ByProject\SymblogyLayers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
     # 'AK': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_Albers_AK_CattleEarTag_euc.lyr',
     # 'AS': 'L:\Workspace\UseSites\ByProject\SymblogyLayers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
@@ -42,17 +33,36 @@ symbology_dict = {
 symbologyLayer = symbology_dict[region]
 path, current_use = os.path.split(inlocation_use)
 use_location = path
+use_location = r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb'
 print use_location
 
 arcpy.env.workspace = use_location
-list_raster_use = (arcpy.ListRasters())
-list_raster_use.remove(current_use)
-for i in previously_run:
-    if i == current_use:
-        pass
-    else:
-        list_raster_use.remove(i)
-print list_raster_use
+# list_raster_use = (arcpy.ListRasters())
+list_raster_use = [
+    'Albers_Conical_Equal_Area_CONUS_Nurseries_euc',
+    'Albers_Conical_Equal_Area_CONUS_ROW_euc',
+    'Albers_Conical_Equal_Area_CONUS_OSD_euc',
+    'Albers_Conical_Equal_Area_CONUS_ManagedForests_euc',
+    'Albers_Conical_Equal_Area_CONUS_PineSeedOrchards_euc',
+    'Albers_Conical_Equal_Area_CONUS_CullPiles_euc',
+
+    'Albers_Conical_Equal_Area_CONUS_Developed_euc',
+
+    'Albers_Conical_Equal_Area_CONUS_usa_adci_allfiles_golfcourse_euc',
+    'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc',
+
+    'Albers_Conical_Equal_Area_CONUS_CattleEarTag_euc',
+    'Albers_Conical_Equal_Area_CONUS_Diazinon_UseFootprint_1608151_euc',
+    'Albers_Conical_Equal_Area_CONUS_Chlorpyrifos_UseFootprint_160815_euc',
+    'Albers_Conical_Equal_Area_CONUS_Malathion_UseFootprint_160815_euc',
+    'Albers_Conical_Equal_Area_CONUS_Methomyl_UseFootprint_160815_euc']
+# list_raster_use.remove(current_use)
+# for i in previously_run:
+#     if i == current_use:
+#         pass
+#     else:
+#         list_raster_use.remove(i)
+
 count_use = len(list_raster_use)
 print list_raster_use
 
@@ -79,6 +89,7 @@ def zone(zone, raster, temp_table, ):
                                   "NON_REQUIRED", "")
 
         arcpy.CalculateField_management(temp, "TableID", "!OBJECTID!", "PYTHON_9.3", "")
+
     except:
         pass
     print "Completed Zonal Histogram"

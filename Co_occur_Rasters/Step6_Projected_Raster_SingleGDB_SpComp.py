@@ -18,13 +18,13 @@ midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\R
 # regional_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102.csv'
 # midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\temp_2.gdb'
 
-skip_group = ['Clams', 'Corals',   'Conifers', 'Corals',  'Ferns',  'Flowering',  'Lichens', 'Mammals', 'Reptiles', ]
+skip_group = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Fishes', 'Flowering', 'Insects', 'Lichens', 'Mammals','Snails']
 # projection folder
 prjFolder = "L:\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 
-skip_region = [ 'CNMI','PR','HI', 'AK','CONUS','GU','AS']
+skip_region = ['AK','CNMI','CONUS','AS']
 
 RegionalProjection_Dict = {
     'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',
@@ -45,8 +45,8 @@ Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'CNMI': 'WGS_1984_UTM_Zone_55N.prj',
                'GU': 'WGS_1984_UTM_Zone_55N.prj',
                'PR': 'StatePlane_Puerto_Rico.prj',
-               #'VI': 'WGS_1984_UTM_Zone_20N.prj',
-               'VI': 'StatePlane_Puerto_Rico.prj'
+               'VI': 'WGS_1984_UTM_Zone_20N.prj',
+               #'VI': 'StatePlane_Puerto_Rico.prj'
                }
 
 
@@ -189,9 +189,8 @@ for region in list_regions:
             sp_group = (raster.split)("_")[1]
             if sp_group in skip_group:
                 continue
-            if sp_group == 'Missing':
-                sp_group = (raster.split)("_")[2]
-            if sp_group not in final_sp_group_region:
+
+            elif sp_group not in final_sp_group_region:
                 continue
             else:
                 try:
