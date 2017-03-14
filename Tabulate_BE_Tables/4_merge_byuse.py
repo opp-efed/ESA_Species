@@ -2,18 +2,9 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\PercentOverlap'
-out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\MergeByUse'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\PercentOverlap'
+out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\MergeByUse'
 
-# in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\PercentOverlap'
-# out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'
-# col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'Corn', 'Corn/soybeans', 'Corn/wheat',
-#            'Corn/grains', 'Cotton', 'Cotton/wheat', 'Cotton/vegetables', 'Rice', 'Soybeans', 'Soybeans/cotton',
-#            'Soybeans/wheat', 'Soybeans/grains', 'Wheat', 'Wheat/vegetables', 'Wheat/grains',
-#            'Vegetables and ground fruit', '(ground fruit)', 'Vegetables/grains', 'Orchards and grapes', 'Other trees',
-#            'Other grains', 'Other row crops', 'Other crops', 'Pasture/hay/forage', 'Developed - open',
-#            'Developed - low', 'Developed - med', 'Developed - high', 'Forest', 'Shrubland', 'Water', 'Wetlands - woods',
-#            'Wetlands - herbaceous', 'Miscellaneous land', 'acres']
 
 def createdirectory(DBF_dir):
     if not os.path.exists(DBF_dir):

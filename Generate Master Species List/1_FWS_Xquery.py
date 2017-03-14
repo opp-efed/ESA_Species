@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 import os
+import datetime
 
 import pandas as pd
 
@@ -10,8 +11,10 @@ import csv
 __author__ = 'JConno02'
 
 
-date = 20160908
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\June2016\Archived'
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
+
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017'
 url = "http://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
 
 r = requests.get(url)
@@ -194,7 +197,8 @@ def create_outtable(outInfo, csvname, header):
             for val in outInfo:
                 writer.writerow([val])
 
-
+start_time = datetime.datetime.now()
+print "Start Time: " + start_time.ctime()
 # Use Beautiful Soup to Parse the HTML
 soup = BeautifulSoup(r.content, 'html.parser')
 tagslist, speciesbreak, identifier = CheckXML_changes(soup)
@@ -222,3 +226,8 @@ fulltable = outpath + os.sep + 'FullTess_' + str(date) + '.csv'
 outDF_Full = pd.DataFrame(FullResults, columns=finalheader)
 outDF_Full.to_csv(fulltable, encoding='utf-8')
 # create_outtable(FullResults, fulltable, finalheader)
+
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)

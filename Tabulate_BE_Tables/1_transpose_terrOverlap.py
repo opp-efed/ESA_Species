@@ -5,8 +5,8 @@ import arcpy
 import numpy as np
 import pandas as pd
 
-csvFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\CriticalHabitat'
-outFolder= r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\Transposed_Spray'
+csvFolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\NL48\\Range'
+outFolder= r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\Transposed_Spray'
 
 interval_step = 30
 max_dis = 1501
@@ -27,11 +27,8 @@ for folder in out_folders:
     use = folder.replace('_euc','')
 
     out_folder= outFolder +os.sep + folder
-
     createdirectory(out_folder)
-
     list_csv = os.listdir(csvFolder+os.sep+folder)
-
     list_csv = [csv for csv in list_csv if csv.endswith( str(folder) +'.csv')]
 
 
@@ -66,12 +63,9 @@ for folder in out_folders:
             outcol.append(col)
 
         group_df_by_zone_sum.columns = outcol
-        #print group_df_by_zone_sum
 
         group_df_by_zone_sum['ZoneID'] = group_df_by_zone_sum.index
         group_df_by_zone_sum['ZoneID'] = group_df_by_zone_sum['ZoneID'].map(lambda x: x.replace('VALUE_', '')).astype(str)
-        #print group_df_by_zone_sum
-
 
         group_df_by_zone_sum.to_csv(out_csv)
 

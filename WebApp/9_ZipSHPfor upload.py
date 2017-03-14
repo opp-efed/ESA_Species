@@ -3,24 +3,34 @@ __author__ = 'JConno02'
 import os
 import zipfile
 
-infolder = 'J:\Workspace\ESA_Species\ForCoOccur\Composites\CurrentComps\WebApp\ShapesforUpload\Range'
-out = 'J:\Workspace\ESA_Species\ForCoOccur\Composites\CurrentComps\WebApp\ShapesforUpload\zip\zipR'
-#
-#
+
+
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\ShapeWebApp_CH\WebMercator'
+out = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\ShapeWebApp_CH\WebMercator\zip_projected'
+##L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\ShapeWebApp_CH
+#L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\ShapeWebApp_CH\zipped_CH
+#L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\ShapeWebApp_Range
+#L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\ShapeWebApp_Range\zipped_range
 listfiles = os.listdir(infolder)
 print listfiles
 grouplist = []
 
 for v in listfiles:
-    group = v.split('_')
-    #print group
-    ftype = group[0]
-    group = group[1]
-    if group not in grouplist:
-        grouplist.append(group)
+    if len(v.split('.'))!= 2:
+        pass
+    else:
+        group = v.split('_')
+        #print group
+        ftype = group[0]
+        group = group[1]
+        if group not in grouplist:
+            grouplist.append(group)
 
 print grouplist
+
+
 for v in grouplist:
+
     outzip = ftype + '_' + str(v)
     zfpath = os.path.join(out, (outzip + '.zip'))
     print zfpath

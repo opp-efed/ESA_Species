@@ -2,15 +2,16 @@ import pandas as pd
 import datetime
 import os
 
-in_range_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Methomyl\Overlap Tables\R_DraftBE_Methomyl_Overlap_20170308.csv'
-in_ch_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Methomyl\Overlap Tables\CH_DraftBE_Methomyl_Overlap_20170308.csv'
-temp_folder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Methomyl\Overlap Tables'
+in_range_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Carbaryl\Overlap Tables\R_DraftBE_Carbaryl_Overlap_20170314.csv'
+in_ch_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Carbaryl\Overlap Tables\CH_DraftBE_Carbaryl_Overlap_20170314.csv'
+temp_folder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Carbaryl\Overlap Tables'
 
-chem_name = 'Methomyl'
+chem_name = 'Carbaryl'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
-out_csv_unformat = temp_folder + os.sep + chem_name + '_SummaryCalls_' + date + '_unformated.csv'
+out_csv_unformat= temp_folder + os.sep + chem_name + '_SummaryCalls_' + date + '_unformated.csv'
 out_csv = temp_folder + os.sep + chem_name + '_SummaryCalls_' + date + '.csv'
+
 
 sp_index_cols = 16
 
@@ -67,9 +68,8 @@ merge_df = pd.merge(merge_df, ch_short, on='EntityID', how='outer')
 merge_df['Source of Call final BE-Range'] = merge_df.apply(lambda row: clean_source_call_range(row), axis=1)
 merge_df['Source of Call final BE-Critical Habitat'] = merge_df.apply(lambda row: clean_source_call_CH(row), axis=1)
 print merge_df.columns.values.tolist()
-clean_df = merge_df.ix[:, ['EntityID', 'comname', 'sciname', 'Source of Call final BE-Range', 'WoE Summary Group',
-                           'Source of Call final BE-Critical Habitat', 'Step 2 ED', 'CH_Step 2 ED', ]]
-clean_df = clean_df.reindex(
+clean_df = merge_df.ix[:,['EntityID', 'comname', 'sciname', 'Source of Call final BE-Range', 'WoE Summary Group', 'Source of Call final BE-Critical Habitat',  'Step 2 ED',  'CH_Step 2 ED', ]]
+clean_df =clean_df.reindex(
     columns=['WoE Summary Group', 'sciname', 'comname', 'EntityID', 'Source of Call final BE-Range', 'Step 2 ED',
              'Source of Call final BE-Critical Habitat', 'CH_Step 2 ED'])
 clean_df.columns = ['Taxa', 'Scientific Name', 'Common Name', 'EntityID1',
@@ -79,6 +79,8 @@ clean_df.columns = ['Taxa', 'Scientific Name', 'Common Name', 'EntityID1',
 
 merge_df.to_csv(out_csv_unformat)
 clean_df.to_csv(out_csv)
+
+
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

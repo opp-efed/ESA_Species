@@ -18,13 +18,13 @@ midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\R
 # regional_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161102.csv'
 # midGBD = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\temp_2.gdb'
 
-skip_group = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Fishes', 'Flowering', 'Insects', 'Lichens', 'Mammals','Snails']
+skip_group = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Flowering', 'Insects', 'Lichens', 'Mammals','Snails']
 # projection folder
 prjFolder = "L:\projections\FinalBE"
 # Dictionary of all projections needed for raster and the snap raster
 # snap raster must be in desired projection with the desired cell size
 
-skip_region = ['AK','CNMI','CONUS','AS']
+skip_region = ['AK','CNMI','CONUS',]
 
 RegionalProjection_Dict = {
     'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015',

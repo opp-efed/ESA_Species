@@ -2,15 +2,15 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'E:\Tabulated_NewComps\NL48\CriticalHabitat\MergeByUse'
-out_location = r'E:\Tabulated_NewComps\NL48\CriticalHabitat'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\MergeByUse'
+out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat'
 
 # in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'
 # out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat'
 
-out_csv = out_location + os.sep + 'NL48_SprayInterval_20170109_All.csv'
+out_csv = out_location + os.sep + 'L48_NonAg_SprayInterval_20170206_All.csv'
 
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH',
                 'CH_GIS','Source of Call final BE-Range','	WoE Summary Group','Source of Call final BE-Range']

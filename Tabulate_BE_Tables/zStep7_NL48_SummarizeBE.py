@@ -14,7 +14,7 @@ master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH'
 temp_folder = r'E:\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_intervals'
 out_csv = temp_folder + os.sep + 'CH_NL48_Ag_NonAg_BE_Sum_CoOccur_SprayDriftIntervals_20170109.csv'
 regions = ['AK', 'GU', 'HI', 'PR', 'VI', 'CNMI']  # CritHab NL48
-#regions = ['CONUS'] #CONUS
+
 #regions = ['AK', 'GU', 'HI', 'PR', 'VI', 'CNMI','AS'] #RANGE NL48
 sp_index_cols = 8
 bins = [0, 305, 765]  # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5

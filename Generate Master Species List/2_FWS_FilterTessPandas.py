@@ -1,5 +1,5 @@
 __author__ = 'JConno02'
-__author__ = 'JConno02'
+
 
 from bs4 import BeautifulSoup
 import requests
@@ -8,12 +8,15 @@ import os
 import datetime
 import pandas as pd
 
+
 import csv
 
 ##Todo rather than loading in dict add a field to df that is in out and pop field based on if ent in on filter list then select all rows that are in
-date = 20160607
-inpath_FULLTESS =r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\TESSQueries\20160606\FilteredinPandas\FullTess_20160607.csv'
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\TESSQueries\20160606\FilteredinPandas'
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
+
+inpath_FULLTESS =r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\FWS\FullTess_20170221.csv'
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\FWS'
 url = "http://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
 
 r = requests.get(url)

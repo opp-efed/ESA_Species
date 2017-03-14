@@ -3,15 +3,15 @@ import datetime
 
 import arcpy
 
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
-infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'  # folder of GDB
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_20170117.csv'
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_WebApp_Composite.gdb'  # folder of GDB
 
 # species groups to skip
 skiplist = []
 
-ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, popabb=8,status =6)
-final_fields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID', 'Pop_Abb', 'Status']
-final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, PopName=3,Status=6)#group is in pos 2 and not being added
+ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, PopName=8,status =6)
+final_fields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID', 'PopName', 'Status','Region']
+final_fieldsindex = dict(NAME=1, Name_sci=4, SPCode=5, VIPCode=7, EntityID=2, PopName=0,Status=6)#group is in pos 3 and not being added
 singleGDB = True
 
 ########Static variables
@@ -130,6 +130,7 @@ def LoadSpeciesinfo_frommaster(ColIndexDict, reqindex, masterlist):
             for v in listKeys:
                 vars()[v] = line[int(ColIndexDict[v])]
                 speciesinfo.append(vars()[v])
+            # print speciesinfo
             speciesinfo_dict[entid] = speciesinfo
     inputFile.close()
     alpha = sorted(grouplist)

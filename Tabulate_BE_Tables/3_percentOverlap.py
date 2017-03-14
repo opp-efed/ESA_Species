@@ -17,16 +17,17 @@ type_use = 'Raster'
 
 # Master table of species that sums pixels by use and distance interval from previous script
 
-in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\SumSpecies'
+in_raw_sum_overlap = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\SumSpecies'
 sp_col_count = 7  # number of cols with species info  base 0 found in the sum overlap table
 
 # Master acres for all species by region
 
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161215.csv'
+in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
+percent_regional = False
 
 # Location where output and temp files will be saved
 
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\PercentOverlap'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\PercentOverlap'
 
 # List of regions that are completed and should be included
 
@@ -45,9 +46,14 @@ use_cell_size = {'AK': [30],
 
 
 # TODO ADD IN VECTOR OVERLAP
-def calculation(typefc, in_sum_df, cell_size, c_region):
-    range_acres_float = in_sum_df[('Acres_' + str(c_region))].map(lambda x: x).astype(float).map(lambda x: x).astype(
-        float)
+def calculation(typefc, in_sum_df, cell_size, c_region, percent_type):
+
+    if percent_type:
+        range_acres_float = in_sum_df[('Acres_' + str(c_region))].map(lambda x: x).astype(float).map(lambda x: x).astype(
+            float)
+    else:
+        range_acres_float = in_sum_df[('TotalAcresOnLand')].map(lambda x: x).astype(float).map(lambda x: x).astype(
+            float)
     list_acres = range_acres_float.values.tolist()
     se = pd.Series(list_acres)
 
@@ -60,7 +66,11 @@ def calculation(typefc, in_sum_df, cell_size, c_region):
         # print acres_overlap
 
         percent_overlap = (acres_overlap.div(acres_overlap.Acres, axis='index')) * 100
-        percent_overlap[('Acres_' + str(region))] = se.values
+        if percent_type:
+            percent_overlap[('Acres_' + str(region))] = se.values
+        else:
+            percent_overlap['TotalAcresOnLand'] = se.values
+
 
         return percent_overlap
     else:
@@ -89,6 +99,7 @@ for folder in list_folder:
     current_folder = in_raw_sum_overlap + os.sep + folder
     list_csv = os.listdir(current_folder)
     for csv in list_csv:
+
         region = csv.replace("__", "_")
         region = region.split("_")[2]
         print region
@@ -131,12 +142,13 @@ for folder in list_folder:
 
         cnt_cha = len(region)
 
-        acres_in_sum = acres_in_sum.ix[:, ['EntityID', ('Acres_' + str(region))]]
+        acres_in_sum = acres_in_sum.ix[:, ['EntityID', ('Acres_' + str(region)),'TotalAcresOnLand']]
         acres_in_sum[('Acres_' + str(region))] = acres_in_sum[('Acres_' + str(region))].map(lambda x: x).fillna(-1)
+        acres_in_sum['TotalAcresOnLand'] = acres_in_sum['TotalAcresOnLand'].map(lambda x: x).fillna(-1)
 
         sum_df_acres = pd.merge(sum_df, acres_in_sum, on='EntityID', how='left')
 
-        percent_overlap_df_full = calculation(type_use, sum_df_acres, 30, region)
+        percent_overlap_df_full = calculation(type_use, sum_df_acres, 30, region,percent_regional)
         final_df = pd.concat([species_info_df, percent_overlap_df_full], axis=1)
 
         final_df.drop('Unnamed: 0', axis=1, inplace=True)

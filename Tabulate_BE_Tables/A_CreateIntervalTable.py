@@ -2,27 +2,19 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\MergeByUse'
-out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\MergeByUse'
+out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range'
 
 # in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'
 # out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-out_csv = out_location + os.sep + 'L48_Ag_SprayInterval_'+ (date)+'_All.csv'
+out_csv = out_location + os.sep + 'R_NL48_SprayInterval_'+ (date)+'_All.csv'
 
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170117.xlsx'
-col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','	WoE Summary Group','Source of Call final BE-Range']
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
+col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','WoE Summary Group','Source of Call final BE-Range']
 
-
-# col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'Corn', 'Corn/soybeans', 'Corn/wheat',
-#            'Corn/grains', 'Cotton', 'Cotton/wheat', 'Cotton/vegetables', 'Rice', 'Soybeans', 'Soybeans/cotton',
-#            'Soybeans/wheat', 'Soybeans/grains', 'Wheat', 'Wheat/vegetables', 'Wheat/grains',
-#            'Vegetables and ground fruit', '(ground fruit)', 'Vegetables/grains', 'Orchards and grapes', 'Other trees',
-#            'Other grains', 'Other row crops', 'Other crops', 'Pasture/hay/forage', 'Developed - open',
-#            'Developed - low', 'Developed - med', 'Developed - high', 'Forest', 'Shrubland', 'Water', 'Wetlands - woods',
-#            'Wetlands - herbaceous', 'Miscellaneous land', 'acres']
 
 def extract_species_info(master_in_table, col_from_master):
     check_extention = (master_in_table.split('.'))[1]
@@ -33,6 +25,7 @@ def extract_species_info(master_in_table, col_from_master):
     master_list_df['EntityID'] = master_list_df['EntityID'].astype(str)
     ent_list_included = master_list_df['EntityID'].values.tolist()
     sp_info_df = pd.DataFrame(master_list_df, columns=col_from_master)
+    print sp_info_df
     sp_info_header = sp_info_df.columns.values.tolist()
 
     return sp_info_df, sp_info_header, ent_list_included

@@ -3,16 +3,16 @@ import datetime
 import os
 
 
-in_tables_nona = 'E:\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\Mag_Spray\CH_CONUS_SprayInterval_20170106_NonAg.csv'
-in_table_ag = 'E:\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\Mag_Spray\CH_CONUS_SprayInterval_20170106_Ag.csv'
+in_tables_nona = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\CH_L48_NonAg_SprayInterval_20170206_All.csv'
+in_table_ag = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\CH_L48_Ag_SprayInterval_20170206_All.csv'
+in_table_aa ='L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\AAs\CriticalHabitat\CH_L48_AA_SprayInterval_20170206_All.csv'
 
-outlocation = 'E:\Tabulated_NewComps\L48\Agg_layers'
-out_csv = outlocation + os.sep + 'CH_MagTool_SprayDrift_20170106.csv'
-
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601221.xlsx'
+outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers'
+out_csv = outlocation + os.sep + 'CH_MagTool_SprayDrift_20170206.csv'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 
 in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161215.csv'
-master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','	WoE Summary Group','Source of Call final BE-Range']
+master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','WoE Summary Group','Source of Call final BE-Range']
 
 region = 'CONUS'
 
@@ -53,6 +53,8 @@ useLookup = {'10x2': 'Corn',
              'bermudagrass2' : 'Bermuda Grass',
              'usa':'Golfcourses',
              'XmasTrees': 'Christmas Trees',
+             'alleycropping2': 'Alley Cropping',
+             'wheat2': 'zMethomylWheat'
 
 
 
@@ -120,10 +122,31 @@ for v in in_df_nonag_col:
                 continue
             except:
                 pass
-
 in_df_non_ag = in_df_non_ag.reindex(columns=in_df_nonag_col)
 
-out_df = pd.merge( in_df_ag,in_df_non_ag, on='EntityID', how='inner')
+in_df_aa= pd.read_csv(in_table_aa, dtype= object)
+in_df_aa['EntityID'] = in_df_aa['EntityID'].map(lambda x: x).astype(str)
+in_df_aa_col = in_df_aa.columns.values.tolist()
+
+for v in in_df_aa_col:
+    if v == 'EntityID':
+        pass
+    else:
+        if v in master_col:
+            try:
+                in_df_aa_col.remove(v)
+            except:
+                pass
+        if not v.startswith(region):
+            try:
+                in_df_aa_col.remove(v)
+                continue
+            except:
+                pass
+in_df_aa = in_df_aa.reindex(columns=in_df_aa_col)
+
+out_df = pd.merge( in_df_aa,in_df_ag, on='EntityID', how='inner')
+out_df = pd.merge( out_df ,in_df_non_ag, on='EntityID', how='inner')
 out_df.to_csv(outlocation + os.sep + 'Temp.csv')
 
 final_df = pd.merge(final_df, out_df, on='EntityID', how='outer')

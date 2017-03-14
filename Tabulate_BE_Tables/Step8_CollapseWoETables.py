@@ -9,12 +9,13 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-in_table = r'E:\Tabulated_NewComps\FinalBETables\Range\BE_Intervals\R_AllUses_BE_20170109.csv'
-master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
+in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\BETables\R_AllUses_BE_20170109.csv'
+master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS',
+              'Source of Call final BE-Range', 'WoE Summary Group', 'Source of Call final BE-Range']
 # master list
-temp_folder = r'E:\Tabulated_NewComps\FinalBETables\Range'
+temp_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\BETables'
 out_csv = temp_folder + os.sep + 'R_Collapsed_WoE_20170109.csv'
-sp_index_cols = 12
+sp_index_cols = 10
 col_reindex = ['EntityID',  'comname', 'sciname','family', 'status_text','pop_abbrev', 'Des_CH','Critical_Habitat_',
                'Migratory','Migratory_', 'Corn', 'Cotton','Orchards and Vineyards', 'Other Crops', 'Other Grains',
                'Other RowCrops', 'Pasture', 'Rice', 'Soybeans','Vegetables and Ground Fruit', 'Wheat', 'Developed',

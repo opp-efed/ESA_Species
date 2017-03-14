@@ -5,12 +5,16 @@ import datetime
 # Title - Generates regional composites in correct projection to calc area of the species file found in each region
 
 # master list and location by index number base zero of species information
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
+masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_20170117.csv'
 # col index values of species info cols in master list
-ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, popabb=8, status=6)
+
+ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, PopName=9,status =6)
 
 # Index order of how the information is loaded into the species dict this is alpha order based on col name in fc
-final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, Pop_Abb=3, Status=6)
+
+final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, PopName=3,Status=6)
+#This is from the update all ATT scripte should this be the dict being used?
+#final_fieldsindex = dict(NAME=1, Name_sci=4, SPCode=5, VIPCode=7, EntityID=2, PopName=0,Status=6)#group is in pos 3 and not being added
 
 # input values and workspaces for range files
 Range = True

@@ -1,11 +1,11 @@
 import pandas as pd
 import datetime
-in_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\LongBins_unfilter_AB_20170110.csv'
-out_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\WideBins_unfilter_20170110_b.csv'
+in_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Updates_Feb2017\LongBins_unfilter_AB_20170209.csv'
+out_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Updates_Feb2017\WideBins_unfilter_AB_20170209.csv'
 
 
 final_cols =['lead_agency', 'Group', 'HUC_2', 'comname', 'EntityID', 'sciname', 'status_text', 'Multi HUC',
-             'Reassigned', 'sur_huc',  'AttachID', 'WoE_group_1', 'WoE_group_2', 'Bin 1',
+             'Reassigned','Bins_reassigned', 'sur_huc',  'AttachID', 'WoE_group_1', 'WoE_group_2', 'Bin 1',
               'Bin 2', 'Bin 3', 'Bin 4', 'Bin 5', 'Bin 6', 'Bin 7', 'Bin 8', 'Bin 9','Bin 10']
 
 

@@ -8,29 +8,30 @@ import pandas as pd
 
 # Per conversation with Steve on 2/1/2017 the cattle ear tag layer is use to represent pasture in HI, he feels the CCAP data is more
 # Accurate than the state data
+# figure out why 589	954	1175	1218	3540	7229 are coming yp NLAA fly bait and overlap should just be flybait? because it include driift?
 
-# TODO UPDATE WHEAT NUMBERS
 # inlocation
-in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\FinalBETables\Range\BE_intervals\R_AllUses_BE_20170117.csv'
+in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\BETables\R_AllUses_BE_20170209.csv'
 temp_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\DraftBEs\Methomyl\Overlap Tables'
 
 chem_name = 'Methomyl'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
-out_csv = temp_folder + os.sep + 'R_FinalBE_' + chem_name + '_Overlap_' + date + '.csv'
-out_summary_csv = temp_folder + os.sep + 'R_FinalBE_' + chem_name + '_summary_' + date + '.csv'
+out_csv = temp_folder + os.sep + 'R_DraftBE_' + chem_name + '_Overlap_' + date + '.csv'
+out_summary_csv = temp_folder + os.sep + 'R_DraftBE_' + chem_name + '_summary_' + date + '.csv'
 
 sp_index_cols = 15
 col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group', 'Des_CH',
                'Critical_Habitat_', 'CH_GIS', 'Migratory', 'Migratory_', 'Source of Call final BE-Range',
-               'WoE Summary Group', 'Source of Call final BE-CH', 'Bermuda Grass', 'Corn', 'Flybait',
+               'WoE Summary Group', 'Source of Call final BE-Critical Habitat', 'Bermuda Grass', 'Corn', 'Flybait',
                'Orchards and Vineyards', 'Other Crops', 'Other Grains', 'Other RowCrops', 'Pasture', 'Soybeans',
-               'Vegetables and Ground Fruit', 'Wheat', 'Corn_Buffer', 'Orchards and Vineyards_Buffer',
+               'Vegetables and Ground Fruit', 'Methomyl Wheat', 'Cotton', 'Alley Cropping', 'Corn_Buffer',
+               'Orchards and Vineyards_Buffer',
                'Other Crops_Buffer', 'Other Grains_Buffer', 'Other RowCrops_Buffer', 'Pasture_Buffer',
-               'Soybeans_Buffer',
-               'Vegetables and Ground Fruit_Buffer', 'Wheat_Buffer', 'Bermuda Grass_Buffer', 'Fly bait_Buffer',
-               'Methomyl_ActionArea',
-               'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED', 'Step 2 ED Comment', 'Fly bait Only'
+               'Soybeans_Buffer', 'Vegetables and Ground Fruit_Buffer', 'Methomyl Wheat_Buffer', 'Bermuda Grass_Buffer',
+               'Cotton_Buffer', 'Alley Cropping_Buffer',
+               'Fly bait_Buffer', 'Methomyl_ActionArea', 'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED',
+               'Step 2 ED Comment', 'Fly bait Only', 'Drift Only-NonFly bait'
                ]
 NE_Extinct = ['19', '26', '68', '122', '141', '6345', '9433', '9435', '9437', '9445', '9447', '9451', '9455', '9463',
               '9481', '10582']
@@ -41,25 +42,69 @@ NLAA_OutsideUse = ['70', '71', '72', '75', '499', '606']
 
 NoGIS = ['9407']
 
-# TODO these are the list for diaz update based on chem
+# 133.44232.8861.9709.10381 5232 because they are NLAA for overlap too
+#  would be NLAA for for overlap and DD but we are leaving it with LAA based on the report
 QualRepot_speceis = ['7', '45', '153', '154', '155', '160', '447', '448', '449', '459', '460', '461', '463', '464',
                      '465', '466', '467', '469', '470', '471', '472', '473', '474', '485', '1769', '2510', '2862',
-                     '2891', '3096', '3133', '3199', '3318', '3379', '4719', '5064', '5232', '5623', '5989', '7115',
-                     '7134', '8861', '9126', '9707', '9709', '9941', '10144', '10145', '10381', '10485', '10700',
+                     '2891', '3096', '3199', '3318', '3379', '4719', '5064', '5623', '5989', '7115',
+                     '7134', '9126', '9707', '9941', '10144', '10145', '10485', '10700',
                      '10733', '10734', '10736', '11175', '11176', '11191', '11192', '11193', 'NMFS137', 'NMFS159',
-                     'NMFS175', 'NMFS178', 'NMFS180', 'NMFS181']
+                     'NMFS175', 'NMFS178', 'NMFS180', 'NMFS181', '3133', '44232', '8861', '9709', '10381', '5232']
 
-LAA_QualReport = ['10485', '11175', '11176', '11191', '11192', '11193', '155', '160', '5989', '9707', '9941', '9126',
-                  '7', '45', '2891', '3318', '7115', 'NMFS159', '469', '470', '472', '473', '447', '448', '449', '459',
-                  '460', '461', '463', '464', '465', '466', '467', '471', '474', '485', '5064', '3379', '154', '153',
-                  '7134', ]
+LAA_QualReport = ['7', '45', '153', '154', '155', '160', '447', '448', '449', '459', '460', '461', '463', '464', '465',
+                  '466', '467', '469', '470', '471', '472', '473', '474', '485', '2862', '2891', '3318', '3379', '5064',
+                  '5989', '7115', '7134', '9126', '9707', '9941', '10485', '11175', '11176', '11191', '11192', '11193',
+                  'NMFS159', ]
+#  3133.44232.8861.9709.10381 because they are NLAA for overlap but leaving the call in the report
+NLAA_QualReport = ['1769', '2510', '3096', '3199', '4719', '5623', '9709', '10144', '10145', '10733', '10734', '10736',
+                   ' NMFS137', '10700', 'NMFS175', 'NMFS178', ' NMFS180', ' NMFS181', '3133', '44232', '8861', '9709',
+                   '10381', '5232']
 
-NLAA_QualReport = ['1769', '2510', '3096', '3133', '3199', '4719', '5623', '10144', '10145', '10700', '10733', '10734',
-                   '10736', 'NMFS137', '5232', '9709', '10381', 'NMFS175', 'NMFS176', '2862', 'NMFS182', '8861',
-                   'NMFS178', 'NMFS180', 'NMFS181']
-# TODO these are the list for diaz cattle eartag update based on chem results fly bait
-NLAA_Flybait = []
-LAA_Flybait = []
+NLAA_Flybait = ['4', '28', '46', '61', '89', '146', '147', '162', '200', '510', '535', '536', '537', '545', '563',
+                '565',
+                '575', '577', '589', '601', '604', '616', '622', '623', '635', '684', '688', '690', '691', '697', '720',
+                '725', '726', '727', '728', '732', '733', '755', '765', '768', '771', '772', '773', '774', '776', '781',
+                '801', '814', '815', '833', '839', '846', '847', '848', '851', '864', '865', '895', '915', '918', '938',
+                '948', '954', '955', '965', '968', '981', '983', '987', '1016', '1049', '1051', '1052', '1054', '1062',
+                '1067', '1071', '1083', '1084', '1097', '1099', '1101', '1102', '1104', '1105', '1109', '1121', '1124',
+                '1128', '1129', '1135', '1139', '1144', '1146', '1148', '1152', '1155', '1156', '1163', '1175', '1176',
+                '1177', '1179', '1181', '1182', '1183', '1184', '1197', '1201', '1202', '1208', '1211', '1218', '1223',
+                '1224', '1227', '1230', '1232', '1278', '1361', '1407', '1521', '1609', '1636', '1968', '2085', '2144',
+                '2268', '2364', '2404', '2517', '2619', '2727', '2782', '2970', '3020', '3084', '3175', '3387', '3472',
+                '3540', '3653', '3728', '3753', '3876', '4136', '4201', '4297', '4308', '4326', '4377', '4413', '4551',
+                '4754', '4858', '5333', '5580', '5956', '6019', '6231', '6303', '6522', '6536', '6632', '6654', '6679',
+                '6747', '6845', '6867', '7136', '7170', '7229', '7529', '7840', '7907', '7948', '8338', '8347', '8357',
+                '9282', '9395', '9399', '9403', '9405', '9413', '9421', '9423', '9459', '9461', '9465', '9467', '9469',
+                '9471', '9473', '9475', '9477', '9479', '9483', '9954', '9955', '9959', '9960', '9961', '9962', '9963',
+                '10222', '10225', '10226', '10233', '10235', '10721', '10722', '10725', '10726', '10727', '10732',
+                '11340', 'FWS001',
+                ]
+
+LAA_Flybait = ['29', '31', '32', '821', '822', '878', '1252', '1255', '1257', ]
+
+# before adjustment to assumptions to exlude false positive in aa
+# NLAA_Flybait = ['4', '28', '46', '61', '86', '89', '146', '147', '162', '536', '545', '563', '565', '589', '604', '635',
+#                 '684', '688', '697', '720', '755', '772', '776', '781', '801', '814', '833', '851', '895', '915', '938',
+#                 '954', '965', '981', '987', '1016', '1049', '1067', '1071', '1083', '1084', '1121', '1135', '1139',
+#                 '1146', '1156', '1175', '1182', '1183', '1218', '1224', '1227', '1609', '2144', '2268', '2404', '2619',
+#                 '3020', '3175', '3540', '4201', '4551', '6536', '7136', '7948', '8347', '9403', '9459', '9461', '9465',
+#                 '9469', '9471', '9473', '9475', '9479', '9483', '9955', '9959', '9961', '9962', '10226', '200', '510',
+#                 '535', '537', '572', '575', '577', '590', '601', '616', '622', '623', '687', '690', '691', '725', '726',
+#                 '727', '728', '732', '733', '759', '765', '768', '770', '771', '773', '774', '799', '815', '839', '846',
+#                 '847', '848', '864', '865', '866', '867', '918', '948', '949', '955', '968', '983', '1051', '1052',
+#                 '1054', '1062', '1097', '1099', '1101', '1102', '1104', '1105', '1109', '1112', '1118', '1124', '1128',
+#                 '1129', '1144', '1148', '1152', '1155', '1157', '1163', '1176', '1177', '1179', '1180', '1181', '1184',
+#                 '1187', '1197', '1201', '1202', '1208', '1211', '1223', '1230', '1232', '1278', '1349', '1361', '1407',
+#                 '1521', '1636', '1968', '1989', '2085', '2364', '2517', '2727', '2782', '2970', '3084', '3385', '3387',
+#                 '3472', '3653', '3728', '3753', '3876', '4136', '4238', '4297', '4308', '4326', '4377', '4413', '4754',
+#                 '4858', '4961', '5333', '5580', '5956', '5991', '6019', '6231', '6303', '6522', '6632', '6654', '6679',
+#                 '6747', '6845', '6867', '7170', '7229', '7529', '7840', '7907', '7979', '8338', '8357', '9282', '9395',
+#                 '9399', '9405', '9413', '9421', '9423', '9439', '9441', '9467', '9477', '9954', '9958', '9960', '9963',
+#                 '10222', '10225', '10227', '10232', '10233', '10235', '10721', '10722', '10725', '10726', '10727',
+#                 '10732', '11340', 'FWS001',
+#                 ]
+# LAA_Flybait = ['29', '31', '32', '821', '822', '878', '1248', '1250', '1252', '1254', '1255', '1256', '1257', '7261',
+#                ]
 
 DD_Species = ['2', '7', '19', '26', '58', '67', '69', '70', '76', '84', '88', '91', '103', '104', '108', '124',
               '125', '130', '131', '132', '134', '135', '136', '147', '152', '167', '168', '169', '171', '172',
@@ -96,10 +141,29 @@ DD_Species = ['2', '7', '19', '26', '58', '67', '69', '70', '76', '84', '88', '9
               '9968', '9969', '10037', '10038', '10039', '10052', '10060', '10077', '10124', '10130', '10150',
               '10297', '10298', '10299', '10300', '10301', '10485', '10517', '10910', '11175', '11176', '11191',
               '11192', '11193', '11201', '11262', 'FWS001', 'NMFS166', 'NMFS175']
-
-# TODO these are the list for diaz DD update based on chem
-NE_DD = []
+# removed species with direct overlap '401','1245', '1246','NMFS166',
+NE_DD = ['11191', 'NMFS175', '69', '70', '108', '147', '196', '418', '439', '1361',
+         '2144', '4326', '5232', '6231', '6654', '8861', '8962', '76', 'FWS001',
+         ]
 NLAA_DD = []  # No additional species aew NLAA for DD
+
+NLAA_WoE = [
+     '2144', '146', '147', '4136', '6522', '6654', 'FWS001', '162', '3876', '9395', '9403', '9421', '9423',
+    '9459', '9461', '9465', '9467', '9469', '9477', '9479', '510', '535', '536', '537', '545', '563', '565', '572',
+    '575', '577', '589', '601', '604', '616', '622', '623', '635', '684', '688', '690', '691', '697', '720', '725',
+    '726', '727', '728', '732', '733', '755', '765', '768', '771', '772', '773', '774', '776', '781', '801', '814',
+    '815', '833', '839', '844', '846', '847', '848', '851', '864', '865', '867', '870', '895', '915', '918', '938',
+    '948', '954', '955', '965', '968', '981', '983', '987', '1016', '1049', '1051', '1052', '1054', '1062', '1067',
+    '1071', '1083', '1084', '1097', '1099', '1101', '1102', '1104', '1105', '1109', '1112', '1121', '1124', '1128',
+    '1129', '1135', '1139', '1144', '1146', '1148', '1152', '1155', '1156', '1157', '1163', '1175', '1176', '1177',
+    '1179', '1181', '1182', '1183', '1184', '1197', '1201', '1202', '1208', '1211', '1218', '1223', '1224', '1227',
+    '1230', '1232', '1278', '1407', '1521', '1609', '1636', '1968', '2085', '2268', '2404', '2517', '2619', '2727',
+    '2782', '2970', '3020', '3084', '3175', '3387', '3472', '3540', '3653', '3728', '3753', '4201', '4297', '4377',
+    '4551', '4754', '4858', '4961', '5956', '6019', '6303', '6536', '6632', '6679', '6845', '7136', '7170', '7229',
+    '7529', '7840', '7948', '7979', '8181', '8338', '8347', '8357', '9954', '9955', '9959', '9960', '9961', '9962',
+    '9963', '10222', '10225', '10226', '10227', '10233', '10235', '10721', '10726', '10727', '11340',
+
+]
 collapses_dict = {
     'Bermuda Grass': ['CONUS_Bermuda Grass_0'],
     'Corn': ['AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0', 'CONUS_Corn_0'],
@@ -113,13 +177,14 @@ collapses_dict = {
                      'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
     'Other RowCrops': ['AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0',
                        'CONUS_Other RowCrops_0'],
-    'Pasture':['AK_Pasture/Hay/Forage_0','HI_Cattle Eartag_0','CONUS_Pasture_0','AS_Cattle Eartag_0',
-               'CNMI_Cattle Eartag_0','GU_Cattle Eartag_0','PR_Cattle Eartag_0','VI_Cattle Eartag_0'],
+    'Pasture': ['AK_Pasture_0', 'HI_Cattle Eartag_0', 'CONUS_Pasture_0', 'AS_Cattle Eartag_0',
+                'CNMI_Cattle Eartag_0', 'GU_Cattle Eartag_0', 'PR_Cattle Eartag_0', 'VI_Cattle Eartag_0'],
     'Soybeans': ['CONUS_Soybeans_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
     'Vegetables and Ground Fruit': ['CONUS_Vegetables and Ground Fruit_0', 'HI_Ag_0',
                                     'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
-    'Wheat': ['CONUS_Wheat_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
-    'Cotton':['CONUS_Cotton_0','AK_Ag_0','AS_Ag_0','CNMI_Ag_0','GU_Ag_0','HI_Ag_0','PR_Ag_0','VI_Ag_0'],
+    'Methomyl Wheat': ['CONUS_zMethomylWheat_0'],
+    'Cotton': ['CONUS_Cotton_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Alley Cropping': ['CONUS_Alley Cropping_0'],
     'Corn_Buffer': ['AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765',
                     'CONUS_Corn_765'],
     'Orchards and Vineyards_Buffer': ['CONUS_Orchards and Vineyards_765', 'HI_Ag_765',
@@ -131,7 +196,7 @@ collapses_dict = {
                             'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'VI_Ag_765'],
     'Other RowCrops_Buffer': ['AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
                               'VI_Ag_765', 'CONUS_Other RowCrops_765'],
-    'Pasture_Buffer': ['AK_Pasture/Hay/Forage_765', 'HI_Cattle Eartag_765', 'CONUS_Pasture_765',
+    'Pasture_Buffer': ['AK_Pasture_765', 'HI_Cattle Eartag_765', 'CONUS_Pasture_765',
                        'AS_Cattle Eartag_765', 'CNMI_Cattle Eartag_765', 'GU_Cattle Eartag_765', 'PR_Cattle Eartag_765',
                        'VI_Cattle Eartag_765'],
     'Soybeans_Buffer': ['CONUS_Soybeans_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765',
@@ -139,13 +204,14 @@ collapses_dict = {
     'Vegetables and Ground Fruit_Buffer': ['CONUS_Vegetables and Ground Fruit_765', 'HI_Ag_765',
                                            'PR_Ag_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765',
                                            'GU_Ag_765', 'VI_Ag_765'],
-    'Wheat_Buffer': ['CONUS_Wheat_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
-                     'VI_Ag_765'],
+    'Methomyl Wheat_Buffer': ['CONUS_zMethomylWheat_765'],
     'Bermuda Grass_Buffer': ['CONUS_Bermuda Grass_765'],
     'Fly bait_Buffer': ['AK_Developed_765', 'AS_Developed_765', 'CNMI_Developed_765', 'CONUS_Developed_765',
                         'GU_Developed_765',
                         'HI_Developed_765', 'PR_Developed_765', 'VI_Developed_765'],
-    'Cotton_Buffer':['CONUS_Cotton_765','AK_Ag_765','AS_Ag_765','CNMI_Ag_765','GU_Ag_765','HI_Ag_765','PR_Ag_765','VI_Ag_765'],
+    'Cotton_Buffer': ['CONUS_Cotton_765', 'AK_Ag_765', 'AS_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765',
+                      'PR_Ag_765', 'VI_Ag_765'],
+    'Alley Cropping_Buffer': ['CONUS_Alley Cropping_765', ],
     'Methomyl_ActionArea': ['AK_Methomyl_AA_765', 'AS_Methomyl_AA_765', 'CNMI_Methomyl_AA_765', 'CONUS_Methomyl_AA_765',
                             'GU_Methomyl_AA_765', 'HI_Methomyl_AA_765', 'PR_Methomyl_AA_765', 'VI_Methomyl_AA_765'],
 
@@ -179,6 +245,8 @@ def step_1_ED(row):
         return 'NE-Overlap'
     elif row['Methomyl_ActionArea'] > 0:
         return 'May Affect-Overlap'
+    else:
+        return 'May Affect-Nothing'
 
 
 def step_2_ED(row):
@@ -186,7 +254,7 @@ def step_2_ED(row):
         return 'NE-Extinct'
     elif row['EntityID'] in NLAA_Extinct:
         return 'NLAA-Extinct'
-    elif row['Step 1 ED'] == 'NE':
+    elif str(row['Step 1 ED Comment']).startswith('NE'):
         return 'NE- Step 1'
     elif row['EntityID'] in NLAA_OutsideUse:
         return 'NLAA-Outside Use'
@@ -196,10 +264,40 @@ def step_2_ED(row):
         return 'LAA-QualReport'
     elif row['EntityID'] in NoGIS:
         return 'LAA-No GIS'
-    elif row['Corn_Buffer'] > 0.4 and row['Orchards and Vineyards_Buffer'] > 0.4 and row['Other Crops_Buffer'] > 0.4 \
-            and row['Other Grains_Buffer'] > 0.4 and row['Other RowCrops_Buffer'] > 0.4 and row['Pasture_Buffer'] > 0.4 \
-            and row['Soybeans_Buffer'] > 0.4 and row['Vegetables and Ground Fruit_Buffer'] > 0.4 \
-            and row['Wheat_Buffer'] > 0.4 and row['Bermuda Grass_Buffer'] > 0.4:
+    elif row['EntityID'] in NLAA_Flybait:
+        if row['Fly bait Only'].endswith('Drift Only'):
+            if row['Corn_Buffer'] <= 0.44 and row['Orchards and Vineyards_Buffer'] <= 0.44 and row[
+                'Other Crops_Buffer'] <= 0.44 \
+                    and row['Other Grains_Buffer'] <= 0.44 and row['Other RowCrops_Buffer'] <= 0.44 \
+                    and row['Pasture_Buffer'] <= 0.44 and row['Soybeans_Buffer'] <= 0.44 \
+                    and row['Vegetables and Ground Fruit_Buffer'] <= 0.44 and row['Methomyl Wheat_Buffer'] <= 0.44 \
+                    and row['Bermuda Grass_Buffer'] <= 0.44 and row['Alley Cropping_Buffer'] <= 0.44 \
+                    and row['Cotton_Buffer'] <= 0.44:
+                if row['EntityID'] in NE_DD:
+                    return 'NLAA-Overlap NLAA- Fly bait NE- DD'
+                elif row['EntityID'] in DD_Species:
+                    return 'LAA- DD NLAA-Overlap NLAA- Fly bait'
+                else:
+                    return 'NLAA-Overlap NLAA- Fly bait'
+            else:
+                if row['EntityID'] in NE_DD:
+                    return 'LAA-Overlap NLAA- Fly bait NE- DD'
+                elif row['EntityID'] in DD_Species:
+                    return 'LAA-Overlap LAA- DD NLAA- Fly bait'
+                else:
+                    return 'LAA-Overlap NLAA- Fly bait'
+        else:
+            if row['EntityID'] in NE_DD:
+                return 'NLAA- Fly bait NE- DD'
+            elif row['EntityID'] in DD_Species:
+                return 'LAA- DD NLAA- Fly bait'
+            else:
+                return 'NLAA- Fly bait'
+    elif row['Corn_Buffer'] > 0.4 or row['Orchards and Vineyards_Buffer'] > 0.4 or row['Other Crops_Buffer'] > 0.4 \
+            or row['Other Grains_Buffer'] > 0.4 or row['Other RowCrops_Buffer'] > 0.4 or row['Pasture_Buffer'] > 0.4 \
+            or row['Soybeans_Buffer'] > 0.4 or row['Vegetables and Ground Fruit_Buffer'] > 0.4 \
+            or row['Methomyl Wheat_Buffer'] > 0.4 or row['Bermuda Grass_Buffer'] > 0.4 \
+            or row['Alley Cropping_Buffer'] > 0.4 or row['Cotton_Buffer'] > 0.4:
 
         if row['EntityID'] not in DD_Species:
             return 'LAA-Overlap'
@@ -214,8 +312,9 @@ def step_2_ED(row):
     elif row['Corn_Buffer'] <= 0.4 and row['Orchards and Vineyards_Buffer'] <= 0.4 and row['Other Crops_Buffer'] <= 0.4 \
             and row['Other Grains_Buffer'] <= 0.4 and row['Other RowCrops_Buffer'] <= 0.4 \
             and row['Pasture_Buffer'] <= 0.4 and row['Soybeans_Buffer'] <= 0.4 \
-            and row['Vegetables and Ground Fruit_Buffer'] <= 0.4 and row['Wheat_Buffer'] <= 0.4 \
-            and row['Bermuda Grass_Buffer'] <= 0.4:
+            and row['Vegetables and Ground Fruit_Buffer'] <= 0.4 and row['Methomyl Wheat_Buffer'] <= 0.4 \
+            and row['Bermuda Grass_Buffer'] <= 0.4 and row['Alley Cropping_Buffer'] <= 0.4 \
+            and row['Cotton_Buffer'] <= 0.4:
         if row['EntityID'] not in DD_Species:
             return 'NLAA-Overlap'
         else:
@@ -226,36 +325,87 @@ def step_2_ED(row):
             else:
                 return 'LAA-DD and NLAA-Overlap'
     else:
-        return 'LAA-Overlap'
+        return 'LAA-No Catch'
 
 
 def flybait_tag(row):
     if row['Flybait'] >= 0:
-        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row['Other Crops'] <= 0.4 and row['Other Grains'] <= 0.4 and row['Other RowCrops'] <= 0.4 and row['Pasture'] <= 0.4 and row['Soybeans'] <= 0.4 and row['Vegetables and Ground Fruit'] <= 0.4 and row['Wheat'] <= 0.4 and row['Bermuda Grass'] <= 0.4:
-            if row['Step 2 ED Comment'] == 'LAA-Overlap and LAA-DD' or row['Step 2 ED Comment'] == 'NE- Step 1':
-                result= 'No'
+
+        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row['Other Crops'] <= 0.4 and row[
+            'Other Grains'] <= 0.4 and row['Other RowCrops'] <= 0.4 and row['Pasture'] <= 0.4 and row[
+            'Soybeans'] <= 0.4 and row['Vegetables and Ground Fruit'] <= 0.4 and row['Methomyl Wheat'] <= 0.4 and row[
+            'Bermuda Grass'] <= 0.4 and row['Alley Cropping'] <= 0.4 and row['Cotton'] <= 0.4:
+
+            if row['Source of Call final BE-Range'].startswith('Aqua'):
+                result = 'No'
+            elif row['Step 1 ED Comment'] == 'NE-Overlap':
+                result = 'No'
+            elif row['Source of Call final BE-Range'].startswith('Qual'):
+                result = 'No'
             elif row['EntityID'] in NE_Extinct:
-                result= 'No'
+                result = 'No'
             elif row['EntityID'] in NLAA_Extinct:
-                result= 'No'
+                result = 'No'
             elif row['EntityID'] in NLAA_OutsideUse:
                 result = 'No'
             elif row['EntityID'] in NoGIS:
-                result ='No'
+                result = 'No'
+            elif row['Flybait'] == 0:
+                result = 'No'
             else:
-                result ='Yes'
+                result = 'Yes'
 
             if result == 'Yes':
-                if row['Corn_Buffer'] <= 0.4 and row['Orchards and Vineyards_Buffer'] <= 0.4 and row['Other Crops_Buffer'] <= 0.4 and row['Other Grains_Buffer'] <= 0.4 and row['Other RowCrops_Buffer'] <= 0.4 and row['Pasture_Buffer'] <= 0.4 and row['Soybeans_Buffer'] <= 0.4 and row['Vegetables and Ground Fruit_Buffer'] <= 0.4 and row['Wheat_Buffer'] <= 0.4 and row['Bermuda Grass_Buffer'] <= 0.4:
-                    return 'Yes'
+                if row['Corn_Buffer'] <= 0.4 and row['Orchards and Vineyards_Buffer'] <= 0.4 and row[
+                    'Other Crops_Buffer'] <= 0.4 and row['Other Grains_Buffer'] <= 0.4 and row[
+                    'Other RowCrops_Buffer'] <= 0.4 and row['Pasture_Buffer'] <= 0.4 and row[
+                    'Soybeans_Buffer'] <= 0.4 and row['Vegetables and Ground Fruit_Buffer'] <= 0.4 and row[
+                    'Methomyl Wheat_Buffer'] <= 0.4 and row['Bermuda Grass_Buffer'] <= 0.4 and row[
+                    'Alley Cropping_Buffer'] <= 0.4 and row['Cotton_Buffer'] <= 0.4:
+                    if row['Flybait'] == 0:
+                        return 'No'
+                    else:
+                        return 'Yes'
                 else:
-                    return 'Yes- Spray Drift Only'
+                    if row['Flybait'] == 0:
+                        return 'No'
+                    else:
+                        return 'Yes- Spray Drift Only'
             else:
                 return 'No'
 
 
+def drift_tag(row):
+    if row['Fly bait Only'] is None or not row['Fly bait Only'].startswith('Yes'):
 
-# TODO Removed all steps other than last else as things are completed
+        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row['Other Crops'] <= 0.4 and row[
+            'Other Grains'] <= 0.4 and row['Other RowCrops'] <= 0.4 and row['Pasture'] <= 0.4 and row[
+            'Soybeans'] <= 0.4 and row['Vegetables and Ground Fruit'] <= 0.4 and row['Methomyl Wheat'] <= 0.4 and row[
+            'Bermuda Grass'] <= 0.4 and row['Alley Cropping'] <= 0.4 and row['Cotton'] <= 0.4:
+
+            if row['Step 1 ED Comment'] == 'NE-Overlap':
+                return 'No'
+            elif row['Source of Call final BE-Range'].startswith('Qual'):
+                return 'No'
+            elif row['EntityID'] in NE_Extinct:
+                return 'No'
+            elif row['EntityID'] in NLAA_Extinct:
+                return 'No'
+            elif row['EntityID'] in NLAA_OutsideUse:
+                return 'No'
+            elif row['EntityID'] in NoGIS:
+                return 'No'
+            elif row['Corn_Buffer'] > 0.4 or row['Orchards and Vineyards_Buffer'] > 0.4 or row[
+                'Other Crops_Buffer'] > 0.4 or row['Other Grains_Buffer'] > 0.4 or row[
+                'Other RowCrops_Buffer'] > 0.4 or row['Pasture_Buffer'] > 0.4 or row[
+                'Soybeans_Buffer'] > 0.4 or row['Vegetables and Ground Fruit_Buffer'] > 0.4 or row[
+                'Methomyl Wheat_Buffer'] > 0.4 or row['Bermuda Grass_Buffer'] > 0.4 or row[
+                'Alley Cropping_Buffer'] > 0.4 or row['Cotton_Buffer'] > 0.4:
+                return 'Yes'
+            else:
+                return 'NLAA-overlap'
+
+
 def apply_ed_flaybait(row, column):
     if row['EntityID'] in NE_Extinct:
         return 'NE-Extinct'
@@ -263,24 +413,154 @@ def apply_ed_flaybait(row, column):
         return 'NLAA-Extinct'
     elif row['EntityID'] in NLAA_OutsideUse:
         return 'NLAA-Outside Use'
-    elif row['EntityID'] in NLAA_Flybait:
-        return 'NLAA-Fly bait'
     elif row['EntityID'] in LAA_Flybait:
         return 'LAA-Fly bait'
-    elif row['EntityID'] in DD_Species:
-        return 'TBD- DD needs to be run'
-    elif row['EntityID'] in QualRepot_speceis:
-        return 'TBD- Qual Report needs to be finalized'
-    elif row['Fly bait Only'] == 'Yes':
-        return 'TBD- Fly bait analysis to be finalized'
+    elif row['EntityID'] in NLAA_Flybait:
+        if row['Fly bait Only'].endswith('Drift Only'):
+            if row['Corn_Buffer'] <= 0.44 and row['Orchards and Vineyards_Buffer'] <= 0.44 and row[
+                'Other Crops_Buffer'] <= 0.44 and row['Other Grains_Buffer'] <= 0.44 and row[
+                'Other RowCrops_Buffer'] <= 0.44 and row['Pasture_Buffer'] <= 0.44 and row[
+                'Soybeans_Buffer'] <= 0.44 and row['Vegetables and Ground Fruit_Buffer'] <= 0.44 and row[
+                'Methomyl Wheat_Buffer'] <= 0.44 and row['Bermuda Grass_Buffer'] <= 0.44 and row[
+                'Alley Cropping_Buffer'] <= 0.44 and row['Cotton_Buffer'] <= 0.44:
+                if row['EntityID'] in NE_DD:
+                    return 'NLAA-Overlap NLAA- Fly bait NE- DD'
+                elif row['EntityID'] in DD_Species:
+                    return 'LAA- DD NLAA-Overlap NLAA- Fly bait'
+                else:
+                    return 'NLAA-Overlap NLAA- Fly bait'
+
+            else:
+                if row['EntityID'] in NE_DD:
+                    return 'LAA-Overlap NLAA- Fly bait NE- DD'
+                elif row['EntityID'] in DD_Species:
+                    return 'LAA-Overlap LAA- DD NLAA- Fly bait'
+                else:
+                    return 'LAA-Overlap NLAA- Fly bait'
+        else:
+            if row['EntityID'] in NE_DD:
+                return 'NLAA- Fly bait NE- DD'
+            elif row['EntityID'] in DD_Species:
+                return 'LAA- DD NLAA- Fly bait'
+            else:
+                return 'NLAA- Fly bait'
+
+
     else:
         value = row[column]
         return value
 
 
 def clean_up_columns(row, column):
-    value = str(row[column].split('-')[0])
-    return value
+    try:
+
+        value = str(row[column].split('-')[0])
+
+        return value
+    except:
+        return 'check'
+
+
+def apply_ed_woe(row, column):
+    value = row[column]
+    if row['EntityID'] in NE_Extinct:
+        return 'NE-Extinct'
+    elif row['EntityID'] in NLAA_Extinct:
+        return 'NLAA-Extinct'
+    elif row['EntityID'] in NLAA_OutsideUse:
+        return 'NLAA-Outside Use'
+    elif row['EntityID'] in LAA_Flybait:
+        return 'LAA-Fly bait'
+    elif row['EntityID'] in NLAA_QualReport:
+        return 'NLAA-QualReport'
+    elif row['EntityID'] in LAA_QualReport:
+        return 'LAA-QualReport'
+    elif row['EntityID'] in NoGIS:
+        return 'LAA-No GIS'
+    elif value == 'NE- Step 1':
+        return value
+    elif value == 'NLAA-Overlap':
+        return value
+    elif row['EntityID'] in NLAA_Flybait:
+        if row['Fly bait Only'].endswith('Drift Only'):
+            if row['Corn_Buffer'] <= 0.44 and row['Orchards and Vineyards_Buffer'] <= 0.44 and row[
+                'Other Crops_Buffer'] <= 0.44 and row['Other Grains_Buffer'] <= 0.44 and row[
+                'Other RowCrops_Buffer'] <= 0.44 and row['Pasture_Buffer'] <= 0.44 and row[
+                'Soybeans_Buffer'] <= 0.44 and row['Vegetables and Ground Fruit_Buffer'] <= 0.44 and row[
+                'Methomyl Wheat_Buffer'] <= 0.44 and row['Bermuda Grass_Buffer'] <= 0.44 and row[
+                'Alley Cropping_Buffer'] <= 0.44 and row['Cotton_Buffer'] <= 0.44:
+                if row['EntityID'] in NE_DD:
+                    return 'NLAA-Overlap NLAA- Fly bait NE- DD'
+                elif row['EntityID'] in DD_Species:
+                    return 'LAA- DD NLAA-Overlap NLAA- Fly bait'
+                else:
+                    return 'NLAA-Overlap NLAA- Fly bait'
+            else:
+                if row['EntityID'] in NE_DD:
+                    if row['EntityID'] in NLAA_WoE:
+                        return 'NLAA- WoE LAA-Overlap NLAA- Fly bait NE- DD'
+                    else:
+                        return 'LAA- WoE LAA-Overlap NLAA- Fly bait NE- DD'
+                elif row['EntityID'] in DD_Species:
+                    if row['EntityID'] in NLAA_WoE:
+                        return 'NLAA- WoE LAA-Overlap LAA- DD NLAA- Fly bait'
+                    else:
+                        return 'LAA- WoE LAA-Overlap LAA- DD NLAA- Fly bait'
+                else:
+                    if row['EntityID'] in NLAA_WoE:
+                        return 'NLAA- WoE LAA-Overlap NLAA- Fly bait'
+                    else:
+                        return 'LAA- WoE LAA-Overlap NLAA- Fly bait'
+        else:
+            if row['EntityID'] in NE_DD:
+                if row['EntityID'] in NLAA_WoE:
+                    return 'NLAA-WoE NLAA- Fly bait NE- DD'
+                else:
+                    return 'NLAA- Fly bait NE- DD'
+            elif row['EntityID'] in DD_Species:
+                if row['EntityID'] in NLAA_WoE:
+                    return 'NLAA-WoE LAA- DD NLAA- Fly bait'
+                else:
+                    return 'LAA- DD NLAA- Fly bait'
+            else:
+                if row['EntityID'] in NLAA_WoE:
+                    return 'NLAA-WoE NLAA- Fly bait'
+                else:
+                    return 'NLAA- Fly bait'
+    elif row['Corn_Buffer'] >= 0.44 or row['Orchards and Vineyards_Buffer'] >= 0.44 or row[
+        'Other Crops_Buffer'] >= 0.44 or row['Other Grains_Buffer'] >= 0.44 or row[
+        'Other RowCrops_Buffer'] >= 0.44 or row['Pasture_Buffer'] >= 0.44 or row[
+        'Soybeans_Buffer'] >= 0.44 or row['Vegetables and Ground Fruit_Buffer'] >= 0.44 or row[
+        'Methomyl Wheat_Buffer'] >= 0.44 or row['Bermuda Grass_Buffer'] >= 0.44 or row[
+        'Alley Cropping_Buffer'] >= 0.44 or row['Cotton_Buffer'] >= 0.44:
+        if row['EntityID'] in NLAA_WoE:
+            if row['EntityID'] in NE_DD:
+                return 'NLAA-WoE LAA- Overlap NE-DD'
+            elif row['EntityID'] in DD_Species:
+                return 'NLAA-WoE LAA- Overlap LAA-DD'
+            else:
+
+                return 'NLAA-WoE LAA- Overlap'
+        else:
+            if row['EntityID'] in NE_DD:
+                return 'LAA-WoE LAA- Overlap NE-DD'
+            elif row['EntityID'] in DD_Species:
+                return 'LAA-WoE LAA- Overlap LAA-DD'
+            else:
+                return 'LAA-WoE LAA- Overlap'
+    elif row['EntityID'] in NLAA_WoE:
+        if row['EntityID'] in NE_DD:
+            return 'NLAA-WoE LAA- Overlap NE-DD'
+        elif row['EntityID'] in DD_Species:
+            return 'NLAA-WoE LAA- Overlap LAA-DD'
+        else:
+            return 'NLAA-WoE LAA- Overlap'
+    elif row['EntityID'] in NE_DD:
+        return 'LAA-WoE LAA- Overlap NE-DD'
+    elif row['EntityID'] in DD_Species:
+        return 'LAA-WoE LAA- Overlap LAA-DD'
+    else:
+        return 'LAA-WoE LAA- Overlap'
 
 
 def summary_table(step1, step2, groups):
@@ -315,9 +595,9 @@ print list_uses
 # Sets up the intervals that are of interests for each of the uses
 
 sp_table_df = pd.read_csv(in_table, dtype=object)
-
+print sp_table_df.columns.values.tolist()
+# print sp_table_df
 sp_info_df = sp_table_df.iloc[:, :sp_index_cols]
-print sp_info_df.columns.values.tolist()
 use_df = sp_table_df.iloc[:, sp_index_cols:]
 # print use_df
 
@@ -340,41 +620,38 @@ for use in list_uses:
 # ### Step 1
 
 collapsed_df['Step 1 ED Comment'] = collapsed_df.apply(lambda row: step_1_ED(row), axis=1)
-collapsed_df['Step 1 ED'] = collapsed_df['Step 1 ED Comment'].map(lambda x: 'NE' if x.startswith('NE')else 'May Affect')
 
-# TODO waiting on final Qual reports, DD, and fly bait table
-# ## Step 2
-collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: step_2_ED(row), axis=1)
+collapsed_df['Step 1 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 1 ED Comment'), axis=1)
+
 collapsed_df['Fly bait Only'] = collapsed_df.apply(lambda row: flybait_tag(row), axis=1)
+collapsed_df['Drift Only-NonFly bait'] = collapsed_df.apply(lambda row: drift_tag(row), axis=1)
+collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: step_2_ED(row), axis=1)
 
-# ##Clean up columns
 collapsed_df['Step 1 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 1 ED'), axis=1)
+collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: apply_ed_flaybait(row, 'Step 2 ED Comment'),
+                                                       axis=1)
 
-# TODO waiting on final Qual reports, DD, and fly bait table
-collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: apply_ed_flaybait(row, 'Step 2 ED Comment'), axis=1)
+collapsed_df['Step 2 ED Comment'] = collapsed_df.apply(lambda row: apply_ed_woe(row, 'Step 2 ED Comment'),
+                                                       axis=1)
 collapsed_df['Step 2 ED'] = collapsed_df['Step 2 ED Comment'].map(lambda x: x.split('-')[0])
 collapsed_df['Step 2 ED'] = collapsed_df.apply(lambda row: clean_up_columns(row, 'Step 2 ED'), axis=1)
-
 final_df = collapsed_df.reindex(columns=col_reindex)
 final_df = final_df.fillna(0)
+
 final_df.to_csv(out_csv)
 
 # set up summary table
-
 summary_count_step1 = collapsed_df[['WoE Summary Group', 'Step 1 ED']].groupby(
     ['WoE Summary Group', 'Step 1 ED']).size()
-df_step1 = summary_count_step1.to_frame()
-df_step1.reset_index(inplace=True)
-
-# TODO waiting on final Qual reports, DD, and fly bait table
-df_step2 = pd.DataFrame()
 summary_count_step2 = collapsed_df[['WoE Summary Group', 'Step 2 ED']].groupby(
     ['WoE Summary Group', 'Step 2 ED']).size()
 
+df_step1 = summary_count_step1.to_frame()
+df_step1.reset_index(inplace=True)
+
 df_step2 = summary_count_step2.to_frame()
 df_step2.reset_index(inplace=True)
-
-groups = sorted(list(set(df_step1['WoE Summary Group'].values.tolist())))
+groups = sorted(list(set(df_step2['WoE Summary Group'].values.tolist())))
 out_summary = summary_table(df_step1, df_step2, groups)
 out_summary.to_csv(out_summary_csv)
 

@@ -3,14 +3,14 @@ import pandas as pd
 import datetime
 # Title - generates acres table for all species in each region and full spatial file
 
-out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20170131.csv'
+out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv'
 # out table
 # in GDB with projected comp files, regional and world projection for full spatial file
 inGDB_list = [
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional\R_SpGroupComposite_ProjectedtRegion_20161102.gdb',
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite_WebMercator.gdb']
+    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional\CH_SpGroupComposite_ProjectedtRegion_20161102.gdb',
+    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite_WebMercator.gdb']
 # current master for species info
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_201601102.xlsx'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170117.xlsx'
 # Colums in Master that should be included
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Range_Filename', 'Des_CH', 'CH_GIS',
                 'CH_Filename']

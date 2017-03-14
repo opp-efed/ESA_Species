@@ -4,7 +4,7 @@ import datetime
 
 in_split = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\AquModeling\SpatialJoins\Summarized_spatialJoins\AllHUC_a_b.csv'
 huc_12_cross = r'L:\Workspace\ESA_Species\Range\HUC12\SpInBins\HUC12\GDB\R_SpInBins_FWS_NMFS_wide_HUC12_Cross_ForA_BSplit_bins.txt'
-long_bins = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\LongBins_unfilter_20170106.csv'
+long_bins = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Updates_Feb2017\LongBins_unfilter_20170209.csv'
 final_cols = ['lead_agency', 'Group', 'HUC_2', 'comname', 'EntityID', 'sciname', 'status_text',
               'Reassigned', 'Bins_reassigned', 'AttachID', 'Bins', 'Value', 'WoE_group_1', 'WoE_group_2']
 
@@ -18,8 +18,9 @@ df_long['EntityID'] = df_long['EntityID'].map(lambda x: x).astype(str)
 df_long['HUC_2'] = df_long['HUC_2'].map(lambda x: x).astype(str)
 df_cross.columns = ['EntityID', 'HUC_12']
 
-out_location = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError'
-date = 20170110
+out_location = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Updates_Feb2017'
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
 
 HUC2_Dict = {'10a': '10',
              '10b': '10',

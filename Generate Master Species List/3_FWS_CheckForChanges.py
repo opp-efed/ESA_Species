@@ -7,30 +7,31 @@ import csv
 import pandas as pd
 
 # TODO update cross check to arrays and not dictionaries
-date = 20160608
-oldMaster = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\TESSQueries\20160606\FilteredinPandas\ChangesJustFWS\FWS_MasterListESA_April2015_20151015_20151124.csv'
-newMaster = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\TESSQueries\20160606\FilteredinPandas\ChangesJustFWS\FilteredTessPandas_FWS_20160607.csv'
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
+oldMaster = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\CheckforChanges\OldMaster_20170223.csv'
+newMaster = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\CheckforChanges\NewMaster_20170223.csv'
 table_id_list = ['old', 'new']
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\TESSQueries\20160606\FilteredinPandas\ChangesJustFWS'
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\CheckforChanges'
 
-CheckForChanges_col = ['entity_id', 'spcode', 'vipcode', 'sciname', 'comname', 'family', 'status_text', 'country']
+CheckForChanges_col = ['EntityID', 'spcode', 'vipcode', 'sciname', 'comname', 'family', 'status_text', 'country']
 
-newColindex = {'entity_id': 1,
+newColindex = {'EntityID': 0,
                'spcode': 10,
                'vipcode': 11,
                'sciname': 3,
                'comname': 2,
                'family': 9,
                'status_text': 6,
-               'country': 14}
-oldColindex = {'entity_id': 0,
-               'spcode': 26,
-               'vipcode': 27,
-               'sciname': 8,
-               'comname': 7,
-               'family': 9,
-               'status_text': 11,
                'country': 13}
+oldColindex = {'EntityID': 0,
+               'spcode': 11,
+               'vipcode': 12,
+               'sciname': 2,
+               'comname': 1,
+               'family': 9,
+               'status_text': 3,
+               'country': 14}
 
 
 def CreatDicts(list_vars, table_id):
@@ -57,7 +58,7 @@ def LoadDatainDicts(incsv, colIndex, dict_list, table_id):
     df = pd.read_csv(incsv)
     header = list(df.columns.values)
     # print header
-    entidindex = colIndex["entity_id"]
+    entidindex = colIndex["EntityID"]
     # print entidindex
     rowcount = df.count(axis=0, level=None, numeric_only=False)
     rowindex = rowcount.values[0]
@@ -77,14 +78,14 @@ def LoadDatainDicts(incsv, colIndex, dict_list, table_id):
                 ((globals()[dictionary][entid])) = str(value)
 
         row += 1
-    addSpecies_df = df[df['EntityID'].isin(ent_df['EntityID'])]
+    #addSpecies_df = df[df['EntityID'].isin(ent_df['EntityID'])]
     return ent_df
 
 
 def CheckForChanges(dictlist, cols, allent_df):
     for v in cols:
         start = datetime.datetime.now()
-        if v == 'entity_id':
+        if v == 'EntityID':
             continue
         else:
             print "Checking for changes in {0}".format(v)
@@ -187,6 +188,8 @@ def create_outtable(outInfo, csvname, header):
             for val in outInfo:
                 writer.writerow([val])
 
+start_time = datetime.datetime.now()
+print "Start Time: " + start_time.ctime()
 
 CreatDicts(CheckForChanges_col, "old")
 CreatDicts(CheckForChanges_col, "new")
@@ -208,24 +211,7 @@ addSpecies_df.to_csv(add_outfilter, encoding='utf-8')
 removedspecies_df.to_csv(remove_outfilter, encoding='utf-8')
 
 CheckForChanges(allDicts, CheckForChanges_col, allents_singlelist)
-
-# print "Added Species {0}".format(addSpecies_df)
-# print "Removed Species {0}".format(removedspecies_df)
-
-
-
-# finalheader = ['EntityID']
-# for v in header:
-#     finalheader.append(v)
-#
-# for value in sp_info_need:
-#     create_outtable(globals()[value], (outpath + os.sep + str(value) + "_" + str(date) + '.csv'), finalheader)
-#
-# outfilter = outpath + os.sep + 'FilteredTess_' + str(date) + '.csv'
-#
-# outDF_filtered = pd.DataFrame(filterResults, columns=finalheader)
-# outDF_filtered.to_csv(outfilter, encoding='utf-8')
-
-
-
-# create_outtable(filterResults, outfilter, finalheader)
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)

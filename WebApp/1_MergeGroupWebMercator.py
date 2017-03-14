@@ -6,9 +6,9 @@ import arcpy
 
 # TODO make updated for append so that the len list is equal to the len count of rows of comp
 
-refFC = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\regions\R_SpGroupComposite_DissolveRegion_Final_20160909.gdb\R_Clams_Composite_20160908_DissolveRegion_20160909'
+refFC = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional\R_SpGroupComposite_Regional_STDprj_20161102.gdb\AK_R_Birds_Composite_MAG_20161102_DissolveRegion_20161102_STDprj'
 
-outFolderCompGDB = r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat'
+
 skipgroup = []
 
 while True:
@@ -17,17 +17,19 @@ while True:
         print 'This is not a valid answer'
     else:
         if user_input == 'Yes':
-            FilesGDB = [r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Range\R_SpGroupComposite_ProjectedtRegion_20160909.gdb']
+            FilesGDB = [r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\Regional\R_SpGroupComposite_Regional_STDprj_20161102.gdb']
             RangeFile = True
             FileType = "R_"
+            outFolderCompGDB = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range'
             outGDB = outFolderCompGDB + os.sep + 'R_WebApp_Composite.gdb'
             break
         else:
 
             FilesGDB = [
-                r'C:\WorkSpace\ESA_Species\FinalBE_EucDis_CoOccur\Critical Habitat\CH_SpGroupComposite_Regional_STDprj_20160909.gdb']
+                r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional\CH_SpGroupComposite_Regional_STDprj_20161102.gdb']
             RangeFile = False
             FileType = "CH_"
+            outFolderCompGDB = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat'
             outGDB = outFolderCompGDB + os.sep + 'CH_WebApp_Composite.gdb'
             break
 

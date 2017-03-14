@@ -7,14 +7,17 @@ import csv
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+import datetime
 
 ## TODO Tables do not follow standard HTML table an the species with populations are not loading correctly, must correct
 
 # NOTE because of the above to do must check each individual table against final merge to see if anything dropped,
 # specifically salmon and other species with populaations
-date = 20160606
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
+
 groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Corals', 'Abalone', 'Fishes']
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\TESSQueries\20160606\NMFS\New folder'
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\NMFS\CanProposed'
 url = "http://www.nmfs.noaa.gov/pr/species/esa/listed.htm"
 
 
@@ -72,7 +75,8 @@ def create_Finaltable(outInfo, csvname):
             writer = csv.writer(output, delimiter="\n", quoting=csv.QUOTE_MINIMAL)
             for val in outInfo:
                 writer.writerow([val])
-
+start_time = datetime.datetime.now()
+print "Start Time: " + start_time.ctime()
 
 # Download and parse website table
 r = requests.get(url)
@@ -156,3 +160,7 @@ outDF_Full.to_csv(fulltable, encoding='utf-8')
 # create_Finaltable(inter, (outpath + os.sep + 'NMFSb_' + str(counter) + '_' + str(date) + '.csv'))
 ##Fix ring seal- so that the pop is correct
 ### read in csv take the max values try to complete one row per pop
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)
