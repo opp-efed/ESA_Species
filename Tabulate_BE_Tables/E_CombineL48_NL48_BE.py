@@ -7,7 +7,7 @@ in_table_NL48 = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\T
 outlocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\BETables'
 
 regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI','CONUS','AS'] #Range
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
+master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170117.xlsx'
 
 master_col = ['EntityID', 'Group', 'comname', 'sciname','status_text','pop_abbrev', 'Des_CH', 'CH_GIS',
               'Source of Call final BE-Range', 'WoE Summary Group', 'Source of Call final BE-Critical Habitat',

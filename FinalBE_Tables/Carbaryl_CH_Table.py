@@ -25,15 +25,15 @@ col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_a
                'WoE Summary Group', 'Source of Call final BE-Critical Habitat', 'Corn', 'Culitivated',
                'Developed', 'Golfcourses', 'Managed Forests', 'Non Cultivated', 'Nurseries', 'Open Space Developed',
                'Orchards and Vineyards', 'Other Crops', 'Other Grains', 'Other RowCrops', 'Pasture',
-                'Rangeland', 'Rice', 'Right of Way', 'Soybeans', 'Vegetables and Ground Fruit',
-                'Corn_CarbarylBuffer', 'Culitivated_CarbarylBuffer',
+               'Rangeland', 'Rice', 'Right of Way', 'Soybeans', 'Vegetables and Ground Fruit',
+               'Corn_CarbarylBuffer', 'Culitivated_CarbarylBuffer',
                'Developed_CarbarylBuffer', 'Golfcourses_CarbarylBuffer', 'Managed Forests_CarbarylBuffer',
                'Non Cultivated_CarbarylBuffer', 'Nurseries_CarbarylBuffer', 'Open Space Developed_CarbarylBuffer',
                'Orchards and Vineyards_CarbarylBuffer', 'Other Crops_CarbarylBuffer', 'Other Grains_CarbarylBuffer',
                'Other RowCrops_CarbarylBuffer', 'Pasture_CarbarylBuffer', 'Rangeland_CarbarylBuffer',
                'Rice_CarbarylBuffer', 'Right of Way_CarbarylBuffer', 'Soybeans_CarbarylBuffer',
                'Vegetables and Ground Fruit_CarbarylBuffer', 'Carbaryl_ActionArea',
-               'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED', 'Step 2 ED Comment','Drift Only']
+               'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED', 'Step 2 ED Comment', 'Drift Only']
 # None of the NE Extinct speices should have crithab
 NE_Extinct = []
 
@@ -248,7 +248,7 @@ def step_2_ED(row):
         return 'LAA-QualReport'
     elif row['EntityID'] in NE_QualReport:
         return 'NE-QualReport'
-    elif  row['Corn_CarbarylBuffer'] > 0.4 or row[
+    elif row['Corn_CarbarylBuffer'] > 0.4 or row[
         'Culitivated_CarbarylBuffer'] > 0.4 or row['Developed_CarbarylBuffer'] > 0.4 or row[
         'Golfcourses_CarbarylBuffer'] > 0.4 or row['Managed Forests_CarbarylBuffer'] > 0.4 or row[
         'Non Cultivated_CarbarylBuffer'] > 0.4 or row['Nurseries_CarbarylBuffer'] > 0.4 or row[
@@ -257,7 +257,7 @@ def step_2_ED(row):
         'Other RowCrops_CarbarylBuffer'] > 0.4 or row['Pasture_CarbarylBuffer'] > 0.4 or row[
         'Rangeland_CarbarylBuffer'] > 0.4 or row['Rice_CarbarylBuffer'] > 0.4 or row[
         'Right of Way_CarbarylBuffer'] > 0.4 or row['Soybeans_CarbarylBuffer'] > 0.4 or row[
-        'Vegetables and Ground Fruit_CarbarylBuffer'] > 0.4 :
+        'Vegetables and Ground Fruit_CarbarylBuffer'] > 0.4:
 
         if row['EntityID'] not in DD_Species:
             return 'LAA-Overlap'
@@ -278,7 +278,7 @@ def step_2_ED(row):
         'Other RowCrops_CarbarylBuffer'] <= 0.4 and row['Pasture_CarbarylBuffer'] <= 0.4 and row[
         'Rangeland_CarbarylBuffer'] <= 0.4 and row['Rice_CarbarylBuffer'] <= 0.4 and row[
         'Right of Way_CarbarylBuffer'] <= 0.4 and row['Soybeans_CarbarylBuffer'] <= 0.4 and row[
-        'Vegetables and Ground Fruit_CarbarylBuffer'] <= 0.4 :
+        'Vegetables and Ground Fruit_CarbarylBuffer'] <= 0.4:
         if row['EntityID'] not in DD_Species:
             return 'NLAA-Overlap'
         else:
@@ -292,6 +292,7 @@ def step_2_ED(row):
         return 'No CritHab'
     else:
         return 'LAA-No Catch'
+
 
 def apply_ed_flaybait(row, column):
     if row['CH_GIS'] == 'TRUE' or row['CH_GIS'] == 'True':
@@ -318,46 +319,51 @@ def clean_up_columns(row, column):
     else:
         value = str(row[column].split('-')[0])
         return value
+
+
 def drift_tag(row):
     if row['CH_GIS'] == 'TRUE' or row['CH_GIS'] == 'True':
-        if  row['Corn_CarbarylBuffer'] <= 0.4 and row[
-        'Culitivated_CarbarylBuffer'] <= 0.4 and row['Developed_CarbarylBuffer'] <= 0.4 and row[
-        'Golfcourses_CarbarylBuffer'] <= 0.4 and row['Managed Forests_CarbarylBuffer'] <= 0.4 and row[
-        'Non Cultivated_CarbarylBuffer'] <= 0.4 and row['Nurseries_CarbarylBuffer'] <= 0.4 and row[
-        'Open Space Developed_CarbarylBuffer'] <= 0.4 and row['Orchards and Vineyards_CarbarylBuffer'] <= 0.4 and row[
-        'Other Crops_CarbarylBuffer'] <= 0.4 and row['Other Grains_CarbarylBuffer'] <= 0.4 and row[
-        'Other RowCrops_CarbarylBuffer'] <= 0.4 and row['Pasture_CarbarylBuffer'] <= 0.4 and row[
-        'Rangeland_CarbarylBuffer'] <= 0.4 and row['Rice_CarbarylBuffer'] <= 0.4 and row[
-        'Right of Way_CarbarylBuffer'] <= 0.4 and row['Soybeans_CarbarylBuffer'] <= 0.4 and row[
-        'Vegetables and Ground Fruit_CarbarylBuffer'] <= 0.4 :
+        if row['Corn_CarbarylBuffer'] <= 0.4 and row[
+            'Culitivated_CarbarylBuffer'] <= 0.4 and row['Developed_CarbarylBuffer'] <= 0.4 and row[
+            'Golfcourses_CarbarylBuffer'] <= 0.4 and row['Managed Forests_CarbarylBuffer'] <= 0.4 and row[
+            'Non Cultivated_CarbarylBuffer'] <= 0.4 and row['Nurseries_CarbarylBuffer'] <= 0.4 and row[
+            'Open Space Developed_CarbarylBuffer'] <= 0.4 and row['Orchards and Vineyards_CarbarylBuffer'] <= 0.4 and \
+                        row[
+                            'Other Crops_CarbarylBuffer'] <= 0.4 and row['Other Grains_CarbarylBuffer'] <= 0.4 and row[
+            'Other RowCrops_CarbarylBuffer'] <= 0.4 and row['Pasture_CarbarylBuffer'] <= 0.4 and row[
+            'Rangeland_CarbarylBuffer'] <= 0.4 and row['Rice_CarbarylBuffer'] <= 0.4 and row[
+            'Right of Way_CarbarylBuffer'] <= 0.4 and row['Soybeans_CarbarylBuffer'] <= 0.4 and row[
+            'Vegetables and Ground Fruit_CarbarylBuffer'] <= 0.4:
 
-                if row['Step 1 ED Comment'] == 'NE-Overlap':
-                    return 'No'
-                elif row['Source of Call final BE-Range'].startswith('Qual'):
-                    return 'No'
-                elif row['EntityID'] in NE_Extinct:
-                    return 'No'
-                elif row['EntityID'] in NLAA_Extinct:
-                    return 'No'
-                elif row['EntityID'] in NLAA_OutsideUse:
-                    return 'No'
-                elif row['EntityID'] in NoGIS:
-                    return 'No'
-                elif row['EntityID'] in NLAA_OutsideUse:
-                    return 'No'
-                elif row['Corn_CarbarylBuffer'] > 0.4 or row[
-        'Culitivated_CarbarylBuffer'] > 0.4 or row['Developed_CarbarylBuffer'] > 0.4 or row[
-        'Golfcourses_CarbarylBuffer'] > 0.4 or row['Managed Forests_CarbarylBuffer'] > 0.4 or row[
-        'Non Cultivated_CarbarylBuffer'] > 0.4 or row['Nurseries_CarbarylBuffer'] > 0.4 or row[
-        'Open Space Developed_CarbarylBuffer'] > 0.4 or row['Orchards and Vineyards_CarbarylBuffer'] > 0.4 or row[
-        'Other Crops_CarbarylBuffer'] > 0.4 or row['Other Grains_CarbarylBuffer'] > 0.4 or row[
-        'Other RowCrops_CarbarylBuffer'] > 0.4 or row['Pasture_CarbarylBuffer'] > 0.4 or row[
-        'Rangeland_CarbarylBuffer'] > 0.4 or row['Rice_CarbarylBuffer'] > 0.4 or row[
-        'Right of Way_CarbarylBuffer'] > 0.4 or row['Soybeans_CarbarylBuffer'] > 0.4 or row[
-        'Vegetables and Ground Fruit_CarbarylBuffer'] > 0.4 :
-                    return 'Yes'
-                else:
-                    return 'NLAA-overlap'
+            if row['Step 1 ED Comment'] == 'NE-Overlap':
+                return 'No'
+            elif row['Source of Call final BE-Range'].startswith('Qual'):
+                return 'No'
+            elif row['EntityID'] in NE_Extinct:
+                return 'No'
+            elif row['EntityID'] in NLAA_Extinct:
+                return 'No'
+            elif row['EntityID'] in NLAA_OutsideUse:
+                return 'No'
+            elif row['EntityID'] in NoGIS:
+                return 'No'
+            elif row['EntityID'] in NLAA_OutsideUse:
+                return 'No'
+            elif row['Corn_CarbarylBuffer'] > 0.4 or row[
+                'Culitivated_CarbarylBuffer'] > 0.4 or row['Developed_CarbarylBuffer'] > 0.4 or row[
+                'Golfcourses_CarbarylBuffer'] > 0.4 or row['Managed Forests_CarbarylBuffer'] > 0.4 or row[
+                'Non Cultivated_CarbarylBuffer'] > 0.4 or row['Nurseries_CarbarylBuffer'] > 0.4 or row[
+                'Open Space Developed_CarbarylBuffer'] > 0.4 or row['Orchards and Vineyards_CarbarylBuffer'] > 0.4 or \
+                            row[
+                                'Other Crops_CarbarylBuffer'] > 0.4 or row['Other Grains_CarbarylBuffer'] > 0.4 or row[
+                'Other RowCrops_CarbarylBuffer'] > 0.4 or row['Pasture_CarbarylBuffer'] > 0.4 or row[
+                'Rangeland_CarbarylBuffer'] > 0.4 or row['Rice_CarbarylBuffer'] > 0.4 or row[
+                'Right of Way_CarbarylBuffer'] > 0.4 or row['Soybeans_CarbarylBuffer'] > 0.4 or row[
+                'Vegetables and Ground Fruit_CarbarylBuffer'] > 0.4:
+                return 'Yes'
+            else:
+                return 'NLAA-overlap'
+
 
 def summary_table(step1, step2, groups):
     df_summary = pd.DataFrame(data=groups, columns=['WoE Summary Group'])
