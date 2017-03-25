@@ -161,9 +161,13 @@ def check_lead(row, fws_current_df):
     fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
     try:
         current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'lead_agency'].iloc[0]
-        return current_Tess
+        if int(current_Tess) ==1:
+            current_Tess = 3
+            return current_Tess
+        else:
+            return int(current_Tess)
     except:
-        return '2'
+        return 2
 
 
 def check_country(row, fws_current_df):
@@ -220,3 +224,7 @@ current_NMFS['spcode'] = current_NMFS.apply(lambda row: check_spcode(row, FWS_li
 current_NMFS_std_col = current_NMFS.reindex(columns=out_cols)
 current_NMFS.to_csv(outlocation + os.sep + 'Full_NMFS_Listed' + date + '.csv', encoding='utf-8')
 current_NMFS_std_col.to_csv(outlocation + os.sep + 'Full_NMFS_Listed_STD_' + date + '.csv', encoding='utf-8')
+
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+print "Elapsed  Time: " + str(end - start_time)
