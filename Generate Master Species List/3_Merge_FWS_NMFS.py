@@ -1,6 +1,5 @@
 import datetime
 import os
-import csv
 
 import pandas as pd
 
@@ -8,11 +7,11 @@ import pandas as pd
 # #### user input variables
 outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017'  # path final tables
 current_NMFS_csv = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\NMFS' \
-                     r'\Full_NMFS_Listed_STD_20170324.csv'
-current_FWS = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\FWS' \
-              r'\FilteredTessPandasbb_20170221.csv'
+                     r'\Full_NMFS_Listed_STD_20170325.csv'
+current_FWS = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\FWS' \
+              r'\FilteredTessPandas_20170325.csv'
 
-current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170117.xlsx'
+current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 
 out_cols = ['entity_id', 'Notes', 'comname', 'sciname', 'invname', 'status', 'status_text', 'pop_abbrev',
             'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country', 'Group']
