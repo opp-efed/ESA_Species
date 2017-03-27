@@ -16,11 +16,11 @@ out_cols = ['entity_id', 'Updated date', 'Update description', 'Notes', 'Deliste
             'sciname', 'status_text', 'pop_abbrev', 'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country',
             'Group', 'Entid_Updated']
 
-col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',
-              u'CH_Type', u'CH_OriginalFileName', u'Group b', u'Group c', u'BinsAssigned', u'Range_Filename',
-              u'CH_Filename', u'Aqu_Species_20160819', u'DD_Species_DraftBE', u'InBins', u'AquWoeSpecies',
-              u'Source of Call final BE-Range', u'WoE Summary Group', u'Source of Call final BE-Critical Habitat',
-              u'Critical_Habitat_', u'Migratory', u'Migratory_']
+col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',u'CH_Type', u'CH_OriginalFileName', u'Group b', u'Group c',
+              u'BinsAssigned', u'Range_Filename',u'CH_Filename', u'Aqu_Species_20160819', u'DD_Species_DraftBE',
+              u'InBins', u'AquWoeSpecies', u'Source of Call final BE-Range', u'WoE Summary Group',
+              u'Source of Call final BE-Critical Habitat',u'Critical_Habitat_', u'Migratory', u'Migratory_',
+              u'AddedAquWoe',	u'AddedTerrWoE']
 
 entid_update = {'11356': '5623',
                 '11355': 'NMFS180',

@@ -22,8 +22,7 @@ lead_agency_index =12
 group_index =14
 
 current_master_col = [u'EntityID', u'Notes', u'comname', u'sciname', u'invname', u'status', u'status_text',
-                      u'pop_abbrev',
-                      u'pop_desc', u'family', u'spcode', u'vipcode', u'lead_agency', u'country', u'Group']
+                      u'pop_abbrev',u'pop_desc', u'family', u'spcode', u'vipcode', u'lead_agency', u'country', u'Group']
 
 # Tess has species tagged to the wrong lead agency should be both (3)11191 green sea turtle, 1
 # 397 id the genus listing of the Oahu trees snail and the individual pops are consider, the are add at line 112 also
