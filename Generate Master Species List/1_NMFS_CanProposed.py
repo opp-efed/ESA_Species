@@ -16,7 +16,7 @@ groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Cor
           'MarineMammals', 'MarineInvertebrates']
 
 url = "http://www.nmfs.noaa.gov/pr/species/esa/candidate.htm#proposed"
-outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\NMFS'
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'
 
 # Can and Proposed foreign species per NMFS
 removed_perNMFS =['Cephalorhynchus hectori maui','Cephalorhynchus hectori hectori','Sousa chinensis taiwanensis',
@@ -33,9 +33,17 @@ def get_tables(htmldoc):
     return soup.find_all('table'), title
 
 
+def createdirectory(DBF_dir):
+    if not os.path.exists(DBF_dir):
+        os.mkdir(DBF_dir)
+        print "created directory {0}".format(DBF_dir)
+
+
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+createdirectory(outlocation+os.sep+'NMFS')
+outlocation = outlocation+os.sep+'NMFS'
 # Download and parse website table
 r = requests.get(url)
 

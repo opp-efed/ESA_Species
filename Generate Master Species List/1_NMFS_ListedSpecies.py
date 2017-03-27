@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup
 
 # #################### VARIABLES
 # #### user input variables
-outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\NMFS' # path final tables
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test' # path final tables
 # Species groups used by NMFS
 groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Corals', 'Abalone', 'Fishes',
           'Sea Turtles', 'Other Marine Reptiles']
@@ -67,10 +67,21 @@ def get_tables(htmldoc):  # h2 is the tag for the table header, this will parse 
         title_list.append(t)
     return soup.find_all('table'), title_list
 
+
+def createdirectory(DBF_dir):
+    if not os.path.exists(DBF_dir):
+        os.mkdir(DBF_dir)
+        print "created directory {0}".format(DBF_dir)
+
+
 # ######################################################################################################################
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+
+
+createdirectory(outlocation+os.sep+'NMFS')
+outlocation = outlocation+os.sep+'NMFS'
 # Step 1:Download and parse out website tables
 r = requests.get(url)
 list_tables, title = get_tables(r)

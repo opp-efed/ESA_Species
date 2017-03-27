@@ -14,7 +14,7 @@ __author__ = 'JConno02'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017'
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'
 url = "http://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
 
 r = requests.get(url)
@@ -197,8 +197,17 @@ def create_outtable(outInfo, csvname, header):
             for val in outInfo:
                 writer.writerow([val])
 
+
+def createdirectory(DBF_dir):
+    if not os.path.exists(DBF_dir):
+        os.mkdir(DBF_dir)
+        print "created directory {0}".format(DBF_dir)
+
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+createdirectory(outpath+os.sep+'FWS')
+outpath = outpath+os.sep+'FWS'
+
 # Use Beautiful Soup to Parse the HTML
 soup = BeautifulSoup(r.content, 'html.parser')
 tagslist, speciesbreak, identifier = CheckXML_changes(soup)

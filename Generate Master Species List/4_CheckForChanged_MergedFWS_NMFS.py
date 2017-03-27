@@ -6,13 +6,9 @@ import pandas as pd
 # #################### VARIABLES
 # #### user input variables
 
-# TODO add group values to FWS tables and load in family for missing NMFS species that aren't new
-# TODO if entid is new= add current date
-# TODO generate delisted table
-# TODO update column refelcting a brand  new species
-outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017'  # path final tables
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'   # path final tables
 current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
-new_master = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\Full_Merged_Listed20170325.csv'
+new_master = outlocation +os.sep+ 'Full_Merged_Listed20170327.csv'
 
 # removing inverted name and status
 # columns in tables must be in the same order
@@ -56,8 +52,8 @@ def compare_tables(entityid, count_columns, df_parent, df_child, update_new, dat
     while counter < count_columns:
         parent_col = str(df_parent.columns.values.tolist()[counter])
         child_col = str(df_child.columns.values.tolist()[counter])
-
         parent_value = str(df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, parent_col].iloc[0])
+
         try:
             child_value = str(df_child.loc[df_child[df_child.columns.values.tolist()[index_pos_entid]] == entityid, child_col].iloc[0])
             old_notes = str(df_child.loc[df_child[df_child.columns.values.tolist()[index_pos_entid]] == entityid, 'Notes'].iloc[0])
@@ -73,10 +69,8 @@ def compare_tables(entityid, count_columns, df_parent, df_child, update_new, dat
                     new_update_date = str(df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Updated date'].iloc[0])
                     old_update_date = str(df_child.loc[df_child[df_child.columns.values.tolist()[index_pos_entid]] == entityid, 'Updated date'].iloc[0]).split(" ")[0]
                     old_update_description = df_child.loc[df_child[df_child.columns.values.tolist()[index_pos_entid]] == entityid, 'Update description'].iloc[0]
-
                     if new_update_date == date_update:
                         pass
-
                     else:
                         df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Update description'] = old_update_description
                         df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Updated date'] = old_update_date
@@ -112,7 +106,6 @@ def compare_tables(entityid, count_columns, df_parent, df_child, update_new, dat
 
             counter += 1
         else:
-
             break
 
 
@@ -172,7 +165,6 @@ def flag_new_species(df_parent, date_update, entityid, added_tess, old_entityid)
         df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Update description'] = description
 
 
-
 def check_entityID_updates(row, df_parent, df_child, date_update):
     df_parent[df_parent.columns.values.tolist()[index_pos_entid]] = df_parent[df_parent.columns.values.tolist()[index_pos_entid]].map(lambda x: x).astype(str)
     df_child[df_child.columns.values.tolist()[index_pos_entid]] = df_child[df_child.columns.values.tolist()[index_pos_entid]].map(lambda x: x).astype(str)
@@ -221,21 +213,20 @@ def check_removed(df_child, df_parent):
     return removed_species
 
 
-# [u'EntityID', u'Updated date', u'Update description', u'Notes', u'Delisted', u'Update Agency', u'comname', u'sciname', u'status_text', u'Group', u'pop_abbrev', u'pop_desc', u'NotConsidered_BE', u'GIS_underDevelopment', u'family', u'Order', u'spcode', u'vipcode', u'lead_agency', u'country', u'NMFSID', u'Des_CH', u'CH_GIS', u'CritHabUpdate', u'CH_Type', u'CH_OriginalFileName', u'refuge_occurrence', u'Group b', u'Group c', u'BinsAssigned', u'Range_Filename', u'CH_Filename', u'Aqu_Species_20160819', u'DD_Species_DraftBE', u'InBins', u'AquWoeSpecies', u'Source of Call final BE-Range', u'WoE Summary Group', u'Source of Call final BE-Critical Habitat', u'Critical_Habitat_', u'Migratory', u'Migratory_']
-current_listed_df = pd.read_csv(new_master)
-current_listed_df = current_listed_df.reindex(columns=out_cols)
-
-master_list_df = pd.read_excel(current_masterlist)
-master_list_df = master_list_df.reindex(columns=current_master_col)
-# print master_list_df.columns.values.tolist()
-
-
-today = datetime.datetime.today()
-date = today.strftime('%Y%m%d')
-
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+current_listed_df = pd.read_csv(new_master)
+current_listed_df = current_listed_df.reindex(columns=out_cols)
+current_listed_df['entity_id'] = current_listed_df['entity_id'].map(lambda x: x).astype(str)
+
+master_list_df = pd.read_excel(current_masterlist)
+master_list_df = master_list_df.reindex(columns=current_master_col)
+master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: x).astype(str)
+# print master_list_df.columns.values.tolist()
+
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
 update_date = today.strftime('%m/%d/%Y')
 
 current_listed_df.apply(lambda row: check_values(row, current_listed_df, master_list_df, True, update_date), axis=1)
@@ -246,11 +237,16 @@ current_listed_df['Entid_Updated'] = current_listed_df.apply(
 print '\nCompleted species entityid check\n'
 
 removed_list = check_removed(master_list_df, current_listed_df)
-print 'Removed Species {0}'.format(removed_list)
+print 'Removed Species {0} \nVerify species have be delisted or deemed not warranted'.format(removed_list)
 removed_species = master_list_df.loc[master_list_df['EntityID'].isin(removed_list) == True]
+
+added_species= current_listed_df.loc[current_listed_df['Entid_Updated'] == True]
+added_species = added_species.loc[added_species['Update description'] == 'added']
 
 current_listed_df.to_csv(outlocation + os.sep + 'Full_Merged_Listed_updated_' + date + '.csv', encoding='utf-8')
 removed_species.to_csv(outlocation + os.sep + 'Removed_species_' + date + '.csv', encoding='utf-8')
+added_species.to_csv(outlocation + os.sep + 'NewlyListed_species_' + date + '.csv', encoding='utf-8')
+
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 print "Elapsed  Time: " + str(end - start_time)

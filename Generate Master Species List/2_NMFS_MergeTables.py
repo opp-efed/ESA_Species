@@ -4,15 +4,13 @@ import csv
 
 import pandas as pd
 # TODO ADD IN CHECK OF FAMILY and country from currext master to load NMFS entity data
-# TODO CHECK WHY SO MANY COUNTRY VALUES are 2
+
 # #################### VARIABLES
 # #### user input variables
-outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\NMFS'  # path final tables
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'  # path final tables
 
-current_listed_csv = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\NMFS' \
-                     r'\FilteredWebsite_NMFS_Listed20170324.csv'
-current_canProposed_csv = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\March2017\NMFS' \
-                          r'\FilteredWebsite_NMFS_PropCan20170324.csv'
+current_listed_csv = 'FilteredWebsite_NMFS_Listed20170327.csv'
+current_canProposed_csv =  'FilteredWebsite_NMFS_PropCan20170327.csv'
 
 family_group_cross ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Family_Group_crosswalk_20170325.csv'
 current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
@@ -161,6 +159,16 @@ def check_family(row, fws_current_df):
         return family
 
 
+def check_country_master(row, master_df):
+    entid = str(row['entity_id'])
+    current_country = str(row['country'])
+    try:
+        current_Tess = master_df.loc[(master_df['EntityID'] == entid), 'country'].iloc[0]
+        if current_Tess!= current_country:
+            return current_country
+    except:
+        return current_country
+
 def check_spcode(row, fws_current_df):
     entid = str(row['entity_id'])
     fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
@@ -232,6 +240,9 @@ def check_group(row, fws_current_df):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+outlocation = outlocation+os.sep+'NMFS'
+current_listed_csv = outlocation +os.sep+current_listed_csv
+current_canProposed_csv =outlocation +os.sep+current_canProposed_csv
 current_listed_df = pd.read_csv(current_listed_csv)
 current_canProposed_csv = pd.read_csv(current_canProposed_csv)
 current_NMFS = pd.concat([current_listed_df, current_canProposed_csv], axis=0)
@@ -267,6 +278,7 @@ current_NMFS['lead_agency'] = current_NMFS.apply(lambda row: check_lead(row, FWS
 # use old master so that the FWS errors in TESS are not carried forward
 # default country for new species is 3 domestic and foreign
 current_NMFS['country'] = current_NMFS.apply(lambda row: check_country(row, nmfs_species_master), axis=1)
+current_NMFS['country'] = current_NMFS.apply(lambda row: check_country_master(row, nmfs_species_master), axis=1)
 current_NMFS['Group'] = current_NMFS.apply(lambda row: check_group(row,fmy_grp_xwalk), axis=1)
 current_NMFS['Group'] = current_NMFS.apply(lambda row: check_nmfs_group(row), axis=1)
 
@@ -280,5 +292,7 @@ end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 print "Elapsed  Time: " + str(end - start_time)
 
+
+
 print '\nCheck that the following columns are complete before merging with nmfs and ' \
-      'checking for updates \n {0}'.format(out_cols)
+      'checking for updates \n {0} \n Family may need to be added manually'.format(out_cols)
