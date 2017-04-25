@@ -14,8 +14,8 @@ __author__ = 'JConno02'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'
-url = "http://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'
+url = "https://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
 
 r = requests.get(url)
 reload(sys)

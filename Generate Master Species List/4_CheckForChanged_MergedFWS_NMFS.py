@@ -6,13 +6,13 @@ import pandas as pd
 # #################### VARIABLES
 # #### user input variables
 
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'   # path final tables
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'   # path final tables
 current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
-new_master = outlocation +os.sep+ 'Full_Merged_Listed20170327.csv'
+new_master = outlocation +os.sep+ 'Full_Merged_Listed20170410.csv'
 
 # removing inverted name and status
 # columns in tables must be in the same order
-out_cols = ['entity_id', 'Updated date', 'Update description', 'Notes', 'Delisted', 'Update Agency', 'comname',
+out_cols = ['EntityID', 'Updated date', 'Update description', 'Notes', 'Delisted', 'Update Agency', 'comname',
             'sciname','status_text', 'pop_abbrev', 'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country',
             'Group']
 
@@ -89,6 +89,8 @@ def compare_tables(entityid, count_columns, df_parent, df_child, update_new, dat
                             description = description_dict[description]
                             df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Update description'] = description
                             df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Update Agency'] = 'Connolly-EPA'
+                            df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Notes'] = old_notes
+                            df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Delisted'] = old_delist
                     else:
                         description = str(df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Update description'].iloc[0])
                         add_description = df_parent.columns.values.tolist()[counter]
@@ -96,6 +98,8 @@ def compare_tables(entityid, count_columns, df_parent, df_child, update_new, dat
                             pass
                         else:
                             df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Updated date'] = date_update
+                            df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Notes'] = old_notes
+                            df_parent.loc[df_parent[df_parent.columns.values.tolist()[index_pos_entid]] == entityid, 'Delisted'] = old_delist
                             add_description = description_dict[add_description]
                             check_pop = description.split(' and ')
                             if add_description in check_pop:
@@ -172,7 +176,7 @@ def check_entityID_updates(row, df_parent, df_child, date_update):
 
     sciname = row['sciname']
     pop = row['pop_abbrev']
-    entid = row['entity_id']
+    entid = row['EntityID']
     added_tess = False
     old_entityid = 'None'
 
@@ -180,7 +184,7 @@ def check_entityID_updates(row, df_parent, df_child, date_update):
         child_value = str(df_child.loc[df_child[df_child.columns.values.tolist()[index_pos_entid]] == entid, child_col].iloc[0])
         if child_value == entid:
             return False
-    except:
+    except IndexError:
         try:
             old_entityid = df_child.loc[(df_child['sciname'] == sciname) & (df_child['pop_abbrev'] == pop),child_col].iloc[0]
             added_tess =True
@@ -195,7 +199,7 @@ def check_entityID_updates(row, df_parent, df_child, date_update):
 
             update_entityid_description(lead_agency, df_parent, date_update, old_entityid, entid, added_tess)
             return True
-        except:
+        except IndexError:
             print 'Entity, sciname and popname change for {0} flag as new species- check'.format(entid)
             flag_new_species(df_parent, date_update, entid, added_tess, old_entityid)
             return True
@@ -217,8 +221,9 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 current_listed_df = pd.read_csv(new_master)
+[current_listed_df.drop(v, axis=1, inplace=True) for v in current_listed_df.columns.values.tolist() if v.startswith ('Unnamed')]
 current_listed_df = current_listed_df.reindex(columns=out_cols)
-current_listed_df['entity_id'] = current_listed_df['entity_id'].map(lambda x: x).astype(str)
+current_listed_df['EntityID'] = current_listed_df['EntityID'].map(lambda x: x).astype(str)
 
 master_list_df = pd.read_excel(current_masterlist)
 master_list_df = master_list_df.reindex(columns=current_master_col)

@@ -5,8 +5,8 @@ import pandas as pd
 __author__ = 'JConno02'
 
 
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'
-inpath_FULLTESS = r'FullTess_20170327.csv'
+outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'
+inpath_FULLTESS = r'FullTess_20170410.csv'
 
 previos_FWS = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 family_group_cross ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Family_Group_crosswalk_20170325.csv'

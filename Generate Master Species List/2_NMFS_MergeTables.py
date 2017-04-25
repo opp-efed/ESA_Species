@@ -3,29 +3,29 @@ import os
 import csv
 
 import pandas as pd
-# TODO ADD IN CHECK OF FAMILY and country from currext master to load NMFS entity data
 
 # #################### VARIABLES
 # #### user input variables
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'  # path final tables
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'  # path final tables
 
-current_listed_csv = 'FilteredWebsite_NMFS_Listed20170327.csv'
-current_canProposed_csv =  'FilteredWebsite_NMFS_PropCan20170327.csv'
+current_listed_csv = 'FilteredWebsite_NMFS_Listed20170410.csv'
+current_canProposed_csv = 'FilteredWebsite_NMFS_PropCan20170410.csv'
 
-family_group_cross ='C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Family_Group_crosswalk_20170325.csv'
+family_group_cross = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Family_Group_crosswalk_20170325.csv'
 current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
-current_FWS = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\Feb2017\FWS\FullTess_20170221.csv'
+current_FWS = outlocation + os.sep + 'FWS\FullTess_20170410.csv'
 
 lead_agency_NMFS = ['2', '3']
 
 current_maxNMFSID = 181
 
-out_cols = ['entity_id', 'Notes', 'comname', 'sciname', 'invname', 'status', 'status_text', 'pop_abbrev',
+out_cols = ['EntityID', 'Notes', 'comname', 'sciname', 'invname', 'status', 'status_text', 'pop_abbrev',
             'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country', 'Group']
 
 # ####static default variables
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
+
 
 # ## Functions
 def assign_entitid(row, nmfs_masterlist_df):
@@ -35,38 +35,38 @@ def assign_entitid(row, nmfs_masterlist_df):
         value = nmfs_masterlist_df.loc[
             (nmfs_masterlist_df['sciname'] == sciname) & (nmfs_masterlist_df['pop_abbrev'] == pop), 'EntityID'].iloc[0]
         return value
-    except:
+    except IndexError:
         try:
             value = nmfs_masterlist_df.loc[(nmfs_masterlist_df['sciname'] == sciname) & (
                 nmfs_masterlist_df['pop_abbrev'] == pop + (' DPS')), 'EntityID'].iloc[0]
             return value
-        except:
+        except IndexError:
             pass
 
 
 def check_entity_currentTESS(row, fws_current_df):
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     global current_maxNMFSID
     sciname = str(row['Scientific Name'])
     pop = str(row['Population'])
-    entid = str(row['entity_id'])
+    entid = str(row['EntityID'])
     try:
         current_Tess = fws_current_df.loc[
-            (fws_current_df['sciname'] == sciname) & (fws_current_df['pop_abbrev'] == pop), 'entity_id'].iloc[0]
+            (fws_current_df['sciname'] == sciname) & (fws_current_df['pop_abbrev'] == pop), 'EntityID'].iloc[0]
 
         if current_Tess != entid:
             return current_Tess
         else:
             return entid
-    except:
+    except IndexError:
         try:
             current_Tess = fws_current_df.loc[(fws_current_df['sciname'] == sciname) & (
-                fws_current_df['pop_abbrev'] == pop + (' DPS')), 'entity_id'].iloc[0]
+                fws_current_df['pop_abbrev'] == pop + (' DPS')), 'EntityID'].iloc[0]
             if current_Tess != entid:
                 return str(current_Tess)
             else:
                 return entid
-        except:
+        except IndexError:
             value = entid
             if value == 'None':
                 current_maxNMFSID = int(current_maxNMFSID + 1)
@@ -77,13 +77,13 @@ def check_entity_currentTESS(row, fws_current_df):
 
 
 def check_commonname(row, fws_current_df):
-    entid = str(row['entity_id'])
+    entid = str(row['EntityID'])
     nmfs_common = row['Invname']
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     try:
-        current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'comname'].iloc[0]
+        current_Tess = fws_current_df.loc[(fws_current_df['EntityID'] == entid), 'comname'].iloc[0]
         return current_Tess
-    except:
+    except IndexError:
         break_common = nmfs_common.split(',')
         if len(break_common) == 1:
             return nmfs_common
@@ -126,28 +126,31 @@ def assign_status_test(row):
 
 
 def check_popdesc(row, fws_current_df):
-    entid = str(row['entity_id'])
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    entid = str(row['EntityID'])
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     try:
-        current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'pop_desc'].iloc[0]
+        current_Tess = fws_current_df.loc[(fws_current_df['EntityID'] == entid), 'pop_desc'].iloc[0]
         return current_Tess
-    except:
+    except IndexError:
         return 'NOT IN TESS'
 
+
 def check_family_master(row, master_df):
-    entid = str(row['entity_id'])
+    entid = str(row['EntityID'])
     try:
         current_Tess = master_df.loc[(master_df['EntityID'] == entid), 'family'].iloc[0]
         return current_Tess
-    except:
+    except IndexError:
         return ''
+
+
 def check_family(row, fws_current_df):
-    entid = str(row['entity_id'])
+    entid = str(row['EntityID'])
     family = (row['family'])
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     try:
-        current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'family'].iloc[0]
-        current_Tess= current_Tess.decode('unicode_escape').encode('ascii','ignore')
+        current_Tess = fws_current_df.loc[(fws_current_df['EntityID'] == entid), 'family'].iloc[0]
+        current_Tess = current_Tess.decode('unicode_escape').encode('ascii', 'ignore')
         if family == current_Tess:
             return family
         elif current_Tess != family:
@@ -155,46 +158,47 @@ def check_family(row, fws_current_df):
                 return family
             else:
                 return current_Tess
-    except:
+    except IndexError:
         return family
 
 
 def check_country_master(row, master_df):
-    entid = str(row['entity_id'])
+    entid = str(row['EntityID'])
     current_country = str(row['country'])
     try:
         current_Tess = master_df.loc[(master_df['EntityID'] == entid), 'country'].iloc[0]
-        if current_Tess!= current_country:
+        if current_Tess != current_country:
             return current_country
-    except:
+    except IndexError:
         return current_country
 
+
 def check_spcode(row, fws_current_df):
-    entid = str(row['entity_id'])
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    entid = str(row['EntityID'])
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     try:
-        current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'spcode'].iloc[0]
+        current_Tess = fws_current_df.loc[(fws_current_df['EntityID'] == entid), 'spcode'].iloc[0]
         return current_Tess
-    except:
+    except IndexError:
         return 'NOT IN TESS'
 
 
 def check_vipcode(row, fws_current_df):
-    entid = str(row['entity_id'])
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    entid = str(row['EntityID'])
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     try:
-        current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'vipcode'].iloc[0]
+        current_Tess = fws_current_df.loc[(fws_current_df['EntityID'] == entid), 'vipcode'].iloc[0]
         return current_Tess
-    except:
+    except IndexError:
         return 'NOT IN TESS'
 
 
 def check_lead(row, fws_current_df):
-    entid = str(row['entity_id'])
-    fws_current_df['entity_id'] = fws_current_df['entity_id'].map(lambda x: x).astype(str)
+    entid = str(row['EntityID'])
+    fws_current_df['EntityID'] = fws_current_df['EntityID'].map(lambda x: x).astype(str)
     try:
-        current_Tess = fws_current_df.loc[(fws_current_df['entity_id'] == entid), 'lead_agency'].iloc[0]
-        if int(current_Tess) ==1:
+        current_Tess = fws_current_df.loc[(fws_current_df['EntityID'] == entid), 'lead_agency'].iloc[0]
+        if int(current_Tess) == 1:
             current_Tess = 3
             return current_Tess
         else:
@@ -204,11 +208,11 @@ def check_lead(row, fws_current_df):
 
 
 def check_country(row, master_df):
-    entid = str(row['entity_id'])
+    entid = str(row['EntityID'])
     try:
         current_Tess = master_df.loc[(master_df['EntityID'] == entid), 'country'].iloc[0]
         return current_Tess
-    except:
+    except IndexError:
         return '3'
 
 
@@ -235,33 +239,34 @@ def check_group(row, fws_current_df):
     try:
         group_value = str(fws_current_df.loc[fws_current_df['family'] == family, 'Group'].iloc[0])
         return group_value
-    except:
+    except IndexError:
         pass
+
+
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-outlocation = outlocation+os.sep+'NMFS'
-current_listed_csv = outlocation +os.sep+current_listed_csv
-current_canProposed_csv =outlocation +os.sep+current_canProposed_csv
+outlocation = outlocation + os.sep + 'NMFS'
+current_listed_csv = outlocation + os.sep + current_listed_csv
+current_canProposed_csv = outlocation + os.sep + current_canProposed_csv
 current_listed_df = pd.read_csv(current_listed_csv)
 current_canProposed_csv = pd.read_csv(current_canProposed_csv)
 current_NMFS = pd.concat([current_listed_df, current_canProposed_csv], axis=0)
 
 master_list_df = pd.read_excel(current_masterlist)
-master_list_df['lead_agency']= master_list_df['lead_agency'].map(lambda x: str(x))
-master_list_df['lead_agency']= master_list_df['lead_agency'].map(lambda x: str(x.split('.')[0]))
+master_list_df['lead_agency'] = master_list_df['lead_agency'].map(lambda x: str(x))
+master_list_df['lead_agency'] = master_list_df['lead_agency'].map(lambda x: str(x.split('.')[0]))
 master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: str(x))
 
 FWS_list = pd.read_csv(current_FWS)
-FWS_list ['entity_id'] = FWS_list ['entity_id'].map(lambda x: str(x))
+FWS_list['EntityID'] = FWS_list['EntityID'].map(lambda x: str(x))
 
 fmy_grp_xwalk = pd.read_csv(family_group_cross)
 
 nmfs_species_master = master_list_df.loc[master_list_df['lead_agency'].isin(lead_agency_NMFS) == True]
 
-
-current_NMFS['entity_id'] = current_NMFS.apply(lambda row: assign_entitid(row, nmfs_species_master), axis=1)
-current_NMFS['entity_id'] = current_NMFS.apply(lambda row: check_entity_currentTESS(row, FWS_list), axis=1)
+current_NMFS['EntityID'] = current_NMFS.apply(lambda row: assign_entitid(row, nmfs_species_master), axis=1)
+current_NMFS['EntityID'] = current_NMFS.apply(lambda row: check_entity_currentTESS(row, FWS_list), axis=1)
 current_NMFS['comname'] = current_NMFS.apply(lambda row: check_commonname(row, FWS_list), axis=1)
 current_NMFS['sciname'] = current_NMFS['Scientific Name'].map(lambda x: x).astype(str)
 current_NMFS['invname'] = current_NMFS['Invname'].map(lambda x: x).astype(str)
@@ -279,10 +284,8 @@ current_NMFS['lead_agency'] = current_NMFS.apply(lambda row: check_lead(row, FWS
 # default country for new species is 3 domestic and foreign
 current_NMFS['country'] = current_NMFS.apply(lambda row: check_country(row, nmfs_species_master), axis=1)
 current_NMFS['country'] = current_NMFS.apply(lambda row: check_country_master(row, nmfs_species_master), axis=1)
-current_NMFS['Group'] = current_NMFS.apply(lambda row: check_group(row,fmy_grp_xwalk), axis=1)
+current_NMFS['Group'] = current_NMFS.apply(lambda row: check_group(row, fmy_grp_xwalk), axis=1)
 current_NMFS['Group'] = current_NMFS.apply(lambda row: check_nmfs_group(row), axis=1)
-
-
 
 current_NMFS_std_col = current_NMFS.reindex(columns=out_cols)
 current_NMFS.to_csv(outlocation + os.sep + 'Full_NMFS_Listed' + date + '.csv', encoding='utf-8')
@@ -291,8 +294,6 @@ current_NMFS_std_col.to_csv(outlocation + os.sep + 'Full_NMFS_Listed_STD_' + dat
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 print "Elapsed  Time: " + str(end - start_time)
-
-
 
 print '\nCheck that the following columns are complete before merging with nmfs and ' \
       'checking for updates \n {0} \n Family may need to be added manually'.format(out_cols)

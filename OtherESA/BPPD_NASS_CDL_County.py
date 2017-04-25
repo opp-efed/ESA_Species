@@ -8,17 +8,35 @@ import datetime
 # location of files/Workspace
 
 infcs = [
-    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite.gdb\CH_Insects_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Amphibians_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Arachnids_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Birds_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Clams_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Corals_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Crustaceans_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Fishes_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Insects_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Mammals_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Reptiles_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Snails_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Lichens_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Ferns_and_Allies_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Flowering_Plants_Composite_MAG_20161102',
+    'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb\R_Conifers_and_Cycads_Composite_MAG_20161102'
     ]
-outLocation = "C:\Users\JConno02\Documents\Projects\SmallProject\BEADOverlap"
-outfilename = 'CH_ESA_Insects_20170123'
+
 counties = "L:\Workspace\ESA_Species\Range\Cnty_State_Range20150410\ESA_State_CntyRanges_Report2015Jan.gdb\Boundaries\Counties_NASS_Table160418_2"
 raw_counties = 'L:\Workspace\ESA_Species\Range\Cnty_State_Range20150410\ESA_State_CntyRanges_Report2015Jan.gdb\Boundaries\Counties_all'
 raw_states = 'L:\Workspace\ESA_Species\Range\Cnty_State_Range20150410\ESA_State_CntyRanges_Report2015Jan.gdb\Boundaries\States_tiger2014'
-# TODO create county file with crop information on the fly at the beginning and point to raw county file in the path above
-
-
 masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_20170117.csv'
+
+# TODO create county file with crop information on the fly at the beginning and point to raw county file in the path above
+state_filter = ['Massachusetts', 'Rhode Island']
+outLocation = "L:\Workspace\ESA_Species\Section18\propyzamide"
+outfilename_all = outLocation + os.sep + 'R_ESA_propyzamide_20170410_all.csv'
+outfilename_counties = outLocation + os.sep + 'R_ESA_propyzamide_20170410_counties.csv'
+outfilename_states = outLocation + os.sep + 'R_ESA_propyzamide_20170410_states.csv'
+
 entid_index = 0
 status_index = 6
 # Table Names
@@ -45,7 +63,7 @@ useLookup = {'10': 'Corn',
 
 start_script = datetime.datetime.now()
 print "Script started at: {0}".format(start_script)
-csvfile = outLocation + os.sep + outfilename + '.csv'
+
 statusDict = {}
 
 with open(masterlist, 'rU') as inputFile:
@@ -92,7 +110,7 @@ for i in fieldList:
 
 header.append('State')
 state_code = fieldList.index("STATEFP")
-print header
+# print header
 for fc in infcs:
     print fc
     arcpy.Delete_management("fc_lyr")
@@ -156,10 +174,19 @@ for fc in infcs:
                         SpeTables.append(currentcnty)
 
 outDF = pd.DataFrame(SpeTables, columns=header)
+outDF.to_csv('L:\Workspace\ESA_Species\GMOs\isoxaflutole' + os.sep + 'test.csv')
+stateDF = outDF.reindex(
+    columns=['EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'Status', 'Group', 'State'])
+stateDF = stateDF.drop_duplicates(
+    subset=['EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'Status', 'Group', 'State'], keep='first')
 
-print 'Cleaning DF'
+print stateDF
+outDF.to_csv(outfilename_all)
+if len(state_filter) != 0:
+    outDF = outDF.loc[outDF['State'].isin(state_filter)]
+    stateDF = stateDF.loc[stateDF['State'].isin(state_filter)]
 
-print outDF
-outDF.to_csv(csvfile)
+outDF.to_csv(outfilename_counties)
+stateDF.to_csv(outfilename_states)
 
 print "Script completed in: {0}".format(datetime.datetime.now() - start_script)

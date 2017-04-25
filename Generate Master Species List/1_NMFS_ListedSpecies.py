@@ -1,6 +1,6 @@
 import datetime
 import os
-
+import sys
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 # ## when new species have been added, species with multiple pops with sometimes have merge cell eg false killer whale
 # ## may have split cells with some information that applies to all pops like humpback
 # ## may have split cells without info like ring seal, loggerhead and Pacific eulachon
-# # match the new species to exceptions already coded in here
+# ## match the new species to exceptions already coded in here
+# ## array length error: If species lists are not the same length print out each list to see which one is shorter
 
-# NOTE array length error: If species lists are not the same length print out each list to see which one is shorter
 # Description: J. Connolly 3/24/2017
 # Loop through each tables and extract species information into the standard lists set in static variables
 # List will be combined into a single data frame then exported
@@ -32,7 +32,8 @@ from bs4 import BeautifulSoup
 
 # #################### VARIABLES
 # #### user input variables
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test' # path final tables
+
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'# path final tables
 # Species groups used by NMFS
 groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Corals', 'Abalone', 'Fishes',
           'Sea Turtles', 'Other Marine Reptiles']
@@ -43,7 +44,8 @@ removed_perNMFS =['Pristis pristis formerly P. perotteti, P. pristis, and P. mic
 # statuses that will be included when final table is filtered
 # Note: NMFS experimental populations do not fall under section 7, see notes from T Hooper
 section_7_status = ['E', 'T']
-# ####static default variables
+# ####static default variables - no input needed
+
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 # empty lists to store data; and default boolean assumptions
@@ -56,7 +58,10 @@ crithab = []
 recovery = []
 group = []
 multi_pop = False
+
 # Functions
+
+
 def get_tables(htmldoc):  # h2 is the tag for the table header, this will parse soup to get the html table header,
     # then extract the text
     soup = BeautifulSoup(htmldoc.content, 'html.parser')
@@ -66,6 +71,23 @@ def get_tables(htmldoc):  # h2 is the tag for the table header, this will parse 
         t = v.getText().lstrip()
         title_list.append(t)
     return soup.find_all('table'), title_list
+
+
+def check_for_exceptions():
+    possAnswer = ['Yes', 'No']
+    ask_preQ = True
+    while ask_preQ:
+        default_answers = raw_input('Have you check for unstructured species? {0}: '.format(possAnswer))
+
+        if default_answers  not in possAnswer:
+            print 'This is not a valid answer: remove quotes and spaces'
+        else:
+            break
+    if default_answers=='Yes':
+                pass
+    else:
+        print '\nCheck for unstructured species such as bullets, or merged cells that do not follow structure; see notes'
+        sys.exit()
 
 
 def createdirectory(DBF_dir):
@@ -78,6 +100,7 @@ def createdirectory(DBF_dir):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+check_for_exceptions()
 
 
 createdirectory(outlocation+os.sep+'NMFS')
@@ -261,8 +284,11 @@ for table in list_tables:
                 recovery.append(recovery_list[0].replace('*', '').replace('+', ''))
 
     counter += 1
+
+
 # # NOTE array length error:
 # # print len(species_sci), len(species_com),len(status),len(year),len(crithab),len(recovery),len(pop),len(group)
+
 # Step 3: Loads species lists into a dictionary and then a data frame
 columns = {'Invname': species_com, 'Scientific Name': species_sci, 'Population': pop, 'Status': status,
            'Year Listed': year, 'Critical Habitat': crithab, 'Recovery Plan': recovery, 'Group_B': group}

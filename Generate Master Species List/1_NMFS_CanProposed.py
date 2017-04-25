@@ -1,14 +1,12 @@
 import os
-import unicodedata
-import csv
-# http://chrisalbon.com/python/beautiful_soup_scrape_table.html
+
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import datetime
-import json
-import urllib2
+import sys
 
+# Pull structure from http://chrisalbon.com/python/beautiful_soup_scrape_table.html
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
@@ -16,12 +14,30 @@ groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Cor
           'MarineMammals', 'MarineInvertebrates']
 
 url = "http://www.nmfs.noaa.gov/pr/species/esa/candidate.htm#proposed"
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\test'
+outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'
 
 # Can and Proposed foreign species per NMFS
 removed_perNMFS =['Cephalorhynchus hectori maui','Cephalorhynchus hectori hectori','Sousa chinensis taiwanensis',
                   'Mustelus schmitti','Squatina guggenheim','Amblyraja radiata','Rhinobatos horkelii',
                   'Squatina argentina','Isogomphodon oxyrhynchus','Mustelus fasciatus']
+
+def check_for_exceptions():
+    possAnswer = ['Yes', 'No']
+    ask_preQ = True
+    while ask_preQ:
+        default_answers = raw_input('Have you check for unstructured species? {0}: '.format(possAnswer))
+
+        if default_answers  not in possAnswer:
+            print 'This is not a valid answer: remove quotes and spaces'
+        else:
+            break
+    if default_answers=='Yes':
+                pass
+    else:
+        print '\nCheck for unstructured species such as bullets, or merged cells that do not follow structure-see notes'
+        sys.exit()
+
+
 
 def get_tables(htmldoc):
     soup = BeautifulSoup(htmldoc.content, 'html.parser')
@@ -41,6 +57,8 @@ def createdirectory(DBF_dir):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+
+check_for_exceptions()
 
 createdirectory(outlocation+os.sep+'NMFS')
 outlocation = outlocation+os.sep+'NMFS'
@@ -291,12 +309,12 @@ for table in list_tables:
                 # and append it to age variable
                 status.append(current_status)
 
-print len(species_sci)
-print len(species_com)
-print len(status)
-print len(year)
-print len(group)
-print len(pop)
+# print len(species_sci)
+# print len(species_com)
+# print len(status)
+# print len(year)
+# print len(group)
+# print len(pop)
 # print len(current_group)
 columns = {'Invname': species_com, 'Scientific Name': species_sci, 'Status': status, 'Year Listed': year,
            'Group_B': group, 'Population': pop, 'Critical Habitat': ['n/a'] * len(species_com),

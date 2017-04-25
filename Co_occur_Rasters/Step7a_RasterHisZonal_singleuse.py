@@ -11,10 +11,10 @@ from arcpy.sa import *
 
 #inlocation_species =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 #
-inlocation_species =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\WGS_1984_UTM_Zone__2S'
+inlocation_species =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area'
 Range = True
 temp_file = "temp_table"
-region = "AS"
+region = "CONUS"
 
 use_location_base = 'L:\Workspace\UseSites\ByProject'
 use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
