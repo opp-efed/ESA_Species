@@ -148,7 +148,7 @@ NE_DD = ['11191', 'NMFS175', '69', '70', '108', '147', '196', '418', '439', '136
 NLAA_DD = []  # No additional species aew NLAA for DD
 
 NLAA_WoE = [
-     '2144', '146', '147', '4136', '6522', '6654', 'FWS001', '162', '3876', '9395', '9403', '9421', '9423',
+    '2144', '146', '147', '4136', '6522', '6654', 'FWS001', '162', '3876', '9395', '9403', '9421', '9423',
     '9459', '9461', '9465', '9467', '9469', '9477', '9479', '510', '535', '536', '537', '545', '563', '565', '572',
     '575', '577', '589', '601', '604', '616', '622', '623', '635', '684', '688', '690', '691', '697', '720', '725',
     '726', '727', '728', '732', '733', '755', '765', '768', '771', '772', '773', '774', '776', '781', '801', '814',
@@ -331,11 +331,11 @@ def step_2_ED(row):
 def flybait_tag(row):
     if row['Flybait'] >= 0:
 
-        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row['Other Crops'] <= 0.4 and row[
-            'Other Grains'] <= 0.4 and row['Other RowCrops'] <= 0.4 and row['Pasture'] <= 0.4 and row[
-            'Soybeans'] <= 0.4 and row['Vegetables and Ground Fruit'] <= 0.4 and row['Methomyl Wheat'] <= 0.4 and row[
-            'Bermuda Grass'] <= 0.4 and row['Alley Cropping'] <= 0.4 and row['Cotton'] <= 0.4:
-
+        if row['Corn'] <= 0.4 and row['Orchards and Vineyards'] <= 0.4 and row['Other Crops'] <= 0.4 and \
+                        row['Other Grains'] <= 0.4 and row['Other RowCrops'] <= 0.4 and row['Pasture'] <= 0.4 and \
+                        row['Soybeans'] <= 0.4 and row['Vegetables and Ground Fruit'] <= 0.4 and \
+                        row['Methomyl Wheat'] <= 0.4 and row['Bermuda Grass'] <= 0.4 and\
+                        row['Alley Cropping'] <= 0.4 and row['Cotton'] <= 0.4:
             if row['Source of Call final BE-Range'].startswith('Aqua'):
                 result = 'No'
             elif row['Step 1 ED Comment'] == 'NE-Overlap':

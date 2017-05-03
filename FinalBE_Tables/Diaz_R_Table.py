@@ -16,14 +16,25 @@ temp_folder = r'E:\Tabulated_NewComps\FinalBETables\DraftNewFormat'
 out_csv = temp_folder + os.sep + 'R_FinalBE_DiazinonOverlap_20170117.csv'
 out_summary_csv = temp_folder + os.sep + 'R_FinalBE_Diazinon_summary_20170117.csv'
 
+# inlocation
+in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\BETables\R_AllUses_BE_20170209.csv'
+temp_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\FinalBETables\Diazinon'
+
+chem_name = 'Diazinon'
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
+out_csv = temp_folder + os.sep + 'R_OverlapTest_' + chem_name + '_Overlap_' + date + '.csv'
+out_summary_csv = temp_folder + os.sep + 'R_OverlapTest_' + chem_name + '_summary_' + date + '.csv'
+
 sp_index_cols = 15
 col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group', 'Des_CH',
                'Critical_Habitat_', 'CH_GIS', 'Migratory', 'Migratory_', 'Source of Call final BE-Range',
-               'WoE Summary Group', 'Source of Call final BE-CH', 'Orchards and Vineyards',
+               'WoE Summary Group', 'Source of Call final BE-Critical Habitat', 'Orchards and Vineyards',
                'Vegetables and Ground Fruit',
-               'Cattle Eartag', 'Nurseries', 'Nurseries_DiazBuffer', 'VegetablesGroundFruit_DiazBuffer',
-               'OrchardsVineyards_DiazBuffer', 'Diazinon_ActionArea', 'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED',
-               'Step 2 ED Comment', 'Cattle Eartag Only'
+               'Cattle Eartag', 'Nurseries','OrchardsVineyards_DiazBuffer','VegetablesGroundFruit_DiazBuffer',
+               'Nurseries_DiazBuffer','Cattle Eartag_Buffer', 'OrchardsVineyards_MaxBuffer',
+               'Diazinon_ActionArea', 'Step 1 ED','Step 1 ED Comment', 'Step 2 ED','Step 2 ED Comment',
+               'Cattle Eartag Only'
                ]
 NE_Extinct = ['19', '26', '68', '122', '141', '6345', '9433', '9435', '9437', '9445', '9447', '9451', '9455', '9463',
               '9481', '10582']
@@ -111,10 +122,11 @@ NLAA_DD = ['69', '70', '76', '84', '108', '147', '196', '210', '211', '220', '22
            '287', '401', '418', '439', '1245', '1246', '1361', '1380', '1707', '2142', '2144', '2514', '2599', '2767',
            '3628', '4274', '4326', '4766', '5232', '6231', '6620', '6654', '6739', '8861', '8962', '9694', '10517',
            '11191', 'FWS001', 'NMFS166', 'NMFS175']  # No additional species aew NLAA for DD
+# swap out orch and vine and veg and grounf in HI for ag since final BE
 collapses_dict = {
 
-    'Vegetables and Ground Fruit': ['CONUS_Vegetables and Ground Fruit_0', 'HI_Veg Ground Fruit_0',
-                                    'PR_Veg Ground Fruit_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
+    'Vegetables and Ground Fruit': ['CONUS_Vegetables and Ground Fruit_0', 'HI_Ag_0',
+                                    'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
 
     'Nurseries': ['CONUS_Nurseries_0', 'AK_Nurseries_0', 'HI_Nurseries_0', 'PR_Nurseries_0',
                   'VI_Nurseries_0'],
@@ -122,16 +134,24 @@ collapses_dict = {
     'Cattle Eartag': ['CONUS_Cattle Eartag_0', 'AK_Cattle Eartag_0', 'CNMI_Cattle Eartag_0',
                       'GU_Cattle Eartag_0',
                       'HI_Cattle Eartag_0', 'PR_Cattle Eartag_0', 'VI_Cattle Eartag_0', 'AS_Cattle Eartag_0'],
-    'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_0', 'HI_Orchards and vineyards_0',
-                               'PR_Orchards and vineyards_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
+    'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_0', 'HI_Ag_0',
+                               'PR_Ag_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'VI_Ag_0'],
+    'OrchardsVineyards_DiazBuffer': ['CONUS_Orchards and Vineyards_305', 'HI_Ag_305',
+                                     'PR_Ag_305', 'CNMI_Ag_305', 'AK_Ag_305', 'GU_Ag_305',
+                                     'VI_Ag_305', 'AS_Ag_305'],
+    'VegetablesGroundFruit_DiazBuffer': ['CONUS_Vegetables and Ground Fruit_765', 'HI_Ag_765',
+                                         'PR_Ag_765', 'CNMI_Ag_765', 'AK_Ag_765', 'GU_Ag_765',
+                                         'VI_Ag_765', 'AS_Ag_765'],
     'Nurseries_DiazBuffer': ['CONUS_Nurseries_305', 'AK_Nurseries_305', 'HI_Nurseries_305',
                              'PR_Nurseries_305', 'VI_Nurseries_305'],
-    'VegetablesGroundFruit_DiazBuffer': ['CONUS_Vegetables and Ground Fruit_765', 'HI_Veg Ground Fruit_765',
-                                         'PR_Veg Ground Fruit_765', 'CNMI_Ag_765', 'AK_Ag_765', 'GU_Ag_765',
-                                         'VI_Ag_765', 'AS_Ag_765'],
-    'OrchardsVineyards_DiazBuffer': ['CONUS_Orchards and Vineyards_305', 'HI_Orchards and vineyards_305',
-                                     'PR_Orchards and vineyards_305', 'CNMI_Ag_305', 'AK_Ag_305', 'GU_Ag_305',
-                                     'VI_Ag_305', 'AS_Ag_305'],
+
+
+    'Cattle Eartag_Buffer': ['CONUS_Cattle Eartag_765', 'AK_Cattle Eartag_765', 'CNMI_Cattle Eartag_765',
+                      'GU_Cattle Eartag_765','HI_Cattle Eartag_765', 'PR_Cattle Eartag_765', 'VI_Cattle Eartag_765',
+                             'AS_Cattle Eartag_765'],
+    'OrchardsVineyards_MaxBuffer': ['CONUS_Orchards and Vineyards_765', 'HI_Ag_765',
+                                     'PR_Ag_765', 'CNMI_Ag_765', 'AK_Ag_765', 'GU_Ag_765',
+                                     'VI_Ag_765', 'AS_Ag_765'],
     'Diazinon_ActionArea': ['CONUS_Diazinon_AA_765', 'AK_Diazinon_AA_765', 'CNMI_Diazinon_AA_765',
                             'GU_Diazinon_AA_765', 'HI_Diazinon_AA_765', 'PR_Diazinon_AA_765', 'VI_Diazinon_AA_765',
                             'AS_Diazinon_AA_765'],

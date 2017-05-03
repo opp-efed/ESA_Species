@@ -2,8 +2,8 @@ import os
 import pandas as pd
 import datetime
 
-# TODO add in dynamic sur huc and multiple HUC assignments wfor the final table
-FileNew = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\UpdatedBins_20170420.csv'
+# TODO check dynamic assignment of reassingment
+FileNew = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\UpdatedBins_20170503.csv'
 outLocation = 'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived'
 supporting_col_index = 8
 trailing_col = 20
@@ -22,8 +22,8 @@ def check_reassigned_bin(row, df):
                                               'Bin 9', 'Bin 10']]
     try:
         lookup_huc_bins = lookup_huc_bins.values.tolist()[0]
-        for v in lookup_huc_bins:
-            if v in reassigned:
+        for z in lookup_huc_bins:
+            if z in reassigned:
                 bool_reassign = 'TRUE'
             else:
                 pass
@@ -48,7 +48,7 @@ def check_multi_huc(row, df):
 def check_sur_huc(row):
     huc_2 = row['HUC_2']
     huc_2 = int(huc_2[:2])
-    if huc_2 > 21:
+    if huc_2 >= 22:
         return 'TRUE'
     elif huc_2 <= 21:
         return 'FALSE'
@@ -82,34 +82,21 @@ DBcodeDict = {1: 'No',
               412: 'Reassigned-Food item',
               312: 'Food item/Reassigned-Food item',
               612: 'Food item',
-              1312: 'No'}
+              1312: 'No',
+              132: 'No',
+              136: 'No',
+              1328: 'No',
+              1329: 'No',
+              13210: 'No',
+              13211: 'No'}
 
-# DBcodeDict = {'No': '1',
-#               'Yes': '2',
-#               'Yes/R': '3',
-#               'R': '4',
-#               'Dummy Bin': '5',
-#               'Yes': '6',
-#               'Indirect only- Marine host': '7',
-#               'Yes- FH-Obligate': '8',
-#               'Yes- FH-Generalist': '9',
-#               'Yes- FH-Specialist': '10',
-#               'Yes- FH-Unknown': '11',
-#               'Yes/Yes- FH-Obligate': '28',
-#               'Yes/ Yes-Fish Host- Generalist': '29',
-#               'Yes/Yes-Fish Host- Specialist': '210',
-#               'Yes/Yes- Fish Host- Unknown': '211',
-#               'Food item': '12',
-#               'Reassigned-Food item': '412',
-#               'Food item/Reassigned-Food item': '312',
-#               'Food item': '612'}
-
-
+# Everything that started with 13 is a code that cannot exists in land-locked HUCS, so it is change to No; but that
+# assignment could be meaning for other HUCs
 
 
 df_bins = pd.read_csv(FileNew, )
 [df_bins.drop(v, axis=1, inplace=True) for v in df_bins.columns.values.tolist() if v.startswith('Unnamed')]
-df_bins['Entid_HUC'] = df_bins['ENTITYID'] +"_" +df_bins['HUC_2']
+df_bins['Entid_HUC'] = df_bins['ENTITYID'] + "_" + df_bins['HUC_2']
 df_bins['Reassigned'] = df_bins.apply(lambda row: check_reassigned_bin(row, df_bins), axis=1)
 
 leading_col = df_bins.iloc[:, :supporting_col_index]
@@ -120,14 +107,17 @@ keys = DBcodeDict.keys()
 
 for i in keys:
     value = (DBcodeDict[i])
-    bins = bins.replace({(i): value})
+    bins = bins.replace({i: value})
     print "Replaced {0} to {1}".format(i, value)
 
 df_final = pd.concat([leading_col, bins], axis=1)
 df_final = pd.concat([df_final, trailing_col], axis=1)
+
 df_final['Multi HUC'] = df_final.apply(lambda row: check_multi_huc(row, df_final), axis=1)
 df_final['sur_huc'] = df_final.apply(lambda row: check_sur_huc(row), axis=1)
 df_final.loc[df_final['sur_huc'] == 'TRUE', 'HUC_2'] = '21'
 
+[df_final.drop(v, axis=1, inplace=True) for v in ['Entid_HUC', 'Spe_HUC']]
+df_final.drop_duplicates(inplace=True)
 df_final.to_csv(outfile)
 print "Script completed in: {0}".format(datetime.datetime.now() - start_script)
