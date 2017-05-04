@@ -61,19 +61,25 @@ def collaspse_species(working_df,):
         spe_huc = lookup_huc_bins['Spe_HUC'].values.tolist()
         list_spe_huc = lookup_huc_bins.values.tolist()
         count_huc = len(list_spe_huc)
-        starting_values = list_spe_huc[0][9:19]
+        starting_values = map(int,list_spe_huc[0][9:19])
+        print starting_values
         counter = 1
 
         while counter < count_huc:
-            current_bins = list_spe_huc[counter][9:19]
+            current_bins =map(int, list_spe_huc[counter][9:19])
             for i in current_bins:
                 index_pos = current_bins.index(i)
                 out_value = starting_values[index_pos]
-                print i, out_value, ent
+
                 if out_value == i:
                     pass
-                elif out_value > i:
-                    starting_values[index_pos] = out_value
+                elif out_value != i:
+                    print i, out_value, ent
+                    update_value = max(out_value, i)
+                    print update_value
+                    starting_values[index_pos] = update_value
+                    print starting_values
+
             counter += 1
 
         for t in spe_huc:

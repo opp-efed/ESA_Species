@@ -2,8 +2,6 @@ import pandas as pd
 import os
 import datetime
 
-
-
 archived_location = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived'
 entityid_updated = {'NMFS88': '9432',
                     'NMFS180': '11353',
@@ -127,19 +125,28 @@ def collaspse_species(working_df, added_df):
                 spe_huc = lookup_huc_bins['Spe_HUC'].values.tolist()
                 list_spe_huc = lookup_huc_bins.values.tolist()
                 count_huc = len(list_spe_huc)
-                starting_values = list_spe_huc[0][9:19]
+                starting_values = map(int,list_spe_huc[0][9:19])
                 counter = 1
+                huc_specific_assignments = False
                 while counter < count_huc:
-                    current_bins = list_spe_huc[counter][9:19]
-                    for i in current_bins:
-                        index_pos = current_bins.index(i)
-                        out_value = starting_values[index_pos]
-                        if out_value == i:
-                            pass
-                        elif out_value > i:
+                    try:
+                        current_bins = map(int, list_spe_huc[counter][9:19])
+                        for i in current_bins:
+                            index_pos = current_bins.index(i)
+                            out_value = starting_values[index_pos]
+                            if out_value == i:
+                                pass
+                            elif out_value != i:
+                                print i, out_value, ent
+                                update_value = max(out_value, i)
+                                starting_values[index_pos] = update_value
+                                huc_specific_assignments = True #TODO Get thing into the table
 
-                            starting_values[index_pos] = out_value
-                    counter += 1
+
+                        counter += 1
+                    except ValueError:
+                        counter+=1
+                        pass
 
                 if collapse_new_HUCS_only:
                     huc_2 = added_df.loc[added_df['ENTITYID'] == v]
@@ -148,6 +155,7 @@ def collaspse_species(working_df, added_df):
                 for t in spe_huc:
                     working_df.loc[working_df['Spe_HUC'] == t, ['Bin 1', 'Bin 2', 'Bin 3', 'Bin 4', 'Bin 5', 'Bin 6',
                                                                 'Bin 7', 'Bin 8', 'Bin 9', 'Bin 10']] = starting_values
+
 
     return working_df
 

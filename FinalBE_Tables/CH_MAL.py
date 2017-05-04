@@ -9,21 +9,33 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\Archived\CriticalHabitat\BE_Intervals\CH_AllUses_BE_20170109.csv'
+in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_CriticalHabitat\BETables\CH_AllUses_BE_20170209.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
 temp_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\FinalBETables\MAL_CPY\Malithon'
 out_csv = temp_folder + os.sep + 'CH_FinalBE_MAL_CPY_Overlap_20170110.csv'
 sp_index_cols = 12
-col_reindex = ['EntityID',  'comname', 'sciname','family', 'status_text','pop_abbrev', 'Des_CH','Critical_Habitat_',
-               'Migratory','Migratory_','WideAreaOnly', 'Corn', 'Cotton','Orchards and Vineyards', 'Other Crops', 'Other Grains',
-               'Other RowCrops', 'Pasture', 'Rice', 'Soybeans','Vegetables and Ground Fruit', 'Wheat', 'Developed',
-               'Managed Forest', 'Nurseries','Open Space Developed', 'Pine seed orchards', 'Right of Way',
-               'Christmas Trees', 'Golf Courses','Cattle Eartag', 'Cull Piles', 'Ag','Mosquito Control', 'Wide Area Use','CH_GIS',
-               'Group','Step 2 ED Comment','Step 2 ED','Malathion_ActionArea','Chlorpyrifos_ActionArea','Ag'
-               ]
+col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group', 'Des_CH',
+               'Critical_Habitat_', 'CH_GIS', 'Migratory', 'Migratory_', 'Source of Call final BE-Range',
+               'WoE Summary Group', 'Source of Call final BE-Critical Habitat', 'Corn', 'Cotton',
+               'Developed', 'Nurseries', 'Open Space Developed',
+               'Orchards and Vineyards', 'Other Crops', 'Other Grains', 'Other RowCrops', 'Pasture',
+               'Rice', 'Soybeans', 'Vegetables and Ground Fruit', 'Wheat', 'Christmas Tree', 'Golfcourses',
+               'Right of Way', 'Pine see Orchards', 'Managed Forests', 'Ag',
+               'Corn_MalathionBuffer', 'Cotton_MalathionBuffer',
+               'Developed_MalathionBuffer', 'Nurseries_MalathionBuffer', 'Open Space Developed_MalathionBuffer',
+               'Orchards and Vineyards_MalathionBuffer', 'Other Crops_MalathionBuffer', 'Other Grains_MalathionBuffer',
+               'Other RowCrops_MalathionBuffer', 'Pasture_MalathionBuffer',
+               'Rice_MalathionBuffer', 'Soybeans_MalathionBuffer',
+               'Vegetables and Ground Fruit_MalathionBuffer', 'Wheat_MalathionBuffer', 'Christmas Tree_MalathionBuffer',
+               'Golfcourses_MalathionBuffer', 'Right of Way_MalathionBuffer', 'Pine see Orchards_MalathionBuffer',
+               'Managed Forests_MalathionBuffer', 'Ag_Buffer', 'Malathion_ActionArea_Aerial',
+               'Chlorpyrifos_ActionArea_Aerial', 'Malathion_ActionArea_Ground', 'Chlorpyrifos_ActionArea_Ground',
+               'Malathion_ActionArea_noDrift', 'Chlorpyrifos_ActionArea_noDrift',
+               'Mosquito Control', 'Wide Area Use',
+               'Step 1 ED', 'Step 1 ED Comment', 'Step 2 ED', 'Step 2 ED Comment', 'Drift Only']
 
-wide_area_only = ['439','656','1092','9382','9384']
+wide_area_only = ['439', '656', '1092', '9382', '9384']
 NE_Extinct = ['19', '26', '68', '122', '141', '6345', '9433', '9435', '9437', '9445', '9447', '9451', '9455', '9463',
               '9481', '10582']
 
@@ -104,57 +116,133 @@ NLAA_DD = ['58', '147', '196', '209', '215', '234', '249', '255', '256', '259', 
            '6138', '6231', '6297', '7610', '8172', '8962', '10517', '11192',
            ]
 
-
 collapses_dict = {
-    'Ag': ['AK_Ag_765',  'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765'],
-    'Cattle Eartag': ['AK_Cattle Eartag_0', 'CNMI_Cattle Eartag_0',
-                      'CONUS_Cattle Eartag_0', 'GU_Cattle Eartag_0', 'HI_Cattle Eartag_0',
-                      'PR_Cattle Eartag_0'],
-    'Christmas Trees': ['CONUS_Christmas Trees_765'],
-    'Corn': ['CONUS_Corn_765'],
-    'Cotton': ['CONUS_Cotton_765'],
-    'Cull Piles': ['CONUS_Cull Piles_765'],
-    'Developed': ['AK_Developed_765', 'CNMI_Developed_765', 'CONUS_Developed_765',
-                  'GU_Developed_765', 'HI_Developed_765', 'PR_Developed_765'],
-    'Golf Courses': ['AK_Golf Courses_765', 'GU_Golf Courses_765', 'HI_Golf Courses_765', 'PR_Golf Courses_765',
-                     'CONUS_Golfcourses_765'],
-    'Managed Forest': ['CONUS_Managed Forest_765', 'AK_Managed Forests_765', 'CNMI_Managed Forests_765',
-                       'GU_Managed Forests_765', 'HI_Managed Forests_765', 'PR_Managed Forests_765',
-                       'VI_Managed Forests_765'],
-    'Nurseries': ['AK_Nurseries_765', 'CONUS_Nurseries_765', 'HI_Nurseries_765', 'PR_Nurseries_765',
-                  'VI_Nurseries_765'],
-    'Open Space Developed': ['AK_Open Space Developed_765',
-                             'CNMI_Open Space Developed_765', 'CONUS_Open Space Developed_765',
-                             'GU_Open Space Developed_765', 'HI_Open Space Developed_765',
-                             'PR_Open Space Developed_765'],
-    'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_765', 'HI_Orchards and vineyards_765',
-                               'PR_Orchards and vineyards_765'],
-    'Other Crops': ['CONUS_Other Crops_765', 'HI_Other crops_765', 'PR_Other crops_765'],
-    'Other Grains': ['CONUS_Other Grains_765', 'HI_Other grains_765', 'PR_Other grains_765'],
-    'Other RowCrops': ['CONUS_Other RowCrops_765'],
-    'Pasture': ['CONUS_Pasture_765', 'AK_Pasture/Hay/Forage_765', 'HI_Pasture/Hay/Forage_765', ],
-    'Pine seed orchards': ['CONUS_Pine seed orchards_765'],
-    'Rice': ['CONUS_Rice_765'],
-    'Right of Way': ['AK_Right of Way_765', 'CNMI_Right of Way_765', 'CONUS_Right of Way_765',
-                     'GU_Right of Way_765', 'HI_Right of Way_765', 'PR_Right of Way_765'],
-    'Soybeans': ['CONUS_Soybeans_765'],
-    'Vegetables and Ground Fruit': ['HI_Veg Ground Fruit_765', 'PR_Veg Ground Fruit_765',
-                                    'CONUS_Vegetables and Ground Fruit_765'],
-    'Wheat': ['CONUS_Wheat_765'],
+
+    'Corn': ['CONUS_Corn_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0', ],
+    'Cotton': ['CONUS_Cotton_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Orchards and Vineyards': ['CONUS_Orchards and Vineyards_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0',
+                               'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Other Crops': ['CONUS_Other Crops_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0',
+                    'VI_Ag_0', ],
+    'Other Grains': ['CONUS_Other Grains_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0',
+                     'VI_Ag_0', ],
+    'Other RowCrops': ['CONUS_Other RowCrops_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0',
+                       'VI_Ag_0', ],
+    'Pasture': ['CONUS_Pasture_0', 'AK_Pasture_0', 'CNMI_Cattle Eartag_0', 'GU_Cattle Eartag_0',
+                'HI_Cattle Eartag_0', 'PR_Cattle Eartag_0', 'VI_Cattle Eartag_0'],
+    'Rice': ['CONUS_Rice_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0', ],
+
+    'Vegetables and Ground Fruit': ['CONUS_Vegetables and Ground Fruit_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0',
+                                    'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0', ],
+
+    'Wheat': ['CONUS_Wheat_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Developed': ['CONUS_Developed_0', 'AK_Developed_0', 'CNMI_Developed_0', 'GU_Developed_0', 'HI_Developed_0',
+
+                  'PR_Developed_0', 'VI_Developed_0'],
+
+    'Nurseries': ['CONUS_Nurseries_0', 'AK_Nurseries_0', 'HI_Nurseries_0', 'PR_Nurseries_0', 'VI_Nurseries_0'],
+
+    'Open Space Developed': ['CONUS_Open Space Developed_0', 'AK_Open Space Developed_0', 'CNMI_Open Space Developed_0',
+                             'GU_Open Space Developed_0', 'HI_Open Space Developed_0', 'PR_Open Space Developed_0',
+                             'VI_Open Space Developed_0', ],
+    'Christmas Tree': ['CONUS_Christmas Trees_0'],
+    'Golfcourses': ['CONUS_Golfcourses_0', 'AK_Golfcourses_0', 'GU_Golfcourses_0', 'HI_Golfcourses_0',
+                    'PR_Golfcourses_0'],
+    'Right of Way': ['CONUS_Right of Way_0', 'AK_Right of Way_0', 'CNMI_Right of Way_0', 'GU_Right of Way_0',
+                     'HI_Right of Way_0', 'PR_Right of Way_0', 'VI_Right of Way_0', ],
+    'Pine see Orchards': ['CONUS_Pine seed orchards_0'],
+    'Managed Forests': ['CONUS_Managed Forests_0', 'AK_Managed Forests_0', 'CNMI_Managed Forests_0',
+                        'GU_Managed Forests_0', 'HI_Managed Forests_0', 'PR_Managed Forests_0',
+                        'VI_Managed Forests_0'],
+
+    'Ag': ['AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Corn_MalathionBuffer': ['CONUS_Corn_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
+                             'VI_Ag_765'],
+
+    'Cotton_MalathionBuffer': ['CONUS_Cotton_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
+                               'VI_Ag_765'],
+    'Orchards and Vineyards_MalathionBuffer': ['CONUS_Orchards and Vineyards_765', 'AK_Ag_765', 'CNMI_Ag_765',
+                                               'GU_Ag_765', 'HI_Ag_765',
+                                               'PR_Ag_765', 'VI_Ag_765'],
+    'Other Crops_MalathionBuffer': ['CONUS_Other Crops_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765',
+                                    'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765'],
+    'Other Grains_MalathionBuffer': ['CONUS_Other Grains_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765',
+                                     'PR_Ag_765', 'VI_Ag_765', 'HI_Ag_765',
+                                     'PR_Ag_765'],
+    'Other RowCrops_MalathionBuffer': ['CONUS_Other RowCrops_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765',
+                                       'PR_Ag_765', 'VI_Ag_765', ],
+    'Pasture_MalathionBuffer': ['CONUS_Pasture_765', 'PR_Cattle Eartag_765', 'CNMI_Cattle Eartag_765',
+                                'GU_Cattle Eartag_765',
+                                'AK_Pasture_765', 'HI_Cattle Eartag_765', 'VI_Cattle Eartag_765', ],
+    'Rice_MalathionBuffer': ['CONUS_Rice_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
+                             'VI_Ag_765'],
+    'Soybeans_MalathionBuffer': ['CONUS_Soybeans_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765',
+                                 'PR_Ag_765',
+                                 'VI_Ag_765'],
+    'Vegetables and Ground Fruit_MalathionBuffer': ['CONUS_Vegetables and Ground Fruit_765', 'AK_Ag_765', 'CNMI_Ag_765',
+                                                    'GU_Ag_765', 'PR_Ag_765',
+                                                    'VI_Ag_765', 'HI_Ag_765', ],
+    'Wheat_MalathionBuffer': ['CONUS_Wheat_765', 'AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765',
+                              'VI_Ag_765'],
+    'Developed_MalathionBuffer': ['CONUS_Developed_765', 'AK_Developed_765', 'CNMI_Developed_0', 'GU_Developed_765',
+                                  'HI_Developed_765', 'PR_Developed_765', 'VI_Developed_765'],
+
+    'Nurseries_MalathionBuffer': ['CONUS_Nurseries_765', 'AK_Nurseries_765', 'HI_Nurseries_765', 'PR_Nurseries_765',
+                                  'VI_Nurseries_765'],
+    'Open Space Developed_MalathionBuffer': ['CONUS_Open Space Developed_765', 'AK_Open Space Developed_765',
+                                             'CNMI_Open Space Developed_765',
+                                             'GU_Open Space Developed_765', 'HI_Open Space Developed_765',
+                                             'PR_Open Space Developed_765', 'VI_Open Space Developed_765'],
+    'Christmas Tree_MalathionBuffer': ['CONUS_Christmas Trees_765'],
+    'Golfcourses_MalathionBuffer': ['CONUS_Golfcourses_765', 'AK_Golfcourses_765', 'GU_Golfcourses_765',
+                                    'HI_Golfcourses_765',
+                                    'PR_Golfcourses_765'],
+    'Right of Way_MalathionBuffer': ['CONUS_Right of Way_765', 'AK_Right of Way_765', 'CNMI_Right of Way_765',
+                                     'GU_Right of Way_765',
+                                     'HI_Right of Way_765', 'PR_Right of Way_765', 'VI_Right of Way_765',
+                                    ],
+    'Pine see Orchards_MalathionBuffer': ['CONUS_Pine seed orchards_765'],
+    'Managed Forests_MalathionBuffer': ['CONUS_Managed Forests_765', 'AK_Managed Forests_765',
+                                        'CNMI_Managed Forests_765',
+                                        'GU_Managed Forests_765', 'HI_Managed Forests_765', 'PR_Managed Forests_765',
+                                        'VI_Managed Forests_765'],
+
+    'Ag_Buffer': ['AK_Ag_765', 'CNMI_Ag_765', 'GU_Ag_765', 'HI_Ag_765', 'PR_Ag_765', 'VI_Ag_765'],
+    'Malathion_ActionArea_Aerial': ['CONUS_Malathion_AA_765', 'AK_Malathion_AA_765', 'CNMI_Malathion_AA_765',
+                                    'GU_Malathion_AA_765', 'HI_Malathion_AA_765', 'PR_Malathion_AA_765',
+                                    'VI_Malathion_AA_765',
+                                    ],
+    'Chlorpyrifos_ActionArea_Aerial': ['CONUS_Chlorpyrifos_AA_765', 'AK_Chlorpyrifos_AA_765',
+                                       'CNMI_Chlorpyrifos_AA_765',
+                                       'GU_Chlorpyrifos_AA_765', 'HI_Chlorpyrifos_AA_765', 'PR_Chlorpyrifos_AA_765',
+                                       'VI_Chlorpyrifos_AA_765',
+                                       ],
+    'Malathion_ActionArea_Ground': ['CONUS_Malathion_AA_305', 'AK_Malathion_AA_305', 'CNMI_Malathion_AA_305',
+                                    'GU_Malathion_AA_305', 'HI_Malathion_AA_305', 'PR_Malathion_AA_305',
+                                    'VI_Malathion_AA_305',
+                                    ],
+    'Chlorpyrifos_ActionArea_Ground': ['CONUS_Chlorpyrifos_AA_305', 'AK_Chlorpyrifos_AA_305',
+                                       'CNMI_Chlorpyrifos_AA_305',
+                                       'GU_Chlorpyrifos_AA_305', 'HI_Chlorpyrifos_AA_305', 'PR_Chlorpyrifos_AA_305',
+                                       'VI_Chlorpyrifos_AA_305',
+                                       ],
+    'Malathion_ActionArea_noDrift': ['CONUS_Malathion_AA_0', 'AK_Malathion_AA_0', 'CNMI_Malathion_AA_0',
+                                     'GU_Malathion_AA_0', 'HI_Malathion_AA_0', 'PR_Malathion_AA_0', 'VI_Malathion_AA_0',
+                                     ],
+    'Chlorpyrifos_ActionArea_noDrift': ['CONUS_Chlorpyrifos_AA_0', 'AK_Chlorpyrifos_AA_0', 'CNMI_Chlorpyrifos_AA_0',
+                                        'GU_Chlorpyrifos_AA_0', 'HI_Chlorpyrifos_AA_0', 'PR_Chlorpyrifos_AA_0',
+                                        'VI_Chlorpyrifos_AA_0',
+                                        ],
+
     'Mosquito Control': [],
-    'Wide Area Use': [],
-    'Malathion_ActionArea': ['CONUS_Malathion_AA_765', 'AK_Malathion_AA_765', 'CNMI_Malathion_AA_765',
-                             'GU_Malathion_AA_765', 'HI_Malathion_AA_765', 'PR_Malathion_AA_765', 'VI_Malathion_AA_765',
-                             ],
-    'Chlorpyrifos_ActionArea': ['CONUS_Chlorpyrifos_AA_765', 'AK_Chlorpyrifos_AA_765', 'CNMI_Chlorpyrifos_AA_765',
-                             'GU_Chlorpyrifos_AA_765', 'HI_Chlorpyrifos_AA_765', 'PR_Chlorpyrifos_AA_765', 'VI_Chlorpyrifos_AA_765',
-                             ],
-    'Ag': ['AK_Ag_0',  'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+    'Wide Area Use': []
 }
+
 
 def clean_up_columns(row, column):
     value = str(row[column].split('-')[0])
     return value
+
 
 def wide_area_ed(row):
     if row['Des_CH'] == 'Not Prudent':
@@ -165,7 +253,7 @@ def wide_area_ed(row):
         return 'NLAA-Extinct'
     elif row['EntityID'] in NLAA_QualReport:
         return 'NLAA-QualReport'
-    elif row['EntityID'] in NLAA_OutsideUse :
+    elif row['EntityID'] in NLAA_OutsideUse:
         return 'NLAA-OutsideUse'
     elif row['EntityID'] in LAA_QualReport:
         return 'LAA-QualReport'
@@ -173,7 +261,6 @@ def wide_area_ed(row):
         return 'NLAA-Wide Area Only'
     else:
         return 'LAA-Overlap'
-
 
 
 start_time = datetime.datetime.now()
