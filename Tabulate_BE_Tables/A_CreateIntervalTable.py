@@ -2,15 +2,15 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\MergeByUse'
-out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\CriticalHabitat\MergeByUse_WholeRange'
+out_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\CriticalHabitat'
 
 # in_folder = r'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat\MergeByUse'
 # out_location = 'E:\Tabulated_NewComps\NL48\AG\CriticalHabitat'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-out_csv = out_location + os.sep + 'R_NL48_SprayInterval_'+ (date)+'_All.csv'
+out_csv = out_location + os.sep + 'CH_NL48_SprayInterval_'+ (date)+'_WholeRange.csv'
 
 master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','WoE Summary Group','Source of Call final BE-Range']

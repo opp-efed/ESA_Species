@@ -2,8 +2,8 @@ import pandas as pd
 import os
 import datetime
 
-in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\PercentOverlap'
-out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\MergeByUse'
+in_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\PercentOverlap_WholeRange'
+out_location = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\MergeByUse_WholeRange'
 
 
 def createdirectory(DBF_dir):

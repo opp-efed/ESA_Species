@@ -2,10 +2,10 @@ import pandas as pd
 import os
 import datetime
 
-# TODO see if adding the a _b to the long df, then running a wide to long is faster than interating through all row  species_a_b function - current time 6 minutes
+# TODO get final output of columns correct
 in_split = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\AquModeling\SpatialJoins\Summarized_spatialJoins\AllHUC_a_b.csv'
 huc_12_cross = r'L:\Workspace\ESA_Species\Range\HUC12\AllSpe\HUC12\GDB\R_AllSpe_FWS_NMFS_ByHUC12_20170328.txt'
-long_bins = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\LongBins_unfilter_20170503.csv'
+long_bins = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\LongBins_unfilter_20170504.csv'
 final_cols = ['lead_agency', 'Group', 'HUC_2', 'comname', 'EntityID', 'sciname', 'status_text',
               'Reassigned', 'Bins_reassigned', 'sur_huc', 'AttachID', 'Bins', 'Value', 'WoE_group_1', 'WoE_group_2',
               'WoE_group_3']
@@ -139,8 +139,7 @@ def split_long_df(long_df):
     df['HUC_Split_Value'].fillna('No', inplace=True)
     df.to_csv(out_location + os.sep + 'NL_Working_AB_long_' + str(date) + '.csv')
     df['HUC_2'] = df.apply(lambda row: assign_a_b(row), axis=1)
-    df = df.loc[~df['HUC_2'].isin(nl48_huc_split)]
-    df.to_csv(out_location + os.sep + 'NL_2_Working_AB_long_' + str(date) + '.csv')
+
     return df
 
 
@@ -154,18 +153,21 @@ huc_12_crosswalk_dict = df_cross.set_index('EntityID').T.to_dict('list')
 list_species = huc_12_crosswalk_dict.keys()
 
 hucs_a_b, working_df = species_a_b(dict_a_b_split, list_species, huc_12_crosswalk_dict, df_long)
-# # working_df.to_csv(out_location + os.sep + 'Working_L48_AB_' + str(date) + '.csv')
+
+working_df.to_csv(out_location + os.sep + 'Working_L48_AB_' + str(date) + '.csv')
 df_working_nl48 = split_long_df(df_long)
-# df_working_nl48.to_csv(out_location + os.sep + 'Working_NL48_AB_' + str(date) + '.csv')
+
+df_working_nl48.to_csv(out_location + os.sep + 'Working_NL48_AB_' + str(date) + '.csv')
 
 l48_nl48_df = working_df.append(df_working_nl48)
+
 reindex_cols = df_long.columns.values.tolist()
-l48_nl48_df = l48_nl48_df.reindex(columns=reindex_cols)
+l48_nl48_df = l48_nl48_df.reindex(columns=final_cols)
 
 non_split_hucs = df_long.loc[~df_long['HUC_2'].isin(huc_split)]
 
 df_final = non_split_hucs.append(l48_nl48_df)
-df_final = df_final.reindex(columns=reindex_cols)
+df_final = df_final.reindex(columns=final_cols)
 
 df_final.drop_duplicates(inplace=True)
 

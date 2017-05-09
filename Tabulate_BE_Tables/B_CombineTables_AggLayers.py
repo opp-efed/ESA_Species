@@ -2,17 +2,20 @@ import pandas as pd
 import datetime
 import os
 
-
-in_tables_nona = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\CH_L48_NonAg_SprayInterval_20170206_All.csv'
-in_table_ag = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\CH_L48_Ag_SprayInterval_20170206_All.csv'
-in_table_aa ='L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\AAs\CriticalHabitat\CH_L48_AA_SprayInterval_20170206_All.csv'
+WholeRange= True
+in_tables_nona = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\NonAg\CriticalHabitat\CH_L48_NonAg_SprayInterval_20170508_WholeRange.csv'
+in_table_ag = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\Ag\CriticalHabitat\CH_L48_Ag_SprayInterval_20170508_WholeRange.csv'
+in_table_aa ='L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\AAs\CriticalHabitat\CH_L48_AAs_SprayInterval_20170508_WholeRange.csv'
 
 outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers'
-out_csv = outlocation + os.sep + 'CH_MagTool_SprayDrift_20170206.csv'
+out_csv = outlocation + os.sep + 'tCH_MagTool_SprayDrift_WholeRange_20170508.csv'
 master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20161215.csv'
-master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','WoE Summary Group','Source of Call final BE-Range']
+in_acres_list = [r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv',
+                  r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv']
+
+
+master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS','Source of Call final BE-Range','WoE Summary Group','Source of Call final BE-Critical Habitat']
 
 region = 'CONUS'
 
@@ -62,6 +65,12 @@ useLookup = {'10x2': 'Corn',
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+path_check_ch_r, sum_table = os.path.split(in_tables_nona)
+path, ch_r_folder = os.path.split(path_check_ch_r)
+if ch_r_folder == 'Range':
+    in_acres_table = in_acres_list[1]
+else:
+    in_acres_table = in_acres_list[0]
 # master_list_df =  pd.read_csv(master_list)
 master_list_df = pd.read_excel(master_list)
 master_list_df = master_list_df.ix[:, master_col]
@@ -71,13 +80,24 @@ final_col = final_df.columns.values.tolist()
 
 acres_df = pd.read_csv(in_acres_table, dtype= object)
 acres_df['EntityID'] = acres_df['EntityID'].map(lambda x: x).astype(str)
-in_acres = acres_df[('Acres_' + str(region))].map(lambda x: x).astype(float).map(lambda x: x).astype(
+
+if WholeRange:
+    in_acres = acres_df[('TotalAcresOnLand')].map(lambda x: x).astype(float).map(lambda x: x).astype(
     float)
+    list_acres = in_acres.values.tolist()
+    se = pd.Series(list_acres)
+    final_df[('TotalAcresOnLand')] = se.values
 
-list_acres = in_acres.values.tolist()
-se = pd.Series(list_acres)
+else:
+    in_acres = acres_df[('Acres_' + str(region))].map(lambda x: x).astype(float).map(lambda x: x).astype(
+    float)
+    list_acres = in_acres.values.tolist()
+    se = pd.Series(list_acres)
+    final_df[('Acres_' + str(region))] = se.values
 
-final_df[('Acres_' + str(region))] = se.values
+
+
+
 final_df['EntityID'] = final_df['EntityID'].map(lambda x: x).astype(str)
 
 in_df_ag = pd.read_csv(in_table_ag, dtype= object)

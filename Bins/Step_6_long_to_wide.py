@@ -1,8 +1,8 @@
 import pandas as pd
 import datetime
 
-in_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\LongBins_unfilter_AB_20170503.csv'
-out_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\WideBins_unfilter_AB_20170503.csv'
+in_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\LongBins_unfilter_AB_20170504.csv'
+out_table = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\WideBins_unfilter_AB_20170504.csv'
 
 final_cols = ['lead_agency', 'Group', 'HUC_2', 'comname', 'EntityID', 'sciname', 'status_text', 'Multi HUC',
               'Reassigned', 'Bins_reassigned', 'sur_huc', 'AttachID', 'WoE_group_1', 'WoE_group_2', 'Bin 1',

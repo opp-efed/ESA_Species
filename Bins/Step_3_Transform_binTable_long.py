@@ -6,7 +6,7 @@ today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
 table_folder = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived'
-in_table = table_folder +os.sep +'Recode_BinTable_asof_20170503.csv'
+in_table = table_folder +os.sep +'Recode_BinTable_asof_20170504.csv'
 out_table = table_folder + os.sep + 'LongBins_' + date +'.csv'
 
 start_script = datetime.datetime.now()

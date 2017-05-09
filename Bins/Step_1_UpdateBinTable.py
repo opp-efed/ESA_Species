@@ -137,7 +137,6 @@ def collaspse_species(working_df, added_df):
                             if out_value == i:
                                 pass
                             elif out_value != i:
-                                print i, out_value, ent
                                 update_value = max(out_value, i)
                                 starting_values[index_pos] = update_value
                                 huc_specific_assignments = True #TODO Get thing into the table

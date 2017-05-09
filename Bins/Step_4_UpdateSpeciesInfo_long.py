@@ -7,7 +7,7 @@ out_location = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-long_bins = out_location + os.sep + 'LongBins_20170503.csv'
+long_bins = out_location + os.sep + 'LongBins_20170504.csv'
 woe_csv = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Update_Jan2016_FishesError\species woe taxa.csv'
 col_included = ['lead_agency', 'Group', 'comname', 'EntityID', 'sciname', 'status_text']
 col_index_bins = {'Lead_Agency': 1, 'Group': 2, 'COMNAME': 3, 'ENTITYID': 4, 'SCINAME': 5, 'STATUS_TEXT': 6}

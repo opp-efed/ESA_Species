@@ -22,12 +22,13 @@ sp_col_count = 7  # number of cols with species info  base 0 found in the sum ov
 
 # Master acres for all species by region
 
-in_acres_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
+in_acres_list = [r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv',
+                  r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv']
 percent_regional = False
 
 # Location where output and temp files will be saved
 
-out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\PercentOverlap'
+out_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\NL48\Range\PercentOverlap_WholeRange'
 
 # List of regions that are completed and should be included
 
@@ -68,8 +69,12 @@ def calculation(typefc, in_sum_df, cell_size, c_region, percent_type):
         percent_overlap = (acres_overlap.div(acres_overlap.Acres, axis='index')) * 100
         if percent_type:
             percent_overlap[('Acres_' + str(region))] = se.values
+            percent_overlap.drop('TotalAcresOnLand',axis=1, inplace=True)
+            percent_overlap.drop('Acres',axis=1, inplace=True)
         else:
             percent_overlap['TotalAcresOnLand'] = se.values
+            percent_overlap.drop('Acres',axis=1, inplace=True)
+            percent_overlap.drop(('Acres_' + str(region)),axis=1, inplace=True)
 
 
         return percent_overlap
@@ -89,10 +94,13 @@ createdirectory(out_folder)
 # 1) Read in master tables
 
 # read in master use list with cell size info for each use
-
-
 # read in master raw sum table; apply data types; split spe info and use info into two dataframes
-
+path_check_ch_r, sum_folder = os.path.split(in_raw_sum_overlap)
+path, ch_r_folder = os.path.split(path_check_ch_r)
+if ch_r_folder == 'Range':
+    in_acres_table = in_acres_list[1]
+else:
+    in_acres_table = in_acres_list[0]
 list_folder = os.listdir(in_raw_sum_overlap)
 
 for folder in list_folder:

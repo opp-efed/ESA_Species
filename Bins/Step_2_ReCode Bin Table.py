@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 
 # TODO check dynamic assignment of reassingment
-FileNew = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\UpdatedBins_20170503.csv'
+FileNew = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived\UpdatedBins_20170504.csv'
 outLocation = 'C:\Users\JConno02\Documents\Projects\ESA\Bins\UpdatedToDB_20170419\Archived'
 supporting_col_index = 8
 trailing_col = 20
