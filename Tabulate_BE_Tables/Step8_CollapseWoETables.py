@@ -22,11 +22,9 @@ col_reindex = ['EntityID',  'comname', 'sciname','family', 'status_text','pop_ab
                'Managed Forests', 'Nurseries','Open Space Developed', 'Pine Seed Orchards', 'Right of Way',
                'Christmas Trees', 'Golfcourses','Rangeland', 'Mosquito Control', 'Wide Area Use','CH_GIS',
                'Group', 'Alaska', 'American Samoa', 'Hawaii', 'Lower 48','Guam', 'Puerto Rico', 'Virgin Islands',
-               'Commonwealth of the Northern Mariana Islands','Nurseries_DiazBuffer',	'VegetablesGroundFruit_DiazBuffer',
-               'OrchardsVineyards_DiazBuffer',	'Diazinon_ActionArea','Federally Managed Lands',	'FWS Refuge',
-               'Indian Reservations',	'Wilderness land',	'Cull Piles'
-
-               ]
+               'Commonwealth of the Northern Mariana Islands','Nurseries_DiazBuffer','VegetablesGroundFruit_DiazBuffer',
+               'OrchardsVineyards_DiazBuffer',	'Diazinon_ActionArea','Federally Managed Lands','FWS Refuge',
+               'Indian Reservations',	'Wilderness land',	'Cull Piles']
 ## need ot add in AS for Range
 
 collapses_dict = {
@@ -121,13 +119,9 @@ for use in list_uses:
             collapsed_df.ix[:, str(use)] = 100
     else:
         collapsed_df.ix[:, str(use)] = 100
-
-
         # collapsed_df = pd.concat([collapsed_df, new_df], axis=1)
 
 # final_df = pd.concat([sp_info_df, collapsed_df], axis=1)
-
-
 
 final_df = collapsed_df.reindex(columns=col_reindex)
 final_df = final_df.fillna(0)

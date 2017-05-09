@@ -1,7 +1,8 @@
 import pandas as pd
 import datetime
 import os
-WholeRange= False
+
+WholeRange = False
 in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers\R_MagTool_SprayDrift_RegionalRange_20170508.csv'
 outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\Agg_layers'
 out_csv = outlocation + os.sep + 'R_MagTool_SprayDrift_RegionalRange_20170508_clean.csv'
@@ -11,8 +12,9 @@ master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListES
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS',
               'Source of Call final BE-Range', 'WoE Summary Group', 'Source of Call final BE-Critical Habitat']
 
-in_acres_list = [r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv',
-                  r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv']
+in_acres_list = [
+    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv',
+    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv']
 regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI', 'AS', 'CONUS']
 
 useLookup = {
@@ -62,13 +64,13 @@ useLookup = {
     'Pine seed orchards': 'Pine seed orchards',
     'Christmas Trees': 'Christmas Trees',
     'Managed Forests': 'Managed Forests',
-    'Golf Courses':'Golfcourses',
-    'zMethomylWheat':'zMethomylWheat',
+    'Golf Courses': 'Golfcourses',
+    'zMethomylWheat': 'zMethomylWheat',
     'Methomyl_footprint': 'Methomyl',
     'Chlorpyrifos_footprint': 'Chlorpyrifos',
-    'Carbaryl_footprint':'Carbaryl',
-    'Diazinon_footprint':'Diazinon',
-    'Malathion_footprint':'Malathion'
+    'Carbaryl_footprint': 'Carbaryl',
+    'Diazinon_footprint': 'Diazinon',
+    'Malathion_footprint': 'Malathion'
 }
 
 start_time = datetime.datetime.now()
@@ -81,29 +83,27 @@ if ch_r_folder == 'Range':
 else:
     in_acres_table = in_acres_list[0]
 
-acres_df = pd.read_csv(in_acres_table, dtype= object)
+acres_df = pd.read_csv(in_acres_table, dtype=object)
 acres_df['EntityID'] = acres_df['EntityID'].map(lambda x: x).astype(str)
 
 if WholeRange:
-    in_acres = acres_df[('TotalAcresOnLand')].map(lambda x: x).astype(float).map(lambda x: x).astype(
-    float)
+    in_acres = acres_df['TotalAcresOnLand'].map(lambda x: x).astype(float).map(lambda x: x).astype(
+        float)
     list_acres = in_acres.values.tolist()
     se = pd.Series(list_acres)
 
 else:
     pass
 
-
 # master_list_df =  pd.read_csv(master_list)
 master_list_df = pd.read_excel(master_list)
 master_list_df = master_list_df.ix[:, master_col]
-master_list_df ['EntityID'] = master_list_df ['EntityID'].map(lambda x: x).astype(str)
+master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: x).astype(str)
 print master_list_df
 
 in_df = pd.read_csv(in_table, dtype=object)
 in_df['EntityID'] = in_df['EntityID'].map(lambda x: x).astype(str)
 in_df_col = in_df.columns.values.tolist()
-
 
 for col in in_df_col:
     if col == 'Acres_CONUS':
@@ -136,7 +136,7 @@ for col in in_df_col:
 
 in_df.columns = col_reindex
 
-out_df = pd.merge(master_list_df ,in_df, on='EntityID', how='inner')
+out_df = pd.merge(master_list_df, in_df, on='EntityID', how='inner')
 if WholeRange:
     out_df[('TotalAcresOnLand')] = se.values
 
