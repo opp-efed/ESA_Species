@@ -2,20 +2,19 @@ import arcpy, traceback, os, sys, csv, time, datetime, functions
 from arcpy import env
 import functions
 
-SingleRaster = True #one raster will be cliped or a group in a GDB
-SingleFC = False #one species or many
+SingleRaster = False #one raster will be cliped or a group in a GDB
+SingleFC = True #one species or many
 speciesRangefc = True #species range or critical habitat
 
-out_location= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TimMcNest\Clipped_GAP.gdb'
+out_location= 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\Overlapping_UseRaster_Combine\Work_570_CONUS.gdb'
 #out_working = 'J:\Workspace\Step3_Proposal\Yearly_CDL\SpeRangeClips.gdb'
-inraster = r'L:\Workspace\ESA_Species\Step3\Step3_Proposal\GAP\National\natgaplandcov_v2_2_1.img'
+inraster = r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb'
 #J:\Workspace\Step3_Proposal\Yearly_CDL\CDL_reclass_new.gdb
-infc = 'L:\Workspace\ESA_Species\Step3\Step3_Proposal\Bird_HexSimPilot.gdb'
-snapRaster = r"L:\Workspace\ESA_Species\Step3\Step3_Proposal\GAP\National\natgaplandcov_v2_2_1.img"
-
+infc = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\Overlapping_UseRaster_Combine\Work_570_CONUS.gdb\R_953_CONUS'
+#snapRaster = r"L:\Workspace\ESA_Species\Step3\Step3_Proposal\GAP\National\natgaplandcov_v2_2_1.img"
+snapRaster = r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.img"
 arcpy.MakeRasterLayer_management(snapRaster,"snap")
 arcpy.env.snapRaster = "snap"
-
 
 def CreateGDB(OutFolder, OutName, outpath):
     if not arcpy.Exists(outpath):

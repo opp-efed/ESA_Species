@@ -9,28 +9,41 @@ import pandas as pd
 # TODO set up separate script that will spit out chem specific table with different interval include aerial and group
 
 # inlocation
-filetype = 'CH'
-in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\FinalBETables\CriticalHabitat\BE_Intervals\CH_AllUses_BE_20170109.csv'
+filetype = 'R'
+in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\L48\FinalTables_Range\BETables\R_AllUses_BE_20170209.csv'
 master_col = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Des_CH', 'CH_GIS']
 # master list
-temp_folder = r'C:\Users\JConno02\Documents\Projects\SmallProject\BEADOverlap'
-out_csv = temp_folder + os.sep + 'CH_ESA_AllSpecies_20170117_bySpecies.csv'
+temp_folder = r'C:\Users\JConno02\Documents\Projects\SmallProject\BPPD_overlap'
+out_csv = temp_folder + os.sep + 'R_ESA_AllSpecies_20170209_bySpecies_20170515.csv'
 sp_index_cols = 12
-col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group', 'Des_CH',
-               'Critical_Habitat_','CH_GIS', 'Migratory', 'Migratory_', 'Corn_Collapsed', 'Corn_CONUS',
-               'Ag_NL48']
 
 if filetype == 'R':
     collapses_dict = {
-        'Corn_Collapsed':['CONUS_Corn_0','AK_Ag_0','AS_Ag_0','CNMI_Ag_0','GU_Ag_0','HI_Ag_0','PR_Ag_0','VI_Ag_0'],
-        'Corn_CONUS':['CONUS_Corn_0'],
-        'Ag_NL48': ['AK_Ag_0','AS_Ag_0','CNMI_Ag_0','GU_Ag_0','HI_Ag_0','PR_Ag_0','VI_Ag_0']}
+        'Corn_Collapsed': ['CONUS_Corn_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0',
+                           'VI_Ag_0'],
+        'Corn_CONUS': ['CONUS_Corn_0'],
+        'Cotton_Collapsed': ['CONUS_Cotton_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0',
+                             'VI_Ag_0'],
+        'Cotton_CONUS': ['CONUS_Cotton_0'],
+        'Soybean_Collapsed': ['CONUS_Soybeans_0', 'AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0',
+                              'VI_Ag_0'],
+        'Soyben_CONUS': ['CONUS_Soybeans_0'],
+        'Ag_NL48': ['AK_Ag_0', 'AS_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0']}
+    col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group' 'Corn_Collapsed',
+                   'Corn_CONUS', 'Cotton_Collapsed', 'Cotton_CONUS', 'Soybean_Collapsed', 'Soybean_CONUS', 'Ag_NL48']
 else:
     collapses_dict = {
-        'Corn_Collapsed':['CONUS_Corn_0','AK_Ag_0','CNMI_Ag_0','GU_Ag_0','HI_Ag_0','PR_Ag_0','VI_Ag_0'],
-        'Corn_CONUS':['CONUS_Corn_0'],
-        'Ag_NL48': ['AK_Ag_0','CNMI_Ag_0','GU_Ag_0','HI_Ag_0','PR_Ag_0','VI_Ag_0']
-        }
+        'Corn_Collapsed': ['CONUS_Corn_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+        'Corn_CONUS': ['CONUS_Corn_0'],
+        'Cotton_Collapsed': ['CONUS_Cotton_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+        'Cotton_CONUS': ['CONUS_Cotton_0'],
+        'Soybean_Collapsed': ['CONUS_Soybeans_0', 'AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0'],
+        'Soyben_CONUS': ['CONUS_Soybeans_0'],
+        'Ag_NL48': ['AK_Ag_0', 'CNMI_Ag_0', 'GU_Ag_0', 'HI_Ag_0', 'PR_Ag_0', 'VI_Ag_0']}
+
+    col_reindex = ['EntityID', 'comname', 'sciname', 'family', 'status_text', 'pop_abbrev', 'Group', 'Des_CH', 'CH_GIS',
+                   'Corn_Collapsed', 'Corn_CONUS', 'Cotton_Collapsed', 'Cotton_CONUS', 'Soybean_Collapsed',
+                   'Soybean_CONUS', 'Ag_NL48']
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
@@ -60,7 +73,6 @@ for use in list_uses:
             collapsed_df.ix[:, str(use)] = 100
     else:
         collapsed_df.ix[:, str(use)] = 100
-
 
 final_df = collapsed_df.reindex(columns=col_reindex)
 final_df = final_df.fillna(0)
