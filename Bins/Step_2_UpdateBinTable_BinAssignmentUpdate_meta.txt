@@ -1,0 +1,27 @@
+Updated 5/30/2017 J. Connolly
+
+############### User input variables
+Input Sources: User driven, Services, UpdatedBins_[date].csv  from Step_1_UpdateBinTable_RangeUpdate
+
+############### General Notes:
+Before running this update table must be codes to match the current bin database codes
+
+This step can be skipped if using collapsed species bin assignment as surrogate for new spe/huc2 combos; this *will not*
+account for new species
+
+# ############## ASSUMPTIONS
+1) Species bin assignment found in the in_update_table have been manually recode to match the current bins DB bin codes
+2) New Species/HUC combos are represented in the species range
+3) Final columns headers are the same as those in current_wide
+########################################################################################################################
+
+Step 1: load data from current bin tables, and tables used for update
+Loads input tables, updated species entity ids as needed, standardized the columns headers to current_wide headers,
+add Spe_HUC column to all tables to be used as unique ID of species/HUC2 combinations
+
+Step 2: Add updated assignment for species/huc2 combos found on the in_update_table
+Updated the working df to include the updates found in the in_update_table.  NOTE assumption is the range files are
+final for this round of updates before running step 1.  Any spe/huc2 combo added at this point IS NOT found in the range
+file.  These additions are exported to an intermediate table.
+
+Step 3: Exports data frame to csv

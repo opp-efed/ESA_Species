@@ -1,0 +1,32 @@
+Updated 5/31/2017 J. Connolly
+
+############### User input variables
+Input Sources: User driven, Recode_BinTable_as_of_[date].csv from Step_3_Recode Bin Table
+
+# ############## ASSUMPTIONS
+1) Columns in the input table are in the desire order
+2) All columns in table should be retained
+3) Only the bin columns should be 'melted' in the long transformation
+########################################################################################################################
+
+# Step 1: Load data from shorthand bin tables, removed unnamed columns. Try/Excepts makes sure we have a complete
+# archive of data used for update,and intermediate tables.
+
+Loads input table to data frame, verifies table is in the correct location to have a complete archive of update, and
+drop unnamed columns
+
+# Step 2: Generates list used as for the id_vars and value_vars variables in transformation and runs wide to long
+# transformation
+
+Generates the lists used as the variables for the long transformation and runs transformations. The transformation takes
+the values in the value_vars, in this case all of the bin columns and generates individual rows of data that includes
+the information in the id_vars. It is assumed that only the bin cols should me 'melted', this can be change by changing
+the list of columns name in bin_col.  Also, it is assumed all columns not found in bin_col should be used in the id_vars
+
+# Step 3: Reindex transformed df to original column order of input table, with added columns from the transformation
+
+Reorders (reindex) the id_vars columns in the transformed df to the original order of the input table, the 'melted' are
+at the end of the data frame (Bins and Value)
+
+# Step 4:Exports transformed data frame to csv
+
