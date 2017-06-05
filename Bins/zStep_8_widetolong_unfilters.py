@@ -1,45 +1,40 @@
-# Author: J. Connolly: updated 5/31/2017
+# Author: J. Connolly: updated 6/1/2017
 # ############## ASSUMPTIONS
-# Column order has not change since step 1
-# All columns in table should be retained
-# Only the bin columns should be 'melted' in the long transformation
+
 import pandas as pd
-import os
 import datetime
+import os
 import sys
 
 # #############  User input variables
+
 # location where out table will be saved - INPUT Source user
 table_folder = r'C:\Users\JConno02\Documents\Projects\ESA\Bins\updates\Script_Check_20170531'
-
-# INPUT SOURCES Recode_BinTable_as_of_[date].csv from Step_3_Recode Bin Table; file should already be located at the
+# INPUT SOURCES 'WideBins_unfiltered_AB_[date].csv' from Step_6_long_to_wide; file should already be located at the
 # path table_folder
-short_hand_wide_table_nm = 'Recode_BinTable_as_of_20170605.csv'
-# column headers for bins short_hand_wide_table - INPUT SOURCE- User
+in_table_nm = 'WideBins_unfiltered_AB_20170605.csv'
+# column headers for bins from in_table - INPUT SOURCE- User
 bin_col = ['Terrestrial Bin', 'Bin 1', 'Bin 2', 'Bin 3', 'Bin 4', 'Bin 5', 'Bin 6', 'Bin 7', 'Bin 8', 'Bin 9', 'Bin 10']
 
 # ############# Static input variables
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
-archived_location = table_folder + os.sep + 'Archived'
-os.mkdir(archived_location) if not os.path.exists(archived_location) else None
 
-in_table = table_folder + os.sep + short_hand_wide_table_nm
-out_table = archived_location + os.sep + 'LongBins_' + date + '.csv'
+in_table = table_folder + os.sep + in_table_nm
+out_table = table_folder + os.sep + 'LongBins_AB_' + date + '.csv'
+
 
 # Time tracker
 start_script = datetime.datetime.now()
 print "Start Time: " + start_script.ctime()
-
 # Step 1: Load data from shorthand bin tables, removed unnamed columns. Try/Excepts makes sure we have a complete
 # archive of data used for update,and intermediate tables.
 try:
     df_in = pd.read_csv(in_table)
     [df_in.drop(v, axis=1, inplace=True) for v in df_in.columns.values.tolist() if v.startswith('Unnamed')]
 except IOError:
-    print('\nYou must move the Recoded shorthand bin table to the table_folder location')
+    print('\nYou must move the in table  to table_folder location')
     sys.exit()
-
 # Step 2: Generates list used as for the id_vars and value_vars variables in transformation and runs wide to long
 # transformation
 df_cols = df_in.columns.values.tolist()

@@ -1,0 +1,44 @@
+Metadata- 1_NMFS_ListedSpecies.py - author J.Connolly Updated 3/24/2017,3/2/2017, 6/20/2016
+
+Reference website: http://chrisalbon.com/python/beautiful_soup_scrape_table.html
+
+VARIABLES -user input variables
+
+outlocation = path where the final tables will save, a NMFS directory will be generated for all NMFS tables
+groups = NMFS species groups sub-groups within a table or table header
+url = url where tables are founf
+removed_perNMFS = should be considered foreign for the purposes of our section 7 consultation even though the website states
+			it is domestic
+section_7_status = listing status of concern under section 7- note the salmon fish XN pop do not fall under section 7
+
+static default variables: No user input needed
+
+
+Step 1:Download and parse out website tables
+
+***Before generated the table check the website table for species that do not follow basic structure. 
+
+If a species only has one population the comname, sciname, and popname with be found in the first columns and supporting 
+information in the following columns.  A species with multiple population will have the comname and sciname in a merged cell 
+across all columns (ie one cell).  Each pop will be on a separate row  with support information in the following columns. 
+
+Common exceptions: failed merged across columns on the species cell when there are multiple pops eg. Pacific/smelt eulachon,
+partial merge on species cell with multiple pops eg. loggerhead, and species pops with unique sciname eg ring seal
+
+Step 2: For each table parse out species information in each table column and load it into the appropriate lists
+Each row of data is loaded into a list variable col, html is converted to text, ascii characters removed, and sp information
+and species information is loaded into the lists based on the index position of the col variable
+
+Step 3: Loads species lists into a dictionary and then a data frame
+Pulls lists together into a dictionary and then loads it into a data frame. 
+
+***If an array error is received a piece of species information is not loading into one of the list likely do to a structure 
+exception on the website tables.  Printing out the length of each list can help narrow down where the problem is.
+
+Step 4: Filters data frame to include only the statuses of concern for section 7
+Generate second data frame that only includes the species with a status of concern under section 7
+
+Step 5: Exports both the full list from the website and filtered list to csvs
+Exports two tables, the first is a complete list of species from website table, second is only the section 7 species. 
+
+***Second table, section 7 species is the table that will be used as the input for 2_NMFS_MergeTables

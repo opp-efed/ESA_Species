@@ -26,20 +26,33 @@ bins in coastal HUC2s.
 
 Step 1: load data from current bin tables, and tables used for update
 
-Loads input tables, updated species entity ids as needed, standardized the columns headers to current_bin_table headers,
-add Spe_HUC column to all tables to be used as unique ID of species/HUC2 combinations. Columns of the input table are
-are consider the final cols to be use, and assumed to be in the correct order. DF is split using index postion of bin
-columns. Used index position so we could change the columns without having to change the code.
+Loads input tables, updated species entity ids as needed, standardized the columns headers to current_bin_table and
+master species table headers,add Spe_HUC column to all tables to be used as unique ID of species/HUC2 combinations.
 
-Step 2: Add new HUCs based on species range update and make archived of intermediate tables
+Columns of the input table are are consider the final cols to be use, and assumed to be in the correct order. Species
+info columns must match the headers in the master list. Bin df is split using index position of bin columns. Used index
+position so we could change the columns without having to change the code.
+
+Step 2: Make species info data frames from master, used to update species info, and woe group crosswalk from post
+processor, append current woe groups to current species info, save a wide version of the woe groups to archive, add woe
+groups to the column headers for the out table
+
+Generates species data frame using input tables, appends at end to insuring all species info is updated
+
+Step 3: Add new HUCs based on species range update and make archived of intermediate tables
 
 Adds empty rows for new species/HUC2 combinations, for species with a new HUC2 add updated flagged to note when there
 are HUC2 specific assignments, typically species found in marine bins in both coastal and land locked HUCS
 
-Step 3: Removed HUCs based on species range update and make archived of intermediate tables
+Step 4: Removed HUCs based on species range update and make archived of intermediate tables
 Removed HUC2 assignments for HUCs outside the new species range, and generates an archive of this data.
 
-Step 4: Collapse bins assignment across all hucs into a single assignment for a species, when this occurs, and what
+Step 5: Updated bins assignments in land locked hucs based on bin_code_update dictionary
+Checks the marine bin assignments for species found in the land locked hucs, species can not be found in these bins
+    **NOTE when species occur in marine bins in coastal hucs and other bins in land-locked hucs the code value in the
+    marine bins for the land-locked huc starts with '13'
+
+Step 6: Collapse bins assignment across all hucs into a single assignment for a species, when this occurs, and what
 If user wishes generate an inclusive species bin assignment that represents all HUCs this can be done just for the new
 species/HUC2 combinations or for all species/HUC2 combinations.
     ** NOTE when sub-setting the individual bin assignments for a species/HUC2 in list format using index values
@@ -49,12 +62,8 @@ species/HUC2 combinations or for all species/HUC2 combinations.
     **NOTE if doing this for all combination we will be violating the assumption that high bin coded values trump lower
     one and the **DB_code_Dict in Step_2_ReCode Bin Table**
 
-Step 5: Updated bins assignments in land locked hucs based on bin_code_update dictionary
-Checks the marine bin assignments for species found in the land locked hucs, species can not be found in these bins
-    **NOTE when species occur in marine bins in coastal hucs and other bins in land-locked hucs the code value in the
-    marine bins for the land-locked huc starts with '13'
-
-Step 6: Runs a final check to make sure all entity id have been updated based on entityid_updated dictionary
+Step 7: Runs a final check to make sure all entity id have been updated based on entityid_updated dictionary; Pulls
+replace the species information in the output table with the current information found in the master list
 Final check to make sure all entity ids are updated, should have been captured in Step 1
 
-Step 7: Exports data frame to csv
+Step 8: Exports data frame to csv

@@ -19,9 +19,9 @@ Verify logic for downstream dilution assignments hasn't changed
 1) Maintaining huc specific assignments, typically this happens for the marine bins when a species is found in coastal
 and land-locked hucs
 2) Bin columns ['Terrestrial Bin', 'Bin 1', 'Bin 2', 'Bin 3', 'Bin 4', 'Bin 5', 'Bin 6', 'Bin 7', 'Bin 8', 'Bin 9',
-Bin 10'] are in a continuous are in order. DF is split using index position and not column names - Note if this is
+Bin 10'] are continuous. DF is split using index position and not column names - Note if this is
 problem this can be changed to column names if needed
-3) Columns are in the correct order ie, species info cols, bins, database info columns
+3) Column order has not changed since Step 1
 ########################################################################################################################
 
 # Step 1: load data from current bin tables, splits species info and database info into their own data frame using index
@@ -61,4 +61,5 @@ number of HUC2 where change to the same surrogate HUC2.
 
 Add a Yes/No column to note a downstream dilution species based on criteria in flag_dd_species.
 
-# Step 8:Exports data frame to csv
+# Step 8:Filters the list to the species on the current master. Exports filter data frame to csv in root folder, export
+# unfiltered table to archived folder

@@ -4,7 +4,7 @@ Updated 5/31/2017 J. Connolly
 Input Sources: User driven, Recode_BinTable_as_of_[date].csv from Step_3_Recode Bin Table
 
 # ############## ASSUMPTIONS
-1) Columns in the input table are in the desire order
+1) Column order has not change since step 1
 2) All columns in table should be retained
 3) Only the bin columns should be 'melted' in the long transformation
 ########################################################################################################################
