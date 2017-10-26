@@ -1,0 +1,42 @@
+Updated 6/12/2017 J. Connolly
+
+# ##############General notes
+# All hard coded columns are purposefully, these are new columns used for tracking
+# Before running this make sure WoE have not been changes since they were updated during Step 1 or 2
+# If duplicates are found, tables from Step 6 should be updated.
+
+############### User input variables
+Input Sources: User driven, LongBins_unfiltered_AB_20170605.csv from Step_6_UpdateSpeciesInfo_long,
+
+# ############## ASSUMPTIONS
+1) Long bin table is used a master for entity id and huc2 columns names
+2) Col header in long bin table should be used out output header for final data frame
+
+########################################################################################################################
+# Step 1: Load data from current bin tables; breaks into three parts, species info, bin and bin database info; Sets the
+# columns from the species tables that should be included in the output bin tables.
+
+
+# Step 2: Drops all columns in bin data frame expect for ['Spe_HUC', 'Bins', 'Value'] and removes duplicates
+
+# Step 3: Generates column with unique identifier that represent the species/huc/bin and check for duplicates.
+# Duplicates will cause transformation to fail.  Duplicates are printed for user address.
+
+
+# Step 4: Reindex working df back to ['Spe_HUC', 'Bins', 'Value'] and does one more check for exact duplicates by
+# dropping them
+
+# Step 5: Runs pivot to transform data from long to wide; drop any duplicates generate in transformation and updates
+# [HUC_2] col; pivot function - Reshape data (produce a “pivot” table) based on column values. Uses unique values from
+# index / columns to form axes of the resulting DataFrame.
+
+# Step 6: Merges species info, bin database info back to wide bin data frame; run reindex to set col based on input
+# table; drops duplicates
+
+# Step 7: Exports data frame to csv
+# WideBins_unfiltered_AB_[date].csv  # wide bin table with shorthand for bins values and a/b split; used for BE
+wide_df.to_csv(out_table)
+
+Reference URLs
+https://chrisalbon.com/python/pandas_join_merge_dataframe.html
+https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.pivot.html

@@ -1,0 +1,47 @@
+Updated 6/12/2017 J. Connolly
+
+# ##############General notes
+# All hard coded columns are purposefully, these are new columns used for tracking
+# Before running this make sure WoE have not been changes since they were updated during Step 1 or 2
+# Output: LongBins_PP_filter_AB_[date].csv goes to [C.Peck] to be incorporated into the post-processor
+# In Step_7_long_to_wide; there is another check for duplicates; of duplicates are found these tables should be updated
+
+############### User input variables
+Input Sources: User driven, LongBins_unfiltered_AB_[date].csv from Step_5_A_B_split,
+
+# ############## ASSUMPTIONS
+1) Col order has not changed since step 1
+2) Long bin table is used a master for entity id and huc2 header names
+3) Master huc12/ab split is used for huc12 columns names
+4) Col header in long bin table should be used out output header for final data frame
+5) Woe groups have not changes since they were updated in Step 1 or Step 2 NOTE can add loop in to also make update to
+WoE groups
+########################################################################################################################
+
+# Step 1: Load data from current bin tables;  Sets the columns from the species tables that should be included in the
+# output bin tables.
+
+Loads input tables, standardized the columns headers to input table and master species table headers, generates data
+frame with updated species info from active master species table
+
+# Step 2: Removes old species info from bin data frame then merges the new species info to the bin data frame and runs
+# reindex on out cols
+
+Slices working data frame to include just bin information and the species identifier (entityid); removing old supporting
+species information. Merges the bin data frame to the updated species info data frame on the species identifier column.
+Reindex col order to match user input
+
+# Step 3: Updated lead agency code to agency abbreviations;
+
+Add in flags to allow output table to be filtered to view species w/o rage, new hucs, and removed species
+
+# Step 4: Filters working data frame to a filter and unfiltered version. Unfiltered includes all bins and all values,
+# filter includes just Bins 2-10 and bins where species are located.  Filtered version used as input for post-processor
+
+# Step 5: Exports data frame to csv
+# used to make a wide version of the A/B splits; should be the same as long_bins unless species info updated
+# LongBins_unfiltered_AB_[date].csv
+# LongBins_PP_filter_AB_[date].csv # Filters to 'yes' just bins 2-10; Used as input for post-processor
+
+Reference URLs
+https://chrisalbon.com/python/pandas_join_merge_dataframe.html

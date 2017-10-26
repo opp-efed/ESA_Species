@@ -1,0 +1,115 @@
+J. Connolly Updated 6/6/2017
+
+Time line to complete update: ~ 6 Months from when updated master species list in locked- See outlined time line
+Time line Assumptions: Range files updates (~3 Months) and Bin assignment (~1 month) received on time; Troubleshooting
+new Range composites and HUC2 assignments to new composites is minimal
+
+Purpose: Incorporate the updates to the species HUC and bin assignments, change may be to the huc 2 based on a spatial
+range change or to the bin assignment.  During each update all support species information such as listing status, WoE
+group etc will updated to match the current master species list.  New species are add to the table and removed species
+are filtered.  All removed species an associated bin information will be retained in the archived, just removed for the
+active table.
+
+Output file structure:
+
+The table_folder variable is the path to the folder where all output tables will be saved. This variable needs to remain
+static the entire update. Within the output folder there needs to be an [Archived] folder where all input tables used
+for the update need to be saved and  all intermediate and record keeping tables, ie bin assignments for removed species,
+will be saved located.  The updated coded bin assignment table,[UpdatedBins[date].csv]  finalized at the end of step 2
+should be loaded into the bin tracking database. [LongBins_PP_filter_AB_[date].csv], end of Step 6,goes to [C.Peck] to
+be incorporated into the Post Processor. [WideBins_unfiltered_AB_[date].csv] end of step 7 used as bin able for BE
+attachment.
+
+Key Assumptions:
+***Coded bins values are hierarchical, a higher number trumps a lower number when collapsing***
+######################################################################################################
+
+Before the Bin update can be started:
+1) Range composite files will need to be finalized
+2) Species/HUC12 crosswalk will need to be generated
+3) ESA WOE groups crosswalk used by post processor
+
+Documents/Tools dependant on output from update:
+1) Update to bin tracking database (Current_Bins_tobeLoadDB_[date].csv from Step 2
+2) Post-Processor (LongBins_PP_filter_AB_[date].csv from Step 6
+3) Active Bin table used in BE documents (WideBis_unfiltered_AB_[date].csv from Step 7
+4) Updates to WoE/MagTool
+
+######################################################################################################
+
+Time line to complete update: ~ 6 Months from when updated master species list in locked
+Step 1: Date to lock master list set by team
+1) Lock master species list with support species information
+1) Set date on when update Range files need to be received
+4) Add HUCs for a species based on range updates
+5) Removed HUCs for a species based on range updates
+
+Step 2: 2 weeks from date due date for updated Range files- typically 3 months from locking master species list
+2) Finalize Range composite files and HUC12 crosswalks from theses files.
+2) Update ESA WOE groups crosswalk used by post processor
+
+Step 3: 2 Weeks from when Step 2 is complete
+Assumption: Time estimate includes 1.5 weeks of troubleshooting of new range composite files
+3)Run HUC2 for the update range files
+
+Step 4: 1 Day from when final crosswalks (HUC12/WoE groups- Step 2) and final HUC2 change tables (Step 3) are received
+4) Update HUC2 assignments in the current bin table
+4) Submit species without an bin assignment to Services for review- brand new species or new HUC2 add
+
+Step 5: 3 weeks from when the Services provided updated bin assignments- typically 1 month after sending the request
+Assumption - Time estimate includes 2.5 weeks to address questions on the updates received  by Services.
+
+5) Incorporate Services feedback
+5) Load the updated coded bin table to the bin tracking database
+5) Complete remaining steps for bin update
+5) Provide post-processor table to [C. Peck] to be loading into Post Processor tool
+5) Provide table used for BE Attachment to [J.Connolly] to be finalized for chemical
+######################################################################################################
+
+General Notes:
+Starting input tables that need to be moved to [Archived] folder at the table_folder location:
+1) Master species list
+2) ESA WoE group crosswalk (long format)
+3) HUC2 a/b assignment by HUC12
+4) Species HUC12 crosswalks
+5) HUC2 added and removed tables
+
+Step 1 and 2:
+User must set boolean variables :collapse_huc and collapse_new_HUCS_only
+
+If just only collapse_huc all species will multiple will hucs will be collapsed to single bin assignments applied to
+each HUC. (NOTE: HUC specific assignments will be lost)
+
+If both are set to true, when a new HUC is added for a species with a bin assignments for other HUCs, a bin assignment
+will  be generated that include all bins.
+
+Cannot set collapse_huc to False if you want to generate a bin assignment to for the new hucs by collapsing.
+
+Species information is updated on active coded bin assignment table, identifying new species without any bin assignment
+and species with new HUC2 with a bin assignment that is collapsed from all other HUC2s
+    - UpdatedBins[date].csv [Updated] column
+        1) Species without a range file - New Species
+        2) Species with an added huc and a bin assignment collapsed from previously assigned HUCS with a huc specific
+        bin assignment - [New HUC add - Collapsed, huc specific bin assignments]
+        3) Species with an added huc and a bin assignment collapsed from previously assigned HUCS, no huc specific bin
+         assignments - [New HUC add - Collapsed, No, huc specific bin assignments]
+        4) Collapsed all HUCs to a single bin assignment with a huc specific bin assignment - [All hucs collapsed,
+        included huc -specific bin assignments]
+        5) Collapsed all HUCs to a single bin assignment without a huc specific bin assignment - [All hucs collapsed,
+        no huc specific bin assignments]
+    -  UpdatedBins[date].csv column immediately following the EntityID column
+        1) Make note of a species that has been removed from the current master list.  Bin assignment and EntityID will
+        still be found in table  but the species supporting information.  Archived of dropped species with species
+        with species supporting information can be found in the DroppedSpecies_[date].csv table
+
+All bin assignments for new species and new HUCs should be verified by the Services.
+    - Table Species_w_NewHUC2_[date].csv will have all species with new huc 2s
+    - UpdatedBins_[date].csv can be filtered using update column. Boolean variables collapse_huc and
+    collapse_new_HUCS_only variable allows user to generate bin assignments for species with a new huc based on the
+    previous assigned hucs.
+
+Steps 3-7
+
+Converts bins codes to shorthand description,  transforms format from wide to long, long format needed for
+post-processor, applies HUC2 a/b split based on species HUC12 crosswalks, updates all species information, transform
+table with shorthand back to wide format for use as BE attachment

@@ -1,0 +1,68 @@
+Updated 5/31/2017 J. Connolly
+
+############### User input variables
+Input Sources: User driven,  UpdatedBins_[date].csv  from Step_1_UpdateBinTable_RangeUpdate or
+Current_Bins_tobeLoadDB_[date].csv from Step_2_UpdateBinTable_BinAssignments,
+
+############### General Notes:
+Included a few checks to make sure when the table loads, the bin assignment columns loads as integers, default they
+would load one decimal place floats.
+
+Verify dictionary that that updates the bin code to shorthand is correct; and that all reassigned code are captured in
+list.
+
+Verify logic for downstream dilution assignments hasn't changed
+
+**Check output table for errors in the dynamically populated columns**
+
+# ############## ASSUMPTIONS
+1) Maintaining huc specific assignments, typically this happens for the marine bins when a species is found in coastal
+and land-locked hucs
+2) Bin columns ['Terrestrial Bin', 'Bin 1', 'Bin 2', 'Bin 3', 'Bin 4', 'Bin 5', 'Bin 6', 'Bin 7', 'Bin 8', 'Bin 9',
+Bin 10'] are continuous. DF is split using index position and not column names - Note if this is
+problem this can be changed to column names if needed
+3) Column order has not changed since Step 1
+########################################################################################################################
+
+# Step 1: load data from current bin tables, splits species info and database info into their own data frame using index
+# location of bin cols.  To split the df this way it is assumed that cols are in the correct order in the current bin
+# table.  Done by index rather than hard code this way so we change the supporting columns without impacting the code.
+
+Loads table to data frame, drops unnamed columns, sets bins columns values to integers,secondary check in function using
+.replace to make sure bin codes load as integer. Populated the ['Reassigned'] columns using by check for the values in
+the reassigned list for each row of data.
+
+# Step 2: Break coded bin table into three parts, species info (leading_col), bin info (bins) and trailing_col (database
+# info for tracking updates to assignment
+
+Separates data frame into three parts, species info cols, bins, and database info columns.  Note this is an assumption
+that the columns on the input table are in the correct order; the split is done by index position. Used index position
+so we could change the columns without having to change the code.
+
+# Step 3:Update of of the bins codes to shorthand description based on DB_code_Dict dictionary
+
+Changes the bin code to shorthand. Be sure to verify the shorthand for each bin is correct
+
+# Step 4: Merge the species info, bins and database info back into one df
+
+Merges the three split data frames back into one
+
+# Step 5: Populated the MultiHUC and sur_HUC columns based on species/huc combos in working_df; all HUC2 that start with
+# 22 (pacific islands) use 21 (HI) has surrogate
+
+Populates the MultiHUC and sur HUC columns for each row based one which and how much HUC2 the species is found in.
+
+# Step 6: Drop columns added during processing, and drop any duplicate row in data frame
+
+Drops columns that were added during processing and to any duplicate rows for a species. The duplicate row occur when a
+number of HUC2 where change to the same surrogate HUC2.
+
+# Step 7: Flag Downstream dilution species
+
+Add a Yes/No column to note a downstream dilution species based on criteria in flag_dd_species.
+
+# Step 8:Filters the list to the species on the current master. Exports filter data frame to csv in root folder, export
+# unfiltered table to archived folder
+
+Reference URLs
+https://chrisalbon.com/python/pandas_join_merge_dataframe.html
