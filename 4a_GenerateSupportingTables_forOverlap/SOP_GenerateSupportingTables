@@ -1,0 +1,82 @@
+When Spatial libraries are considered locked for a given overlap update Steps 4 a, b c - Notes withing the directories
+will prompt what steps can be run simultaneously
+
+Step 4a:
+
+ Step A - Time estimate ~ 3 hours
+ Time estimate per species ~ 1-15 minutes per species except flowering plant which takes 2.5 hours
+ Flowering plants takes a very long time to generate- one the script reaches this species group it can be
+ re-started to create the other species group files while flowering plants completes
+
+ Step B- Check for missing species against the master list for range files only - checks for missing species happen
+ several other places
+
+ Step C - Start 4B
+
+ Step D - Time estimate ~ 10hours
+ Intersect Regions intersect regions, explodes and dissolves to generate multipart polygons specific to certain regions
+
+ Step E -
+    Projects geographic output from Step D into Web Mercator to get the acres for the full range- web mercator
+    TODO clean up script - can be streamlined
+    Use the 2 dissolve file from Step D - the one that has been exploded, regions assigned then dissolved - polygons in
+    regions are separate from each other
+
+ Step F - Acres tables
+    Generates acres table- for each species you will have the acres from each region where it occurs; the region
+    region specific value is in the projection for that region; the total acres value is from the web mercator file
+    generated in Step E and is in a projected web mercator
+
+ Step G- L48/NL48
+    places species into L48/NL48 or both for sorting; will also note the number of NL48 regions where the species is
+    found
+
+ Step H- Converts acres to another area unit
+
+Step  4B - is delayed to Step C because 4a E takes so long:
+
+ Step 1a - updates ATT tables of merged composite files  to master list
+
+ Step 2 -  Time estimate ~ 15 hours
+    Union composite files; and generate the list of species included in each union
+        TODO clean up of flowering plants takes the longest- finding a way to do this more quickly would speed up the
+        process; this can be done in arcpy by hiding the fields in ArcMap then exporting the file- quicker than current
+        logic in python
+
+    Union files to be used in overlap runs - union so no one location on the ground is run more than once
+    step b- add unique key ZoneID used as key in overlap
+    ** NOTE NOTE** After union finishes compare list of species included in union to make master to make sure no species
+    were missed
+    2a- generates just the union list of species by species group to from union file to compare to master list
+        **NOTE species that are miss are difficult to add back in - done by adding a fake species group - generating
+        comp file- and changing species group in master list; to update a species range same logic can be following by
+        species must be removed from all zone in original union file FIRST - done manually
+
+ Step 3 - Time estimate ~ 3 hours
+    Clips union-ed composite file to land - Flowering plants takes the longest, once this files starts you can start a second
+    instance of the script and it will skip to the other species files
+        **Note note** be sure to populate the ZoneID field before clip! ZoneID=ObjectID of un-clipped files, Zones may
+        drop when clipped to land and the objectID cannot be used as a look up for species or for a join
+
+ Step 4 - Time estimate 12 hours
+    convert union polygons to raster - cannot have multiple instances of script running due to schema locks
+    snap raster for conversion must be a NAD 83 geographic project with 30 meter cells; default cell is very large;
+    typical use the cult mask from current cdl
+
+ Step 5- Time estimate ~ 72 hours if all regions are done separately; run CONUS on its one and split other; esp AK to
+    Speed up
+    Projects rasters into region projections
+    only zones in region are included - use snap raster specific to region
+    Run different regions at a time to make this go faster; specifically run the regions that do not need to be
+    re-projected; the others may have schema lock errors for the re-projection into WGS; causing region to be run twice.
+    WGS re-projection does full file, individual file will one be in the region
+    #TODO Check if the WGS in needed
+
+ Step 6- Time estimate 3.5 hours CH 9.5 Range
+    coverts geodatabase raster to GRIDs
+    Done to avoid schema locks from gdb when working with rasters found in the same region
+    be aware files name length is limit is short - be sure to check for extra _ or spaces in file name - there should
+    not be an _ at the end of the file name
+    **Note - these names are used as IDs for naming output tables and joining back the
+    union file to covert from result by zone to result by species**
+

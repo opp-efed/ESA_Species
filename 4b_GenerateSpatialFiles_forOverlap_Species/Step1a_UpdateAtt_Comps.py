@@ -6,15 +6,16 @@ import arcpy
 
 # ###############user input variables
 
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
-infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'  # folder of GDB
+masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
+infolder = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb' # folder of GDB
 
 # species groups to skip
 skiplist = []
 
-ColIndexDict = dict(comname=4, sciname=5, spcode=14, vipcode=15, entid=0, group=7, popabb=8,status =6)
+ColIndexDict = dict(comname=6, sciname=7, spcode=12, vipcode=13, entid=1, group=16, popabb=9,status =8)
 final_fields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID', 'Pop_Abb', 'Status']
-final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, Pop_Abb=3,Status=6)#group is in pos 2 and not being added
+final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, Pop_Abb=3, Status=6) # group is in pos 2 and not being added
 singleGDB = True
 
 ########Static variables

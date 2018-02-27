@@ -2,20 +2,26 @@ import arcpy
 import pandas as pd
 import datetime
 # Title - generates acres table for all species in each region and full spatial file
-
-out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv'
+#TODO Add in a sum of just the NL48 values to the header of TotalAcresNL48
+out_csv = 'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110.csv'
 # out table
 # in GDB with projected comp files, regional and world projection for full spatial file
 inGDB_list = [
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\Regional\CH_SpGroupComposite_ProjectedtRegion_20161102.gdb',
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\CriticalHabitat\CH_SpGroupComposite_WebMercator.gdb']
+    r'L:\ESA\CompositeFiles_Winter2018\RegionalFiles\Range'
+    r'\R_SpGroupComposite_ProjectedtRegion_20180110.gdb',
+    r'L:\ESA\CompositeFiles_Winter2018\RegionalFiles\Range'
+    r'\R_SpGroupComposite_WebMercator.gdb']
 # current master for species info
-master_list = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170117.xlsx'
+master_list = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
 # Colums in Master that should be included
-col_included = ['EntityID', 'Group', 'comname', 'sciname', 'status_text', 'Range_Filename', 'Des_CH', 'CH_GIS',
-                'CH_Filename']
+col_included = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency', 'Group',
+                'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
+                'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+                'CH_Filename', 'Range_Filename']
 # regional fc
-regional_fc = r'C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
+regional_fc = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Regions_dissolve'
 # header values that won't be added dynamically
 acres_total_headers = ['EntityID', 'TotalAcres']
 
@@ -23,7 +29,7 @@ acres_total_headers = ['EntityID', 'TotalAcres']
 # # Functions
 # extracts species info from table and loads it a species df
 def extract_species_info(master_in_table, col_from_master):
-    master_list_df = pd.read_excel(master_in_table)
+    master_list_df = pd.read_csv(master_in_table)
     master_list_df['EntityID'] = master_list_df['EntityID'].astype(str)
     sp_info_df = pd.DataFrame(master_list_df, columns=col_from_master)
     sp_info_header = sp_info_df.columns.values.tolist()
@@ -86,6 +92,7 @@ for gdb in inGDB_list:
                 pass
 
 # selects just the acres headers and sums them to a new column titled total acres on land
+#TODO Add in a sum of just the NL48 values to the header of TotalAcresNL48
 df_Acres['TotalAcresOnLand'] = df_Acres[acres_headers].sum(axis=1)
 
 df_Acres.to_csv(out_csv)

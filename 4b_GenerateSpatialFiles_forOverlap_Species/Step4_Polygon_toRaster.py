@@ -6,20 +6,21 @@ import arcpy
 # Title- converts all polygons in the inlocation to raster to be used in zonal historgram
 
 # in and out location
-# inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat' \
-#              '\CH_Clipped_Union_MAG_20161102.gdb'
-# outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat' \
-#               '\Clipped_MaxArea.gdb'
+# inlocation = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+#
+# outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_20180110_2.gdb'
+# id_field = 'ZoneID'  # pr ZoneID
 
 
-inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'
+inlocation = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
 
-outlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Clipped_MaxArea.gdb'
+outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_20180110_2.gdb'
+id_field = 'ZoneID'  # pr ZoneID
+
 
 skip_group =[]
-# snap raster for conversion
-snapRaster = r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb" \
-             r"\cultmask_2015_NAD83"
+# snap raster for conversion must be a NAD 83 geographic project with 30 meter cells; default cell is very large
+snapRaster = r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
 #
 
 # ###Functions
@@ -42,11 +43,12 @@ def polygon_to_raster(in_fc, out_location, snap_raster, in_location):
     # Set local variables
     inFeatures = in_location + os.sep + in_fc
 
-    valField = "ZoneID"
+    valField = id_field
     outRaster = out_location + os.sep + in_fc
-    # variable that sets raster type; using max area so no matter how small the range a cell is generated
-    assignmentType = "MAXIMUM_AREA"
-    cellSize = snapRaster
+    # variable that sets raster type; using max area or Max combined so no matter how
+    # small the range a cell is generated - max combine will include area both different but give it one value max area
+    # will only keeo the area with the most
+    assignmentType = "MAXIMUM_COMBINED_AREA"
 
     # print inFeatures
     arcpy.Delete_management("fc_lyr")
@@ -59,7 +61,7 @@ def polygon_to_raster(in_fc, out_location, snap_raster, in_location):
     else:
         print "Start conversion"
         try:
-            arcpy.PolygonToRaster_conversion("fc_lyr", valField, outRaster, assignmentType, "NONE", cellSize)
+            arcpy.PolygonToRaster_conversion("fc_lyr", valField, outRaster, assignmentType, "ZoneID", "snap")
             print "Completed conversion of {0} in {1}\n".format(outRaster, (datetime.datetime.now() - start_conversion))
         except Exception as error:
             print(error.args[0])

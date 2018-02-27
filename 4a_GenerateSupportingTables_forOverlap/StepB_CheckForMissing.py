@@ -3,7 +3,8 @@ import os
 import datetime
 import pandas as pd
 
-# Tile: Checks for missing range files
+# Tile: Checks for missing range files - currently not set up to check for missing CH files
+
 
 
 # NOTE  Make sure all commas are removed from master table before running this script to a find all and
@@ -11,16 +12,17 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 
 # User input variable
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
+masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
 # Spatial Library for range files
-infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Range\R_SpGroupComposite.gdb'
+infolder = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb'
 group_fc_index = 1 # location of the sp group in the file name
 # also need to set the hard code to the index number for the cols reference in loop species
 
-group_colindex = 7
-entid_colindex = 0
-not_considered_colindex = 10  # Species on master but not be considered in BE
-dev_colindex = 11  # species range is under development
+group_colindex = 16
+entid_colindex = 1
+not_considered_colindex = 17  # Species on master but not be considered in BE
+dev_colindex = 18  # species range is under development
 
 
 # #########Functions

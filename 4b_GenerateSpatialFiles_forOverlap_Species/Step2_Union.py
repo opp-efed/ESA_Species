@@ -17,51 +17,63 @@ import arcpy
 
 # TODO look for a way to that make deleting field easier, can field mapping be used to copy only - check fieldinfo visiable url below
 # http://pro.arcgis.com/en/pro-app/arcpy/classes/fieldinfo.htm
+# TODO can the clean up to union file go faster with pandas?
 # TODO the columns of interest to a new file?
 # This can be done in arcmap by turning off fields then exporting, need to see if it can be done in a script
 
-# TODO SET UP TO ADD ZONEID SO OBJECTID IS NOT USED- to prevent  objectID from change when clipped
+
+# Static variable
+file_suffix = '_Union_inter'
+file_suffix_clean = '_Union_Final_20180110'
+
 Range = True
 out_df = pd.DataFrame(index=(list(range(0, 1000))))
-outcsv =r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\Species_included_inUnion_2016020217.csv'
+
 if Range:
     # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
-    inlocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
+    inlocation = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
+                 '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\Range'
     filetype = 'R_'
+    outcsv = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range' \
+             r'\R_Species_included_inUnion' + file_suffix_clean + '.csv'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\inter.gdb'
-    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_SpGroup_Union_final_20161102.gdb'
+    out_inter_location = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\inter.gdb'
+    finalfc = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_SpGroup_Union_final_20180110.gdb'
     # NOTE NOTE if process interrupted incomplete file will be generated
 
-    start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
+    start_union = False  # True runs full union and clean up of union, false runs just the clean up of att table
 
     # Species to include or exclude depending on if use is running all sp group or a subset of a group
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = ['Amphibians','Arachnids' 'Birds', 'Conifers','Corals','Ferns','Flowering_Plants']
+    skipgroup = []
 
     # if True will only union entid listed in ent list if false will union all entid in gdb
     subset_group = False
     # filename sub set comp
     enlistfc_name = ''
     # list of entid to be include subset comp
-    entlist = [
-    ]
+    entlist = []
 
 else:
-    inlocation = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat'
+    inlocation = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
+                 '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
     filetype = 'CH_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_spGroup_Union_inter_20161102.gdb'
-    finalfc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat\CH_SpGroup_Union_final_20161102.gdb'
+
+    out_inter_location = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\inter.gdb'
+    finalfc = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat' \
+              r'\CH_SpGroup_Union_final_20180110.gdb'
+    outcsv = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat' \
+             r'\Species_included_inUnion' + file_suffix_clean + '.csv'
     # NOTE NOTE if process interupted incomplete file will be generated
 
-    start_union = False  # True runs full union and clean up of union, false runs just the clean up of att table
+    start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
 
     # Species to include or exclude depending on if use is running all sp group or a subset of a group
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = ['Amphibians','Arachnids', 'Birds','Corals','Crustaceans','Flowering','Lichens','Insects','Mammals','Reptiles','Snails','Conifers','Corals','Ferns', 'Clams']
+    skipgroup = []
 
     # if True will only union entid listed in ent list if false will union all entid in gdb
     subset_group = False
@@ -69,10 +81,6 @@ else:
     enlistfc_name = 'SubInsects_'
     # list of entid to be include subset comp
     entlist = []
-
-# Static variable
-file_suffix = '_Union_MAG_inter'
-file_suffix_clean = '_Union_MAG_Final_201601102'
 
 
 # Create a new GDB
@@ -93,22 +101,25 @@ def union_sp_files(in_ws, out_inter, subset_group_bool, ent_list):
         print "\nStarting {0} at {1}".format(out_inter, start_union_time)
         arcpy.env.workspace = in_ws
         fc_list = arcpy.ListFeatureClasses()
-        if subset_group_bool:
-            for fcs in fc_list:
-                entid = fcs.split('_')
-                entid = str(entid[1])
+        if len(fc_list) != 0:
+            if subset_group_bool:
+                for fcs in fc_list:
+                    entid = fcs.split('_')
+                    entid = str(entid[1])
 
-                if entid in ent_list:
-                    unionlist.append(str(in_ws + os.sep + str(fcs)))
+                    if entid in ent_list:
+                        unionlist.append(str(in_ws + os.sep + str(fcs)))
 
+            else:
+                unionlist = fc_list
+            try:
+                arcpy.Union_analysis(unionlist, out_inter, "ALL")
+            except Exception as error:
+                print(error.args[0])
+                arcpy.Delete_management(out_inter)
+            print "\nCreated output {0} in {1}".format(out_inter, (datetime.datetime.now() - start_union_time))
         else:
-            unionlist = fc_list
-        try:
-            arcpy.Union_analysis(unionlist, out_inter, "ALL")
-        except Exception as error:
-            print(error.args[0])
-            arcpy.Delete_management(out_inter)
-        print "\nCreated output {0} in {1}".format(out_inter, (datetime.datetime.now() - start_union_time))
+            pass
     else:
         print '\nAlready union {0}'.format(out_inter)
 
@@ -128,17 +139,23 @@ def clean_unionfiles(outfc, final, group, df):
         if field.startswith('EntityID'):
             ent_fields.append(field)
     ent_fields.append('OBJECTID')
+    ent_fields.append("ZoneID")
     # print ent_fields
 
     arcpy.AddField_management("out", 'ZoneSpecies', "TEXT", "", "", "1000", "", "NULLABLE", "NON_REQUIRED", "")
 
+    arcpy.AddField_management(fc, "ZoneID", "DOUBLE")
+    with arcpy.da.UpdateCursor(fc, ['OBJECTID', 'ZoneID']) as cursor:
+        for row in cursor:
+            row[1] = row[0]
+            cursor.updateRow(row)
     zonesp = {}
     with arcpy.da.SearchCursor(outfc, ent_fields) as cursor:
         for row in cursor:
             listsp = []
             for field in ent_fields:
                 index_f = ent_fields.index(field)
-                if field == 'OBJECTID':
+                if field == 'ZoneID':
                     zoneid = row[index_f]
                 else:
                     ent = row[index_f]
@@ -152,7 +169,7 @@ def clean_unionfiles(outfc, final, group, df):
             zonesp[zoneid] = listsp
         del cursor, listsp
 
-    with arcpy.da.UpdateCursor("out", ['OBJECTID', 'ZoneSpecies']) as cursor:
+    with arcpy.da.UpdateCursor("out", ['ZoneID', 'ZoneSpecies']) as cursor:
         for row in cursor:
             listsp = zonesp[row[0]]
             row[1] = str(listsp)
@@ -169,12 +186,12 @@ def clean_unionfiles(outfc, final, group, df):
     # place holder for field mapping str- this is much faster than deleting field
     field_info_str = ''
     try:
-        for index in range(0,field_info.count):
+        for index in range(0, field_info.count):
             field_nm = ("{0}".format(field_info.getFieldName(index)))
             if field_nm in delfields:
                 # add column to field mapping str for layer creation; structure [field name] [field name] [HIDDEN]; next
                 field_info_str += field_nm + ' ' + field_nm + ' HIDDEN;'
-                #print("\tVisible:    {0}".format(field_info.getVisible(index)))
+                # print("\tVisible:    {0}".format(field_info.getVisible(index)))
     except:
         pass
     # print field_info_str
@@ -184,10 +201,9 @@ def clean_unionfiles(outfc, final, group, df):
     arcpy.Delete_management("temp_lyr")
     arcpy.Delete_management("lyr")
 
-
     group_spe = list(set(group_spe))
     count = len(group_spe)
-    remaining = [None]* (1000-count)
+    remaining = [None] * (1000 - count)  # all columns need to 1000 rows - makes additional rows with value none
     mergelist = group_spe + remaining
     series_sp = pd.Series(mergelist)
     out_df[group] = series_sp.values
@@ -201,6 +217,8 @@ print "Start Time: " + start_time.ctime()
 # Make sure out location have been created
 if not arcpy.Exists(out_inter_location):
     path, gdb_file = os.path.split(out_inter_location)
+    if not os.path.exists(path):
+        os.mkdir(path)
     create_gdb(path, gdb_file, out_inter_location)
 
 if not arcpy.Exists(finalfc):
@@ -261,7 +279,7 @@ else:
         if sp_group in skipgroup:
             continue
         inter_fc = out_inter_location + os.sep + fc
-        print inter_fc
+
         out_fc = fc.replace(file_suffix, file_suffix_clean)
         out_fc_final = finalfc + os.sep + out_fc
         if not arcpy.Exists(out_fc_final):
