@@ -13,7 +13,7 @@ import arcpy
 # TODO see script Step3_ProjectRegionalFiles
 
 # User define variables
-InGDB = r""
+InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017\UpdatedProcess_December2017\GDB\STD_ReNmNMFS20171204_2018-01-10.gdb"
 
 # Location of prj files
 proj_Folder = 'L:\projections\FinalBE'
@@ -22,15 +22,16 @@ proj_Folder = 'L:\projections\FinalBE'
 middlegdb = r'L:\projections\FinalBE\temp.gdb'
 
 # Workspace
-ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
-name_dir = "NewRanges_Step3_FWS_20161031"
+name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
-receivedDate = '20161017'
+receivedDate = '20171204'
 
-ReProjectGDB = "R_polygon_20161017_Reprojected"
-CSVName = "R_polygon_20161017_Reprojected"
+
+ReProjectGDB = "CH_20171204_Reprojected"
+CSVName = "CH_20171204_Reprojected"
 
 NADabb = 'NAD83'
 Unknowncsv = 'Unknown'

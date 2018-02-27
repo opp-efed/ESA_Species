@@ -1,0 +1,43 @@
+
+
+NOTE BEFORE STARTING CREATE AN ARCHIVED BACK-UP OF THE MOST RECENT SPATIAL LIBRARY
+
+Step 1: After creating an archived of the current spatial libraries, moved  new or updated files into the libraries.
+The dictionary file used to identify the geodatabase(s) with the new/updated files allows for multiple gdbs to move at
+once.  Each row in the csv dictionary should be the path to the re-projected / standardized files. Currentlty this step
+ is split into CH and Range but these could be merged over time
+
+Step 2: Archive files for any species that has  been delisted or will be excluded from the overlap analysis because they
+have been identified as extinct, possibly extinct, qualitative, or occurring exclusively on uninhabited islands. This
+is done by comparing the current master list to an old master list for delisted species; archiving any species no
+longer active.  For species excluded from overlap, a list excluded the species each catergory is generated and used
+in the current_master variables, and the current  master list is used as the old list.
+
+Step 3 is done in loop until all updated files are archived, duplicates addressed and all species are accounted for. Run
+the check duplicates script to find species with multiple files.  Identify the species with an updated files where the
+old file she be archived in list format.  # NOTE Files that are being replaced with multiple files must be manually
+archived before running the archive script! this can be looped into the routine in the future# The listed of updated
+species becomes an input variable for the archives_Files_updated script, and run it. Run BufferLine_point to buffer all
+files not in polygon format. Polygon format is need to calculate an area.  Run MergeDups to merge all species that have
+duplicate files that need to be merged into a single file. Be sure all files that are being completely replaced area
+already archived or they will be included in the merge.  Run the Checkfor Missing scripts to see if any species are
+missing a spatial file.  *These are separate because the filtered on the master list is different for range and critical
+habitat files.*
+
+Do not proceed to Step 4until spatial libraries are locked for the current update.
+
+Note- merged files may bomb if a geometry error occurs during the merge.  If this happens manually run the repair
+geometry tool and restart script
+
+Steps 4-8 : verifies all files are in the format needed for overlap; one multipart polygon per species (step4),
+if any species is represented as multiple polygons step 5 is used to dissolve the files to a single multipart polygon
+per species; checks all of the species info is current (step 6); rectifies any geometry error that may have come up
+during processing (step 7) and confirms all files are in the NAD83 projection to start (step8).
+
+******NOTE STEPS 5-8 are critical to makes sure files have all information needed, and are in the correct format before
+generating files for overlap.  If a mistake is found in one of the files overlap will need to be re-done for the
+impacted species groups******* These checks do take a while to process!
+
+Step A: this will generate extract HUC12 files used for aquatics if we continue to do this.  these files are than used
+like 'updated files' and run through this routine starting with step1.
+

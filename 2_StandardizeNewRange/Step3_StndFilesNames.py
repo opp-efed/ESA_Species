@@ -17,17 +17,17 @@ import arcpy
 # Set the workspace for the ListFeatureClass function
 #
 
-InGDB = r""
-abb = "FWS"  # FWS or NMFS
-
+InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017" \
+        r"\UpdatedProcess_December2017\GDB\NMFS_CH_UpdatedWinter2017_2018-01-10.gdb"
+abb = "NMFS"  # FWS or NMFS
 
 # Workspace
-ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
-name_dir = "NewRanges_Step3_FWS_20161031"
+name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
-receivedDate = '20161017'
+receivedDate = '20171204'
 
 # NOTE prior to running the NmChange check the the concatenated specode and vipcode on the FWS file name and the
 # sci names match the master list.  Files were sometime received with typos
@@ -35,28 +35,9 @@ receivedDate = '20161017'
 # #DICT for name change original file to EPA Std
 
 
-NmChangeDICT = {'odo_vir_wtdec': 'R_4_GAP_20161017',
-                'pan_onc_r_18': 'R_18_GAP_20161017',
-                'mupdox_r_20': 'R_20_GAP_20161017',
-                'per_lon_r_51': 'R_51_GAP_20161017',
-                'tym_cup_grpca': 'R_83_GAP_20161017',
-                'amp_bel_r_116': 'R_116_GAP_20161017',
-                'str_occ_spowl': 'R_129_GAP_20161017',
-                'vir_atr_bcvix': 'R_138_GAP_20161017',
-                'den_chr_gcwax': 'R_139_GAP_20161017',
-                'aph_coe_flsjx': 'R_140_GAP_20161017',
-                'str_occ_142_r': 'R_142_GAP_20161017',
-                'gam_sil_151': 'R_151_GAP_20161017',
-                'reisnx': 'R_173_GAP_20161017',
-                'uma_r_175': 'R_175_GAP_20161017',
-                'pha_hub_r_192': 'R_192_GAP_20161017',
-                'ple_she_r_200': 'R_200_GAP_20161017',
-                'E070_V01_Hypomesus_transpacificus_new': 'R_305_poly_20161017',
-                'bra_id_py_aoi': 'R_1240_GAP_20161017',
-                'CountyRange_11260_poly_20161031': 'R_11260_CountyRange_20161017',
-                'E088_V01_Spirinchus_thaleichthys_new': 'R_11262_poly_20161017',
+NmChangeDICT = {'FCH_CKSRF_2017':' CH_4300_poly_20171204',
 
-                }
+ }
 
 
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
@@ -138,8 +119,7 @@ datelist.append(today)
 
 OrgSRList = []
 FailedList = []
-addSRList = "Filename Original (GDB)" + "," + "Original Projection" + "," + "Original Projection Type" + "," + \
-            "Standardize Filename"
+addSRList = "Filename Original (GDB)" + "," + "Original Projection" + "," + "Original Projection Type" + "," + "Standardize Filename"
 OrgSRList.append(addSRList)
 addFailed = "Filename-Original (GDB)"
 FailedList.append(addFailed)

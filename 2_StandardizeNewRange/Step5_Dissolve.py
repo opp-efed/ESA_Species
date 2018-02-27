@@ -16,17 +16,18 @@ import arcpy
 maxrow = 5000000
 
 # Input File Locations
-InGDB = r""
-abb = "FWS"
+InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017" \
+        r"\UpdatedProcess_December2017\GDB\ReNm_NMFS_20171204_2018-01-10.gdb"
+abb = "NMFS"
 
 
 # Workspace
-ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
-name_dir = "NewRanges_Step3_FWS_20161031"
+name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
-receivedDate = '20161017'
+receivedDate = '20171204'
 
 # Field Names that will be kept in the dissolve
 Dissolve = "Dissolve"

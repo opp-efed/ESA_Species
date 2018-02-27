@@ -15,26 +15,31 @@ import pandas as pd
 
 
 # inputs
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
-infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat\Fishes.gdb'  # folder or GDB
+masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
+# folder or GDB
+infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
+          '\SpatialLibrary\Generalized files\Range'
+infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
+           '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+
 addition_gdb_filename = ''  # if the gdbs are not just the species group
-# Species groups that do not need to be run
-skiplist = []
+# Species groups that do not need to be run because check was already completed
+# 'Fishes'
+skiplist = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans','Ferns and Allies',
+'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 
 # cols from master that should be included use to pop att table
-col_included = ['EntityID', 'comname', 'sciname', 'spcode', 'vipcode', 'status_text', 'pop_abbrev']
+col_included = ['EntityID', 'Common Name', 'Scientific Name', 'spcode', 'vipcode', 'Status', 'pop_abbrev']
 final_fields = ['FileName', 'EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'Status', 'Pop_Abb']  # in order
 # order of fields in fc;  used to check if FC has fields in the correct order for comp merge
 final_fieldsindex = dict(NAME=2, Name_sci=3, SPCode=4, VIPCode=5, EntityID=1, Status=6,
                          FileName=0, Pop_Abb=7)
 
 # the columns from the final fields list to the corresponding field from the master list
-masterlist_fc_dict = {'NAME': 'comname', 'Name_sci': 'sciname', 'SPCode': 'spcode', 'VIPCode': 'vipcode',
-                      'Status': 'status_text', 'Pop_Abb': 'pop_abbrev'}
+masterlist_fc_dict = {'NAME': 'Common Name', 'Name_sci': 'Scientific Name', 'SPCode': 'spcode', 'VIPCode': 'vipcode',
+                      'Status': 'Status', 'Pop_Abb': 'pop_abbrev'}
 
-# all species group for skiplist = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads',
-# 'Corals', 'Crustaceans','Ferns and Allies','Flowering Plants,'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles',
-# 'Snails']
 
 # Static variables
 
@@ -153,6 +158,7 @@ def check_att_values_update_changes(fc, entid_filename, spe_info_df, masterlist_
                 if not do_not_update:
                     field_col_master = masterlist_fc_dict[field]
                     col_index = col_included.index(field_col_master)
+
                     value = single_sp.iloc[0, col_index]
                     for row in cursor:
                         current = row[0]
@@ -217,11 +223,15 @@ def CheckFieldOrder(inGDB, final_fieldsindex, DissolveFiles, ent_filename_fail_l
                 for field in fclist_field:
                     i = fclist_field.index(field)
                     checkorder[field] = i
-                    j = final_fieldsindex[field]
-                    if i != j:
-                        order_correct = False
-                    else:
-                        continue
+                    try:
+                        j = final_fieldsindex[field]
+                        if i != j:
+                            order_correct = False
+                        else:
+                            continue
+                    except KeyError:  # deletes extraneous fields in fc that would return Key Error b/c they are not in
+                        # the dictionary
+                        arcpy.DeleteField_management(fc, field)
             # if order is not correct or field to be add, all fields are deleted then updated base don current master
             if not order_correct:
                 for field in fclist_field:

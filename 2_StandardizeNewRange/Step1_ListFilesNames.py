@@ -10,16 +10,16 @@ import arcpy
 # ###Varibles to be set by user
 
 # # location of files/Workspace
-InFileLocations = "L:\NewNMFS_Ranges_20161017\HUC2_RangesCan.gdb"
-NameCSV = 'New_Step3_poly_201601017'
+InFileLocations = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\NewNMFS_Winter2017"
+NameCSV = 'NMFS_NewCH_winter2017'
 
 # Workspace
-ws = "L:\NewNMFS_Ranges_20161017"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
-name_dir = "NewNMFS_Step3_20161017"
+name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
-receivedDate = '20161017'
+receivedDate = '20171204'
 
 
 ##################################################################################################################

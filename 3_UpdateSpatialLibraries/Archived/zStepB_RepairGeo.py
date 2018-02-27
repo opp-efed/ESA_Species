@@ -4,20 +4,11 @@ import os
 # Set to True if running on individual species files and false if running on composite file if true in folder must be a
 # single gdb
 
-ind_sp_file = True
-masterlist = masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
-group_colindex = 15  #index position of the speices 'group' from master list extract from TESS
-# folder or gdb
-# infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
-#           '\SpatialLibrary\Generalized files\Range'
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-           '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+ind_sp_file = False
+masterlist = 'J:\Workspace\ESA_Species\ForCoOccur\Documents_FinalBE\MasterListESA_June2016_20160725.csv'
 
-# 'Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads','Corals', 'Crustaceans','Ferns and Allies',
-# 'Flowering Plants','Fishes', 'Insects', 'Lichens', 'Mammals'
-skiplist = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans','Ferns and Allies',
-'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails','Flowering Plants']
+infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat\Fishes.gdb'
+skiplist = []
 
 # ########### Functions
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
@@ -36,7 +27,7 @@ def extract_in_master(master_list):
         header = next(inputFile)
         for line in inputFile:
             line = line.split(',')
-            group_master = line[group_colindex]
+            group_master = line[7]
             grouplist.append(group_master)
 
     inputFile.close()
@@ -48,25 +39,13 @@ def extract_in_master(master_list):
 
 
 if ind_sp_file:
-    if infolder[-3:] != 'gdb':
-        alpha_group = extract_in_master(masterlist)
-        for group in alpha_group:
-            if group in skiplist:
-                continue
-            print "\nWorking on {0}".format(group)
+    alpha_group = extract_in_master(masterlist)
+    for group in alpha_group:
+        if group in skiplist:
+            continue
+        print "\nWorking on {0}".format(group)
 
-            group_gdb = infolder + os.sep + str(group) + '.gdb'
-
-            for fc in fcs_in_workspace(group_gdb):
-                print "\nProcessing " + fc
-                lyr = 'temporary_layer'
-
-                arcpy.MakeFeatureLayer_management(fc, lyr)
-                arcpy.RepairGeometry_management(lyr)
-                print(arcpy.GetMessages(0))
-                arcpy.Delete_management(lyr)
-    else:
-        group_gdb = infolder
+        group_gdb = infolder + os.sep + str(group) + '.gdb'
 
         for fc in fcs_in_workspace(group_gdb):
             print "\nProcessing " + fc

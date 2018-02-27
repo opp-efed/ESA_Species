@@ -11,14 +11,15 @@ import pandas as pd
 
 
 # master species list
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\CSVs\MasterListESA_June2016_201601101.csv'
+masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
 # the location of the spatial library
 outfolder_raw = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Range'
 outfolder_gen = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\Range'
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
-file_dict = 'L:\Workspace\ESA_Species\ForCoOccur\Dicts\Move_Files_SpatialLibrary.csv'
+file_dict = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\UpdateSpatialLibraries\MovePhase_R.csv'
 # col index from master
-group_colindex = 7
+group_colindex = 11
 entid_colindex = 0
 
 
@@ -70,8 +71,11 @@ def loop_species(file_dict_fun, group_list, out_path, out_gen):
                         print "Moving species {0}".format(entid)
                         arcpy.CopyFeatures_management(infc, outfc)
                         arcpy.CopyFeatures_management(infc, outgen)
-                        arcpy.Generalize_edit(outgen)
-                        print "Exported file {0}".format(outfc)
+                        try:
+                            arcpy.Generalize_edit(outgen)
+                            print "Exported file {0}".format(outfc)
+                        except:
+                            pass
                     else:
                         print "Previously exported {0}".format(entid)
                 else:

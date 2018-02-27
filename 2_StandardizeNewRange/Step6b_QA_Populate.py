@@ -8,21 +8,21 @@ import arcpy
 # row.  Species that did not copy correctly have not data and therefore no rows
 
 
-InGDB = r"L:\NewFWS_RangesStep_20161017\FinalShapes\NewRanges_Step3_FWS_20161031\GDB\STD_ReNmFWS20161017_2016-10-31.gdb"
+InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\Range\UpdatedProcess_20171101\GDB\STD_ReNmNMFS20170420_2017-11-02.gdb"
 
-QAcsv = "QA_attributes_20161017"
+QAcsv = "QA_attributes_20171102"
 
 SearchField = "EntityID"
 fileType = "R"
-fileSuffix = "_GAP_20161017_STD"
+fileSuffix = "poly_20170420_STD"
 
 # Workspace
-ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\Range"
 # Folder in workspace where outputs will be saved
-name_dir = "NewRanges_Step3_FWS_20161031"
+name_dir = "UpdatedProcess_20171101"
 
 # in yyyymmdd received date
-receivedDate = '20161017'
+receivedDate = '20170420'
 
 
 # ######################## FUNCTIONS
@@ -69,6 +69,7 @@ outLocationCSV = path_dir + os.sep + "CSV"
 OutFolderGDB = path_dir + os.sep + "GDB"
 
 csvfile, csvpath = create_flnm_timestamp(QAcsv, outLocationCSV, datelist, 'csv')
+print outLocationCSV
 
 for fc in fcs_in_workspace(InGDB):
     name = str(fc)

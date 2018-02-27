@@ -1,6 +1,5 @@
 import os
 import csv
-import time
 import datetime
 
 import arcpy
@@ -20,17 +19,18 @@ import arcpy
 ################################################################Varibles to be set by user
 
 # Input File Locations
-InGDB = r""
+InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017" \
+        r"\UpdatedProcess_December2017\GDB\STD_ReNmNMFS20171204_2018-01-10.gdb"
 # Table will all information to be added to the att table
-JoinTable = r"L:\NewFWS_RangesStep_20161017\FinalShapes\NewRanges_Step3_FWS_20161031\CSV\std_att.csv"
+JoinTable = r"L:\Workspace\ESA_Species\FWS_GIStobeUpdated\UpdatedProcess_20170410\CSV\std_att.csv"
 
 # Workspace
-ws = "L:\NewFWS_RangesStep_20161017\FinalShapes"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
-name_dir = "NewRanges_Step3_FWS_20161031"
+name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
-receivedDate = '20161017'
+receivedDate = '20171204'
 
 # Column headers for join Names
 JoinFieldFC = "FileName"

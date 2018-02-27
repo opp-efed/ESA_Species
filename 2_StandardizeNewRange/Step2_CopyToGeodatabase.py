@@ -10,17 +10,19 @@ import arcpy
 
 # Variables to be set by user
 
-NmCSVCopied = 'FWS_poly_20160906'
-out_nameGDB = "FWS_poly_20160906"
+NmCSVCopied = 'NMFS_CH_UpdatedWinter2017'
+out_nameGDB = "NMFS_CH_UpdatedWinter2017"
 
-InFileLocations = "C:\WorkSpace\ESA_Ranges_Raw_september2016"
+InFileLocations = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\NewNMFS_Winter2017"
+
 # Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = '20171204'
+
 
 
 # FUNCTIONS
@@ -134,6 +136,7 @@ create_directory(path_dir, outLocationCSV, OutFolderGDB)
 
 # Creates outFile GDB and sets location to InFiles allows to overwritten
 create_gdb(OutFolderGDB, OutGDB, outFilegdbpath)
+
 
 # Copy all spatial files found to a file geodatabase created above
 addSRList, FailedList = copyFCtoGEO(InFileLocations, outFilegdbpath, OrgSRList, FailedList)

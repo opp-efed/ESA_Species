@@ -12,17 +12,21 @@ import pandas as pd
 
 
 # master species list
-masterlist = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\FinalLists\FinalBE_December2016\csv\MasterListESA_June2016_20160907.csv'
+masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
 # the location of the spatial library
-outfolder_raw = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat'
-outfolder_gen = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\CriticalHabitat'
+outfolder_raw = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
+                '\_CurrentSpeciesSpatialFiles\SpatialLibrary\CriticalHabitat'
+outfolder_gen = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
+                r'\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
 
 
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
-file_dict = 'J:\Workspace\ESA_Species\ForCoOccur\Dicts\MovePhase_CH.csv'
-group_colindex = 7
+file_dict = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+            '\_ExternalDrive\UpdateSpatialLibraries\MovePhase_CH.csv'
+group_colindex = 16
 entid_colindex = 0
-CHGIS_colindex = 20
+CHGIS_colindex = 22
 
 # ## FUNCTIONS
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
@@ -71,8 +75,11 @@ def loop_species(file_dict_fun, group_list, out_path, out_gen):
                         print "Moving species {0}".format(entid)
                         arcpy.CopyFeatures_management(infc, outfc)
                         arcpy.CopyFeatures_management(infc, outgen)
-                        arcpy.Generalize_edit(outgen)
-                        print "Exported file {0}".format(outfc)
+                        try:
+                            arcpy.Generalize_edit(outgen)
+                            print "Exported file {0}".format(outfc)
+                        except:
+                            pass
                     else:
                         print "Previously exported {0}".format(entid)
                 else:
