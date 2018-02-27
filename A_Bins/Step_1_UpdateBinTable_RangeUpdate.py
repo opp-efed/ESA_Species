@@ -216,7 +216,7 @@ def set_common_cols(bin_df, sp_df):
 
 
 def update_columns_header(current_col, updated_col, list_of_col):
-    # VARS: current:current_col: value in current list, updated_col: value it should be updated to, list_of_col: list of
+    # VARS: current:current_col: value in current list, updated_col: value it should be Fd to, list_of_col: list of
     # values
     # DESCRIPTION: Standardize column headers terminology across tables based on user input variables.
     # RETURN: Update list of values to be used as column headers for data frames

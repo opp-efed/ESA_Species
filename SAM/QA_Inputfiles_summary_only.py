@@ -349,7 +349,6 @@ def check_zeros_blanks(par_df, col_head, m_df, error_df, st_dict, error_nm):
                 if len(filter_zero) == 0:
                     pass
                 else:
-
                     filter_zero['org_soil'] = filter_zero.apply(lambda row: org_soil(row), axis=1)
                     working_zero_error['scenario identifier'] = filter_zero['scenario'].map(lambda p: str(p)).astype(
                         str)
@@ -694,13 +693,13 @@ for in_file in list_input:
 
     if not os.path.exists(outfile_red):
 
-        print '\nChecking zero values...\n'   #  Red Flag a
+        print '\nChecking zero values...\n'   #  Red  and Yellow Flag
         out_df = check_zeros_blanks(input_df, 'zero type', merged_df, out_df, input_file_dict, 'zero value')
 
-        print '\nChecking blank values...'  # Yellow Flag
+        print '\nChecking blank values...'  # Read and Yellow Flag
         out_df = check_zeros_blanks(input_df, 'blank type', merged_df, out_df, input_file_dict, 'blank value')
 
-        print '\nChecking variables with set ranges...'  #  Red Flag a
+        print '\nChecking variables with set ranges...'  #  Red Flag 
         out_df, summary_df = range_limit_type(input_df, 'limit type', merged_df, out_df, input_file_dict, 'min', 'max', 'range',
                                               'outside set range', summary_df)
 
