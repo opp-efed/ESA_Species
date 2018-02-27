@@ -17,7 +17,8 @@ import pandas as pd
 in_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Range_Gap\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501\R_SprayInterval_20170828_FullRange.csv'
 master_col = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency','Group',
               'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
-              'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_']
+              'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+              'CH_Filename','Range_Filename']
 
 look_up_use = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\RangeUses_lookup_test.csv'
 

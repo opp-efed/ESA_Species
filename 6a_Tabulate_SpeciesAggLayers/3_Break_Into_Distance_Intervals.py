@@ -11,15 +11,29 @@ import pandas as pd
 # Static variables are updated once per update; user input variables update each  run
 
 # ###############user input variables
-master_list = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
-col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
-                      'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
-                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_']
-
-csv_folder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Range_Gap\Range\Agg_Layers\MergeOverlap_FullRange'
-look_up_use = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\RangeUses_lookup.csv'
+species_file_type = 'Range'   # can be 'Range' or 'CH'
+p_region = 'L48'  # can be L48 or NL48
+folder_name_csv = 'MO_Region'  # can be MO_NL48Range or 'MO_FullRange' NL48 or MO_Region
+# 'MergeOverlap_Region' L48 or NL48
 interval_step = 30
 max_dis = 1501
+
+# ########### Updated once per run-variables
+master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+              r'\MasterListESA_Feb2017_20180110.csv'
+col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
+                      'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
+                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+                      'CH_Filename', 'Range_Filename', 'L48/NL48']
+
+
+out_root = r'L:\ESA\Results\diazinon\Tabulated' + os.sep + p_region + os.sep + species_file_type
+csv_folder =  out_root + os.sep +'Agg_Layers' + os.sep + folder_name_csv
+
+look_up_use = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
+# look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+#                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
+
 bins = np.arange((0 - interval_step), max_dis, interval_step)
 regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
 
@@ -48,8 +62,9 @@ out_csv = out_folder + os.sep + file_flag+ "_SprayInterval_" + date + "_" + \
 species_df = pd.read_csv(master_list, dtype=object)
 [species_df.drop(m, axis=1, inplace=True) for m in species_df.columns.values.tolist() if m.startswith('Unnamed')]
 base_sp_df = species_df.loc[:, col_include_output]
+
+base_sp_df['EntityID'] = base_sp_df['EntityID'].map(lambda x: x).astype(str)
 out_df = base_sp_df.copy()
-out_df['EntityID'] = out_df['EntityID'].map(lambda x: x).astype(str)
 
 use_lookup = pd.read_csv(look_up_use)
 
@@ -62,8 +77,8 @@ def create_directory(dbf_dir):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
-create_directory(out_folder)
 
+create_directory(out_folder)
 list_csv = os.listdir(csv_folder)
 list_csv = [csv for csv in list_csv if csv.endswith('.csv')]
 

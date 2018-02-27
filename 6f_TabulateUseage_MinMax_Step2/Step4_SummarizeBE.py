@@ -18,8 +18,8 @@ import pandas as pd
 
 # ###############user input variables
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
-in_table = 'L:\ESA\Results\diazinon\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           '\R_SprayInterval_20180212_Region.csv'
+in_table = r'L:\ESA\Results\diazinon\Tabulated_usage\Diazinon\example\SprayInterval_IntStep_30_MaxDistance_1501' \
+           r'\Upper_SprayInterval_20180221.csv'
 
 # in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #            r'\_ED_results\Tabulated_Jan2018\L48\CH\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
@@ -59,10 +59,10 @@ bins = [0, 305, 765]  # meter conversion of 1000 and 2500 foot buffer round up t
 
 use_lookup = pd.read_csv(look_up_use)
 use_lookup['FinalColHeader'].fillna('none', inplace=True)
-region_lookup = use_lookup.loc[(use_lookup['Included AA'] == 'x') & use_lookup['Region'].isin(regions)]
+region_lookup = use_lookup.loc[(use_lookup['Included AA'] == 'x')]
+
 
 list_regional_uses = list(set(region_lookup ['FinalColHeader'].values.tolist()))
-
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
@@ -71,13 +71,15 @@ print "Start Time: " + start_time.ctime()
 
 sp_table_df = pd.read_csv(in_table, dtype=object)
 [sp_table_df.drop(m, axis=1, inplace=True) for m in sp_table_df.columns.values.tolist() if m.startswith('Unnamed')]
-columns_uses = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0] in regions]
-columns_species = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0] not in regions]
+columns_uses =[t for t in sp_table_df.columns.values.tolist() if t.split("_")[0] == 'CONUS']
+
+columns_species = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0]!= 'CONUS']
 # print sp_table_df
 sp_info_df = sp_table_df.loc[:, columns_species]
 use_df = sp_table_df.loc[:, columns_uses]
 
 use_list = use_df.columns.values.tolist()
+
 
 uses = []
 for x in use_list:
@@ -94,20 +96,23 @@ for x in use_list:
 collapsed_df = pd.DataFrame()
 
 for i in list_regional_uses:
-    if i != 'none':
+
         # NOTES SEE ASSUMPTION ABOUT NOT HAVING ANY "_" in the use name part of final use col headers;
         # ie [region]_[use name]_[intervalvalue] list of current group of column will not populate correctly
         break_use = i.split("_")
         use_group = break_use[0] + "_" + break_use[1]
 
         current_group = [use for use in use_list if (use.split("_")[0] + "_" + use.split("_")[1]) == use_group]
+
         if len(current_group) == 0:
             continue
         grouped_use = use_df.loc[:, current_group]
 
         current_cols = grouped_use.columns.values.tolist()
         previous_col = []
+
         for value in bins:
+
             new_df = pd.DataFrame()
             binned_col = []
             if full_impact:  # direct use is included is drift calculations
@@ -116,6 +121,7 @@ for i in list_regional_uses:
                     interval = int(get_interval[(len(get_interval) - 1)])
                     if interval <= value and col not in previous_col:
                         binned_col.append(col)
+
             elif not full_impact:  # direct use is not included is drift calculations
 
                 if value == bins[0]:

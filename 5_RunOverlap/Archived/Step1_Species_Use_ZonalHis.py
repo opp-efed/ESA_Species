@@ -15,15 +15,15 @@ from arcpy.sa import *
 
 # #### User input variables
 # Species files and region
-in_location_species = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\VI_WGS_1984_UTM_Zone_20N'
-temp_file = "temp_table2"
-region = "VI"
+in_location_species = r'L:\Grids_byProjection\L48_intersect'
+temp_file = "temp_table1"
+region = "CONUS"
 
 # #### Use layer location
 # Running aggregate layers
 # use_location_base = 'L:\Workspace\UseSites\ByProject'
 # use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
-use_location = 'L:\Workspace\UseSites\ByProjection\VI_UseLayers.gdb'
+use_location = 'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\CONUS_UseLayer.gdb'
 
 # Running individual years
 # use_location = r"L:\Workspace\UseSites\CDL_Reclass\161031\CDL_Reclass_1015_161031.gdb"
@@ -35,10 +35,12 @@ arcpy.env.workspace = use_location
 # instances
 use_list = (arcpy.ListRasters())  # run all layers in use location
 
-
+use_list = [u'Albers_Conical_Equal_Area_CONUS_Nurseries_euc', u'Albers_Conical_Equal_Area_CONUS_Cultivated_2015_euc',
+            u'Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc', u'Albers_Conical_Equal_Area_CONUS_CDL_1015_70x2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Diazinon_euc']  # runs specified layers in use location
 
 # ################Static variables
-out_results = r'L:\ESA\Results\NL48'
+out_results = r'L:\results_intersect'
 find_file_type = in_location_species.split(os.sep)
 
 if 'Range' in find_file_type:
@@ -57,12 +59,10 @@ else:
         out_results = out_results + os.sep + 'NL48' + os.sep + 'CriticalHabitat'
 
 
-# Each region is a list pos 0 euc distance, pos 1 on/off, pos 3 Yearly (CONUS only
 symbology_dict = {'CONUS': [
     'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc.lyr',
-    r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_on_off.lyr'
     r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_CONUS_CDL_2010_rec.lyr',
-    ],
+    r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_on_off.lyr'],
     'HI': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
     'AK': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
     'AS': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
@@ -114,17 +114,17 @@ def zonal_hist(in_zone, in_value_raster, set_raster_symbology, region_c, use_nam
     sp_group = in_species.split("_")[1]
 
     # out paths
-    break_use = os.path.basename(use_path).split("_")
+    break_use = use_path.split("_")
     break_bool = False
     use_nm_folder = region_c  # starting point that will be used for use_nm_folder
 
-    for v in break_use:  # SEE TODO
-        if v != 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
+    for v in break_use:
+        if v != region_c:
             pass
         else:
             break_bool = True
         if break_bool:
-            if v == region_c or v == '2S'or v == '55N' or v == 'Area' or v == '4N'or v == '20N' or v == 'Area':
+            if v == region_c:
                 continue
             else:
                 use_nm_folder = use_nm_folder + "_" + v
@@ -187,26 +187,22 @@ for raster_in in list_raster:
         out_folder = out_results
         if region != 'CONUS':
             snap_raster = snap_raster_dict[region]
-            if os.path.dirname(use_location).endswith('UseLayers'):
-                symbologyLayer = symbology_dict[region][0]
-                out_folder = out_folder + os.sep + 'Agg_Layers'
-                create_directory(out_folder)
-            elif os.path.dirname(use_location).endswith('OnOffField'):
-                symbologyLayer = symbology_dict[region][1]
-                out_folder = out_folder + os.sep + 'OnOffField'
-                create_directory(out_folder)
+            symbologyLayer = symbology_dict[region][0]
+
+
         else:
-            snap_raster = snap_raster_dict[region]
-            if os.path.dirname(use_location).endswith('UseLayers'):
+            split_use_nm = use_nm.split("_")
+            symbology_flag = split_use_nm[(len(split_use_nm) - 1)]
+            if symbology_flag == 'euc':
                 symbologyLayer = symbology_dict[region][0]
+                snap_raster = snap_raster_dict[region]
+
                 out_folder = out_folder + os.sep + 'Agg_Layers'
                 create_directory(out_folder)
-            elif os.path.dirname(use_location).endswith('OnOffField'):
+            else:
                 symbologyLayer = symbology_dict[region][1]
-                out_folder = out_folder + os.sep + 'OnOffField'
-                create_directory(out_folder)
-            elif os.path.dirname(use_location).endswith('Yearly'):
-                symbologyLayer = symbology_dict[region][2]
+                snap_raster = snap_raster_dict[region]
+
                 out_folder = out_folder + os.sep + 'Indiv_Year_raw'
                 create_directory(out_folder)
 

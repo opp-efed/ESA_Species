@@ -12,87 +12,88 @@ from arcpy.sa import *
 # ##User input variables
 
 # Location of spatial library od NHDPluse
-in_HUC_base = 'L:\NHDPlusV2'
-# sub-directory folder where shapefile
-tail = 'WBDSnapshot\WBD\WBD_Subwatershed.shp'
+# in_HUC_base = 'L:\NHDPlusV2'
+# # sub-directory folder where shapefile
+# tail = 'WBDSnapshot\WBD\WBD_Subwatershed.shp'
+# region = 'CONUS'
+# temp_file = 'table_1'
+
+in_HUC_base = 'L:\ESA\UnionFiles_Winter2018\NHDFiles\L48\HUC_12byHUC2.gdb'
+# # sub-directory folder where shapefile
+# tail = 'WBDSnapshot\WBD\WBD_Subwatershed.shp'
 region = 'CONUS'
-temp_file = 'table_1'
+temp_file = 'table_8'
 
-# # location of use site to runt
-use_location_base = 'L:\Workspace\UseSites\ByProject'
-use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
+# # location of use site to run
+use_location = r'L:\Workspace\UseSites\ByProjection' + os.sep + region +'_UseLayers.gdb'
+# use_location = r'L:\Workspace\UseSites\ByProjection' + os.sep + region +'_Yearly.gdb'
 
-# use_location = r"L:\Workspace\UseSites\CDL_Reclass\161031\CDL_Reclass_1015_161031.gdb"
 
 arcpy.env.workspace = use_location
-# use_list =[ u'Albers_Conical_Equal_Area_CONUS_TribalLands_euc_final']
 use_list = (arcpy.ListRasters())
 
 # location of results
-out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\test_gap'
+out_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ED_results\Results\L48\HUC_2'
 
 
 # STATIC Variables
 # Symbology layer so that the unique values can be applied to use layer before running zonal stats
-symbology_dict = {"CONUS": [r'L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr',
-    r'L:\Workspace\UseSites\ByProject\SymblogyLayers\CDL_2013_rec.lyr']}
+symbology_dict = {"CONUS" : ['L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr',
+              r'L:\Workspace\UseSites\ByProjection\Symbol_Layers'
+              r'\Albers_Conical_Equal_Area_CDL_2010_rec.lyr']}
 
 snap_raster_dict = {
     'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.img'}
-
-
-current_use = 1
-arcpy.env.workspace = use_location
-list_raster_use = (arcpy.ListRasters())
-
-list_raster_use = [raster for raster in list_raster_use if raster in use_list]
-count_use = len(list_raster_use)
-print list_raster_use
 
 
 if os.path.basename(out_results) != 'HUC12':
     out_results = out_results +os.sep+ 'HUC12'
 
 def zone(zone_lyr, raster_lyr, temp_table, snap):
+    # fclist_field = [f.name for f in arcpy.ListFields(zone_lyr) if not f.required]
+    # print fclist_field
     # Set Snap Raster environment
     arcpy.env.snapRaster = Raster(snap)
     start_zone = datetime.datetime.now()
     arcpy.CreateTable_management("in_memory", temp_table)
     temp = "in_memory" + os.sep + temp_table
     arcpy.env.overwriteOutput = True
-    arcpy.gp.ZonalHistogram_sa(zone_lyr, "HUC_12", raster_lyr, temp)
+    arcpy.gp.ZonalHistogram_sa(zone_lyr, "huc_fips", raster_lyr, temp)
     print "Completed Zonal Histogram"
-
     return temp, start_zone
 
 
 def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, results_folder, huc12, temp_table, region_c, snap):
 
     # out paths
-    break_use = use_path.split("_")
+    break_use = os.path.basename(use_path).split("_")
     break_bool = False
     use_nm_folder = region_c  # starting point that will be used for use_nm_folder
 
-    for v in break_use:
-        if v != region_c:
+    for v in break_use:  # SEE TODO
+        if v != 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
             pass
         else:
             break_bool = True
         if break_bool:
-            if v == region_c:
+            if v == region_c or v == '2S'or v == '55N' or v == 'Area' or v == '4N'or v == '20N' or v == 'Area':
                 continue
             else:
                 use_nm_folder = use_nm_folder + "_" + v
+
+    use_nm_folder = use_nm_folder.split(".")[0]
 
     out_folder = results_folder + os.sep + use_nm_folder
     if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
     # parse out information needed for file names
-    huc_12_value = huc12.replace('NHDPlus', '_')
-    run_id = use_nm_folder + huc_12_value
-
+    # huc_12_value = huc12.replace('NHDPlus', '_')
+    huc_12_value = huc12
+    run_id = use_nm_folder +"_" +huc_12_value
     csv = out_folder + os.sep + run_id + '.csv'
+    print csv
     if os.path.exists(csv):
         print ("Already completed run for {0}".format(run_id))
     elif not os.path.exists(csv):
@@ -120,6 +121,10 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
 def create_directory(dbf_dir):
     if not os.path.exists(dbf_dir):
         os.mkdir(dbf_dir)
+
+
+arcpy.env.workspace = in_HUC_base
+fc_list = (arcpy.ListFeatureClasses())
 
 
 start_time = datetime.datetime.now()
@@ -161,16 +166,19 @@ for use_nm in list_raster_use:  # loops through all use raster to be included
 
             out_folder = out_folder + os.sep + 'Indiv_Year_raw'
             create_directory(out_folder)
-    for value in list_HUC2:  # loop all NHD folders for each use
-            HUC12_path = in_HUC_base + os.sep + value + os.sep + tail
+    # for value in list_HUC2:  # loop all NHD folders for each use
+    for value in fc_list:
+            # HUC12_path = in_HUC_base + os.sep + value + os.sep + tail
+            HUC12_path = in_HUC_base + os.sep + value
+
 
             print "\nWorking on uses for {0} HUC file {1} of {2}".format(value, count, len(list_HUC2))
-            try:
+            # try:
 
-                zonal_hist(HUC12_path, use_path, symbologyLayer, use_nm, out_folder, value, temp_file, region, snap_raster)
-            except Exception as error:
-                print(error.args[0])
-                print "Failed on {0} with use {1}".format(value, use_nm)
+            zonal_hist(HUC12_path, use_path, symbologyLayer, use_nm, out_folder, value, temp_file, region, snap_raster)
+            # except Exception as error:
+            #     print(error.args[0])
+            #     print "Failed on {0} with use {1}".format(value, use_nm)
             count += 1
     current_use += 1
 

@@ -1,0 +1,30 @@
+Date 2/5/2017 J.Connolly
+
+
+# Extract row 0
+# Transpose
+# Extract corresponding vector from PCT table for use
+# Transpose
+# Join two df by state
+# multiply into columns PCT	State adjusted by PCT
+# out df by use
+# long format  State	State overlap	PCT	  State adjusted by PCT
+
+# Extract row 0
+# Transpose
+# join back to look up and add in State and ZoneID
+# Sum to Species from Zone ID
+# working df cols = species species overlap in state within range state
+# join to output for current use from Step 1
+# Calculate
+#   Total outside species range: State - species in state
+#   min in Species range	if total outside > state adjusted pct;0 else = state adjusted PCT -total outside
+#   Max in species range if total total species < state adjusted pct; state adjust else = species overlap in state
+#   uniform : pct * species overlap in state
+
+# create three df one min max and uniform
+# sum to species : now this is the same as the merge files for raw overlap
+# calculate overlap
+
+# Possible for drift overlap extract by drift value calc PCT save document _distance then merge back to single species
+# by drift interval

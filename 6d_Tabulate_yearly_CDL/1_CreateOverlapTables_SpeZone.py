@@ -14,37 +14,42 @@ import pandas as pd
 # All raster are 30 meter cells - note previously VI and CNMI has some use with a different cell size
 overwrite_inter_data = False
 
-
-master_list = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
+master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+              r'\MasterListESA_Feb2017_20180110.csv'
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
-                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_']
+                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+                      'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-raw_results_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\test_gap\Range' \
-                  r'\Indiv_Year_raw'
+raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ED_results\Results\L48\CriticalHabitat\Indiv_Year_raw'
 find_file_type = raw_results_csv.split(os.sep)
 
 
 if 'Range' in find_file_type or 'range' in find_file_type:
-    look_up_fc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range' \
-                 r'\R_Clipped_Union_MAG_20161102.gdb'
-    look_up_use = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\Indiv_year_lookup.csv'
+    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ExternalDrive\_CurrentResults\Results_diaz\Indiv_year_lookup_nosplit.csv'
+    file_type = 'R_'
     species_file_type = 'Range'
 else:
-    look_up_fc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat' \
-                 r'\CH_Clipped_Union_MAG_20161102.gdb'
-    look_up_use = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\Indiv_year_lookup.csv'
-    species_file_type = 'CriticalHabitat'
+    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ExternalDrive\_CurrentResults\Results_diaz\Indiv_year_lookup_nosplit.csv'
+    species_file_type = 'CH'
+    file_type = 'CH_'
 
 in_acres_list = [
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv',
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20170131.csv']
+    r'L:\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv',
+    r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110.csv']
+
 
 # ## Static variables
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
-out_root = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Range_Gap' + os.sep + \
-           species_file_type
+
+out_root = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+           r'\_ED_results\Tabulated_Jan2018' + os.sep +'L48'+ os.sep+ species_file_type
 out_results = out_root + os.sep + 'Indiv_Year_raw'
 
 
@@ -53,10 +58,8 @@ for v in in_acres_list:
     path, tail = os.path.split(v)
     if species_file_type == 'Range' and (tail[0] == 'R' or tail[0] == 'r'):
         in_acres_table = v
-    elif species_file_type == 'CriticalHabitat' and (tail[0] == 'C' or tail[0] == 'C'):
-        in_acres_table = v
     else:
-        pass
+        in_acres_table = v
 
 arcpy.env.workspace = look_up_fc
 list_fc = arcpy.ListFeatureClasses()
@@ -66,6 +69,7 @@ species_df = pd.read_csv(master_list, dtype=object)
 base_sp_df = species_df.loc[:, col_include_output]
 
 list_sp = species_df['EntityID'].values.tolist()
+
 acres_df = pd.read_csv(in_acres_table)
 acres_df['EntityID'] = acres_df['EntityID'].astype(str)
 use_lookup = pd.read_csv(look_up_use, dtype = object)
@@ -85,11 +89,11 @@ def melt_df(df_melt):
     for k in cols:
         val_vars.append(k) if type(k) is long else id_vars_melt.append(k)
 
-    df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
-                          value_name='EntityID')
+    df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',value_name='EntityID')
 
     df_melt_row['EntityID'].fillna('None', inplace=True)
     df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
+
     df_melt_row.drop('melt_var', axis=1, inplace=True)
     df_melt_row.ix[:, id_vars_melt] = df_melt_row.ix[:, id_vars_melt].apply(pd.to_numeric)
     sum_by_ent = df_melt_row.groupby('EntityID').sum()
@@ -163,7 +167,9 @@ def use_by_species(use_df, sp_group_abb, use_lookup_table):
     [use_df.drop(j, axis=1, inplace=True) for j in drop_cols if j in drop_cols]
     # transform table so it is zones by distance interval; rest index; update column header and remove 'VALUE' form
     # zone ID- value term is the default output of the tool
+    use_df.drop_duplicates(inplace=True)  # # duplicate result in table for 200- dropped for melt
     use_df = use_df.T
+
     use_df = use_df.reset_index()
     use_df.columns = use_df.iloc[0]
     use_df = use_df.reindex(use_df.index.drop(0))
@@ -176,13 +182,14 @@ def use_by_species(use_df, sp_group_abb, use_lookup_table):
     # break out species from csv name to know which FC attribute table to pull in; read in table and set correct
     # dtypes for columns
 
-    sp_zone_fc = [j for j in list_fc if j.startswith('R_' + sp_group_abb.title())]
+    sp_zone_fc = [j for j in list_fc if j.startswith(file_type + sp_group_abb.title())]
     sp_zone_array = arcpy.da.TableToNumPyArray(look_up_fc + os.sep + sp_zone_fc[0], ['ZoneID', 'ZoneSpecies'])
     sp_zone_df = pd.DataFrame(data=sp_zone_array, dtype=object)
     sp_zone_df['ZoneID'] = sp_zone_df['ZoneID'].map(lambda x: str(x).split('.')[0]).astype(str)
     # Filter so on the zone from the current use table is in the working df
     sp_zone_df = sp_zone_df[sp_zone_df['ZoneID'].isin(c_zones)]
     use_columns = use_df.columns.values.tolist()
+
     for b in use_columns:
         if b == 'ZoneID':
             pass
@@ -221,6 +228,9 @@ create_directory(out_folder_merge_region)
 
 # Loop through the input results
 list_folders = os.listdir(raw_results_csv)
+
+
+
 for folder in list_folders:
     region = folder.split('_')[0]
     split_folder = folder.split("_")

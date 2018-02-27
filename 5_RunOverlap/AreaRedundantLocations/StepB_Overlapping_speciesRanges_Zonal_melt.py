@@ -3,7 +3,8 @@ import os
 import arcpy
 import datetime
 
-master_list = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_Feb2017_20170410.csv'
+master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+              r'\MasterListESA_Feb2017_20180110.csv'
 overlapping_table = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Overlaping_species\overlapping_species'
 
 look_up_fc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\R_Clipped_Union_MAG_20161102.gdb'

@@ -7,15 +7,14 @@ from arcpy.sa import *
 
 # Title- runs Zonal Histogram for all sp union file against each other
 
-in_location_spe = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range' \
-                 r'\SpCompRaster_byProjection\Grids_byProjection\Albers_Conical_Equal_Area\r_snails'
+in_location_spe = r'L:\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection' \
+                  r'\CONUS_Albers_Conical_Equal_Area\r_amphib'
 
 out_results = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\Overlaping_species' \
               r'\overlapping_species'
 temp_file = "temp_table"
 
-previously_run = ['r_amphib','r_arachn','r_birds','r_clams', 'r_conife', 'r_corals','r_crusta', 'r_ferns','r_fishes',
-                  'r_flower','r_insect','r_lichen','r_mammal','r_reptil']
+previously_run = []
 
 run_count = 0
 sy_path = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection' \

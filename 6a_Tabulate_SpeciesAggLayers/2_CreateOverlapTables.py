@@ -17,44 +17,43 @@ import pandas as pd
 # All raster are 30 meter cells - note previously VI and CNMI has some use with a different cell size
 
 # ###############user input variables
-overwrite_inter_data = False
-master_list = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
-col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
-                      'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
-                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_']
-raw_results_csv = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\test_gap\Range' \
-                  r'\Agg_Layers'
+overwrite_inter_data = True
+#
+raw_results_csv = r'L:\ESA\Results\diazinon\Results\L48\Range\Agg_Layers'
+
 
 find_file_type = raw_results_csv.split(os.sep)
-# ###########Static variables
+# ########### Updated once per run-variables
+master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+              r'\MasterListESA_Feb2017_20180110.csv'
+col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
+                      'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
+                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+                      'CH_Filename', 'Range_Filename', 'L48/NL48']
+
 if 'Range' in find_file_type or 'range' in find_file_type:
-    look_up_fc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range' \
-                 r'\R_Clipped_Union_MAG_20161102.gdb'
-    look_up_use = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\RangeUses_lookup.csv'
+    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+    look_up_use = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
+    file_type = 'R_'
     species_file_type = 'Range'
+    in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'
 else:
-    look_up_fc = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\CriticalHabitat' \
-                 r'\CH_Clipped_Union_MAG_20161102.gdb'
-    look_up_use = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Results_NewComps\CH_Uses_lookup.csv'
-    species_file_type = 'CriticalHabitat'
+    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
+              r'\ESA\_ExternalDrive\_CurrentSupportingTables\CH_Uses_lookup.csv'
+    species_file_type = 'CH'
+    file_type = 'CH_'
+    in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv'
 
-in_acres_list = [
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_Acres_by_region_20170208.csv',
-    r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv']
 
-out_root = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tabulated_NewComps\Range_Gap' + os.sep + \
-           species_file_type
+find_file_type = raw_results_csv.split(os.sep)
+if 'L48' in find_file_type:
+    p_region = 'L48'
+else:
+    p_region = 'NL48'
+out_root = r'L:\ESA\Results\diazinon\Tabulated' + os.sep + p_region + os.sep + species_file_type
 out_results = out_root + os.sep + 'Agg_Layers'
 
-in_acres_table = ''
-for v in in_acres_list:
-    path, tail = os.path.split(v)
-    if species_file_type == 'Range' and (tail[0] == 'R' or tail[0] == 'r'):
-        in_acres_table = v
-    elif species_file_type == 'CriticalHabitat' and (tail[0] == 'C' or tail[0] == 'C'):
-        in_acres_table = v
-    else:
-        pass
 
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
@@ -87,7 +86,6 @@ def melt_df(df_melt):
     val_vars = []
     for k in cols:
         val_vars.append(k) if type(k) is long else id_vars_melt.append(k)
-
     df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
                           value_name='EntityID')
 
@@ -103,13 +101,18 @@ def melt_df(df_melt):
 def calculation(type_fc, in_sum_df, cell_size, c_region, percent_type):
     # ASSUMES ONLY NUMERIC COLS ARE USE COLS AND ACRES COLS
     use_cols = in_sum_df.select_dtypes(include=['number']).columns.values.tolist()
-    if percent_type:
-        acres_col = 'Acres_' + str(c_region)
+    if percent_type == 'full range':
+        acres_col = 'TotalAcresOnLand'
         in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
         use_cols.remove(acres_col)
         in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
-    else:
-        acres_col = 'TotalAcresOnLand'
+    elif percent_type == 'NL48 range':
+        acres_col = 'TotalAcresNL48'
+        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
+        use_cols.remove(acres_col)
+        in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
+    elif percent_type == 'regional range':
+        acres_col = 'Acres_' + str(c_region)
         in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
         use_cols.remove(acres_col)
         in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
@@ -127,10 +130,17 @@ def calculation(type_fc, in_sum_df, cell_size, c_region, percent_type):
         overlap.ix[:, use_cols] *= 100
         # Drop excess acres col- both regional and full range are included on input df; user defined parameter
         # percent_type determines which one is used in overlap calculation
-        if percent_type:
-            overlap.drop('TotalAcresOnLand', axis=1, inplace=True)
-        else:
+        if percent_type == 'full range':
+            overlap.drop('TotalAcresNL48', axis=1, inplace=True)
             overlap.drop(('Acres_' + str(c_region)), axis=1, inplace=True)
+
+        elif percent_type == 'NL48 range':
+            overlap.drop(('Acres_' + str(c_region)), axis=1, inplace=True)
+            overlap.drop('TotalAcresOnLand', axis=1, inplace=True)
+
+        elif percent_type == 'regional range':
+            overlap.drop('TotalAcresOnLand', axis=1, inplace=True)
+            overlap.drop('TotalAcresNL48', axis=1, inplace=True)
         return overlap
 
     else:
@@ -181,12 +191,14 @@ def use_by_species(use_df, sp_group_abb):
     # break out species from csv name to know which FC attribute table to pull in; read in table and set correct
     # dtypes for columns
 
-    sp_zone_fc = [j for j in list_fc if j.startswith('R_' + sp_group_abb.title())]
+    sp_zone_fc = [j for j in list_fc if j.startswith(file_type + sp_group_abb.title())]
     sp_zone_array = arcpy.da.TableToNumPyArray(look_up_fc + os.sep + sp_zone_fc[0], ['ZoneID', 'ZoneSpecies'])
     sp_zone_df = pd.DataFrame(data=sp_zone_array, dtype=object)
+
     sp_zone_df['ZoneID'] = sp_zone_df['ZoneID'].map(lambda x: str(x).split('.')[0]).astype(str)
     # Filter so on the zone from the current use table is in the working df
     sp_zone_df = sp_zone_df[sp_zone_df['ZoneID'].isin(c_zones)]
+
     return use_df, sp_zone_df, c_zones
 
 
@@ -194,24 +206,31 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 s_out_folder = out_results
 
-create_directory(out_root)
-sub_root_folder = os.path.dirname(s_out_folder)
+sub_root_folder = os.path.dirname(out_root)
 create_directory(sub_root_folder)
+create_directory(out_root)
 create_directory(s_out_folder)
 
 s_results_folder = raw_results_csv
 # Set up output root folder file structure
 out_folder_sum = s_out_folder + os.sep + 'SumSpecies'
-out_folder_percent = s_out_folder + os.sep + 'PercentOverlap_FullRange'
-out_folder_percent_region = s_out_folder + os.sep + 'PercentOverlap_RegionRange'
-out_folder_merge = s_out_folder + os.sep + 'MergeOverlap_FullRange'
-out_folder_merge_region = s_out_folder + os.sep + 'MergeOverlap_Region'
+out_folder_percent = s_out_folder + os.sep + 'PO_FullRange'
+out_folder_percent_region = s_out_folder + os.sep + 'PO_RegionRange'
+out_folder_percent_NL48 = s_out_folder + os.sep + 'PO_NL48Range'
+
+out_folder_merge = s_out_folder + os.sep + 'MO_FullRange'
+out_folder_merge_region = s_out_folder + os.sep + 'MO_Region'
+out_folder_merge_NL48 = s_out_folder + os.sep + 'MO_NL48Range'
 
 create_directory(out_folder_sum)
+
 create_directory(out_folder_percent)
 create_directory(out_folder_percent_region)
+create_directory(out_folder_percent_NL48)
+
 create_directory(out_folder_merge)
 create_directory(out_folder_merge_region)
+create_directory(out_folder_merge_NL48)
 
 # Loop through the input results
 list_folders = os.listdir(s_results_folder)
@@ -231,13 +250,15 @@ for folder in list_folders:
     out_folder_sum_use = out_folder_sum + os.sep + folder
     out_folder_percent_use = out_folder_percent + os.sep + folder
     out_folder_percent_region_use = out_folder_percent_region + os.sep + folder
+    out_folder_percent_nl48_use = out_folder_percent_NL48 + os.sep + folder
     create_directory(out_folder_percent_use)
     create_directory(out_folder_percent_region_use)
     create_directory(out_folder_sum_use)
+    create_directory(out_folder_percent_nl48_use)
     # parse out use name and region from folder name load use support info from look_up_use and acres info for region
     # and whole range of species
 
-    acres_for_calc = acres_df.ix[:, ['EntityID', ('Acres_' + str(region)), 'TotalAcresOnLand']]
+    acres_for_calc = acres_df.ix[:, ['EntityID', ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']]
     print '\nWorking on {0}: {1} of {2}'.format(folder, (list_folders.index(folder)) + 1, len(list_folders))
     # set up list of result csv files
     list_csv = os.listdir(raw_results_csv + os.sep + folder)
@@ -267,6 +288,10 @@ for folder in list_folders:
                 use_array = pd.read_csv(out_use_pixel_by_species)
                 [use_array.drop(m, axis=1, inplace=True) for m in use_array.columns.values.tolist() if
                  m.startswith('Unnamed')]
+                if len(use_array) == 0:
+                    zones =0
+                else:
+                    zones = use_array['EntityID'].values.tolist()
             else:
                 print '   Summing tables by species...species group:{0}'.format(csv.split('_')[1])
                 use_df_transformed, sp_zone_df_fc, zones = use_by_species(df_use, csv.split('_')[1])
@@ -279,20 +304,22 @@ for folder in list_folders:
 
             # STEP 2: Run percent overlap for both the full range and the regional; set up acres table to include only
             # species found on the current use table (use_array)
-            sum_df_acres = pd.merge(use_array, acres_for_calc, on='EntityID', how='left')
             full_range_overlap_out = out_folder_percent_use + os.sep + csv
             regional_range_overlap_out = out_folder_percent_region_use + os.sep + csv
+            NL48_range_overlap_out = out_folder_percent_nl48_use + os.sep + csv
 
-            if not overwrite_inter_data and os.path.exists(full_range_overlap_out):
-                pass
-            elif len(zones) == 0:  # no zones in the raw output table no overlap; 0 for these species add at end
+            if len(zones) == 0:  # no zones in the raw output table no overlap; 0 for these species add at end
                 pass
             else:
-                print '         Generating full range percent overlap...species group:{0}'.format(csv.split('_')[1])
-                percent_overlap_df_full = calculation(type_use, sum_df_acres, r_cell_size, region, False)
-                [percent_overlap_df_full.drop(m, axis=1, inplace=True) for m in
-                 percent_overlap_df_full.columns.values.tolist() if m.startswith('Unnamed')]
-                percent_overlap_df_full.to_csv(full_range_overlap_out)
+                sum_df_acres = pd.merge(use_array, acres_for_calc, on='EntityID', how='left')
+                if not overwrite_inter_data and os.path.exists(full_range_overlap_out):
+                    pass
+                else:
+                    print '         Generating full range percent overlap...species group:{0}'.format(csv.split('_')[1])
+                    percent_overlap_df_full = calculation(type_use, sum_df_acres, r_cell_size, region, 'full range')
+                    [percent_overlap_df_full.drop(m, axis=1, inplace=True) for m in
+                     percent_overlap_df_full.columns.values.tolist() if m.startswith('Unnamed')]
+                    percent_overlap_df_full.to_csv(full_range_overlap_out)
 
             if not overwrite_inter_data and os.path.exists(regional_range_overlap_out):
                 pass
@@ -300,12 +327,23 @@ for folder in list_folders:
                 pass
             else:
                 print '         Generating regional range percent overlap...species group:{0}'.format(csv.split('_')[1])
-                percent_overlap_df_region = calculation(type_use, sum_df_acres, r_cell_size, region, True)
+                percent_overlap_df_region = calculation(type_use, sum_df_acres, r_cell_size, region, 'regional range')
                 [percent_overlap_df_region.drop(m, axis=1, inplace=True) for m in
                  percent_overlap_df_region.columns.values.tolist() if m.startswith('Unnamed')]
                 percent_overlap_df_region.to_csv(regional_range_overlap_out)
 
-        # STEP 3: Merge Tables by use for the full range and regional rang
+            if not overwrite_inter_data and os.path.exists(NL48_range_overlap_out):
+                pass
+            elif len(zones) == 0:  # no zones in the raw output table no overlap; 0 for these species add at end
+                pass
+            else:
+                print '         Generating NL48 range percent overlap...species group:{0}'.format(csv.split('_')[1])
+                percent_overlap_df_NL48 = calculation(type_use, sum_df_acres, r_cell_size, region, 'NL48 range')
+                [percent_overlap_df_NL48.drop(m, axis=1, inplace=True) for m in
+                 percent_overlap_df_NL48.columns.values.tolist() if m.startswith('Unnamed')]
+                percent_overlap_df_NL48.to_csv(NL48_range_overlap_out)
+
+        # STEP 3: Merge Tables by use for the full range and regional range
         out_csv = out_folder_merge + os.sep + 'Merge_' + str(folder) + '.csv'
         if not overwrite_inter_data and os.path.exists(out_csv):
             pass
@@ -319,11 +357,13 @@ for folder in list_folders:
                 in_df = pd.read_csv(current_csv, dtype=object)
 
                 out_df = pd.concat([out_df, in_df], axis=0)
-
-            out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
-            [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if m.startswith('Unnamed')]
-            out_df.fillna(0, inplace=True)
-            out_df.to_csv(out_csv)
+            if len(out_df) == 0:  # No overlap for any species in the at region use
+                pass
+            else:
+                out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
+                [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if m.startswith('Unnamed')]
+                out_df.fillna(0, inplace=True)
+                out_df.to_csv(out_csv)
 
         # STEP 3: Merge Tables regional range
         out_csv = out_folder_merge_region + os.sep + 'Merge_' + str(folder) + '.csv'
@@ -338,10 +378,36 @@ for folder in list_folders:
                 current_csv = out_folder_percent_region_use + os.sep + csv
                 in_df = pd.read_csv(current_csv, dtype=object)
                 out_df = pd.concat([out_df, in_df], axis=0)
-            out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
-            [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if m.startswith('Unnamed')]
-            out_df.fillna(0, inplace=True)
-            out_df.to_csv(out_csv)
+            if len(out_df) == 0:  # No overlap for any species in the at region use
+                pass
+            else:
+                out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
+                [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if m.startswith('Unnamed')]
+                out_df.fillna(0, inplace=True)
+                out_df.to_csv(out_csv)
+
+        # STEP 3: Merge Tables NL48 range
+        out_csv = out_folder_merge_NL48 + os.sep + 'Merge_' + str(folder) + '.csv'
+
+        if not overwrite_inter_data and os.path.exists(out_csv):
+            pass
+        else:
+            print'Merging overlap table NL48 range...{0}'.format(use_nm)
+            list_percent_nl48_csv = os.listdir(out_folder_percent_nl48_use)
+            list_percent_nl48_csv = [csv for csv in list_percent_nl48_csv if csv.endswith('.csv')]
+            out_df = pd.DataFrame()
+            for csv in list_percent_nl48_csv:
+                current_csv = out_folder_percent_nl48_use + os.sep + csv
+                in_df = pd.read_csv(current_csv, dtype=object)
+                out_df = pd.concat([out_df, in_df], axis=0)
+
+            if len(out_df) == 0:  # No overlap for any species in the at region use
+                pass
+            else:
+                out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
+                [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if m.startswith('Unnamed')]
+                out_df.fillna(0, inplace=True)
+                out_df.to_csv(out_csv)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
