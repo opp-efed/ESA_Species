@@ -4,17 +4,17 @@ import arcpy
 
 import pandas as pd
 
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'
-old_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
+outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists'
 
-current_list_nm= 'MasterListESA_Feb2017_20170410_rangeFiles.csv'
+
+current_list_nm= 'MasterListESA_Feb2017_20180109_CHFiles.csv'
 colIndex_entId = 0
-outfile_nm = 'MasterListESA_Feb2017_20170410_CHFiles.csv'
-addcol = 'CH_Filename'  # Name of column to add
+outfile_nm = 'MasterListESA_Feb2017_20180110.csv'
+addcol = 'Range_Filename'  # Name of column to add
 
-inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat'  # location of GIS files to add table
-
-
+inlocation = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
+             '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\Range' # location of GIS files to add table
 
 addinfo_dict = {}
 files_to_be_archived = []
@@ -90,18 +90,7 @@ master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: x).astype(
 master_list_df[addcol] = master_list_df.apply(lambda row: add_column(row, addinfo_dict), axis=1)
 master_list_df.to_csv(outfile)
 
-added_species = master_list_df.loc[master_list_df['Entid_Updated'] == True]
-added_species = added_species.loc[added_species['Update description'] == 'added']
 
-old_master_list_df = pd.read_excel(old_masterlist)
-old_master_list_df ['EntityID'] = old_master_list_df ['EntityID'].map(lambda x: x).astype(str)
-[old_master_list_df.drop(v, axis=1, inplace=True) for v in old_master_list_df.columns.values.tolist() if v.startswith('Unnamed')]
-removed_list = check_removed(old_master_list_df, master_list_df)
-
-print 'Removed Species {0} \nVerify species have be delisted or deemed not warranted'.format(removed_list)
-removed_species = old_master_list_df.loc[old_master_list_df['EntityID'].isin(removed_list) == True]
-removed_species.to_csv(outlocation + os.sep + 'Removed_species_' + date + '.csv', encoding='utf-8')
-added_species.to_csv(outlocation + os.sep + 'NewlyListed_species_' + date + '.csv', encoding='utf-8')
 
 end = datetime.datetime.now()
 print "Elapse time {0}".format(end - start_script)
