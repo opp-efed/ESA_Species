@@ -4,39 +4,111 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import datetime
-import sys
+
+import copy
+
 
 # Pull structure from http://chrisalbon.com/python/beautiful_soup_scrape_table.html
-today = datetime.datetime.today()
-date = today.strftime('%Y%m%d')
+# and https://johnricco.github.io/2017/04/04/python-html/
 
-groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Corals', 'Abalone', 'Fishes',
-          'MarineMammals', 'MarineInvertebrates']
+#TODO add an output that merges all table to be used in following steps
 
 url = "http://www.nmfs.noaa.gov/pr/species/esa/candidate.htm#proposed"
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\September2017'
+
+outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\MasterLists\Creation\test'
 
 # Can and Proposed foreign species per NMFS
-removed_perNMFS =['Cephalorhynchus hectori maui','Cephalorhynchus hectori hectori','Sousa chinensis taiwanensis',
-                  'Mustelus schmitti','Squatina guggenheim','Amblyraja radiata','Rhinobatos horkelii',
-                  'Squatina argentina','Isogomphodon oxyrhynchus','Mustelus fasciatus']
+removed_perNMFS = ['Cephalorhynchus hectori maui', 'Cephalorhynchus hectori hectori', 'Sousa chinensis taiwanensis',
+                   'Mustelus schmitti', 'Squatina guggenheim', 'Amblyraja radiata', 'Rhinobatos horkelii',
+                   'Squatina argentina', 'Isogomphodon oxyrhynchus', 'Mustelus fasciatus']
 
-def check_for_exceptions():
-    possAnswer = ['Yes', 'No']
-    ask_preQ = True
-    while ask_preQ:
-        default_answers = raw_input('Have you check for unstructured species? {0}: '.format(possAnswer))
 
-        if default_answers  not in possAnswer:
-            print 'This is not a valid answer: remove quotes and spaces'
+def tables_read(tables_html, n):
+    n_cols = 0
+    n_rows = 0
+
+    # Parse each table
+
+    for row in tables_html[n].find_all("tr"):
+        col_tags = row.find_all(["td", "th"])
+        if len(col_tags) > 0:
+            n_rows += 1
+            if len(col_tags) > n_cols:
+                n_cols = len(col_tags)
+
+        # Create dataframe
+    df = pd.DataFrame(index=range(0, n_rows), columns=range(0, n_cols))
+
+    # Create list to store rowspan values
+    skip_index = [0 for i in range(0, n_cols)]
+
+    # Start by iterating over each row in this table...
+    row_counter = 0
+    for row in tables_html[n].find_all("tr"):
+
+        # Skip row if it's blank
+        if len(row.find_all(["td", "th"])) == 0:
+            next
+
         else:
-            break
-    if default_answers=='Yes':
-                pass
-    else:
-        print '\nCheck for unstructured species such as bullets, or merged cells that do not follow structure-see notes'
-        sys.exit()
 
+            # Get all cells containing data in this row
+            columns = row.find_all(["td", "th"])
+            col_dim = []
+            row_dim = []
+            col_dim_counter = -1
+            row_dim_counter = -1
+            col_counter = -1
+            this_skip_index = copy.deepcopy(skip_index)
+            # ROWSPAN AND COLSPAN CHECKS FOR MERGED CELL WHICH ARE TYPICALLY NOT CONSISTENCE ON WEBSITE SEE REFERNCE
+            # WEBSITE FOR MORE DETAILS
+            for col in columns:
+
+                # Determine cell dimensions
+                colspan = col.get("colspan")
+                if colspan is None:
+                    col_dim.append(1)
+                else:
+                    col_dim.append(int(colspan))
+                col_dim_counter += 1
+
+                rowspan = col.get("rowspan")
+                if rowspan is None:
+                    row_dim.append(1)
+                else:
+                    row_dim.append(int(rowspan))
+                row_dim_counter += 1
+
+                # Adjust column counter
+                if col_counter == -1:
+                    col_counter = 0
+                else:
+                    col_counter = col_counter + col_dim[col_dim_counter - 1]
+
+                while skip_index[col_counter] > 0:
+                    col_counter += 1
+
+                # Get cell contents
+                cell_data = col.get_text().encode('ascii', 'replace').replace('\n', '').replace('?', ' ')
+
+                # Insert data into cell
+                df.iat[row_counter, col_counter] = cell_data
+
+                # Record column skipping index
+                if row_dim[row_dim_counter] > 1:
+                    this_skip_index[col_counter] = row_dim[row_dim_counter]
+
+        # Adjust row counter
+        row_counter += 1
+
+        # Adjust column skipping index
+        skip_index = [i - 1 if i > 0 else i for i in this_skip_index]
+
+    # Append dataframe to list of tables
+    tables_html.append(df)
+
+    return (df)
 
 
 def get_tables(htmldoc):
@@ -58,7 +130,8 @@ def createdirectory(DBF_dir):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-check_for_exceptions()
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
 
 createdirectory(outlocation+os.sep+'NMFS')
 outlocation = outlocation+os.sep+'NMFS'
@@ -66,269 +139,43 @@ outlocation = outlocation+os.sep+'NMFS'
 r = requests.get(url)
 
 list_tables, title = get_tables(r)
+print title
+for n in range(0, len(list_tables)):
 
-species_com = []
-species_sci = []
-year = []
-status = []
-group = []
-pop = []
-counter = 0
-for table in list_tables:
-    for row in table.find_all('tr')[1:]:
-        pop_name = 'None'
-        # Create a variable of all the <td> tag pairs in each <tr> tag pair,
-        col = row.find_all('td')
-        print col
+    ssa = tables_read(list_tables, n)
+    ssa.columns = ssa.iloc[0]
+    ssa= ssa.reindex(ssa.index.drop(0))
+    print ssa
 
-        if len(col) == 1:
-            column_1 = col[0].get_text().replace(' ', '')
-            if column_1 == 'MarineInvertebrates':
-                current_group = 'Marine Invertebrates'
-            elif column_1 == 'MarineMammals':
-                current_group = 'Marine Mammals'
-            elif column_1 in groups:
-                current_group = column_1
+    ssa['Common Name'] = ssa['Species'].map(
+        lambda x: str(x.split('(')[0].split(',')[1]).strip() + " " + str(x.split('(')[0].split(',')[0]).strip() if len(
+            x.split('(')[0].split(',')) >= 2 else str(x.split('(')[0].split(',')[0]))
+    ssa['Scientific Name'] = ssa['Species'].map(lambda x: x if len(x.split('(')) <= 1 else (
+        str(x.split('(')[1]).replace(')', '').strip()) if len(x.split('(')) == 2 else str(
+        (x.split('(')[2]).split(')')[0]).replace(')', '').strip())
+    ssa['Population Name'] = ssa['Species'].map(lambda x: '' if len(x.split('(')) <= 1 else (
+        '' if len(x.split('(')) == 2 else str(x.split('(')[2]).split(')')[1]).replace(')', '').strip())
+    row_count = 1
+    year_col = [v for v in ssa.columns.values.tolist() if v.startswith('Year')]
+
+    while row_count <= len(ssa):
+        try:
+            if float(ssa.ix[row_count,(year_col[0])]) > 0:
+                ssa.ix[row_count,'Group'] = group
+                row_count +=1
             else:
-                pass
-        elif len(col) == 2:
-            column_1 = col[0].get_text()
-            name_list = (column_1).split("\n")
+                group = ssa.ix[row_count,'Species']
+                row_count +=1
+        except ValueError:  # white space character in one of the cells from online table can't be converted to float
+                group = ssa.ix[row_count,'Species']
+                row_count +=1
+    ssa['Group'].fillna(0, inplace =True)
+    remove_blanks = ssa.loc[ssa['Group'] != 0]
+    remove_foreign = remove_blanks[remove_blanks['Scientific Name'].isin(removed_perNMFS) == False]
 
-            if name_list[0] == '':
-                if name_list[1] == '':
-                    counter_a = 2
-                    check_end = name_list[counter_a]
-                    if com_name == "dolphin, Hector's (2 subspecies)":
+    remove_foreign.to_csv(outlocation + os.sep + 'FilteredWebsite_NMFS_'+ title[n].split('(')[0] +"_"+ date + '.csv', encoding='utf-8')
+    ssa.to_csv(outlocation + os.sep + 'FullWebsite_NMFS_'+ title[n].split('(')[0] +"_" + date + '.csv', encoding='utf-8')
 
-                        sci_name = name_list[3]
-                        pop_name = name_list[2]
-                        sci = (sci_name.replace('(', ''))
-                        sci = sci.replace(')', '')
-
-                        species_com.append(com_name)
-                        species_sci.append(sci)
-                        pop.append(pop_name)
-                        group.append(current_group)
-
-                        # and append it to last_name variable
-
-                        year.append(str(column_2))
-
-                        # Create a variable of the string inside 3rd <td> tag pair,
-                        column_3 = col[1].get_text()
-                        column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-                        check_fr = column_3.split(' ')
-
-                        if 'FR' in check_fr:
-                            current_status = 'candidate'
-                        else:
-                            current_status = column_3
-                        status.append(current_status)
-
-                    else:
-                        while check_end != '':
-
-                            species_com.append(name_list[counter_a])
-                            sci = (name_list[counter_a + 1].replace('(', ''))
-                            sci = sci.replace(')', '')
-                            species_sci.append(sci)
-                            group.append(current_group)
-                            pop.append(pop_name)
-                            year.append(str(column_2))
-                            col = row.find_all('td')
-                            column_3 = col[1].get_text()
-
-                            column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-
-                            check_fr = column_3.split(' ')
-                            # print check_fr
-                            if 'FR' in check_fr:
-                                current_status = 'candidate'
-                            else:
-                                current_status = column_3
-                            status.append(current_status)
-                            counter_a += 2
-                            check_end = name_list[counter_a]
-            else:
-                species_com.append(name_list[0])
-                sci = (name_list[1].replace('(', ''))
-                sci = sci.replace(')', '')
-                if sci == '':  ## TODO need to account for the bullet species that have two blanks
-                    print name_list
-                # and append it to first_name variable
-                species_sci.append(sci)
-                group.append(current_group)
-                pop.append(pop_name)
-
-                # and append it to last_name variable
-                year.append(str(column_2))
-
-                # Create a variable of the string inside 3rd <td> tag pair,
-                column_3 = col[1].get_text()
-                column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-
-                check_fr = column_3.split(' ')
-                # print check_fr
-                if 'FR' in check_fr:
-                    current_status = 'candidate'
-                else:
-                    current_status = column_3
-                # and append it to age variable
-                status.append(current_status)
-        elif len(col) == 3:
-
-            column_1 = col[0].get_text()
-            name_list = (column_1).split("\n")
-            print name_list
-            sci = (name_list[1].replace('(', ''))
-            sci = sci.replace(')', '')
-
-            if sci == '6 elasmobranch species':
-                total_list = len(name_list) - 1
-                counter = 3
-                while counter < total_list:
-                    com_name = name_list[counter]
-                    sci_name = name_list[counter + 1]
-                    sci = (sci_name.replace('(', ''))
-                    sci = sci.replace(')', '')
-
-                    species_com.append(com_name)
-                    species_sci.append(sci)
-                    group.append(current_group)
-                    pop.append(pop_name)
-
-                    # and append it to last_name variable
-                    column_2 = col[1].get_text()
-                    year.append(str(column_2))
-
-                    # Create a variable of the string inside 3rd <td> tag pair,
-                    column_3 = col[2].get_text()
-                    column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-
-                    check_fr = column_3.split(' ')
-
-                    if 'FR' in check_fr:
-                        current_status = 'candidate'
-                    else:
-                        current_status = column_3
-                    status.append(current_status)
-                    counter += 2
-            elif sci == "dolphin, Hector's 2 subspecies":
-
-                com_name = name_list[1]
-                sci_name = name_list[5]
-                pop_name = name_list[4]
-                sci = (sci_name.replace('(', ''))
-                sci = sci.replace(')', '')
-
-                species_com.append(com_name)
-                species_sci.append(sci)
-                pop.append(pop_name)
-                group.append(current_group)
-
-                # and append it to last_name variable
-                column_2 = col[1].get_text()
-                year.append(str(column_2))
-
-                # Create a variable of the string inside 3rd <td> tag pair,
-                column_3 = col[2].get_text()
-                column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-
-                check_fr = column_3.split(' ')
-
-                if 'FR' in check_fr:
-                    current_status = 'candidate'
-                else:
-                    current_status = column_3
-                status.append(current_status)
-
-            elif sci == "whale, Bryde's 1 subspecies":
-                print name_list
-
-                com_name = name_list[1]
-
-                pop_name = name_list[4]
-                sci_name = name_list[2]
-                sci = (sci_name.replace('(', ''))
-                sci = sci.replace(')', '')
-
-                species_com.append(com_name)
-                species_sci.append(sci)
-                pop.append(pop_name)
-                group.append(current_group)
-
-                # and append it to last_name variable
-                column_2 = col[1].get_text()
-                year.append(str(column_2))
-
-                # Create a variable of the string inside 3rd <td> tag pair,
-                column_3 = col[2].get_text()
-                column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-
-                check_fr = column_3.split(' ')
-
-                if 'FR' in check_fr:
-                    current_status = 'candidate'
-                else:
-                    current_status = column_3
-                status.append(current_status)
-
-            else:
-                if len(name_list) > 2:
-
-                    pop_name = name_list[3]
-                    sci_name = name_list[4]
-                    sci = (sci_name.replace('(', ''))
-                    sci = sci.replace(')', '')
-
-                    species_com.append(name_list[0])
-                    species_sci.append(sci)
-                    pop.append(pop_name)
-                    group.append(current_group)
-                else:
-                    species_com.append(name_list[0])
-                    species_sci.append(sci)
-                    pop.append(pop_name)
-                    group.append(current_group)
-
-                column_2 = col[1].get_text()
-
-                # and append it to last_name variable
-                year.append(str(column_2))
-
-                # Create a variable of the string inside 3rd <td> tag pair,
-                column_3 = col[2].get_text()
-                column_3 = column_3.encode('ascii', 'replace').replace('?', ' ')
-                check_fr = column_3.split(' ')
-                # print check_fr
-
-                if 'FR' in check_fr:
-                    current_status = 'candidate'
-                else:
-                    current_status = column_3
-                # and append it to age variable
-                status.append(current_status)
-
-# print len(species_sci)
-# print len(species_com)
-# print len(status)
-# print len(year)
-# print len(group)
-# print len(pop)
-# print len(current_group)
-columns = {'Invname': species_com, 'Scientific Name': species_sci, 'Status': status, 'Year Listed': year,
-           'Group_B': group, 'Population': pop, 'Critical Habitat': ['n/a'] * len(species_com),
-           'Recovery Plan': ['n/a'] * len(species_com)}
-df = pd.DataFrame(columns,
-                  columns=['Invname', 'Scientific Name', 'Population', 'Year Listed', 'Status', 'Critical Habitat',
-                           'Recovery Plan', 'Group_B'])
-print df
-remove_blanks = df.loc[df['Invname'].isin(['']) == False]
-remove_foreign = remove_blanks[remove_blanks['Scientific Name'].isin(removed_perNMFS) == False]
-
-remove_foreign.to_csv(outlocation + os.sep + 'FilteredWebsite_NMFS_PropCan' + date + '.csv', encoding='utf-8')
-df.to_csv(outlocation + os.sep + 'FullWebsite_NMFS_PropCan' + date + '.csv', encoding='utf-8')
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time

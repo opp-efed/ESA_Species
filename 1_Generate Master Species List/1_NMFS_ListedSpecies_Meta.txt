@@ -1,6 +1,7 @@
 Metadata- 1_NMFS_ListedSpecies.py - author J.Connolly Updated 3/24/2017,3/2/2017, 6/20/2016
 
 Reference website: http://chrisalbon.com/python/beautiful_soup_scrape_table.html
+and https://johnricco.github.io/2017/04/04/python-html/
 
 VARIABLES -user input variables
 
@@ -18,27 +19,51 @@ Step 1:Download and parse out website tables
 
 ***Before generated the table check the website table for species that do not follow basic structure. 
 
-If a species only has one population the comname, sciname, and popname with be found in the first columns and supporting 
-information in the following columns.  A species with multiple population will have the comname and sciname in a merged cell 
-across all columns (ie one cell).  Each pop will be on a separate row  with support information in the following columns. 
+# Step 2: For each table parse out species information information into a dataframe from html them extract values to the
+# specific column headers we need
+
+Step 3: Filters data frame to include only the statuses of concern for section 7
+Generate second data frame that only includes the species with a status of concern under section 7
+
+Step 4: Exports both the full list from the website and filtered list to csvs
+Exports two tables, the first is a complete list of species from website table, second is only the section 7 species. 
+
+***Second table, section 7 species is the table that will be used as the input for 2_NMFS_MergeTables
+
+Updates 3/23/2018 - made updates to make script more flexiable with merged cell and removed notes below as result
+
+# NOTES FOR UPDATES- J.Connolly 3/24/2017
+# ## when new species have been added, species with multiple pops with sometimes have merge cell eg false killer whale
+# ## may have split cells with some information that applies to all pops like humpback
+# ## may have split cells without info like ring seal, loggerhead and Pacific eulachon
+# ## match the new species to exceptions already coded in here
+# ## array length error: If species lists are not the same length print out each list to see which one is shorter
+# Loop through each tables and extract species information into the standard lists set in static variables
+# List will be combined into a single data frame then exported
+# Logic for parse the tables is complicated due to merged cells. There are five columns of information but will
+# sometimes include merged cell.  A merged cell may mean the start of a new species group, a species with multiple
+# populations with varying support data.
+
+# Species info is extracted from columns and append to appropriate lists. All values are
+# .encode ('ascii', 'replace').replace('?', ' ')) to remove excess html characters
+
+# ComName, SciName, Pop Name column 1 (info is split into name_list then extracted by index position,
+# Year list column 2(info is split into list for species that had status updated since original listing.
+# Only the year of the most recent status is extracted)
+# Status column 3 (info is split into list for species that had status updated since original listing.
+# Only the status is extracted)
+# CritHab column 4 (info is split to removed excess html characters)
+# Recovery plan column 5 (info is split to removed excess html characters)
+
+Step 3: Loads species lists into a dictionary and then a data frame
+Pulls lists together into a dictionary and then loads it into a data frame.
 
 Common exceptions: failed merged across columns on the species cell when there are multiple pops eg. Pacific/smelt eulachon,
 partial merge on species cell with multiple pops eg. loggerhead, and species pops with unique sciname eg ring seal
 
-Step 2: For each table parse out species information in each table column and load it into the appropriate lists
-Each row of data is loaded into a list variable col, html is converted to text, ascii characters removed, and sp information
-and species information is loaded into the lists based on the index position of the col variable
-
-Step 3: Loads species lists into a dictionary and then a data frame
-Pulls lists together into a dictionary and then loads it into a data frame. 
-
-***If an array error is received a piece of species information is not loading into one of the list likely do to a structure 
+***If an array error is received a piece of species information is not loading into one of the list likely do to a structure
 exception on the website tables.  Printing out the length of each list can help narrow down where the problem is.
 
-Step 4: Filters data frame to include only the statuses of concern for section 7
-Generate second data frame that only includes the species with a status of concern under section 7
-
-Step 5: Exports both the full list from the website and filtered list to csvs
-Exports two tables, the first is a complete list of species from website table, second is only the section 7 species. 
-
-***Second table, section 7 species is the table that will be used as the input for 2_NMFS_MergeTables
+If a species only has one population the comname, sciname, and popname with be found in the first columns and supporting
+information in the following columns.  A species with multiple population will have the comname and sciname in a merged cell
+across all columns (ie one cell).  Each pop will be on a separate row  with support information in the following columns.
