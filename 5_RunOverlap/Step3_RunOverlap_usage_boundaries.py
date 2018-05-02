@@ -5,9 +5,8 @@ import arcpy
 from arcpy.sa import *
 
 
-# Title- Runs overlap using Zonal Histogram for all FEATURE to RASTER analyses including:
-#           1) NHD HUC12s features to aggregated layers, AA, Ag and NonAG
-#           2) NHD HUC12s features to non euc distance individual years of the CDL
+# Title- Runs overlap using Zonal Histogram for political boundaries need for usage:
+#TODO when run clean up inputs to matach the other script in this tool - to make it more streamlined
 
 # ##User input variables
 

@@ -18,13 +18,11 @@ import pandas as pd
 
 # ###############user input variables
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
-in_table = 'L:\ESA\Results\diazinon\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           '\R_SprayInterval_20180212_Region.csv'
 
-# in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#            r'\_ED_results\Tabulated_Jan2018\L48\CH\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-#            r'\CH_SprayInterval_20180201_Region.csv'
 
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+           r'\_ED_results\Tabulated\NL48\CH\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
+           r'\CH_SprayInterval_20180501_NL48Range.csv'
 
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
@@ -34,7 +32,8 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
 # look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
 
-look_up_use = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
+look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ExternalDrive\_CurrentSupportingTables\Step1_Uses_lookup_20180430.csv'
 
 # #############Static Variables
 today = datetime.datetime.today()
@@ -59,7 +58,7 @@ bins = [0, 305, 765]  # meter conversion of 1000 and 2500 foot buffer round up t
 
 use_lookup = pd.read_csv(look_up_use)
 use_lookup['FinalColHeader'].fillna('none', inplace=True)
-region_lookup = use_lookup.loc[(use_lookup['Included AA'] == 'x') & use_lookup['Region'].isin(regions)]
+region_lookup = use_lookup.loc[use_lookup['Region'].isin(regions)]
 
 list_regional_uses = list(set(region_lookup ['FinalColHeader'].values.tolist()))
 

@@ -72,13 +72,14 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
     use_nm_folder = region_c  # starting point that will be used for use_nm_folder
 
     for v in break_use:  # SEE TODO
-        if v != 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
+        if v != region and v != 'CDL':
+            # 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
             pass
         else:
             break_bool = True
         if break_bool:
-            if v == region_c or v == '2S'or v == '55N' or v == 'Area' or v == '4N'or v == '20N' or v == 'Area':
-                continue
+            if v == region_c:
+                pass
             else:
                 use_nm_folder = use_nm_folder + "_" + v
 

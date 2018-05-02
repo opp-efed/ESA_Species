@@ -7,26 +7,27 @@ import arcpy
 # Title - Re-projects union raster into projection by region
 # in and out location
 in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ExternalDrive\_CurrentSupportingTables\Tables\UseLayers_20180103.csv'
+           r'\_ExternalDrive\_CurrentSupportingTables\UseLayer_Tables\UseLayers_20180103.csv'
 
 midGDB = r'L:\Workspace\UseSites\scratch.gdb'
 
 # projection folder - check all values in Final Projection columns have a corresponding file with the same name
-prjFolder = r"L:\projections\FinalBE"
+prjFolder = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\projections\FinalBE'
 
 # snap raster must be in desired projection with the desired cell size
 #run_regions = ['CONUS']
-#run_regions = ['AK', ]
+# run_regions = ['AK', ]
 run_regions = ['HI','AS', 'CNMI', 'GU',  'PR', 'VI']
+
 SnapRaster_Dict = {
-    'CONUS': r'P:\GIS_Data\landcover\Finals\171226\OnOff_Field_Use\2016_Cultivated_Layer.gdb\cultmask_2016',
-    'HI': r'P:\GIS_Data\landcover\Finals\171226\NonCONUS_AG_151109.gdb\HI_Ag',
-    'AK': r'P:\GIS_Data\landcover\Finals\171226\NonCONUS_AG_151109.gdb\AK_Ag',
-    'AS': r'P:\GIS_Data\landcover\Finals\171226\NonCONUS_AG_151109.gdb\AS_Ag',
-    'CNMI': r'P:\GIS_Data\landcover\Finals\171226\NonCONUS_AG_151109.gdb\CNMI_Ag',
-    'GU': r'P:\GIS_Data\landcover\Finals\171226\Chemicals\NL48\Resample\AA\carbaryl_GU_171227.gdb\GU_Ag_30',
-    'PR': r'P:\GIS_Data\landcover\Finals\171226\NonCONUS_AG_151109.gdb\PR_Ag',
-    'VI': r'P:\GIS_Data\landcover\Finals\171226\Chemicals\NL48\Resample\AA\chlorpyrifos_VI_171227.gdb\VI_Ag_30'}
+    'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2016',
+    'HI': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_HI_171227.gdb\HI_Ag',
+    'AK': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_AK_171227.gdb\AK_Ag',
+    'AS': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_AS_171227.gdb\AS_Ag',
+    'CNMI': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_CNMI_171227.gdb\CNMI_Ag',
+    'GU': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\Resample\AA\methomyl_GU_171227.gdb\GU_Ag_30',
+    'PR': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_PR_171227.gdb\PR_Ag',
+    'VI': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\Resample\AA\methomyl_VI_171227.gdb\VI_Ag_30'}
 
 
 def create_gdb(out_folder, out_name, outpath):  # Create a new GDB

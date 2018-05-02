@@ -30,7 +30,7 @@ Exports two tables, the first is a complete list of species from website table, 
 
 ***Second table, section 7 species is the table that will be used as the input for 2_NMFS_MergeTables
 
-Updates 3/23/2018 - made updates to make script more flexiable with merged cell and removed notes below as result
+Updates 3/23/2018 - made updates to make script more flexible with merged cell and removed notes below as result
 
 # NOTES FOR UPDATES- J.Connolly 3/24/2017
 # ## when new species have been added, species with multiple pops with sometimes have merge cell eg false killer whale

@@ -8,37 +8,52 @@ from arcpy.sa import *
 # Title- Runs overlap using Zonal Histogram for all RASTER to RASTER analyses including:
 #           1) Species zone rasters to aggregated layers, AA, Ag and NonAG
 #           2) Species zone raster to non euc distance individual years of the CDL
-#           3) Pilot GAP species to aggregated layers and non euc distance individual years -
-#                TODO may be able to 3) Pilot GAP to do a last minute update to an individual species range
+#           3) Species zone raster to on/off field
+#           Archived
+#               3) Pilot GAP species to aggregated layers and non euc distance individual years -
+#           TODO Set up a why to update single species
 
-# Static variables are updated once per update; user input variables update each  run
+# Assumptions
+#   1) folder with species composite must start with region abb
+#   2) temp file name should not use the same temp file name when running multiple instances at the same time
+#   3) Snap raster and symbology dictionaries have been updated for current use layers
 
 # #### User input variables
-# Species files and region
-in_location_species = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection\VI_WGS_1984_UTM_Zone_20N'
-temp_file = "temp_table2"
-region = "VI"
 
-# #### Use layer location
-# Running aggregate layers
-# use_location_base = 'L:\Workspace\UseSites\ByProject'
-# use_location = use_location_base + os.sep + str(region) + "_UseLayer.gdb"
-use_location = 'L:\Workspace\UseSites\ByProjection\VI_UseLayers.gdb'
+# Update once then remains static to set file structure
+use_location_base = 'L:\Workspace\UseSites\ByProjection'
+out_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ED_results\Results'
 
-# Running individual years
-# use_location = r"L:\Workspace\UseSites\CDL_Reclass\161031\CDL_Reclass_1015_161031.gdb"
 
-arcpy.env.workspace = use_location
-# print use_location
+# Update for each run - species base only updaed when switching from range to CH
+in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection'
+in_location_species_folder = 'PR_Albers_Conical_Equal_Area'
+# Range
 
-# Manual sub-set layers to be run; user is able to split out layers to complete run faster by splitting run into several
-# instances
-use_list = (arcpy.ListRasters())  # run all layers in use location
+# CONUS_Albers_Conical_Equal_Area
+#CH
+# CONUS_Albers_Conical_Equal_Area
+temp_file = "temp_table36"  # Should not use the same temp file name when running multiple instances at the same time
+run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
+
+# Manually sub-set layers to be run: complete region run faster by splitting run into several instances
+
+use_list = []
+
 
 
 
 # ################Static variables
-out_results = r'L:\ESA\Results\NL48'
+arcpy.CheckOutExtension("Spatial")
+in_location_species = in_location_species_base +os.sep+in_location_species_folder
+region = os.path.basename(in_location_species).split("_")[0]  # folder with species composite must start with region abb
+use_location = use_location_base + os.sep + str(region) + "_" + run_group + ".gdb"
+arcpy.env.workspace = use_location
+if len(use_list) == 0:
+    use_list = (arcpy.ListRasters())  # run all layers in use location
+print use_list
+count_use = len(use_list)
 find_file_type = in_location_species.split(os.sep)
 
 if 'Range' in find_file_type:
@@ -57,39 +72,38 @@ else:
         out_results = out_results + os.sep + 'NL48' + os.sep + 'CriticalHabitat'
 
 
-# Each region is a list pos 0 euc distance, pos 1 on/off, pos 3 Yearly (CONUS only
+# Each region is a list pos 0 euc distance, pos 1 on/off, pos 2 Yearly (CONUS only)
 symbology_dict = {'CONUS': [
-    'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc.lyr',
-    r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_on_off.lyr'
-    r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\Albers_Conical_Equal_Area_CONUS_CDL_2010_rec.lyr',
-    ],
-    'HI': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\NAD_1983_UTM_Zone__4N_HI_Ag_euc.lyr',
-    'AK': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
-    'AS': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_UTM_Zone__2S_AS_Ag_euc.lyr',
-    'CNMI': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
-    'GU': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
-    'PR': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers'
-          '\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc.lyr',
-    'VI': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr'}
+    'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr',
+    r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_OnOff_X7072_171227.lyr',
+    r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_2010_rec.lyr'],
+    'HI': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_HI_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_CCAP_HI_6.lyr'],
+    'AK': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_NLCD_2011_81.lyr'],
+    'AS': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_AS_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_CCAP_AS_6.lyr'],
+    'CNMI': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
+             r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_CNMI_6.lyr'],
+    'GU': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_GU_6_30.lyr'],
+    'PR': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_NLCD_81.lyr'],
+    'VI': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_CCAP_VI_6_30.lyr']}
 
-# TODO update region snap to binary Ag layers
-snap_raster_dict = {'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.img',
-                    'HI': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\HI_UseLayer.gdb\NAD_1983_UTM_Zone__4N_HI_Ag_euc',
-                    'AK': 'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\AK_UseLayer.gdb\WGS_1984_Albers_AK_Ag_euc',
-                    'AS': 'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\AS_UseLayer.gdb\WGS_1984_UTM_Zone__2S_AS_Ag_euc',
-                    'CNMI': 'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\CNMI_UseLayer.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc',
-                    'GU': 'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\GU_UseLayer.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_euc',
-                    'PR': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\PR_UseLayer.gdb'
-                          r'\NAD_1983_StatePlane_Puerto_Rico_Virgin_Isl_FIPS_5200_PR_Ag_euc',
-                    'VI': r'L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\VI_UseLayer.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_euc'}
+snap_raster_dict = {'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb'
+                             r'\Albers_Conical_Equal_Area_cultmask_2016',
+                    'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+                    'AK': 'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+                    'AS': 'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+                    'CNMI': 'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+                    'GU': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+                    'PR': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+                    'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 current_use = 1
-arcpy.env.workspace = use_location
-list_raster_use = (arcpy.ListRasters())
 
-list_raster_use = [raster for raster in list_raster_use if raster in use_list]
-count_use = len(list_raster_use)
-print list_raster_use
 
 
 # ################Functions
@@ -119,13 +133,14 @@ def zonal_hist(in_zone, in_value_raster, set_raster_symbology, region_c, use_nam
     use_nm_folder = region_c  # starting point that will be used for use_nm_folder
 
     for v in break_use:  # SEE TODO
-        if v != 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
+        if v != region and  v != 'CDL':
+            #'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
             pass
         else:
             break_bool = True
         if break_bool:
-            if v == region_c or v == '2S'or v == '55N' or v == 'Area' or v == '4N'or v == '20N' or v == 'Area':
-                continue
+            if v == region_c:
+                pass
             else:
                 use_nm_folder = use_nm_folder + "_" + v
 
@@ -146,7 +161,7 @@ def zonal_hist(in_zone, in_value_raster, set_raster_symbology, region_c, use_nam
 
     elif not os.path.exists(out_path_final + os.sep + csv):
         print ("Running Statistics...for species group {0} and raster {1}".format(sp_group, use_name))
-        arcpy.CheckOutExtension("Spatial")
+        # arcpy.CheckOutExtension("Spatial")
 
         arcpy.MakeRasterLayer_management(Raster(in_zone), "zone")
         arcpy.MakeRasterLayer_management(Raster(in_value_raster), "rd_lyr")
@@ -171,6 +186,7 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 create_directory(os.path.dirname(out_results))
+print out_results
 create_directory(out_results)
 arcpy.env.workspace = in_location_species
 count_sp = len(arcpy.ListRasters())
@@ -183,36 +199,35 @@ for raster_in in list_raster:
     print raster_in
     raster_file = Raster(in_sp)
     print "\nWorking on uses for {0} species file {1} of {2}".format(raster_in, count, count_sp)
-    for use_nm in list_raster_use:
+    for use_nm in use_list:
         out_folder = out_results
         if region != 'CONUS':
             snap_raster = snap_raster_dict[region]
-            if os.path.dirname(use_location).endswith('UseLayers'):
+            if use_location.endswith('UseLayers.gdb'):
                 symbologyLayer = symbology_dict[region][0]
                 out_folder = out_folder + os.sep + 'Agg_Layers'
                 create_directory(out_folder)
-            elif os.path.dirname(use_location).endswith('OnOffField'):
+            elif use_location.endswith('OnOffField.gdb'):
                 symbologyLayer = symbology_dict[region][1]
                 out_folder = out_folder + os.sep + 'OnOffField'
                 create_directory(out_folder)
         else:
             snap_raster = snap_raster_dict[region]
-            if os.path.dirname(use_location).endswith('UseLayers'):
+            if use_location.endswith('UseLayers.gdb'):
                 symbologyLayer = symbology_dict[region][0]
                 out_folder = out_folder + os.sep + 'Agg_Layers'
                 create_directory(out_folder)
-            elif os.path.dirname(use_location).endswith('OnOffField'):
+            elif use_location.endswith('OnOffField.gdb'):
                 symbologyLayer = symbology_dict[region][1]
                 out_folder = out_folder + os.sep + 'OnOffField'
                 create_directory(out_folder)
-            elif os.path.dirname(use_location).endswith('Yearly'):
+            elif use_location.endswith('Yearly.gdb'):
                 symbologyLayer = symbology_dict[region][2]
                 out_folder = out_folder + os.sep + 'Indiv_Year_raw'
                 create_directory(out_folder)
-
         use_path = use_location + os.sep + use_nm
         print 'Starting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
-        # try:
+        # try:  # uncomment try/expect loop if runs need to be done quickly: be sure to check if something fail and why
         zonal_hist(in_sp, use_path, symbologyLayer, region, use_nm, temp_file, out_folder, snap_raster)
         # except Exception as error:
         #     print(error.args[0])

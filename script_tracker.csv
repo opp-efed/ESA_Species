@@ -1,0 +1,506 @@
+,path,folder,filename
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,1_FWS_Xquery.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,1_NMFS_CanProposed.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,1_NMFS_ListedSpecies.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,2_FWS_FilterTessPandas.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,2_NMFS_MergeTables.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,3_Merge_FWS_NMFS.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,4_CheckForChanged_MergedFWS_NMFS.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,5_addColumns_fromOldMaster.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,6_FWS_CheckforCH.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,7_AddGIS_FileName.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,8_ ArchivedSpatialFiles_Delisted_Removed.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List,1_Generate Master Species List,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List\Archived,Archived,Step8_archiveFiles_remove.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List\Archived,Archived,z1_NMFS_WebTableParse.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List\Archived,Archived,z1_NMFS_WebTableParse_listed.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List\Archived,Archived,z2_NMFS_WebTablePaster_cleanup.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List\Archived,Archived,z3_FWS_CheckForChanges.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\1_Generate Master Species List\Archived,Archived,z4_AddCols_FromOtherTable.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step1_ListFilesNames.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step2a_QA_CopiedFC.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step2_CopyToGeodatabase.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step3_StndFilesNames.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step4_popfilename.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step5b_Dissolve_aquatics.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step5_Dissolve.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step6b_QA_Populate.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step6_PopulateDissolved.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,Step7_ProjectSTD_STDGeo.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange,2_StandardizeNewRange,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange\Archived,Archived,A_ExportSingleFC_fromCHComposite.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange\Archived,Archived,JP_files_Step6_ReProjectSTDFiles.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange\Archived,Archived,StepC_Simple_polygon.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\2_StandardizeNewRange\Archived,Archived,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,functions.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,GeneralizeFiles.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step1_MoveCH_Files.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step1_MoveFiles_toSpGDB.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step2_archiveFiles_remove.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step3.0_CheckDuplicates.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step3.1_archiveFiles_updated.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step3.2_BufferLine_point.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step3.3_MergeDup.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step3.4_CheckForMissing.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step3.4_Check_Missing_CH.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step4.1_GenerateHUC12file_aquatics.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step4_CheckMultiRow.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step5_Dissolve_SingleGDB.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step6_UpdateAllAtt_NAD83Files_pandas.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step7_RepairGeo.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,Step8_Check_projection_features.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,StepA_HUC12File_fromindiv_file.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries,3_UpdateSpatialLibraries,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step2_CheckForMissing.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step2_Check_Missing_CH.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step4.0_CheckDuplicates.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step4.1a_BufferLine.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step4.1b_MergeDup.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step4.1_HUC12File_fromindiv_file.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step4.2_archiveFiles_updated.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,Step5_CheckMultiRow.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,StepB_RepairGeo.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,zStep1_moveTopoSimple.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,zStep1_TopoMove.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,zStep2_CheckForMissing_Topo_simple.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,zStep2_CheckTopo.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,zStep3_archiveFiles_remove.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived,Archived,zStepB_RepairGeo.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step1_GenerateRegionalFiles.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step2_ExtractPartialFiles.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step3_ProjectRegionalFiles.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step4_DissolveRegionalFiles.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step5_CheckForMissingGIS.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step6_CreateComposite.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,Step8_ProjectWebMercator.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,StepA_AddRegionATT.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\3_UpdateSpatialLibraries\Archived\GenerateRegionalFiles,GenerateRegionalFiles,StepB_UpdateAllAtt_CompFile.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,Step1_CreateComps_SpGroups.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,Step9_AssignRegions.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepA_Spgroup_CreateComps.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepB_CheckForMissing.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepD_Intersect_Regions.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepE_Reproject_WebMercator.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepF_AcresTableByRegion.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepG_L48_NL48_Both.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepH_Convert_Acres_Table.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap,4a_GenerateSupportingTables_forOverlap,StepH_L48_NL48_Both.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,StepD_1_Reproject_WebMercator.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,StepD_2_CalcAcres_Composites.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,StepE_Intersect_Regions.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,StepG_MergeCompFiles_bySpGroup.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,StepI_Convert_Acres_Table.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,zStep9_AssignRegions.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,zStepE_2_CalcAcres_Composites.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4a_GenerateSupportingTables_forOverlap\Archived,Archived,zStepG_MergeCompFiles_bySpGroup.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,functions.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step1a_UpdateAtt_Comps.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step2a_listSpecies_Union.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step2_Union.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step3_ClipUnion_toLand.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step4_Polygon_toRaster.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step5_Projected_Raster_SingleGDB_SpComp.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step5_Projected_Raster_SingleGDB_SpComp_NHD.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step6_RasterToOtherFormat.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,Step7_ Acres_based_onPixel.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species,4b_GenerateSpatialFiles_forOverlap_Species,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step10_Calc_Overlap_Pandas.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step11_Collapse_Groups.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step12_CompareTablebyRow.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step2b_AddZoneId_FinalUnion.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step4b_CleanSpatialError_Union.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step6b_ProjectRaster_singleProjection_GAP.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step6_Projected_Raster_SingleGDB_SpComp.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step7_RasterToOtherFormat.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step8_Export_result_toDBF_thenCSV.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step9a_CoOccurTable_Unions_Pandas_region_byzone.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step9a_CoOccurTable_Unions_Pandas_region_GAPPilot.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step9b_CoOccurTable_Unions_Pandas_region_byspecies.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step9c_CoOccurTable_Unions_Pandas_region_Master.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step9d.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,Step9e_BETables.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,StepL_Overlapping_SpeciesRanges_fromCombine.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,StepL_Overlapping_SpeciesRanges_Zonal.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep1_Spgroup_CreateComps.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep2b_AddZoneId_FinalUnion.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep4b_CleanSpatialError_Union.py
+20,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep6b_Projected_Feature_SingleGDB.py
+21,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep6b_ProjectRaster_singleProjection_GAP.py
+22,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep6_Projected_Raster_SingleGDB_UseSites.py
+23,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep7A_1_RasterZonalHist_simple.py
+24,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep7a_RasterHisZonal.py
+25,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,zStep9_CoOccurTable_Unions_Pandas.py
+26,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived,Archived,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,1_CalcAcres_Composites.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,1_Topo_Sum_Files.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,1_Vector_Topo_Sum_Files.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,2_AddAcres_FullRange.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,2_AddAcres_jointable.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,2_Topo_AddAcres_FullRange.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,3_AddFullAcres_OverlapTables.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,3_AddFullAcres_OverlapTables_fromtable.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,4a_ClearTable.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,4_Topo_UpdateCo_Occur.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,4_UpdateCo_Occur.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,4_Vector_UpdateCo_Occur.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,5_Collapse_Groups.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,AddAcres_jointable.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,att_table_to_dbf.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CalcAcres_Composites.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Catchment_co.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Catchment_extract.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CH_CoOccur_Vector.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,ClipByRasterExtent.py
+20,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Clip_FailedZonal.py
+21,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Clip_failedZonal_loop.py
+22,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CoOccure_Vector_loop_NonLower.py
+23,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CoOccurVector.py
+24,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CoOccur_Vector_loop.py
+25,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CreateFiles_forMBZonal.py
+26,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,CreateFiles_forMBZonal_sinlgeCompfile.py
+27,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,functions.py
+28,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,L48CreateFiles_forMBZonal.py
+29,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,L48_CreateFiles_forMBZonal.py
+30,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Topo_CoOccur_Vector_loop.py
+31,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,UpdateCo_Occur.py
+32,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,ZonalFromLab.py
+33,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Zonal_LoopRaster.py
+34,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,Zonal_singleCoOccur.py
+35,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4b_GenerateSpatialFiles_forOverlap_Species\Archived\Co_Occur,Co_Occur,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses,4c_StandardizeUseLayers_forOverlap_Uses,Step1_ListUses.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses,4c_StandardizeUseLayers_forOverlap_Uses,Step2_Projected_Structure_Raster.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses,4c_StandardizeUseLayers_forOverlap_Uses,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses\Archive,Archive,Combine.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses\Archive,Archive,Step5_check_projection_use.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses\Archive,Archive,Step6_Projected_Raster_SingleGDB.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\4c_StandardizeUseLayers_forOverlap_Uses\Archive,Archive,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage,5b Usage,1_CreateOverlapTables_FIPS_Step2.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage,5b Usage,1_CreateOverlapTables_FIPS_Step3.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage,5b Usage,A_Intersect_Cnty.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage,5b Usage,B_Select_L48.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage\Archived,Archived,z1_Spgroup_byFIPS.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage\Archived,Archived,z1_Spgroup_byFIPS_intersect.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5b Usage\Archived,Archived,z2_SumToSpe_Agg.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,Step1_species_cnty_use_zonalhis.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,Step1_Species_Use_ZonalHis.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,Step2_HUC12_Use_ZonalHis.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,Step2_Species_Use_ZonalHis_NHD.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,Step3_Species_VectorUse _ZonalHis.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,Step4_RunOverlap_usage_boundaries.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap,5_RunOverlap,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\Archived,Archived,Step1_Species_Use_ZonalHis.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\Archived,Archived,zStep1_species_cnty_use_zonalhis.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\Archived,Archived,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,Step1_RasterHisZonal_overlappingUse.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,Step2a_Overlapping_use_matrix.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,Step2b_Overlapping_use_matrix_Yearly.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,Step3a_PercentUse_Overlaping.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,Step3b_PercentUse_Overlaping_YEarly.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,StepA_RasterHisZonal_overlappingSpecies.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,StepB_Overlapping_speciesRanges_Zonal_melt.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\5_RunOverlap\AreaRedundantLocations,AreaRedundantLocations,StepC_SpeciesOverlaping_Percent.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers,6a_Tabulate_SpeciesAggLayers,1_TabulateUses.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers,6a_Tabulate_SpeciesAggLayers,2_CreateOverlapTables.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers,6a_Tabulate_SpeciesAggLayers,2_New_ApplyUsage_L48.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers,6a_Tabulate_SpeciesAggLayers,3_Break_Into_Distance_Intervals.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers,6a_Tabulate_SpeciesAggLayers,4_SummarizeBE.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers,6a_Tabulate_SpeciesAggLayers,5_CollapseWoETables.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,1_transpose_terrOverlap.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,2_sumBySpecies.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,3_percentOverlap.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,4_merge_byuse.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,5_CollapseWoETables.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,A_CreateIntervalTable.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,B_CombineTables_AggLayers.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,C_CleanColumnHeader_SprayIntervalTables.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,E_CombineL48_NL48_BE.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,z2_New_ApplyUsage_L48.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,z3b_CreateOverlapTables_Usage.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,z3_Usage_intervals.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,z5_CollapseWoETables.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,z6_CollaspseSprayDriftTables.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,zStep2_Step1Summary.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6a_Tabulate_SpeciesAggLayers\Archived,Archived,zStep7_NL48_SummarizeBE.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,1a_APPLYUSEage.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,A_CalcPrjAcres_NHDFiles.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,B_Acres_HUC12.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,Step1_CreateOverlapTables.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,Step2_Break_Into_Distance_Intervals.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,Step3_SummarizeBE.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,Step_B1_GenerateHUC12_Crosswalk.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,Step_B2_ManualUpdate_HUC12Crosswalk.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers,6b_Tabulate_HUC12_AggLayers,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,2_transpose_OverlapHUC12_nonAg.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,2_transpose_OverlapHUC12_YearlyCDL.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,3_Merge_HUC2_overlapyear_AA_w_AggreAg.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,3_Merge_HUC2_overlapyear_yearlyAgwNonAg.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,4_summary_HUC12.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,5_Collapase.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,6_FilterAquOnly.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,functions.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,StepA_ExtractHUC12_Catchment.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\Archived,Archived,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,CheckStreamCross_compareAquPostPrices.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,CrossHUC.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,functions.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,StreamCrossCheckHUC.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,Sum_StreamMiles.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,Uniqu_Streams.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6b_Tabulate_HUC12_AggLayers\RelatedOneOff\StreamCrosswalk_other,StreamCrosswalk_other,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6c_GAP_PilotSpecies,6c_GAP_PilotSpecies,1_CreateOverlapTables.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6c_GAP_PilotSpecies,6c_GAP_PilotSpecies,3_Break_Into_Distance_Intervals.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6c_GAP_PilotSpecies,6c_GAP_PilotSpecies,4_SummarizeBE.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6c_GAP_PilotSpecies\Archived,Archived,2b_SumbySpecies_nonag.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6c_GAP_PilotSpecies\Archived,Archived,3_percentOverlap_GAP.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6c_GAP_PilotSpecies\Archived,Archived,Step9a_CoOccurTable_Unions_Pandas_region_GAPPilot_yearly.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL,6d_Tabulate_yearly_CDL,1_CreateOverlapTables_SpeZone.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL,6d_Tabulate_yearly_CDL,2_CreateOverlapTables_HUC12.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL,6d_Tabulate_yearly_CDL,3_CreateOverlapTables_GAPPilot.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL,6d_Tabulate_yearly_CDL,A_New_ApplyUsage_L48.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,1_transpose_nonAg.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,1_transpose_terrOverlap.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,2_sumBySpecies.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,3_percentOverlap.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,4_b_CombineAg_nonAg.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,4_merge_byuse.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,4_merge_isthis_needed.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,4_merge_nonag.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,5_collapse_ag.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,5_merge.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,6_filter_collapsed.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,A_Generate_SprayDrift_FromMergeByUseFolder.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,F_CombineTables_NL48andAggLayers_sprayDrift.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,F_CombineTables_yearly_sprayDrift.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,z0_SP_zonal_YearlyCDL_.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6d_Tabulate_yearly_CDL\Archived,Archived,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,A_CollapseWoETables.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,B_ReformatBEAD_Tables.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,B_ReformatBEAD_Tables_ag.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,Step1a_Tables_overlap.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,Step1b_DriftInvervals.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,Step2a_Tables_overlap.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,Step2b_DriftInvervals.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage,6e_TabulateUsage,Step3c_Mean_STE_Yearly.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage\Archived,Archived,zStep2b_applyusage_Step_2.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage\Archived,Archived,zStep3a_ApplyFactor.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage\Archived,Archived,zStep3b_Apply Usage_Step3.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,A_CollapseWoETables.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,B_ReformatBEAD_Tables.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,B_ReformatBEAD_Tables_ag.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,Step1a_Tables_overlap.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,Step1b_DriftInvervals.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,Step2a_Tables_overlap.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,Step2b_DriftInvervals.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,Step3c_Mean_STE_Yearly.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,zStep2b_applyusage_Step_2.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,zStep3a_ApplyFactor.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6e_TabulateUsage_Diazinon,6e_TabulateUsage_Diazinon,zStep3b_Apply Usage_Step3.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2,6f_TabulateUseage_MinMax_Step2,Step1_CreateUsageOverlapTables_PolBoundaries.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2,6f_TabulateUseage_MinMax_Step2,Step1_CreateUsageOverlapTables_Species.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2,6f_TabulateUseage_MinMax_Step2,Step2_AdjustSpeciesbyState.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2,6f_TabulateUseage_MinMax_Step2,Step3_Sum_Species_Drift_intervals.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2,6f_TabulateUseage_MinMax_Step2,Step4_SummarizeBE.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2,6f_TabulateUseage_MinMax_Step2,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\6f_TabulateUseage_MinMax_Step2\Archived,Archived,zStep2_AdjustState_PCT.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,1_CH_CollapseWoETables.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,1_R_CollapseWoETables.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Carbaryl_CheckMismatch_ED_R_CH.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Carbaryl_CH_Table.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Carbaryl_R_Table.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Carbaryl_SummaryCalls.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,CH_MAL.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Diaz_CheckMismatch_ED_R_CH.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Diaz_CH_Table.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Diaz_R_Table.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,MAL_CPY_CheckMismatch_ED_R_CH.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,MAL_CPY_CH_Tables.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,MAL_CPY_CH_WideAreaOnly_Table.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,MAL_CPY_R_Table.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,MAL_CPY_R_WideAreaOnly_Table.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Methomyl_CheckMismatch_ED_R_CH.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Methomyl_CH_Table.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Methomyl_R_Table.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Methomyl_SummaryCalls.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,R_MAL_Table.py
+20,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Update_Methomyl_FlybaitTable.py
+21,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables,7_FinalBE_Tables,Update_Methomyl_FlybaitTable_NLAA_LAA.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,1_CH_CollapseWoETables.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,1_R_CollapseWoETables.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,CH_Diazinon_Table.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,CH_MAL_CPY_Tables.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,CH_WideAreaOnly_Table.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,Diazinon_CheckMismatch_ED_R_CH.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,Diazinon_SummaryCalls.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,MAL_CPY_CheckMismatch_ED_R_CH.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,R_Diazinon_Table.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,R_MAL_CPY_Table.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\7_FinalBE_Tables\FinalBE_UsedArchived,FinalBE_UsedArchived,R_WideAreaOnly_Table.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,StepC_CreateChangeArray.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_1_UpdateBinTable_RangeUpdate.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_2_UpdateBinTable_BinAssignmentUpdate.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_3_ReCode Bin Table.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_4_Transform_binTable_long.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_5_A_B_split.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_6_UpdateSpeciesInfo_long.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_7_long_to_wide.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_A1_splitHUC2_A_B.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins,A_Bins,Step_A2_splitHUC2_A_B_Summarize.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\Archived,Archived,zStep_8_widetolong_unfilters.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\RelatedOneOff_Requests,RelatedOneOff_Requests,DownStream_SpeAssignment.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\RelatedOneOff_Requests,RelatedOneOff_Requests,Step_C_Collaspse_Group.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\RelatedOneOff_Requests,RelatedOneOff_Requests,Step_D_SpeciesByHUC2.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\WOE_Groups,WOE_Groups,addcount.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\WOE_Groups,WOE_Groups,UpdateAssignment.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\WOE_Groups,WOE_Groups,WoEGroup_oneRowPerSpecies.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\A_Bins\WOE_Groups,WOE_Groups,WOE_Spe_GroupAssignments.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\B_StreamCrossDD_otherNHD,B_StreamCrossDD_otherNHD,A_Species_in_Huc12.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\B_StreamCrossDD_otherNHD,B_StreamCrossDD_otherNHD,functions.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\B_StreamCrossDD_otherNHD,B_StreamCrossDD_otherNHD,Step1_StreamCrossWalk.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\B_StreamCrossDD_otherNHD,B_StreamCrossDD_otherNHD,Step2_ExportStreamCSV.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\B_StreamCrossDD_otherNHD,B_StreamCrossDD_otherNHD,Step3_TotalSum_StreamMiles.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\B_StreamCrossDD_otherNHD,B_StreamCrossDD_otherNHD,__init__.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,HabQuality_SLemail_20170302.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,Step1_Clip_Raster.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,Step2_TimMcNest_RasterHisZonal_singleuse.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,Step3A_Summarize_Overlap_NonAg.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,Step3B_Summarize_Overlap_yearlyCDL.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,Step4_Percent_Overlap.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\C_TimMcNest,C_TimMcNest,Step5_Merge_Ag_NonAg_bySpecies.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\DER_Project,DER_Project,DER_Sleuthin.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\DER_Project,DER_Project,Guidance_Move.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\DER_Project,DER_Project,Guidance_Sleuthin.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\DER_Project,DER_Project,PDF_read.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\FooBar,FooBar,cjecl.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\FooBar,FooBar,gears.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\FooBar,FooBar,LAMBS.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\FooBar,FooBar,prisoners.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,1_att_csv.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,4_Projected_ReprojectSingleGDB.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,7_Projected_Reproject.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,8_NL48_intersect_USAIslands.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,BPPD_NASS_CDL_County.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,buildAttributeTable_raster.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Calu_prob.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Compare_Counties_toRange.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,EuclDist.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,GetList_filenames.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,mean_cdl.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Overlap_County_Crop_GAP.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Overlap_SP_Crop_GAP.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Overlap_UnionSp_Crop_GAP.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Overlp_Sp_Crop_State.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,raster_to_polygon.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,R_BPPD_CollapseCorn_bySpecies.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,scratch.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,SpeciesState_assignment.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\OtherESA,OtherESA,Step7_CheckForMissingGIS.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\SAM,SAM,mukey.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\SAM,SAM,QA_Combos.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\SAM,SAM,QA_Inputfiles.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\SAM,SAM,QA_Inputfiles_summary_only.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,functions.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step10_Calc_Overlap_Pandas.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step11_Collapse_Groups.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step12_CompareTablebyRow.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step1_Spgroup_CreateComps.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step2_Union.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step3_ClipUnion_toLand.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step4b_CleanSpatialError_Union.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step4_Polygon_toRaster.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step5_check_projection_use.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step6b_Projected_Feature_SingleGDB.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step6_Projected_Raster_SingleGDB.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step7a_RasterHisZonal.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step7b_CoOccur_Vector_loop.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step8_Export_result_toDBF_thenCSV.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,Step9_CoOccurTable_Unions_Pandas.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,StepA_Intersect_Regions.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,StepB_Reproject_WebMercator.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,StepC_CalcAcres_Composites.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,StepD_AcresTableByRegion.py
+20,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\Co_occur_Rasters,Co_occur_Rasters,StepE_Convert_Acres_Table.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,A_ExportSingleFC_fromCHComposite.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step1_ListFilesNames.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step2a_QA_CopiedFC.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step2_CopyToGeodatabase.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step3_StndFilesNames.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step4_popfilename.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step5b_Dissolve_aquatics.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step5_Dissolve.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step6b_QA_Populate.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step6_PopulateDissolved.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,Step7_ProjectSTD_STDGeo.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,StepB_RepairGeo.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\FinalSpeciesProcessing,FinalSpeciesProcessing,StepC_Simple_polygon.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,functions.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step1_MoveCH_Files.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step1_MoveFiles_toSpGDB.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step2_CheckForMissing.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step2_Check_Missing_CH.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step3_archiveFiles_remove.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step4.0_CheckDuplicates.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step4.1a_BufferLine.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step4.1b_MergeDup.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step4.2_archiveFiles_updated.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step5_CheckMultiRow.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step5_Dissolve_SingleGDB.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step6_UpdateAllAtt_NAD83Files_pandas.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step7_RepairGeo.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step8_Check_projection_features.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\PrepFiles_CoOccur,PrepFiles_CoOccur,Step9_AssignRegions.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\StreamCrosswalk,StreamCrosswalk,functions.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\StreamCrosswalk,StreamCrosswalk,Step1_StreamCrossWalk.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\StreamCrosswalk,StreamCrosswalk,Step2_ExportStreamCSV.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\StreamCrosswalk,StreamCrosswalk,Step3_TotalSum_StreamMiles.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\Scripts for Steve\StreamCrosswalk,StreamCrosswalk,StepA_ExtractHUC12_Catchment.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,1_MergeGroupWebMercator.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,2_CheckForMissing_R.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,2_Check_Missing_CH.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,3_UpdateAtt_Comps.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,4_RepairGeo.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,5_ExportToSHP.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,6_Reproject_WebMercator.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,8_Generalize.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,9_ZipSHPfor upload.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,add_updatelayer.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,CreateCompCatchments.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,create_shp_extent.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,ExtractCatchments.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,functions.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,kml.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,makeLYR.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,ProjectWebMercator.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,Project_WGS1984_Albers.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,Project_WGS1984_Albers_Topo.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,Reproject_WebMercator.py
+20,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\WebApp,WebApp,update_add_kml.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,zStep10_AddRegionATT.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,zStep6_ReProjectSTDFiles.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,zStep6_UpdateAllAtt_NAD83Files.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,zStep7_CheckNAD83_projection.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,zStep7_GeoReProjectSingleGDB.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,ZStep8_CreateComposite.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts,z_archivedESAScripts,zStep8_updateComposite.py
+0,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,AddClassInfo_Raster.py
+1,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,AddGAPClasses_toTables.py
+2,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,att_table_to_dbf.py
+3,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,Catchment_Raster.py
+4,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,cleanup_FWSreport.py
+5,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,ClipByFeatures.py
+6,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,Clip_Raster.py
+7,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,CompareOverlap.py
+8,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,CountiesRaster.py
+9,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,csv_addGAP.py
+10,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,dbf_to_csv.py
+11,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,Expand_nonLoop.py
+12,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,ExportDBF.py
+13,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,ExtractCatchments.py
+14,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,functions.py
+15,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,Polygon_toRaster.py
+16,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,RasterHisZonal.py
+17,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,Step9a_CoOccurTable_Unions_Pandas_region_byzone.py
+18,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,SumOverlap.py
+19,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,Union.py
+20,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,VectorHisZonal.py
+21,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,VectorZonal_PUR.py
+22,C:\Users\JConno02\Documents\GitHub\ESA_Scripts_Fall2016\z_archivedESAScripts\Step3,Step3,ZipTables.py

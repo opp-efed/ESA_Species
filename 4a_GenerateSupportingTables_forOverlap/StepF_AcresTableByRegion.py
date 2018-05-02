@@ -92,8 +92,10 @@ for gdb in inGDB_list:
                 pass
 
 # selects just the acres headers and sums them to a new column titled total acres on land
-#TODO Add in a sum of just the NL48 values to the header of TotalAcresNL48
+
+nl48_col = [v for v in acres_headers if not v.startswith('CONUS')]
 df_Acres['TotalAcresOnLand'] = df_Acres[acres_headers].sum(axis=1)
+df_Acres['TotalAcresNL48'] = df_Acres[nl48_col].sum(axis=1)
 
 df_Acres.to_csv(out_csv)
 

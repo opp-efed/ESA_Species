@@ -5,8 +5,8 @@ import datetime
 import arcpy
 
 # Title - Check projection of all use to make sure all projections accounted for in steps 7
-InGDB = r'P:\GIS_Data\landcover\Finals\171226\Chemicals\NL48\Resample'
-NameCSV = 'List_NL48_Resample_AA_projection'
+InGDB = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48'
+NameCSV = 'NL48_Methomyl_layers_171217'
 outCSVLocation = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                  '\_ExternalDrive\_CurrentSupportingTables\Tables'
 
@@ -56,9 +56,12 @@ for raster, r_path in rasters_in_workspace(InGDB):
     if 'CONUS' in r_path.split(os.sep):
         region = "CONUS"
     else:
-        region = [v for v in raster.split("_") if v in regions][0]
-        if region == 'CDL' or region == 'cultmask'or region == 'OnOff':
-            region = 'CONUS'
+        try:
+            region = [v for v in raster.split("_") if v in regions][0]
+            if region == 'CDL' or region == 'cultmask'or region == 'OnOff':
+                region = 'CONUS'
+        except:
+            pass
 
     # extracts spatial info for each raster
     ORGdsc = arcpy.Describe(r_path)

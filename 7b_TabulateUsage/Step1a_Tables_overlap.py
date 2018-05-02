@@ -6,17 +6,18 @@ import datetime
 # Be sure on off field is accounted for
 
 chemical_name = 'Methomyl'
+chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             r'\SupportingTables' + os.sep + chemical_name + "_RangeUses_lookup.csv"
+             r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
 
 max_drift = '765'
 l48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-             r'\CH_AllUses_BE_L48_20180201.csv'
+             r'\CH_AllUses_BE_L48_20180501.csv'
 
 nl48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables'\
-              '\CH_AllUses_BE_NL48_20180201.csv'
+             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
+              '\CH_AllUses_BE_NL48_20180501.csv'
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -26,8 +27,7 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-out_location = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-               '\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables'
+out_location = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables'
 
 on_off_species =[]
 
@@ -43,13 +43,22 @@ def create_directory(dbf_dir):
 
 def step_1_ED(row, col_l48):
     col_nl48 = col_l48.replace('CONUS','NL48')
-    if row['CONUS_Federal Lands_0'] >= 98.5 or row['NL48_Federal Lands_0']>=99 :
-        return 'No Effect'
-    if row[col_l48] >= 0.5 or row[col_nl48] >= 0.5:
-        return 'May Affect'
-    elif row[col_l48] < 0.5 and row[col_nl48] < 0.5:
-        return 'No Effect'
-
+    if row[col_l48] < 0.44 and row[col_nl48] < 0.44:
+        value = 'No Effect - Overlap'
+    elif row[col_l48] <= 4.45 and row[col_nl48] < 4.45:
+        value = 'NLAA - Overlap - 5percent'
+    elif row['CONUS_Federal Lands_0'] >= 98.5 or row['NL48_Federal Lands_0'] >= 99:
+        value = 'No Effect - Federal Land'
+    elif row['CONUS_Federal Lands_0'] >= 94.5 or row['NL48_Federal Lands_0'] >= 94.5:
+        value = 'NLAA - Federal Land'
+    elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
+        value =  'May Affect'
+    if file_type == 'CH_':
+        if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
+                row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
+                row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
+            value = 'No CritHab'
+    return value
 
 def on_off_field(row, cols, df):
     ent_id = row['EntityID']

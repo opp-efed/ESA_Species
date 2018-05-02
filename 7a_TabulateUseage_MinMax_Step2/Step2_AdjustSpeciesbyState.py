@@ -10,8 +10,7 @@ use_lookup = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
 
 state_fp_lookup = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                   r'\_ExternalDrive\_CurrentSupportingTables\Usage\STATEFP_lookup.csv'
-pct_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-            r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Diazinon_example\Diazinon_example_max_20180221.csv'
+pct_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Diazinon_example\Diazinon_example_max_20180221.csv'
 # out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #                r'\_ED_results\Tabulated_Usage'
 out_location = r'L:\ESA\Results\diazinon\Tabulated_usage'

@@ -1,0 +1,13 @@
+After overlap runs are complete raw results are will be transformed from pixel counts by distance to percent overlap by
+distance interval for runs specific to the NHD
+
+Key variable - Acres tables need to be locked to get to percentage; Need buy in chemical team on look-up table
+
+Key Tracking : Root folder for output file locations need to remain consistent for all runs.  File structure
+is automated.   Look-up table should have buy in from chemical team
+
+
+Step 1-  Transforms table from  and convert numbers from pixels to percentage
+Step 2 - Breaks tables into the desired distance interval - default 30m
+Step 3- Generates the summary tables for the BE - ie direct use overlap, overlap for ground and aerial
+

@@ -7,8 +7,8 @@ import datetime
 path_root = r'V:\Science Documents\128994'
 # out_path = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\DER" \
 #            r"\SanFiles_content_all_20171213.csv"
-out_path = r"C:\Users\JConno02\Documents\Projects\Risk Assessments\128994 Dithiopyr\Documents" \
-           r"\SanFiles_DERS_20171213.csv"
+out_path = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects" \
+           r"\Risk Assessments\128994 Dithiopyr\Documents\SanFiles_DERS_20170307.csv"
 
 
 def recursive_look_within_folder(working_path, pccode):
@@ -131,7 +131,7 @@ f_df = pd.DataFrame(columns=['filename', 'keywords', 'folder', 'sci break', 'pat
 keywords = [u'quail', u'duck', u'fish', u'Avian', u'virginianus', u'platyrhynchos', u'mellifera', u'LC50', u'LD50',
             u'IC25', u'IC05', u'EC25', u'EC05', u'NOAEC', u'LOAEC', u'mykiss', u'macrochirus', u'promelas',
             u'variegatus', u'magna', u'bahia', u'capricornutum', u'onion', u'lettace', u'ryegrass', u'soybean',
-            u'degradate', u'normal', u'reverse', u'acid', u'LC', u'LD', u'IC', u'EC']
+            u'degradate', u'normal', u'reverse', u'acid', u'LC', u'LD', u'IC', u'EC', u'sediment']
 
 for folder in folder_directory:
     if 'DER' in folder.split(" ") or 'DER' in folder.split("-") or 'DERs' in folder.split(

@@ -2,6 +2,34 @@ import pandas as pd
 import datetime
 import os
 
+# NOTES:
+# Assumptions:
+#   ~ Formatting needs are met; described below
+#   ~ State/ BEAD combinations are unique
+#   ~ assumptions for crops will not change - all crops to be considered will be included in the SUUM
+#   ~ assumptions related to assumed PCTs will not change - all PCTs values must be final before running overlap
+#           ~**CHANGES TO ASSUMPTIONS WILL MEAN UPDATING ALL OVERLAP TABLES**
+#
+# FORMATTING:
+#       ~ Required columns with data:
+#               ~Crop (BEAD crop)
+#               ~State (for row of data)
+#               ~Acreage (of BEAD crop in State),
+#               ~Min PCT (from SUUM or assumed based on agreements)
+#               ~Max PCT(from SUUM or assumed based on agreements)
+#               ~Avg PCT(from SUUM or assumed based on agreements)
+#               ~GenClass(applied from crosswalk)
+#               ~AgClass (applied from crosswalk)
+#
+#       ~ in_long_table: must include all crops to be considering for the chemical; changes to this will require
+#               generating a new input table **BEFORE** overlap can be run
+#       ~ ****ALL STATE/ BEAD CROP COMBINATION MUST BE UNIQUE****
+#       ~ All BEAD crops must be crossed to use layer category
+#       ~ All BEAD crops/use must be flagged as either Ag or NonAg to apply aggregated PCT to the all Ag composite
+#
+# Known limitations:
+#       ~ PCTs are inflated; no use states are not separated by State so acreage is unavailable - currently filtered out
+
 chemical = 'Diazinon'
 in_long_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                 r'\_ExternalDrive\_CurrentSupportingTables\Usage\usage_diazinon_long.csv'

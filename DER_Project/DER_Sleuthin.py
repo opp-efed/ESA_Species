@@ -1,8 +1,9 @@
 import os
 import pandas as pd
 
-path_root = r'\\w2032pccth016\EFEDADMINSCANS\Science Documents'
-out_path = r"L:\SAN\SanFiles.csv"
+path_root = r'V:\Science Documents'
+out_path = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects" \
+           r"\DER\Science Documents_SanFiles_excel_20180312.csv"
 
 
 def recursive_look_within_folder(folder, working_path, pccode):
@@ -11,7 +12,8 @@ def recursive_look_within_folder(folder, working_path, pccode):
         df = pd.DataFrame(columns=['pccode', 'path', 'folder', 'filename'])
         if len(files) > 0:
             dir_folder = os.path.basename(path)
-            file_directory = [pdf for pdf in files if pdf.endswith('.pdf')]
+            file_directory = [pdf for pdf in files if pdf.endswith('.xlsx')]
+            # file_directory.extend( [pdf for pdf in files if pdf.endswith('.xls')])
             files_series = pd.Series(file_directory)
             df['filename'] = files_series.values
             df.ix[:, 'pccode'] = '"' + str(pccode) + '"'

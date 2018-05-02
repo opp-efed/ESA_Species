@@ -7,13 +7,10 @@ from bs4 import BeautifulSoup
 import copy
 
 
-# Pull structure from http://chrisalbon.com/python/beautiful_soup_scrape_table.html
-# and https://johnricco.github.io/2017/04/04/python-html/
-
 #TODO add an output that merges all table to be used in following steps
 
-# Description: J. Connolly 3/23/2018
-# Loop through each tables and extract species information into the standard lists set in static variables
+# Description: J. Connolly 3/23/2017
+# Loop through each tables and extract species information into the standard columns with all import information
 # #################### VARIABLES
 # #### user input variables
 
@@ -24,7 +21,7 @@ groups = ['Cetaceans', 'Pinnipeds', 'Sea Turtles', 'Other Marine Reptiles', 'Cor
           'Sea Turtles', 'Other Marine Reptiles']
 # NMFS website with the tables of listed species
 url = "http://www.nmfs.noaa.gov/pr/species/esa/listed.htm"
-#foreign species per NMFS
+# foreign species per NMFS but marked as domestic on website
 removed_perNMFS =['Pristis pristis formerly P. perotteti, P. pristis, and P. microdon']
 # statuses that will be included when final table is filtered
 # Note: NMFS experimental populations do not fall under section 7, see notes from T Hooper
@@ -147,6 +144,7 @@ def standard_groups(row):
     else:
         return group
 
+
 def standard_year(row):
     year = str(row['Year Listed'])
     recent_year = year.split(" ")
@@ -162,9 +160,9 @@ print "Start Time: " + start_time.ctime()
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-
 createdirectory(outlocation+os.sep+'NMFS')
 outlocation = outlocation+os.sep+'NMFS'
+
 # Step 1:Download and parse out website tables
 r = requests.get(url)
 
@@ -174,8 +172,8 @@ print
 # Step 2: For each table parse out species information information into a dataframe from html them extract values to the
 # specific column headers we need
 for n in range(0, len(list_tables)):
-
     ssa = tables_read(list_tables, n)
+    # ssa.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\MasterLists\Creation\test\NMFS\tables_'+ str(n)+".csv")
     ssa.columns = ssa.iloc[0]
     ssa= ssa.reindex(ssa.index.drop(0))
     parent_group = str(title[n].split('(')[0].strip()).split(" ")[len(str(title[n].split('(')[0].strip()).split(" "))-1]
@@ -207,7 +205,6 @@ for n in range(0, len(list_tables)):
         previous_row = int(row_count -1)
         if (ssa.ix[row_count, 'Year Most Recent']) == 'nan':
             sci_name = ssa.ix[row_count, 'Scientific Name'].strip()
-
             common_name = ssa.ix[row_count, 'Common Name or Population'].strip()
 
         if str(ssa.ix[row_count,'Species']).strip() in groups:
@@ -233,7 +230,8 @@ for n in range(0, len(list_tables)):
     ssa['Group'].fillna(0, inplace =True)
 
 
-# Step 3: Filters data frame to include only the statuses of concern for section 7
+# Step 3: Filters data frame to include only the statuses of concern for section 7, removes empty rows, or rows with
+# non-species information
     remove_blanks = ssa.loc[ssa['Group'] != 0]
     remove_foreign = remove_blanks[remove_blanks['Scientific Name'].isin(removed_perNMFS) == False]
     remove_foreign = remove_foreign.loc[remove_foreign['Status'].isin(section_7_status) == True]

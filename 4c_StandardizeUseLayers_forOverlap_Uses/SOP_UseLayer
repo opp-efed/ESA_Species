@@ -29,6 +29,12 @@ Use final table as the input csv for Step2_Structure_Project_Rasters to move fil
 CONUS ~ 4 hours AK ~ 1 hour others less
 - reprojected as needed using the final projection columns
 - there needs to be a file .prj file in projection folder with a matching name
+-Mirror file structure of current library - * be sure to set up the symbology library with the new files
+- By region gdb
+    - UseLayers
+    - OnOff Field
+    - Just CONUS- yearly CDL
+    - One for all regions - SnapRasters
 
 Other things to check
 

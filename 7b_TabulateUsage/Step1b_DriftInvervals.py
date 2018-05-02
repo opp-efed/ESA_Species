@@ -8,18 +8,19 @@ import datetime
 
 
 # TODO FILTER NE/NLAAs
+chemical_name = 'Methomyl'
 chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             r'\SupportingTables' + os.sep + chemical_name + "_RangeUses_lookup.csv"
+             r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
 
 max_drift = '765'
 l48_BE_interval = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
                   r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-                  r'\CH_SprayInterval_20180201_Region.csv'
+                  r'\CH_SprayInterval_20180501_Region.csv'
 
 nl48_BE_interval = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
                    '\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-                   '\CH_SprayInterval_20180131_NL48Range.csv'
+                   '\CH_SprayInterval_20180501_NL48Range.csv'
 
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \

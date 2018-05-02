@@ -3,9 +3,9 @@ import os
 
 import pandas as pd
 
-agg_layers = r'L:\ESA\Results\L48\Range\Agg_Layers'
-indv_years = r'L:\ESA\Results\L48\Range\Indiv_Year_raw'
-nl48 = r'L:\ESA\Results\NL48\Range\Agg_Layers'
+agg_layers = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Results\L48\Range\Agg_Layers'
+indv_years = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Results\L48\Range\Indiv_Year_raw'
+nl48 = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Results\NL48\Range\Agg_Layers'
 outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
               r'\ESA\_ExternalDrive\_CurrentSupportingTables'
 lowest_folders = ['Range', 'CriticalHabitat']
@@ -15,11 +15,13 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 range_df = pd.DataFrame(
-    columns=['FullName', 'Region', 'Use', 'Type', 'Cell Size', 'Included AA', 'FinalUseHeader', 'FinalColHeader',
-             'Action Area', 'ground', 'aerial', 'other layer'])
+    columns=['FullName', 'Region', 'Use','Usage lookup' 'Type', 'Cell Size', 'Included AA', 'FinalUseHeader', 'FinalColHeader',
+             'Chem Table FinalColHeader','Action Area', 'ground', 'aerial', 'other layer','On/Off_AG',
+             'On/Off_Pasture', 'On/Off_Orchard_Plantation'])
 ch_df = pd.DataFrame(
-    columns=['FullName', 'Region', 'Use', 'Type', 'Cell Size', 'Included AA', 'FinalUseHeader', 'FinalColHeader',
-             'Action Area', 'ground', 'aerial', 'other layer'])
+    columns=['FullName', 'Region', 'Use','Usage lookup' 'Type', 'Cell Size', 'Included AA', 'FinalUseHeader', 'FinalColHeader',
+             'Chem Table FinalColHeader','Action Area', 'ground', 'aerial', 'other layer','On/Off_AG',
+             'On/Off_Pasture', 'On/Off_Orchard_Plantation'])
 
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
@@ -88,6 +90,7 @@ for v in lowest_folders:
         else:
             region = use.split("_")[0]
             split_nm = use.split("_")
+            print use
             use_nm = use.split("_")[1]
             for t in split_nm:
                 if t == region or t == use_nm or t == 'euc':
