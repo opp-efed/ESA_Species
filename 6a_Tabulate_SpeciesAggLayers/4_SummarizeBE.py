@@ -13,7 +13,7 @@ import pandas as pd
 # col in UsesLook up that represents the Final Use Header - values do not have
 
 
-# TODO set up bool variable to run interveral inclusive of each other and exclusive of each other see title 1a
+# TODO set up bool variable to run interval inclusive of each other and exclusive of each other see title 1a
 # TODO set up separate script so that it will check for missing runs, right now if there is not datat in the master tables
 
 # ###############user input variables
@@ -21,8 +21,8 @@ full_impact = True  # if drift values should include use + drift True if direct 
 
 
 in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated\NL48\CH\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\CH_SprayInterval_20180501_NL48Range.csv'
+           r'\_ED_results\Tabulated\NL48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
+           r'\R_SprayInterval_20180502_NL48Range.csv'
 
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',

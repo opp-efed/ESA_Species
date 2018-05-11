@@ -6,7 +6,7 @@ import datetime
 # Be sure on off field is accounted for
 
 chemical_name = 'Methomyl'
-chemical_name = 'Carbaryl'
+#chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
              r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
 
@@ -23,7 +23,7 @@ master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endanger
               r'\MasterListESA_Feb2017_20180110.csv'
 
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
-                      'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
+                      'country', 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
