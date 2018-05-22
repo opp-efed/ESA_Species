@@ -17,12 +17,37 @@ import pandas as pd
 # All raster are 30 meter cells - note previously VI and CNMI has some use with a different cell size
 
 # ###############user input variables
-overwrite_inter_data = True
-#
+#overwrite boolean - set to false tables were already generated for some uses and new ones need to be added.  If a use
+# layer was updated delete or archive the tables for the dated version and set this to false.  If this variable is set
+# to TRUE than all tables will be recalculated.
+overwrite_inter_data = False
+# file structure is standard for raw result outputs and tabulated results outputs
+# Changes include L48 v NL48  and Range and CriticalHabitat in the path
 raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ED_results\Results\NL48\Range\Agg_Layers'
+                  r'\_ED_results\Results\L48\Range\Agg_Layers'
 
 # ########### Updated once per run-variables
+
+find_file_type = raw_results_csv.split(os.sep)
+if 'Range' in find_file_type or 'range' in find_file_type:
+    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+    file_type = 'R_'
+    species_file_type = 'Range'
+    # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'  # vector table
+    in_acres_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                     r'\_ED_results\R_Acres_Pixels_20180428.csv'
+else:
+    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+    species_file_type = 'CH'
+    file_type = 'CH_'
+    # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv'   # vector table
+    in_acres_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                     r'\_ED_results\CH_Acres_Pixels_20180430.csv'
+
 master_list = r'C:\Users\JConno02' \
               r'\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -30,27 +55,6 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
-
-find_file_type = raw_results_csv.split(os.sep)
-if 'Range' in find_file_type or 'range' in find_file_type:
-    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Step1_Uses_lookup_20180430.csv'
-    file_type = 'R_'
-    species_file_type = 'Range'
-    # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'  # vector table
-    in_acres_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                     r'\_ED_results\Acres_by_Pixels\R_Acres_Pixels_20180428.csv'
-else:
-    look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
-    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Step1_Uses_lookup_20180430.csv'
-    species_file_type = 'CH'
-    file_type = 'CH_'
-    # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv'   # vector table
-    in_acres_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                     r'\_ED_results\Acres_by_Pixels\CH_Acres_Pixels_20180430.csv'
-
 
 find_file_type = raw_results_csv.split(os.sep)
 if 'L48' in find_file_type:
@@ -182,6 +186,7 @@ def use_by_species(use_df, sp_group_abb):
     # removed all extraneous columns only import columns are the VALUE_[zoneID] and default Label col from tool
     # export
     drop_cols = [z for z in use_df.columns.values.tolist() if not z.startswith('VALUE')]
+    # print drop_cols
     drop_cols.remove('LABEL')
     [use_df.drop(j, axis=1, inplace=True) for j in drop_cols if j in drop_cols]
     # transform table so it is zones by distance interval; rest index; update column header and remove 'VALUE' form
@@ -253,6 +258,7 @@ for folder in list_folders:
         else:
             use_nm = use_nm + "_" + t
     use_nm = region + "_" + use_nm
+    # print use_nm
 
     if use_nm not in use_lookup['FullName'].values.tolist():  # allows uses to be tabulated for Step 1/Step 2 separately
         continue
@@ -270,6 +276,7 @@ for folder in list_folders:
         # and whole range of species
 
         acres_for_calc = acres_df.ix[:, ['EntityID', ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']]
+
         print '\nWorking on {0}: {1} of {2}'.format(folder, (list_folders.index(folder)) + 1, len(list_folders))
         # set up list of result csv files
         list_csv = os.listdir(raw_results_csv + os.sep + folder)

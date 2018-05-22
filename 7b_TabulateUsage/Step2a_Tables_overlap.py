@@ -5,16 +5,16 @@ import datetime
 # TODO Remove extra drift call for for uses that are just aerial ot ground if needed
 chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             r'\SupportingTables' + os.sep + chemical_name + "_RangeUses_lookup.csv"
+             r'\SupportingTables' + os.sep + chemical_name + "_Uses_lookup_20180430.csv"
 
 max_drift = '765'
 l48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-             r'\R_AllUses_BE_L48_20180201.csv'
+             r'\CH_AllUses_BE_L48_20180522.csv'
 
 nl48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
               r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-              '\R_AllUses_BE_NL48_20180130.csv'
+              '\CH_AllUses_BE_NL48_20180522.csv'
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -179,10 +179,27 @@ def create_directory(dbf_dir):
         os.mkdir(dbf_dir)
 
 
+# Notes overlap cutoffs Summer/Fall 2017:  As part of the ESA streamlining set on 1% cut-off for and NE call and 5%
+# cut-off for an NLAA issue.  For the purposes of precision this was set as anything < x.5 would meet the cut-off
+# and >=x.5 would not - the specifics of < vs >= were not discussed with the team and can be adjusted if the group feels
+# it should be something else.
+
+# The quality of spatial files received by the Services was also discuss when setting these cut-offs.  JC proposed
+# binning the files based on how confident we are in the file but the team felt setting these criteria for confidence
+# would be too difficult.  Also, as the data we received need to be considered as 'best available' we should accept the
+# files for face value. There are several concerns with this  - see pilot bird/PUR from diazinon as an example of all
+# three of these concerns
+#   1) When range is an overlap underestimated may be diluted due to the large denominator
+#   2) Overlap may be overestimate due to the additional areas with use overlap
+#   3) The use driving concern may not be correct due to concerns 1 and 2
+#   4) These concerns can be further compounded when applying usage -  added Feb 2018
 
 
 def step_1_ED(row, col_l48):
     col_nl48 = col_l48.replace('CONUS', 'NL48')
+    # Federal lands statement needs to be updated to an and statement that will still catch overlap from either L48 or
+    # NL48.  These or statements take advantage of species in both the L48 and NL48 have low overlap with federal lands
+    # but these may not be true in all cases
     if row['CONUS_Federal Lands_0'] >= 99 or row['NL48_Federal Lands_0'] >= 99:
         return 'No Effect- Federal Lands'
     elif row['CONUS_Federal Lands_0'] >= 95 or row['NL48_Federal Lands_0'] >= 95:
@@ -326,8 +343,6 @@ else:
 chemical_step1 = pd.merge(base_sp_df, chemical_step1, on='EntityID', how='left')
 
 
-
-
 # ##Filter NL48 AA
 aa_layers_NL48 = use_lookup_df.loc[((use_lookup_df['Action Area'] == 'x') | (use_lookup_df['other layer'] == 'x')) | (
     use_lookup_df['Included AA'] == 'x') & (use_lookup_df['Region'] != 'CONUS')]
@@ -397,15 +412,13 @@ for z in chemical_step1.columns.values.tolist():
 #               orchard_use_cols.append(z)
 
 
-# chemical_step1.apply(lambda row: on_off_field(row, cult_use_cols, chemical_step1, on_off_cult_species), axis=1)
-# chemical_step1.apply(lambda row: on_off_field(row, pasture_use_cols, chemical_step1, on_off_pasture_species), axis=1)
-
-
-
+# no adjustment
+out_path_no_adjustment = out_path+ os.sep + 'No Adjustment'
+create_directory(out_path_no_adjustment)
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: step_1_ED(row, 'CONUS_' + chemical_name + " AA""_" + max_drift),axis=1)
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: NLAA_overlap(row, col_selection_aa, cols_w_overlap),axis=1)
 
-chemical_step1.to_csv(out_path + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
+chemical_step1.to_csv(out_path_no_adjustment + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
 
 conus_cols = [v for v in chemical_step1.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
 nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
@@ -413,9 +426,30 @@ nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith
 conus_df_step1 = chemical_step1[conus_cols]
 nl48_df_step1 = chemical_step1[nl48_cols_f]
 
-conus_df_step1.to_csv(out_path + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
-nl48_df_step1.to_csv(out_path + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
 
+conus_df_step1.to_csv(out_path_no_adjustment + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
+nl48_df_step1.to_csv(out_path_no_adjustment  + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
+
+# on off field adjusted
+out_path_on_off = out_path+ os.sep + 'On_Off_Field'
+create_directory(out_path_on_off)
+chemical_step1.apply(lambda row: on_off_field(row, cult_use_cols, chemical_step1, on_off_cult_species), axis=1)
+chemical_step1.apply(lambda row: on_off_field(row, pasture_use_cols, chemical_step1, on_off_pasture_species), axis=1)
+
+out_path_on_off = out_path+ os.sep + 'On_Off_Field'
+chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: step_1_ED(row, 'CONUS_' + chemical_name + " AA""_" + max_drift),axis=1)
+chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: NLAA_overlap(row, col_selection_aa, cols_w_overlap),axis=1)
+
+chemical_step1.to_csv(out_path_on_off + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
+
+conus_cols = [v for v in chemical_step1.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
+nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
+
+conus_df_step1 = chemical_step1[conus_cols]
+nl48_df_step1 = chemical_step1[nl48_cols_f]
+
+conus_df_step1.to_csv(out_path_on_off + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
+nl48_df_step1.to_csv(out_path_on_off  + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time

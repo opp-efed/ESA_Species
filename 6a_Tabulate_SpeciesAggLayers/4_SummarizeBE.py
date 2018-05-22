@@ -21,19 +21,16 @@ full_impact = True  # if drift values should include use + drift True if direct 
 
 
 in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated\NL48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\R_SprayInterval_20180502_NL48Range.csv'
+           r'\_ED_results\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
+           r'\R_SprayInterval_20180522_Region.csv'
 
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-# look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
-
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Step1_Uses_lookup_20180430.csv'
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
 
 # #############Static Variables
 today = datetime.datetime.today()
@@ -53,8 +50,8 @@ temp_folder = path_intable
 
 out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' +p_region +"_"+date+ '.csv'
 
-
-bins = [0, 305, 765]  # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5
+# meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
+bins = [0, 305, 765]
 
 use_lookup = pd.read_csv(look_up_use)
 use_lookup['FinalColHeader'].fillna('none', inplace=True)

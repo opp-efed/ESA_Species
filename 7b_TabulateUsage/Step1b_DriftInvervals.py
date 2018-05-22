@@ -16,11 +16,11 @@ use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangere
 max_drift = '765'
 l48_BE_interval = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
                   r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-                  r'\CH_SprayInterval_20180501_Region.csv'
+                  r'\CH_SprayInterval_20180522_Region.csv'
 
 nl48_BE_interval = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
                    '\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-                   '\CH_SprayInterval_20180501_NL48Range.csv'
+                   '\CH_SprayInterval_20180522_NL48Range.csv'
 
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \

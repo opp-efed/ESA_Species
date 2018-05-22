@@ -26,23 +26,20 @@ out_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EP
               r'\_ED_results\Results'
 
 
-# Update for each run - species base only updaed when switching from range to CH
-in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection'
-in_location_species_folder = 'PR_Albers_Conical_Equal_Area'
+# Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
+in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+in_location_species_folder = 'VI_WGS_1984_UTM_Zone_20N'
 # Range
 
 # CONUS_Albers_Conical_Equal_Area
 #CH
 # CONUS_Albers_Conical_Equal_Area
-temp_file = "temp_table36"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table7"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 
 use_list = []
-
-
-
 
 # ################Static variables
 arcpy.CheckOutExtension("Spatial")
@@ -103,8 +100,6 @@ snap_raster_dict = {'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gd
                     'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 current_use = 1
-
-
 
 # ################Functions
 

@@ -12,8 +12,8 @@ import pandas as pd
 
 # ###############user input variables
 species_file_type = 'Range'   # can be 'Range' or 'CH'
-p_region = 'NL48'  # can be L48 or NL48
-folder_name_csv = 'MO_NL48Range'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
+p_region = 'L48'  # can be L48 or NL48
+folder_name_csv = 'MO_Region'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
 # 'MergeOverlap_Region' L48 or NL48
 interval_step = 30
 max_dis = 1501
@@ -33,7 +33,7 @@ csv_folder =  out_root + os.sep +'Agg_Layers' + os.sep + folder_name_csv
 
 
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Step1_Uses_lookup_20180430.csv'
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
 # look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
 

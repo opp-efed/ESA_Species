@@ -13,11 +13,11 @@ use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangere
 max_drift = '765'
 l48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-             r'\CH_AllUses_BE_L48_20180501.csv'
+             r'\R_AllUses_BE_L48_20180522.csv'
 
 nl48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-              '\CH_AllUses_BE_NL48_20180501.csv'
+              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
+              '\R_AllUses_BE_NL48_20180522.csv'
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
