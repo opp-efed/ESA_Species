@@ -8,8 +8,8 @@ import datetime
 
 
 # TODO FILTER NE/NLAAs
-#chemical_name = 'Methomyl'
-chemical_name = 'Carbaryl'
+chemical_name = 'Methomyl'
+#chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
              r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
 
@@ -62,10 +62,11 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 create_directory(out_location + os.sep + chemical_name)
-out_path = out_location + os.sep + chemical_name
+out_path = out_location + os.sep + chemical_name + os.sep +'Step 1'
+create_directory(out_path)
 use_lookup_df = pd.read_csv(use_lookup)
-l48_df = pd.read_csv(l48_BE_interval)
-nl48_df = pd.read_csv(nl48_BE_interval)
+l48_df = pd.read_csv(l48_BE_interval, dtype=object)
+nl48_df = pd.read_csv(nl48_BE_interval, dtype=object)
 nl48_df['EntityID'] = nl48_df['EntityID'].map(lambda x: x).astype(str)
 nl48_df['EntityID'] = nl48_df['EntityID'].map(lambda x: x).astype(str)
 list_final_uses = list(set(use_lookup_df['FinalUseHeader'].values.tolist()))
@@ -114,6 +115,7 @@ for i in cols_aa_nl48:
 
 for t in intervals:
     binned_use = [x for x in cols_aa_nl48 if x.endswith("_" + t)]
+    nl48_df.ix[:,binned_use] = nl48_df.ix[:,binned_use].apply(pd.to_numeric, errors='coerce')
     out_nl48_col = 'NL48_' + binned_use[0].split("_")[1] + "_" + binned_use[0].split("_")[2]
     nl48_df[out_nl48_col] = nl48_df[binned_use].sum(axis=1)
 

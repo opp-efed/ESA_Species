@@ -1,9 +1,11 @@
 import pandas as pd
 import os
 import datetime
+import numpy as np
 
-# TODO Remove extra drift call for for uses that are just aerial ot ground if needed
+# TODO take redudancy loop out
 chemical_name = 'Carbaryl'
+# chemical_name = 'Methomyl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
              r'\SupportingTables' + os.sep + chemical_name + "_Uses_lookup_20180430.csv"
 
@@ -115,6 +117,7 @@ on_off_cult_species = ['4', '5', '9', '17', '21', '28', '29', '31', '32', '33', 
                        '10480', '10481', '10483', '10583', '10584', '10585', '10586', '10587', '10588', '10590',
                        '10591', '10593', '10594', '10599', '10719', '10720', '10721', '10722', '10723', '10724',
                        '10725', '10726', '10727', '10728', '10729', '10732', '10909', '11260', '11340']
+
 on_off_pasture_species = ['4', '8', '13', '28', '29', '31', '32', '34', '35', '41', '42', '43', '46', '49', '50', '53',
                           '54', '58', '60', '62', '63', '65', '74', '79', '80', '81', '84', '85', '86', '87', '94',
                           '95', '97', '98', '99', '102', '103', '111', '112', '113', '116', '118', '120', '121', '123',
@@ -200,18 +203,35 @@ def step_1_ED(row, col_l48):
     # Federal lands statement needs to be updated to an and statement that will still catch overlap from either L48 or
     # NL48.  These or statements take advantage of species in both the L48 and NL48 have low overlap with federal lands
     # but these may not be true in all cases
-    if row['CONUS_Federal Lands_0'] >= 99 or row['NL48_Federal Lands_0'] >= 99:
-        return 'No Effect- Federal Lands'
-    elif row['CONUS_Federal Lands_0'] >= 95 or row['NL48_Federal Lands_0'] >= 95:
-        return 'NLAA - Federal Land'
-    elif row[col_l48] < 0.5 and row[col_nl48] < 0.5:
-        return 'No Effect - Overlap'
-    elif row[col_l48] < 4.5 and row[col_nl48] < 4.5:
-        return 'NLAA - Overlap - 5percent'
-    elif row[col_l48] >= 4.5 or row[col_nl48] >= 4.5:
-        return 'MA'
-    else:
-        return 'Check result - error'
+
+    col_nl48 = col_l48.replace('CONUS','NL48')
+
+
+    if row[col_l48] < 0.44 and row[col_nl48] < 0.44:
+        value = 'No Effect - Overlap'
+    elif row[col_l48] <= 4.45 and row[col_nl48] < 4.45:
+        value = 'NLAA - Overlap - 5percent'
+    elif row['CONUS_Federal Lands_0'] >= 98.5 or row['NL48_Federal Lands_0'] >= 99:
+        value = 'No Effect - Federal Land'
+    elif row['CONUS_Federal Lands_0'] >= 94.5 or row['NL48_Federal Lands_0'] >= 94.5:
+        value = 'NLAA - Federal Land'
+    elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
+        value =  'May Affect'
+
+    if file_type == 'CH_':
+        if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
+                row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
+                row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
+            value = 'No CritHab'
+        if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
+            value = 'Qualitative'
+
+    if file_type == 'R_':
+
+        if str(row['Source of Call final BE-Range']).startswith('Qu'):
+            value = 'Qualitative'
+
+    return value
 
 
 def NLAA_overlap(row,cols_l48, cols_nl48):
@@ -260,15 +280,27 @@ def NLAA_overlap(row,cols_l48, cols_nl48):
     list_values = row[final_col]
 
     if len(list_values) ==0:
-        return row['Step 2 ED Comment']
+        value= row['Step 2 ED Comment']
     elif max(list_values) < 0.45:
-        return 'NLAA Overlap - 1percent'
+        value = 'NLAA Overlap - 1percent'
     else:
-        return row['Step 2 ED Comment']
+        value = row['Step 2 ED Comment']
+    if file_type == 'CH_':
+        if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
+                row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
+                row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
+            value=  'No CritHab'
+        if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
+            value = 'Qualitative'
+
+    if file_type == 'R_':
+        if str(row['Source of Call final BE-Range']).startswith('Qu'):
+            value = 'Qualitative'
+    return value
 
 
 def on_off_field(row, cols, df, on_off_species):
-    ent_id = row['EntityID']
+    ent_id = str(row['EntityID'])
     if ent_id in on_off_species:
         col = [v for v in cols if v.endswith("_0")]
         for i in col:
@@ -280,6 +312,7 @@ def on_off_field(row, cols, df, on_off_species):
                 direct_over = row[other_col.split("_")[0] + "_" + other_col.split("_")[1] + "_0"]
                 value = row[other_col]
                 df.loc[df['EntityID'] == ent_id, other_col] = value - direct_over
+
     else:
         pass
 
@@ -297,6 +330,26 @@ l48_df = pd.read_csv(l48_BE_sum)
 nl48_df = pd.read_csv(nl48_BE_sum)
 list_final_uses = list(set(use_lookup_df['FinalUseHeader'].values.tolist()))
 
+# Extract columns that will be adjusted for redundancy
+other_layer = use_lookup_df.loc[(use_lookup_df['other layer'] == 'x')]
+other_layer_cols = other_layer['Chem Table FinalColHeader'].values.tolist()
+ag_headers = use_lookup_df.loc[(use_lookup_df['Included AA Ag'] == 'x')]
+ag_cols = ag_headers['Chem Table FinalColHeader'].values.tolist()
+
+# Try except loop to set a boolean variable to skip non ag adjustment if there are no non ag uses
+try:
+    non_ag_headers = use_lookup_df.loc[(use_lookup_df['Included AA NonAg'] == 'x')]
+    nonag_cols = non_ag_headers['Chem Table FinalColHeader'].values.tolist()
+    if len(non_ag_headers) == 0:
+        skip_non_ag_adjustment = True
+    else:
+        skip_non_ag_adjustment = False
+except TypeError:
+    non_ag_headers =[]
+    nonag_cols =[]
+    skip_non_ag_adjustment = True
+
+# ## Extract columns that will be adjusted for the on/off field
 on_off_cult = use_lookup_df.loc[(use_lookup_df['On/Off_AG'] == 'x')]
 on_off_pasture = use_lookup_df.loc[(use_lookup_df['On/Off_Pasture'] == 'x')]
 # on_off_orchard = use_lookup_df.loc[(use_lookup_df['On/Off_Orchard_Plantation'] == 'x')]
@@ -393,12 +446,14 @@ for x in chemical_step1.columns.values.tolist():
             binned_use.append(x.split("_")[0] + "_" + x.split("_")[1])
 
 cult_use_cols = []
+
 for z in chemical_step1.columns.values.tolist():
     for p in on_off_cult_cols:
         if z.startswith(p):
             cult_use_cols.append(z)
 
 pasture_use_cols = []
+
 for z in chemical_step1.columns.values.tolist():
     for p in on_off_pasture_cols:
         if z.startswith(p):
@@ -417,39 +472,222 @@ out_path_no_adjustment = out_path+ os.sep + 'No Adjustment'
 create_directory(out_path_no_adjustment)
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: step_1_ED(row, 'CONUS_' + chemical_name + " AA""_" + max_drift),axis=1)
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: NLAA_overlap(row, col_selection_aa, cols_w_overlap),axis=1)
-
+chemical_step1.fillna(0, inplace=True)
 chemical_step1.to_csv(out_path_no_adjustment + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
 
 conus_cols = [v for v in chemical_step1.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
 nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
 
+chemical_step1.fillna(0, inplace=True)
 conus_df_step1 = chemical_step1[conus_cols]
 nl48_df_step1 = chemical_step1[nl48_cols_f]
-
 
 conus_df_step1.to_csv(out_path_no_adjustment + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
 nl48_df_step1.to_csv(out_path_no_adjustment  + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
 
-# on off field adjusted
+
+# redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are calculated
+# ## set up outpath
+out_path_redundancy = out_path+ os.sep + 'Redundancy_only'
+create_directory(out_path_redundancy)
+
+# Set up the different list of columns that apply to conus vs nl48, aa, composites, use, ag and non-ag
+# conus/nonl48
+overlap_cols_conus = [x for x in conus_cols if x not in col_include_output]
+overlap_cols_nl48 = [x for x in nl48_cols_f if x not in col_include_output]
+# layer flag as other that should not be adjusted ie Federal Lands
+other_layer_header  =[x for x in other_layer_cols]
+
+# AA and composite columnms - HARD CODE composite and actions areas must have AA in the use name
+aa_col_conus = [x for x in overlap_cols_conus if 'AA' in x.split('_')[1].split(' ')]
+aa_col_nl48 = [x for x in overlap_cols_nl48  if 'AA' in x.split('_')[1].split(' ')]
+
+# Use columns
+use_col_conus = [x for x in overlap_cols_conus if not 'AA' in x.split('_')[1].split(' ') and (x.split('_')[0]+"_"+x.split('_')[1])  not in other_layer_cols]
+use_col_nl48 = [x for x in overlap_cols_nl48  if not 'AA' in x.split('_')[1].split(' ')and (x.split('_')[0]+"_"+x.split('_')[1]) not in other_layer_cols]
+
+# filters list so only the direct overlap is in list (represent by an _0 at the end of the column header
+use_direct_only_conus_ag = [x for x in use_col_conus if x.endswith('_0') and (x.split('_')[0]+"_"+x.split('_')[1])   in ag_cols]
+use_direct_only_conus_nonag = [x for x in use_col_conus if x.endswith('_0') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
+use_direct_only_nl48_ag  = [x for x in use_col_nl48  if x.endswith('_0')and (x.split('_')[0]+"_"+x.split('_')[1])  in ag_cols]
+use_direct_only_nl48_nonag  = [x for x in use_col_nl48  if x.endswith('_0') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
+
+use_direct_only_conus_ag_aa = [x for x in aa_col_conus if x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
+use_direct_only_conus_nonag_aa = [x for x in aa_col_conus if x.endswith('_0') and 'NonAg' in x.split("_")[1].split(" ")]
+use_direct_only_nl48_ag_aa = [x for x in aa_col_nl48 if x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
+use_direct_only_nl48_nonag_aa = [x for x in aa_col_nl48 if x.endswith('_0') and 'NonAg' in x.split("_")[1].split(" ")]
+use_direct_only_conus_aa = [x for x in aa_col_conus if x.endswith('_0') and 'Ag' not in x.split("_")[1].split(" ")and 'NonAg' not in x.split("_")[1].split(" ")]
+use_direct_only_nl48_aa  = [x for x in aa_col_nl48   if x.endswith('_0')and 'Ag' not in x.split("_")[1].split(" ")and 'NonAg' not in x.split("_")[1].split(" ")]
+
+# filters list so only the ground and aerial overlap is in list (represent by an _305 and _765 at the end of the column header
+use_direct_only_conus_ag_ground = [x for x in use_col_conus if x.endswith('_305') and (x.split('_')[0]+"_"+x.split('_')[1])   in ag_cols]
+use_direct_only_conus_nonag_ground = [x for x in use_col_conus if x.endswith('_305') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
+use_direct_only_nl48_ag_ground  = [x for x in use_col_nl48  if x.endswith('_305')and (x.split('_')[0]+"_"+x.split('_')[1])  in ag_cols]
+use_direct_only_nl48_nonag_ground  = [x for x in use_col_nl48  if x.endswith('_305') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
+
+use_direct_only_conus_ag_aerial = [x for x in use_col_conus if x.endswith('_765') and (x.split('_')[0]+"_"+x.split('_')[1])   in ag_cols]
+use_direct_only_conus_nonag_aerial = [x for x in use_col_conus if x.endswith('_765') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
+use_direct_only_nl48_ag_aerial = [x for x in use_col_nl48  if x.endswith('_765')and (x.split('_')[0]+"_"+x.split('_')[1])  in ag_cols]
+use_direct_only_nl48_nonag_aerial = [x for x in use_col_nl48  if x.endswith('_765') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
+
+# store an unadjusted version of the 4 dataframes Ag/NonAg for both the CONUS and L48
+unadjusted_conus_ag = chemical_step1[['EntityID'] + use_direct_only_conus_ag].copy()
+unadjusted_conus_nonag = chemical_step1[['EntityID'] + use_direct_only_conus_nonag].copy()
+unadjusted_nl48_ag = chemical_step1[['EntityID'] + use_direct_only_nl48_ag].copy()
+unadjusted_nl48_nonag = chemical_step1[['EntityID'] + use_direct_only_nl48_nonag].copy()
+
+# Confirms all number are set to a numeric data type
+chemical_step1.ix[:, use_direct_only_conus_ag] = chemical_step1.ix[:,use_direct_only_conus_ag].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:, use_direct_only_conus_nonag] = chemical_step1.ix[:,use_direct_only_conus_nonag].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:, use_direct_only_nl48_ag] = chemical_step1.ix[:,use_direct_only_nl48_ag].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:, use_direct_only_nl48_nonag] = chemical_step1.ix[:,use_direct_only_nl48_nonag].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:, use_direct_only_conus_ag_aa + use_direct_only_conus_nonag_aa] = chemical_step1.ix[:, use_direct_only_conus_ag_aa + use_direct_only_conus_nonag_aa].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:, use_direct_only_nl48_ag_aa + use_direct_only_nl48_nonag_aa] = chemical_step1.ix[:, use_direct_only_nl48_ag_aa + use_direct_only_nl48_nonag_aa].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:,use_direct_only_conus_aa[0]] = chemical_step1.ix[:,use_direct_only_conus_aa[0]].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:,use_direct_only_nl48_aa[0]] = chemical_step1.ix[:,use_direct_only_nl48_aa[0]].apply(pd.to_numeric, errors='coerce')
+
+# Sum uses in the three groups ag, non ag and composites for both CONUS adn NL48
+chemical_step1['CONUS_Sum_Ag'] = chemical_step1[use_direct_only_conus_ag].sum(axis=1)
+chemical_step1['CONUS_Sum_NonAg'] = chemical_step1[use_direct_only_conus_nonag].sum(axis=1)
+chemical_step1['NL48_Sum_Ag'] = chemical_step1[use_direct_only_nl48_ag].sum(axis=1)
+chemical_step1['NL48_Sum_NonAg'] = chemical_step1[use_direct_only_nl48_nonag].sum(axis=1)
+
+chemical_step1['CONUS_Sum_Composites'] = chemical_step1[use_direct_only_conus_ag_aa +use_direct_only_conus_nonag_aa].sum(axis=1)
+chemical_step1['NL48_Sum_Composites'] = chemical_step1[use_direct_only_nl48_ag_aa +use_direct_only_nl48_nonag_aa].sum(axis=1)
+
+# Calculates factors that will be used for adjustment
+# Ag factor : sum of ag uses/ ag composite; Non-Ag factor sum of non ag use/ non ag composite;
+# Composite factor sum of Ag and Non Ag composite / AA
+# Ag factor is applied to all Ag layer, Non-Ag and Composite factor is applied to JUST the Non-Ag uses - ESA team Summer/Fall 2017
+# Ag factor was added to Step 2 in Spring of 2018
+
+chemical_step1 ['CONUS_Ag_Ag_Factor'] = chemical_step1['CONUS_Sum_Ag'].div((chemical_step1[use_direct_only_conus_ag_aa[0]]).where(chemical_step1[use_direct_only_conus_ag_aa[0]]!= 0, np.nan), axis = 0)
+chemical_step1 ['NL48_Ag_Ag_Factor'] = chemical_step1['NL48_Sum_Ag'].div((chemical_step1[use_direct_only_nl48_ag_aa[0]]).where(chemical_step1[use_direct_only_nl48_ag_aa[0]]!= 0, np.nan), axis = 0)
+if not skip_non_ag_adjustment:
+    chemical_step1 ['CONUS_NonAg_NonAg_Factor'] = chemical_step1['CONUS_Sum_NonAg'].div((chemical_step1[use_direct_only_conus_nonag_aa[0]]).where(chemical_step1[use_direct_only_conus_nonag_aa[0]]!= 0, np.nan), axis = 0)
+    chemical_step1 ['NL48_NonAg_NonAg_Factor'] = chemical_step1['NL48_Sum_NonAg'].div((chemical_step1[use_direct_only_nl48_nonag_aa[0]]).where(chemical_step1[use_direct_only_nl48_nonag_aa[0]]!= 0, np.nan), axis = 0)
+
+
+chemical_step1 ['CONUS_Composite_Factor'] = chemical_step1['CONUS_Sum_Composites'].div((chemical_step1[use_direct_only_conus_aa[0]]).where(chemical_step1[use_direct_only_conus_aa[0]]!= 0, np.nan), axis = 0)
+chemical_step1 ['NL48_Composite_Factor'] = chemical_step1['NL48_Sum_Composites'].div((chemical_step1[use_direct_only_nl48_aa[0]]).where(chemical_step1[use_direct_only_nl48_aa[0]]!= 0, np.nan), axis = 0)
+if not skip_non_ag_adjustment:
+    chemical_step1.ix[:,['CONUS_Ag_Ag_Factor','CONUS_NonAg_NonAg_Factor','NL48_Ag_Ag_Factor','NL48_NonAg_NonAg_Factor','CONUS_Composite_Factor','NL48_Composite_Factor']]= chemical_step1.ix[:,['CONUS_Ag_Ag_Factor','CONUS_NonAg_NonAg_Factor','NL48_Ag_Ag_Factor','NL48_NonAg_NonAg_Factor','CONUS_Composite_Factor','NL48_Composite_Factor']].fillna(0)
+else:
+    chemical_step1.ix[:,['CONUS_Ag_Ag_Factor','NL48_Ag_Ag_Factor','CONUS_Composite_Factor','NL48_Composite_Factor']]= chemical_step1.ix[:,['CONUS_Ag_Ag_Factor','NL48_Ag_Ag_Factor','CONUS_Composite_Factor','NL48_Composite_Factor']].fillna(0)
+
+# Applies the factor adjustments Ag use layer by Ag factor, Non Ag use layers by both NonAg factor and composite factor
+chemical_step1.ix[:,use_direct_only_conus_ag] = chemical_step1.ix[:,use_direct_only_conus_ag].div((chemical_step1['CONUS_Ag_Ag_Factor']).where(chemical_step1['CONUS_Ag_Ag_Factor']!= 0, np.nan), axis = 0)
+chemical_step1.ix[:,use_direct_only_nl48_ag] = chemical_step1.ix[:,use_direct_only_nl48_ag].div(chemical_step1['NL48_Ag_Ag_Factor'].where(chemical_step1['NL48_Ag_Ag_Factor']!= 0, np.nan), axis = 0)
+chemical_step1.ix[:,use_direct_only_conus_nonag] = chemical_step1.ix[:,use_direct_only_conus_nonag].div(chemical_step1['CONUS_Composite_Factor'].where(chemical_step1['CONUS_Composite_Factor']!= 0, np.nan), axis = 0)
+chemical_step1.ix[:,use_direct_only_nl48_nonag] = chemical_step1.ix[:,use_direct_only_nl48_nonag].div(chemical_step1['NL48_Composite_Factor'].where(chemical_step1['NL48_Composite_Factor']!= 0, np.nan), axis = 0)
+
+if not skip_non_ag_adjustment:
+    chemical_step1.ix[:,use_direct_only_conus_nonag] = chemical_step1.ix[:,use_direct_only_conus_nonag].div(chemical_step1['CONUS_NonAg_NonAg_Factor'].where(chemical_step1['CONUS_NonAg_NonAg_Factor']!= 0, np.nan), axis = 0)
+    chemical_step1.ix[:,use_direct_only_nl48_nonag] = chemical_step1.ix[:,use_direct_only_nl48_nonag].div(chemical_step1['NL48_NonAg_NonAg_Factor'].where(chemical_step1['NL48_NonAg_NonAg_Factor']!= 0, np.nan), axis = 0)
+
+
+# store an adjusted version of the 4 dataframes Ag/NonAg for both the CONUS and L48
+adjusted_conus_ag = chemical_step1[['EntityID'] + use_direct_only_conus_ag].copy()
+adjusted_conus_nonag = chemical_step1[['EntityID'] + use_direct_only_conus_nonag].copy()
+adjusted_nl48_ag = chemical_step1[['EntityID'] + use_direct_only_nl48_ag].copy()
+adjusted_nl48_nonag = chemical_step1[['EntityID'] + use_direct_only_nl48_nonag].copy()
+
+# Calculated the difference seen in the adjusted overlap, this difference is removed fromt he summarize
+# ground and aerial values
+difference_conus_ag = unadjusted_conus_ag.set_index('EntityID').subtract(adjusted_conus_ag.set_index('EntityID'))
+difference_conus_nonag = unadjusted_conus_nonag.set_index('EntityID').subtract(adjusted_conus_nonag.set_index('EntityID'))
+difference_nl48_ag = unadjusted_nl48_ag.set_index('EntityID').subtract(adjusted_nl48_ag.set_index('EntityID'))
+difference_nl48_nonag = unadjusted_nl48_nonag.set_index('EntityID').subtract(adjusted_nl48_nonag.set_index('EntityID'))
+
+# get col header for drift columnm by replacing the 0 with the standard values of 305 for ground and 765 for aerial
+columns_conus_ground_ag = [x.replace("_0", "_305") for x in difference_conus_ag.columns.values.tolist()]
+columns_conus_ground_nonag = [x.replace("_0", "_305") for x in difference_conus_nonag.columns.values.tolist()]
+columns_conus_aerial_ag= [x.replace("_0", "_765") for x in difference_conus_ag.columns.values.tolist()]
+columns_conus_aerial_nonag = [x.replace("_0", "_765") for x in difference_conus_nonag.columns.values.tolist()]
+
+columns_nl48_ground_ag = [x.replace("_0", "_305") for x in difference_nl48_ag.columns.values.tolist()]
+columns_nl48_ground_nonag = [x.replace("_0", "_305") for x in difference_nl48_nonag.columns.values.tolist()]
+columns_nl48_aerial_ag= [x.replace("_0", "_765") for x in difference_nl48_ag.columns.values.tolist()]
+columns_nl48_aerial_nonag = [x.replace("_0", "_765") for x in difference_nl48_nonag.columns.values.tolist()]
+
+#Adjust ground
+difference_conus_ag.columns = columns_conus_ground_ag
+difference_conus_nonag.columns = columns_conus_ground_nonag
+difference_nl48_ag.columns = columns_nl48_ground_ag
+difference_nl48_nonag.columns = columns_nl48_ground_nonag
+adjusted_conus_ag_ground = chemical_step1.ix[: , ['EntityID']+use_direct_only_conus_ag_ground].set_index('EntityID').subtract(difference_conus_ag)
+adjusted_conus_nonag_ground = chemical_step1.ix[: , ['EntityID']+use_direct_only_conus_nonag_ground].set_index('EntityID').subtract(difference_conus_nonag)
+adjusted_nl48_ag_ground = chemical_step1.ix[: , ['EntityID']+use_direct_only_nl48_ag_ground].set_index('EntityID').subtract(difference_nl48_ag)
+adjusted_nl48_nonag_ground = chemical_step1.ix[: , ['EntityID']+use_direct_only_nl48_nonag_ground].set_index('EntityID').subtract(difference_nl48_nonag)
+
+#Adjust aerial
+difference_conus_ag.columns = columns_conus_aerial_ag
+difference_conus_nonag.columns = columns_conus_aerial_nonag
+difference_nl48_ag.columns = columns_nl48_aerial_ag
+difference_nl48_nonag.columns = columns_nl48_aerial_nonag
+adjusted_conus_ag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only_conus_ag_aerial].set_index('EntityID').subtract(difference_conus_ag)
+adjusted_conus_nonag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only_conus_nonag_aerial].set_index('EntityID').subtract(difference_conus_nonag)
+adjusted_nl48_ag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only_nl48_ag_aerial].set_index('EntityID').subtract(difference_nl48_ag)
+adjusted_nl48_nonag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only_nl48_nonag_aerial].set_index('EntityID').subtract(difference_nl48_nonag)
+
+# reset index to move entitid back to column for update to the master df
+adjusted_conus_ag_ground = adjusted_conus_ag_ground.reset_index()
+adjusted_conus_nonag_ground = adjusted_conus_nonag_ground.reset_index()
+adjusted_conus_ag_aerial = adjusted_conus_ag_aerial.reset_index()
+adjusted_conus_nonag_aerial = adjusted_conus_nonag_aerial.reset_index()
+adjusted_nl48_ag_ground = adjusted_nl48_ag_ground.reset_index()
+adjusted_nl48nonag_ground = adjusted_nl48_nonag_ground.reset_index()
+adjusted_nl48ag_aerial = adjusted_nl48_ag_aerial.reset_index()
+adjusted_nl48nonag_aerial = adjusted_nl48_nonag_aerial.reset_index()
+
+# updates the drift columns of the master data frame
+chemical_step1.ix[:,adjusted_conus_ag_ground.columns.tolist()] =  adjusted_conus_ag_ground.ix[:,adjusted_conus_ag_ground.columns.tolist()]
+chemical_step1.ix[:,adjusted_conus_nonag_ground.columns.tolist()] =  adjusted_conus_nonag_ground.ix[:,adjusted_conus_nonag_ground.columns.tolist()]
+chemical_step1.ix[:,adjusted_conus_ag_aerial.columns.tolist()] =  adjusted_conus_ag_aerial.ix[:,adjusted_conus_ag_aerial.columns.tolist()]
+chemical_step1.ix[:,adjusted_conus_nonag_aerial.columns.tolist()] =  adjusted_conus_nonag_aerial.ix[:,adjusted_conus_nonag_aerial.columns.tolist()]
+
+chemical_step1.ix[:,adjusted_nl48_ag_ground.columns.tolist()] =  adjusted_nl48_ag_ground.ix[:,adjusted_nl48_ag_ground.columns.tolist()]
+chemical_step1.ix[:,adjusted_nl48_nonag_ground.columns.tolist()] =  adjusted_nl48_nonag_ground.ix[:,adjusted_nl48_nonag_ground.columns.tolist()]
+chemical_step1.ix[:,adjusted_nl48_ag_aerial.columns.tolist()] =  adjusted_nl48_ag_aerial.ix[:,adjusted_nl48_ag_aerial.columns.tolist()]
+chemical_step1.ix[:,adjusted_nl48_nonag_aerial.columns.tolist()] =  adjusted_nl48_nonag_aerial.ix[:,adjusted_nl48_nonag_aerial.columns.tolist()]
+
+# Applies the effects determinations based on just redundancy and saves the table
+chemical_step1.fillna(0, inplace=True)
+chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: step_1_ED(row, 'CONUS_' + chemical_name + " AA""_" + max_drift),axis=1)
+chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: NLAA_overlap(row, col_selection_aa, cols_w_overlap),axis=1)
+chemical_step1.to_csv(out_path_redundancy  + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
+# Export tables for the CONUS and NL48
+
+conus_df_step1 = chemical_step1[conus_cols]
+nl48_df_step1 = chemical_step1[nl48_cols_f]
+conus_df_step1.to_csv(out_path_redundancy  + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
+nl48_df_step1.to_csv(out_path_redundancy   + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
+
+# on off field adjustments- direct overlap is set to zero if for species identified as not be present on the on/off
+# habitat group types  - decided to set to zero rather than re-calucating the overlap dut to the impact of drift in
+# for the whole range; if pixels are remove a new acre value for the species would need to be calculated and drift
+# overlap would be greater than 100 unless the drift pixel are also removed - it is possible to do this but not in the
+# time frame provided so it was decided to set the direct overlap to zero Fall 2017
+
 out_path_on_off = out_path+ os.sep + 'On_Off_Field'
 create_directory(out_path_on_off)
+chemical_step1['EntityID'] = chemical_step1['EntityID'].map(lambda x: x).astype(str)
 chemical_step1.apply(lambda row: on_off_field(row, cult_use_cols, chemical_step1, on_off_cult_species), axis=1)
 chemical_step1.apply(lambda row: on_off_field(row, pasture_use_cols, chemical_step1, on_off_pasture_species), axis=1)
 
 out_path_on_off = out_path+ os.sep + 'On_Off_Field'
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: step_1_ED(row, 'CONUS_' + chemical_name + " AA""_" + max_drift),axis=1)
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: NLAA_overlap(row, col_selection_aa, cols_w_overlap),axis=1)
-
+chemical_step1.fillna(0, inplace=True)
 chemical_step1.to_csv(out_path_on_off + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
-
-conus_cols = [v for v in chemical_step1.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
-nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
 
 conus_df_step1 = chemical_step1[conus_cols]
 nl48_df_step1 = chemical_step1[nl48_cols_f]
 
 conus_df_step1.to_csv(out_path_on_off + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
 nl48_df_step1.to_csv(out_path_on_off  + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
+
+
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time

@@ -6,7 +6,7 @@ import datetime
 # Be sure on off field is accounted for
 
 chemical_name = 'Methomyl'
-#chemical_name = 'Carbaryl'
+# chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
              r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
 
@@ -53,11 +53,20 @@ def step_1_ED(row, col_l48):
         value = 'NLAA - Federal Land'
     elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
         value =  'May Affect'
+
     if file_type == 'CH_':
         if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
                 row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
                 row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
             value = 'No CritHab'
+        if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
+            value = 'Qualitative'
+
+    if file_type == 'R_':
+
+        if str(row['Source of Call final BE-Range']).startswith('Qu'):
+            value = 'Qualitative'
+
     return value
 
 def on_off_field(row, cols, df):
@@ -79,7 +88,8 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 create_directory(out_location + os.sep + chemical_name)
-out_path = out_location + os.sep + chemical_name
+out_path = out_location + os.sep + chemical_name + os.sep +'Step 1'
+create_directory(out_path)
 use_lookup_df = pd.read_csv(use_lookup)
 l48_df = pd.read_csv(l48_BE_sum)
 nl48_df = pd.read_csv(nl48_BE_sum)
