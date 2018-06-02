@@ -1,1 +1,4 @@
-import pandas as pd
+# Steps 1 4 are completed ont he usage overlap output results
+# Step 2 is then used as inpute for Step 2a ofr 7b
+# Step 2 is use as inputs for Step 2b of 7B
+# TODO Will need to make a table that is used for Step 1 and Step of 7b that excludes elevation
