@@ -3,7 +3,6 @@ import os
 in_location =r'L:\Projected.gdb'
 out_location =r'L:\L48_intersect.gdb'
 
-
 arcpy.env.workspace = in_location
 list_species_vector = arcpy.ListFeatureClasses()
 
