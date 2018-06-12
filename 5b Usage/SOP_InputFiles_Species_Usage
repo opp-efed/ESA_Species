@@ -1,0 +1,60 @@
+Author: J. Connolly Updated 6/12/2018
+
+
+Description: When incorporating usage to the overlap output summaries are supplemented using several additional data
+sources: Original downloads, and master files used for analysis backed up to F drive; final spatial libraries on F and
+OneDrive. All files we place in the regional projection identified by team (Fall 2016).  If a geographic transformation
+was need "NAD_1983_To_WGS_1984_1" was selected (B_StandardizeProject_move_Rasters.py).  File projections can be found in
+the Use layer tracking file.
+
+Data sources used to supplement overlap date for usage:
+    - Counties/State boundaries Tiger : https://www.census.gov/geo/maps-data/data/tiger.html - downloaded Fall 2017
+    path to file: r'D:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)
+    \Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
+    (Back up Species support info library F
+
+    - NHDplus Seamless data set: http://www.horizon-systems.com/nhdplus/ - downloaded Fall 2017
+        - Seamless data set is supplemented with island boundaries for AK, AS, CNMI and HI that are not found in the
+        original file.  This is done so these areas are not lost when running the intersect in Aa_Intersect_Cnty_HUC2.py
+        - Also A/B splits are included for the HUC_2 by joining the current output from
+        A_Bins\Step_A2_splitHUC2_A_B_Summarize.py to the HUC12s and updated the HUC2_AB column. This is down so the
+        correct file from the PWC model can be identified in the MagTool
+        (Back up Aquatic model library F, files used for analysis oneDrive)
+
+    - Elevation: https://www.landfire.gov/version_comparison.php download May 2018 see email from S. Lennartz on 4/12/18
+        - Smoothed to 10 meters due to the number of unique values generate by the combine when using the original data
+        set with single meter increments (ESA team meeting May 2018).  This decision point can be revisited in the
+        future if need. Discussed smoothing with S. Lennartz May 2018.
+        - Smoothed using the raster calculator command (Int(("[layer_name]"/10)+0.5))*10
+        -(Back up Use_layer library F, files used for analysis oneDrive)
+    - Habitat:
+        CONUS, AK, HI, PR :https://gapanalysis.usgs.gov/gaplandcover/data/download/ - download May 2018
+        Other NL48 - https://coast.noaa.gov/ccapftp/#/ -download May 2018
+
+        - used original file; but reprojected as needed
+        -(Back up Use_layer library F, files used for analysis oneDrive)
+
+A_Intersect_Cnty_HUC2.py - Intersects the unioned species/CH vector files with the political boundaries from TIGER and
+the supplemented HUC12/HUC2 boundaries from the NHDPlus.  After completed this step Step 4, 5 and 6 from
+4b_GenerateSpatialFiles_forOverlap_Species can be implements to convert these files to raster, project them by region
+and export to GRIDs used for the combine (D_Combine) - Replaced original usage input file generation
+A_Intersect_Cnty.py and  B_Select_L48.py to accomodate the output needed for the aquatic modeling (April - June 2018)
+    - Run time  CH files = ~ 1 hour; Range files = ~
+    - (Back up Union Composites_ESA on library F, files used for analysis oneDrive)
+
+B_StandardizeProject_move_Rasters.py : Standardize projection of raster files used in combine and moves them the the
+spatial library for the appropriate region
+    -(Back up Use_layer library F)
+
+
+C_Combine.py: run combine on the species files with cnty and huc information from A_Intersect_Cnty_HUC2.py with the
+support raster information found in the raster spatial libraries; on/off field and residential and habitat/elevation.
+These are the input files used to run the overlap so the usage overlap  tables can include the additional supporting
+information identified above  - Overlap is run using  (Step1_Species_Use_ZonalHis.py)- Information is extracted by
+joining output tables using the various data source IDs (ZoneID, InterID, HUCID and ROWID from combine)
+    -- (Back up Union Composites_ESA on library F, files used for analysis oneDrive)
+
+
+
+
+
