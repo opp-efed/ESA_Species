@@ -1,0 +1,83 @@
+J. Connolly Updated 6/11/2018; October 2016
+
+Description : For  Step_A1_splitHUC2_A_B.py and Step_A2_splitHUC2_A_B_Summarize.py
+
+Generates Point file with annual precipitation is used to make the HUC2 a/b splits based on the precipitation points
+found within the HUC12. If not point is within the HUC12 the closest point is used.  This table is joined back to the
+NHD seamless data set by HUC12 to set the a/b splits for the HUC2. Area in  HI, AS, and CNMI outside the NHD boundaries
+were assigned the HUC2 of 22 - these need to be included so these locations are found in the intersect species composite
+input files.
+
+Point information is extracted from the original data sources described below, projection into a distance projection and
+merged to a single file. This merged file is the input for  Step_A1_splitHUC2_A_B.py
+
+Used projection that preserves distance  : North_America_Equidistant_Conic ;WKID: 102010 Authority: Esri;
+Projection: Equidistant_Conic ; Transformation: NAD_1983_To_WGS_1984_1 (if needed)
+
+**used a NAD83 because NHDPlus is NAD83
+
+Updated :Moved from North_America_Equidistant_Conic when adding HI
+
+Original Data sources:
+See Ryan email to Chuck on 10/7/2016 forward to me on 10/12/2016 - included below
+L48: http://www.ncdc.noaa.gov/data-access/land-based-station-data/land-based-datasets/climate-normals/1981-2010-normals-data
+Raw data is not being used.  The values were interpolated to a grid and those are the location used.
+Data represent 30 years- 1982-2010
+daily values were normalized and then summarized to get an annual precipitation values - see excel sheet
+mly_prcp_climo_geo.xlsx - folder spring 2017
+This information was the interpolate into 5km intervals across the L48 and exported to a csv.  This is the files used to
+generate point file. We did not use the IDW as it was generating and interpolated surface from something that was
+already interpolated.
+
+Hi Chuck,
+
+Below is a brief description of the process I used to estimate HUC-2 precipitation regions. I've also attached a map
+and the precipitation data.
+
+The data I used comes from NOAA’s National Centers for Environmental Information (formerly the National Climate
+Data Center). I used the latest (1981 – 2010) 30-year precipitation normals. See the link below for information on the d
+ata set and availability of other 30-year periods.
+
+http://www.ncdc.noaa.gov/data-access/land-based-station-data/land-based-datasets/climate-normals/1981-2010-normals-data
+
+I ordered the data through Mike Squires (mike.squires@noaa.gov). He sent a csv file containing 469,758 grid points
+spaced at 5km intervals across the lower 48 (attached). I imported the grid to GIS and applied an Inverse Distance
+Weighted interpolation (IDW) tool to generate a continuous surface map. IDW is one of a few available interpolation
+tools; another may be more appropriate. I clipped the resulting raster to the HUC-2 regions and adjusted the symbology
+to generate a map (attached) which could be adjusted to represent the different precipitation regions (17a/17b). Once
+set, the regions could be reclassified to True/False and run against a HUC-12 map.
+
+Have a good long weekend - talk to you next week!
+(What is the phone number we are using for the 10am meeting on Tuesday?)
+-Ryan
+
+--
+Ryan DeWitt
+Contractor with Ocean Associates, Inc.
+National Marine Fisheries Service
+Office of Protected Resources
+510 Desmond Drive SE Suite 103
+Lacey, WA 98503
+
+Telephone: (360) 753-9595
+ryan.dewitt@noaa.gov
+
+HI: http://rainfall.geography.hawaii.edu/downloads.html - sent from ryan -10/25/2016
+citation for use of products:
+“Giambelluca TW, Chen Q, Frazier AG, Price JP, Chen Y-­‐L, Chu P-­‐S, Eischeid J., and
+Delparte, D. 2011. The Rainfall Atlas of Hawai‘i.
+http://rainfall.geography.hawaii.edu.”
+
+This data source was used rather than the one from the L48 per recommendation from NMFS
+
+Update Spring 2018 - tabular data downloaded on 6/11/2018 - save to spring 2018 folder in AquModeling directory
+HUC12s are now available for HI precipitation data will be used to make the a/b split
+-Raw Monthly data was download from the above site
+-Filtered to include the same 30 years as the L48
+-Filtered so only stationA with 12 months of data for a given year are include
+-Average month value calculation across year
+-Sum of average monthly values is the annual value
+-Annual value in inches used for point file to make the a/b split
+- Station mark as -9999 by author not included in final point file
+- station with a negative value for annual precipitation was updated using the authors annual value which may include
+additional years
