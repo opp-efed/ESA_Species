@@ -83,13 +83,13 @@ for species_comp in list_species_vector:
         arcpy.MakeFeatureLayer_management(invector, "in_spe_vector")
         arcpy.Intersect_analysis(["fc", "in_spe_vector"], r"in_memory\\vector_" + str(species_comp))
         cnty_inter_completed = datetime.datetime.now()
-        print 'Dissolving by political boundary for {0}...Intersect took {0}'.format(species_comp,
+        print 'Dissolving by political boundary for {0}...Intersect took {1}'.format(species_comp,
                                                                                      (cnty_inter_completed - state_sp))
         arcpy.Dissolve_management(r"in_memory\\vector_" + str(species_comp),
                                   r"in_memory\\vector_" + str(species_comp) + 'd',
                                   ['GEOID', 'ZoneID', 'STUSPS', 'Region'])
         cnty_dissolve_completed = datetime.datetime.now()  # time tracker for intersection
-        print ' Adding InterID...cnty dissolve took {0}'.format(cnty_dissolve_completed - cnty_inter_completed)
+        print ' Adding InterID...cnty dissolve took {1}'.format(cnty_dissolve_completed - cnty_inter_completed)
         arcpy.AddField_management(r"in_memory\\vector_" + str(species_comp) + 'd', "InterID", "DOUBLE")
         with arcpy.da.UpdateCursor(r"in_memory\\vector_" + str(species_comp) + 'd', ['OBJECTID', 'InterID']) as cursor:
             for row in cursor:
@@ -101,7 +101,7 @@ for species_comp in list_species_vector:
         arcpy.Intersect_analysis([r"in_memory\\vector_" + str(species_comp) + 'd', "huc_fc"], r"in_memory\\vector_huc_"
                                  + str(species_comp))
         huc_inter_completed = datetime.datetime.now()
-        print '   Dissolving by HUC2 boundary for {0}...Intersect took {0}'.format(species_comp, (
+        print '   Dissolving by HUC2 boundary for {0}...Intersect took {1}'.format(species_comp, (
                 huc_inter_completed - cnty_dissolve_completed))
         arcpy.Dissolve_management(r"in_memory\\vector_huc_" + str(species_comp),
                                   out_vector, ['GEOID', 'ZoneID', 'STUSPS', 'Region', 'InterID', 'HUC2_AB'])
