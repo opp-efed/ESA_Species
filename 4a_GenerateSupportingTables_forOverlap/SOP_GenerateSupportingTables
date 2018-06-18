@@ -62,15 +62,13 @@ Step  4B - is delayed to Step C because 4a E takes so long:
     convert union polygons to raster - cannot have multiple instances of script running due to schema locks
     snap raster for conversion must be a NAD 83 geographic project with 30 meter cells; default cell is very large;
     typical use the cult mask from current cdl
+    Run time CH  ~ 1 hour Range ~3 hour
 
- Step 5- Time estimate ~ 72 hours if all regions are done separately; run CONUS on its one and split other; esp AK to
-    Speed up
-    Projects rasters into region projections
-    only zones in region are included - use snap raster specific to region
-    Run different regions at a time to make this go faster; specifically run the regions that do not need to be
-    re-projected; the others may have schema lock errors for the re-projection into WGS; causing region to be run twice.
-    WGS re-projection does full file, individual file will one be in the region
-    #TODO Check if the WGS in needed
+ Step 5- Time estimate ~ 6 hours for CONUS for CH and 10 for Range. If all of other regions are run at the same time they
+ will finish first. NOTE you must skip AK and AS for CH in the skip region for CH.  Also use the skip region to run
+ CONUS on its own.
+    Projects rasters into region projections - limited the processing extent to just the region based on the snap raster
+
 
  Step 6- Time estimate 3.5 hours CH 9.5 Range
     coverts geodatabase raster to GRIDs

@@ -1,15 +1,13 @@
 import os
-import csv
-import time
 import datetime
 
 import arcpy
 
 # #Tile: Dissolves files into a single  multipart polygons by species
 
-# NOTE - script adjusted to check error with aquatics- aquatic files sometimes had topology issues especially files with
-# many rows.  Set the maxrow variable as the max row cut off to flag species as aquatic and process them using script
-# 5b.  If the dissolve fails the file is moved to a failed gdb to be processed separately
+# NOTE - script adjusted to check error with aquatics- aquatic files sometimes had topology issues especially files
+# with many rows.  Set the maxrow variable as the max row cut off to flag species as aquatic and process them using
+# script 5b.  If the dissolve fails the file is moved to a failed gdb to be processed separately
 
 # Variables to be set by user
 
@@ -19,7 +17,6 @@ maxrow = 5000000
 InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017" \
         r"\UpdatedProcess_December2017\GDB\ReNm_NMFS_20171204_2018-01-10.gdb"
 abb = "NMFS"
-
 
 # Workspace
 ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
@@ -40,24 +37,24 @@ JoinFieldFC = "FileName"
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
 def fcs_in_workspace(workspace):
     arcpy.env.workspace = workspace
-    for fc in arcpy.ListFeatureClasses():
-        yield (fc)
-    for ws in arcpy.ListWorkspaces():
-        for fc in fcs_in_workspace(ws):
-            yield (fc)
+    for fcs in arcpy.ListFeatureClasses():
+        yield (fcs)
+    for wks in arcpy.ListWorkspaces():
+        for fcs in fcs_in_workspace(wks):
+            yield (fcs)
 
 
 # creates directories to save files
-def create_directory(path_dir, outLocationCSV, OutFolderGDB):
-    if not os.path.exists(path_dir):
-        os.mkdir(path_dir)
-        print "created directory {0}".format(path_dir)
-    if not os.path.exists(outLocationCSV):
-        os.mkdir(outLocationCSV)
-        print "created directory {0}".format(outLocationCSV)
-    if not os.path.exists(OutFolderGDB):
-        os.mkdir(OutFolderGDB)
-        print "created directory {0}".format(OutFolderGDB)
+def create_directory(path_directory, out_csv, out_gdb):
+    if not os.path.exists(path_directory):
+        os.mkdir(path_directory)
+        print "created directory {0}".format(path_directory)
+    if not os.path.exists(out_csv):
+        os.mkdir(out_csv)
+        print "created directory {0}".format(out_csv)
+    if not os.path.exists(out_gdb):
+        os.mkdir(out_gdb)
+        print "created directory {0}".format(out_gdb)
 
 
 # creates date stamped generic file
@@ -74,9 +71,9 @@ def create_gdb(out_folder, out_name, outpath):
         arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
 
 
-######################################################################Static Variables no user input needed###########
+# ##################################################Static Variables no user input needed###########
 
-###import time
+# ##import time
 datelist = []
 todaydate = datetime.date.today()
 datelist.append(todaydate)
@@ -132,7 +129,10 @@ for fc in fcs_in_workspace(InGDB):
             try:
                 arcpy.Dissolve_management("fc_lyr", outfc, DissolveList, "", "MULTI_PART", "DISSOLVE_LINES")
                 print "Dissolved: " + str(fc)
-            except:
+            except Exception as error:
+                print(error.args[0])
+                if arcpy.Exists(outfc):  # If it partial file exists it is deleted
+                    arcpy.Delete_management(outfc)
                 outFailedFC = outFilefailgdbpath + os.sep + str(fc)
                 if arcpy.Exists(outFailedFC):
                     continue
@@ -142,9 +142,10 @@ for fc in fcs_in_workspace(InGDB):
                     outFailedFC = outFilefailgdbpath + os.sep + str(fc)
                     if arcpy.Exists(outFailedFC):
                         continue
-                    arcpy.CopyFeatures_management(fc, outFailedFC)
-                    continue
-                continue
+                    else:
+                        arcpy.CopyFeatures_management(fc, outFailedFC)
+                        continue
+
         elif count > 1:
             if count > maxrow:
                 print count
@@ -163,7 +164,11 @@ for fc in fcs_in_workspace(InGDB):
                 else:
                     arcpy.Dissolve_management("fc_lyr", outfc, DissolveList, "", "MULTI_PART", "DISSOLVE_LINES")
                     print "Dissolved: " + str(fc)
-            except:
+
+            except Exception as error:
+                print(error.args[0])
+                if arcpy.Exists(outfc):  # If it partial file exists it is deleted
+                    arcpy.Delete_management(outfc)
                 print count
                 topofc = outfileTopogdbpath + os.sep + str(fc)
                 if arcpy.Exists(topofc):
@@ -176,7 +181,8 @@ for fc in fcs_in_workspace(InGDB):
                     arcpy.CopyFeatures_management(fc, topofc)
                     arcpy.Delete_management(outfc)
                     continue
-    except:
+    except Exception as error:
+        print(error.args[0])
         continue
 
 arcpy.env.workspace = outfileTopogdbpath

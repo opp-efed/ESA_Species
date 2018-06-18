@@ -7,7 +7,8 @@ import pandas as pd
 # TODO update to pandas excel reader so csv of master does not need to be made
 
 # Tile: Moves Range files found in the current update gdb and moves them to the corresponding group gdb in the
-# the spatial library found at the outfolder location
+# the spatial library found at the outfolder location; second generalized file is also generate that removed extraneous
+# vertices
 
 
 # master species list

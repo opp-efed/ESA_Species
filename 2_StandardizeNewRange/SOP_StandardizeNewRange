@@ -1,0 +1,46 @@
+Author J. Connolly Updated 1/10/2018
+
+Purpose: When new range or critical habitat files are received from the Services these scripts will make a copy of the
+original file, standardize the file, standardize the information in the attribute tab;e using the current master species
+list, and then standardizes the projection to a NAD83 geographic projection. Final species file will be a single muli-
+part polygon.
+
+# TODO combine Step 1, 2, 3 into on script - dynamically set up file name dictionary to master species list (step 3)
+Step1_ListFilesNames - Makes a list of the new files and saves it to a csv - will recursively search in the folder
+for all shapefiles
+
+Step2_CopyToGeodatabase - Make a copy of the original files from the input directory to a gdb; Step 2a check to make
+sure all files copy to gdb  and the files copied completely - incomplete files will not have any rows of any rows of data
+
+Step3_StndFilesNames- Copies the files from the gdb and re-names to the standard file name schema used a dictionary
+lookup NmChangeDICT.  This dictionary is create manually using the master species list.  The information from the master
+species list is also used in Step 6
+  - File name structure filetype_entityid_featuretype_date
+    - file type can be range (R) or critical habitat (CH
+    - entityid is from the master species list - NOTE be sure the entity id is species to species and population
+    - feature type - polygon (poly), line(line) , point (point), Cart - polygon file collected as part of the gas
+    cartridge effor for Bulletins, GAP-polygon file generated from the GAP pilot the files were generated from the GAP
+    land cover layer and habitat assigned by the Services - Fall 2016
+    - date - date  received
+
+# TODO Combine Step 3,4,5,6 into a single script
+
+Step4_popfilename - Adds the new files to the attribute table
+
+Step5_Dissolve - Dissolves file into a single multi-part polygon - this structure is needed for the composite files;
+when there composites are create a species need to represented by a single row of data. NOTE - original aquatic files
+received from Services had geometry and topology errors, therefore created the 5b script to try to rectify these errors
+and move the files to a separte location if errors could not be rectified.  This script can probably be archived
+
+# TODO update the manually made join table to a join in pandas back to the master species list
+Step6_PopulateDissolved - Loads standard species information based on the master species into the attribute table
+NOTE - this join table is made manually by filtering the master list to just the species with a new file and limiting
+the columns to the information desired for the attribute table.  This can be updated to a dynamic process. Steb 6b
+confirms that all of the files were copied, completed and contains the desired attribute information - append STD to
+file name
+
+Step7_ProjectSTD_STDGeo - projects files into the standard NAD 83 geographic projection before the files are moved to
+the species spatial libraries
+
+
+

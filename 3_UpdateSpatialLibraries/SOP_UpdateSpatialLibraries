@@ -1,11 +1,25 @@
 
+Author J. Connolly updated December 201
+
+Purpose: Standardized files are then moved the species spatial libraries, points and line are buffered by 30 meter so
+they have an area associated with the file need for overlap, species with multiple files are merged into a single file,
+old files are archive and attribute updated to match the current master list.Standardized files are then moved the
+species spatial libraries, points and line are buffered by 30 meter so they have an area associated with the file
+need for overlap, species with multiple files are merged into a single file, old files are archive and attribute
+updated to match the current master list.
+
+15 meter buffer on either side for a total of 30 meters set by ESA team Fall 2016-  matched the pixel size of the
+rasters
 
 NOTE BEFORE STARTING CREATE AN ARCHIVED BACK-UP OF THE MOST RECENT SPATIAL LIBRARY
 
+# TODO Streamline so of the steps if possible
 Step 1: After creating an archived of the current spatial libraries, moved  new or updated files into the libraries.
 The dictionary file used to identify the geodatabase(s) with the new/updated files allows for multiple gdbs to move at
-once.  Each row in the csv dictionary should be the path to the re-projected / standardized files. Currentlty this step
- is split into CH and Range but these could be merged over time
+once.  Each row in the csv dictionary should be the path to the re-projected / standardized files. Currently this step
+is split into CH and Range but these could be merged over time.  A second generalized files is also created that removes
+extraneous vertices, these are the files used for the composite. The generalized files are faster to process because the
+geometry is less complicated.
 
 Step 2: Archive files for any species that has  been delisted or will be excluded from the overlap analysis because they
 have been identified as extinct, possibly extinct, qualitative, or occurring exclusively on uninhabited islands. This
@@ -20,7 +34,7 @@ archived before running the archive script! this can be looped into the routine 
 species becomes an input variable for the archives_Files_updated script, and run it. Run BufferLine_point to buffer all
 files not in polygon format. Polygon format is need to calculate an area.  Run MergeDups to merge all species that have
 duplicate files that need to be merged into a single file. Be sure all files that are being completely replaced area
-already archived or they will be included in the merge.  Run the Checkfor Missing scripts to see if any species are
+already archived or they will be included in the merge.  Run the Check for Missing scripts to see if any species are
 missing a spatial file.  *These are separate because the filtered on the master list is different for range and critical
 habitat files.*
 

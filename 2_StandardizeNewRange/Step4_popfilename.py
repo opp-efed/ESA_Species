@@ -17,7 +17,6 @@ InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMF
         r"\UpdatedProcess_December2017\GDB\ReNm_NMFS_20171204_2018-01-10.gdb"
 abb = "NMFS"
 
-
 # Workspace
 ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
 # Folder in workspace where outputs will be saved
@@ -25,9 +24,6 @@ name_dir = "UpdatedProcess_December2017"
 
 # in yyyymmdd received date
 receivedDate = '20171204'
-
-
-
 
 # Field names to be added that will be used to dissolve to a single multipart polygon (Dissolve) and the join column to
 # add other attributes (Filename)

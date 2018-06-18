@@ -11,7 +11,6 @@ InGDB = r"C:\WorkSpace\Processed_20160906\FWS_Ranges_20160906\GDB\FWS_poly_20160
 
 QAcsv = "QA_FWS_poly_20160906"
 
-
 # Workspace
 ws = "C:\WorkSpace\Processed_20160906"
 # Folder in workspace where outputs will be saved
@@ -20,8 +19,11 @@ name_dir = "FWS_Ranges_20160906"
 # in yyyymmdd received date
 receivedDate = '20160906'
 
+
 # General functions
 # creates date stamped csv
+
+
 def create_csvflnm_timestamp(namecsvfile, outcsvlocation, date_list):
     filename = str(namecsvfile) + "_" + str(date_list[0]) + '.csv'
     filepath = os.path.join(outcsvlocation, filename)
@@ -66,6 +68,7 @@ csvfile, csvpath = create_csvflnm_timestamp(QAcsv,
 
 for fc in fcs_in_workspace(InGDB):
     name = str(fc)
+    # if the nhumber of rows in the fc is 0 then the file did not copy correctly
     count = int(arcpy.GetCount_management(fc).getOutput(0))
     if count == 0:
         result = str(name) + "," + "FALSE"

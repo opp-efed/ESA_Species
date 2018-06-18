@@ -10,11 +10,11 @@ import pandas as pd
 # User input variable
 # input table
 
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
+masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
 # Spatial Library for range files
-infolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\CriticalHabitat'
-group_colindex = 16
+in_folder = 'D:\ESA\SpatialLibrary\Generalized files\Range'
+group_colindex = 16  # Index position of the group column in the master species list
 # #########Functions
 
 # generates a list of sp groups from masterlist
@@ -48,7 +48,7 @@ duplicate_files = []
 for group in alpha_group:
 
     print "\nWorking on {0}".format(group)
-    group_gdb = infolder + os.sep + str(group) + '.gdb'
+    group_gdb = in_folder + os.sep + str(group) + '.gdb'
 
     arcpy.env.workspace = group_gdb
     fclist = arcpy.ListFeatureClasses()

@@ -1,4 +1,4 @@
-When composite file are finalize and use layer shaev been moved to library in the correct projection
+When composite file are finalize and use layer have been moved to library in the correct projection
 the overlap runs can be started; output raw overlap for each use site by region, species group
 
 Key variable - Use layers and Species files are in the same projections; cell size for use layer is identified
@@ -7,12 +7,12 @@ Updates will need to occur if: use  layer or species range files change, project
 Key Tracking : Root folder for output file locations need to remain consistant for all runs.  File structure
 is automated.
 
-# TODO set up so output folder name is read in from table - makeing consitant folder name is tricky due to variation in
+# TODO set up so output folder name is read in from table - making consistent folder name is tricky due to variation in
 # Use layer names
 
 ** Prior to running the overlap Symbology layers should be updated - this will be variable used in an number of place
 ** Be sure to update the snap raster dictionary as well
-***KEY ASSUMPUTION All uselayer must start with the projection name follow by the regions abbreviation or CDL and then
+***KEY ASSUMPUTION All use layer must start with the projection name follow by the regions abbreviation or CDL and then
 the use with the _euc if is distance raster
 
 Step 1 - General overlap for species range and CH composites; can be used for varied unique IDs; ie ZoneID, InterID etc
@@ -22,7 +22,7 @@ Step 1 - General overlap for species range and CH composites; can be used for va
     - Output is pixel count distance is row wise zone for species is column wise
 Step 2- Overlap for aquatic species based on catchment:
     - Runs by region
-    -Output is pixel count catchment ID is row wise and disance is column wise - transformed so there wouldn't be
+    -Output is pixel count catchment ID is row wise and distance is column wise - transformed so there wouldn't be
     millions of columns  easier to have millions of row
     #TODO - update needs to be finalized for Step 2 needs;; can we simplify?
 Step 2b- Overlap for aquatic species based HUC12:

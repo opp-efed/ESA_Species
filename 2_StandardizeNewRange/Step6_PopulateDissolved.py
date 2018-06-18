@@ -11,7 +11,7 @@ import arcpy
 # if different columns need to be added
 
 
-# TODO can we dynamically make the join table from master list using panadas and remove hard code and the need for the join table?
+# TODO Dynamically make the join table from master list using panadas and remove hard code/join table?
 # join table could be come a problem due to the way arc changes col headers of join
 # see script Step6_UpdateAllAtt_NAD83Files_pandas as option for loading data directly from maste
 

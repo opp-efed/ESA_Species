@@ -6,7 +6,8 @@ import pandas as pd
 # TODO remove hard code to col index in the loop master function
 # ToDO merge with other step 1 scripts and add the user prompts
 # Tile: Moves CH files found in the current update gdb and moves them to the corresponding group gdb in the
-# the spatial library found at the outfolder location
+# the spatial library found at the outfolder location; second generalized file is also generate that removed extraneous
+# # vertices
 #
 # NOTE HARD CODE TO WORK WITH CH files
 
@@ -20,13 +21,13 @@ outfolder_raw = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA
 outfolder_gen = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
                 r'\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
 
-
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
 file_dict = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
             '\_ExternalDrive\UpdateSpatialLibraries\MovePhase_CH.csv'
 group_colindex = 16
 entid_colindex = 0
 CHGIS_colindex = 22
+
 
 # ## FUNCTIONS
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
@@ -43,6 +44,7 @@ def fcs_in_workspace(workspace):
 def create_gdb(out_folder, out_name, outpath):
     if not arcpy.Exists(outpath):
         arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
+
 
 # for each line in the import table, loops through fc from the gdb on the line, and exported a copy
 # to the spatial library for that specie group
@@ -86,6 +88,7 @@ def loop_species(file_dict_fun, group_list, out_path, out_gen):
                     continue
         del header
 
+
 # loop through master list and makes a list of all species found in current group
 def loop_master(current_group, masterlist):
     grouplist = []
@@ -128,7 +131,6 @@ for group in sp_groups:
     # out gdb for the current species found in the spatial library indicated as the outfolder
     outpath = str(outfolder_raw) + os.sep + str(current_group) + '.gdb'
     outpath_gen = str(outfolder_gen) + os.sep + str(current_group) + '.gdb'
-
 
     if not arcpy.Exists(outpath):
         create_gdb(outfolder_raw, str(current_group), outpath)

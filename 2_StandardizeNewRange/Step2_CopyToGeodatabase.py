@@ -23,34 +23,36 @@ name_dir = "UpdatedProcess_December2017"
 # in yyyymmdd received date
 receivedDate = '20171204'
 
-
-
 # FUNCTIONS
 
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
+
+
 def fcs_in_workspace(workspace):
     arcpy.env.workspace = workspace
-    for fc in arcpy.ListFeatureClasses():
-        yield (fc)
-    for ws in arcpy.ListWorkspaces():
-        for fc in fcs_in_workspace(ws):
-            yield (fc)
-
+    for fcs in arcpy.ListFeatureClasses():
+        yield (fcs)
+    for wks in arcpy.ListWorkspaces():
+        for fcs in fcs_in_workspace(wks):
+            yield (fcs)
 
 # creates directories to save files
-def create_directory(path_dir, outLocationCSV, OutFolderGDB):
-    if not os.path.exists(path_dir):
-        os.mkdir(path_dir)
-        print "created directory {0}".format(path_dir)
-    if not os.path.exists(outLocationCSV):
-        os.mkdir(outLocationCSV)
-        print "created directory {0}".format(outLocationCSV)
-    if not os.path.exists(OutFolderGDB):
-        os.mkdir(OutFolderGDB)
-        print "created directory {0}".format(OutFolderGDB)
 
+
+def create_directory(path_directory, out_csv, out_gdb):
+    if not os.path.exists(path_directory):
+        os.mkdir(path_directory)
+        print "created directory {0}".format(path_directory)
+    if not os.path.exists(out_csv):
+        os.mkdir(out_csv)
+        print "created directory {0}".format(out_csv)
+    if not os.path.exists(out_gdb):
+        os.mkdir(out_gdb)
+        print "created directory {0}".format(out_gdb)
 
 # creates date stamped generic file
+
+
 def create_flnm_timestamp(namefile, outlocation, date_list, file_extension):
     file_extension.replace('.', '')
     filename = str(namefile) + "_" + str(date_list[0]) + '.' + file_extension
@@ -59,6 +61,8 @@ def create_flnm_timestamp(namefile, outlocation, date_list, file_extension):
 
 
 # outputs table from list generated in create FileList
+
+
 def create_out_table(list_name, csv_name):
     with open(csv_name, "wb") as output:
         writer = csv.writer(output, lineterminator='\n')
@@ -67,30 +71,35 @@ def create_out_table(list_name, csv_name):
 
 
 # Create a new GDB
+
+
 def create_gdb(out_folder, out_name, outpath):
     if not arcpy.Exists(outpath):
         arcpy.CreateFileGDB_management(out_folder, out_name, "CURRENT")
 
 
-def copyFCtoGEO(InFileLocations, outFilegdbpath, file_list, failed_list):
-    for fc in fcs_in_workspace(InFileLocations):
+def copy_fc_to_geo(in_location, out_location_path, file_list, failed_list):
+    for fc in fcs_in_workspace(in_location):
         try:
             basename, extension = os.path.splitext(fc)
-            outFC = arcpy.ValidateTableName(basename)
-            copiedFC = outFilegdbpath + os.sep + str(outFC)
-            outFeatureClass = os.path.join(outFilegdbpath, copiedFC)
-            if not arcpy.Exists(outFeatureClass):
-                add_new = str(fc) + "," + str(outFC)
+            out_fc = arcpy.ValidateTableName(basename)
+            copied_fc = out_location_path + os.sep + str(out_fc)
+            out_feature_class = os.path.join(out_location_path, copied_fc)
+            if not arcpy.Exists(out_feature_class):
+                add_new = str(fc) + "," + str(out_fc)
                 print add_new
                 file_list.append(add_new)
-                arcpy.CopyFeatures_management(fc, outFeatureClass)
+                arcpy.CopyFeatures_management(fc, out_feature_class)
             else:
                 print "FC already copied"
-        except:
+        except Exception as error:
+            print(error.args[0])
             print "Failed  " + str(fc)
             add_failed = str(fc)
             failed_list.append(add_failed)
-    return file_list, failed_list
+            if arcpy.Exists(out_feature_class):  # Deletes files that was interrupted during copy it would be incomplete
+                arcpy.Delete_management(out_feature_class)
+            return file_list, failed_list
 
 
 # static variable no user input needed unless making change to script structure
@@ -139,7 +148,7 @@ create_gdb(OutFolderGDB, OutGDB, outFilegdbpath)
 
 
 # Copy all spatial files found to a file geodatabase created above
-addSRList, FailedList = copyFCtoGEO(InFileLocations, outFilegdbpath, OrgSRList, FailedList)
+addSRList, FailedList = copy_fc_to_geo(InFileLocations, outFilegdbpath, OrgSRList, FailedList)
 
 # write data store in lists to out tables in csv format
 create_out_table(OrgSRList, csvpath)

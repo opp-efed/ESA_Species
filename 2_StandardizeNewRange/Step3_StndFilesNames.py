@@ -34,7 +34,7 @@ receivedDate = '20171204'
 
 # #DICT for name change original file to EPA Std
 
-
+# TODO dynamically set up dictionary to the master list to make file name
 NmChangeDICT = {'FCH_CKSRF_2017':' CH_4300_poly_20171204',
 
  }

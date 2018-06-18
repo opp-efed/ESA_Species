@@ -176,6 +176,12 @@ group_gdb = InGDB
 arcpy.env.workspace = group_gdb
 fc_list = arcpy.ListFeatureClasses()
 
+# TODO simplify so it go directly into projection coordinate system by setting the transformation see
+# Step5_Projected_Raster_SingleGDB_SpComp in step 4b
+
+# TODO set up fuction that will check the projection then re-project to make this a cleaner script with the
+# transformation to a projected coordinate system
+
 # for each file in in GDB checks the spatial reference, and re-projects into the standard,
 # if a transformation this is done to the temp gdb
 for fc in fc_list:

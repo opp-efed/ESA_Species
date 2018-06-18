@@ -1,5 +1,12 @@
 J. Connolly Updated 1/3/2018 , August 2017
 
+Federal land information data download from the national map of USGS winter of 2015 - not updated since check dec 2017
+https://nationalmap.gov/small_scale/mld/fedlanp.html
+This data set was used  because it was the same data used by FESTF when they conducted their federal lands analysis. It
+was compared with the protected lands database PADUS in the summer/fall of 2017.  PADUS did not include a number of the
+DOD holdings along with several other missing locations for this reason it was decided to not use the PADUS dataset but
+stick with the one from the national map - ESA discussion summer/fall 2017
+
 Time line to complete update:
 Time line Assumptions:
 

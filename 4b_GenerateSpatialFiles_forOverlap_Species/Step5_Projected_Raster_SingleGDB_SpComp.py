@@ -4,47 +4,46 @@ from arcpy.sa import *
 import arcpy
 import pandas as pd
 
-# Title - Re-projects union raster into projection by region
+# Title - Re-projects union raster into projection by region - if geographic conversion needs to be done (NAD to WGS_
+# NAD_1983_To_WGS_1984_1" is used
 # in and out location
-
-# inGDB = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_20180110.gdb'
-# outfolder = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection'
-# regional_acres_table = 'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv'
-# midGBD = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\temp.gdb'
-
-inGDB = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_20180110.gdb'
-outfolder = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection'
-regional_acres_table = 'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110.csv'
-midGBD = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\temp.gdb'
+#
+# inGDB = 'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+# outfolder = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection'
+# regional_acres_table = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv'
 
 
-skip_group = []
+inGDB = 'D:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+outfolder = r'D:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection'
+regional_acres_table = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
+
+
+skip_region = ['PR','AK', 'VI', 'AS', 'CNMI', 'GU', 'HI']
+skip_group = ['Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Flowering', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 #Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Flowering', 'Insects',
 # 'Lichens', 'Mammals','Snails'
+#'Ferns', 'Fishes',
 # projection folder
-prjFolder = "C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA" \
-            "\_ExternalDrive\projections\FinalBE"
-# Dictionary of all projections needed for raster and the snap raster
-# snap raster must be in desired projection with the desired cell size
-#
-skip_region = []
+prjFolder = r'D:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+            r'\Projects\ESA\_ExternalDrive\projections\FinalBE'
 
+# Also use as snap rasters when projecting with will set the extent of the output projected raster to just the region
 RegionalProjection_Dict = {
-    'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
 # TODO can the snap raster be used as the spatial reference for the projection?
 Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
-               'HI': 'NAD_1983_UTM_Zone__4N.prj',
+               'HI': 'NAD_1983_UTM_Zone_4N.prj',
                'AK': 'WGS_1984_Albers.prj',
-               'AS': 'WGS_1984_UTM_Zone__2S.prj',
+               'AS': 'WGS_1984_UTM_Zone_2S.prj',
                'CNMI': 'WGS_1984_UTM_Zone_55N.prj',
                'GU': 'WGS_1984_UTM_Zone_55N.prj',
                'PR': 'Albers_Conical_Equal_Area.prj',
@@ -79,64 +78,66 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
     print str(snap_raster)
 
     # location prj files
-    wgs_coord_file = prj_folder + os.sep + 'WGS_1984.prj'
     prj_file_path = prj_folder + os.sep + prj_current
 
     # extract spatial information from prj files
-    dsc_wgs = arcpy.Describe(wgs_coord_file)
-    wgs_coord_sys = dsc_wgs.spatialReference
 
     dsc_prj = arcpy.Describe(prj_file_path)
     prj_sr = dsc_prj.spatialReference
     prj_datum = prj_sr.GCS.datumName
-
+    print in_raster
+    prj_raster_name = str(inraster) + "_" + prj_name  # regional species raster
+    prj_raster = out_gdb + os.sep + prj_raster_name  # complete output path for regional species raster
     try:
-        if prj_datum == "D_WGS_1984":
-            arcpy.Delete_management("inital_r_lyr")
-            print in_raster
-            arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
+        if prj_datum == "D_WGS_1984":  #  # indicates the file needs a geographic tranformation from  NAD 83 to WGS 84
 
-            raster_other_geo = str(inraster) + "_WGS84"
-            out_other_raster = midGBD + os.sep + raster_other_geo
-            print out_other_raster
-
-            prj_raster_name = raster_other_geo + "_" + prj_name
-            prj_raster = out_gdb + os.sep + prj_raster_name
-
-            if not arcpy.Exists(out_other_raster):
-                print 'Projecting {0} into {1}'.format(inraster, 'WGS 1984')
-                arcpy.ProjectRaster_management("inital_r_lyr", out_other_raster, wgs_coord_sys)
-
-            if not arcpy.Exists(prj_raster):
-                arcpy.Delete_management("WGS_lyr")
-                arcpy.MakeRasterLayer_management(out_other_raster, "WGS_lyr", "#", snap_raster, '#')
-                print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management("WGS_lyr", prj_raster, "snap", 'NEAREST', "30")
-
-
-            else:
-                print str(prj_raster_name) + " already exists"
-
-        else:
-            print in_raster
-            prj_raster_name = str(inraster) + "_" + prj_name
-            prj_raster = out_gdb + os.sep + prj_raster_name
 
             if not arcpy.Exists(prj_raster):
                 arcpy.Delete_management("inital_r_lyr")
-                arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr", "#", snap_raster, '#')
+                arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
+
+                # Set the processing extent to be equal to the use layer; only species within the extent will be
+                # included in the output species file
+                myExtent = snap_raster.extent
+                arcpy.env.extent = myExtent
+
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
-                arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, "snap", 'NEAREST', "30")
+                # "NAD_1983_To_WGS_1984_1" is a geographic transformation used to go from NAD_1983 to WGS 84 for the US
+                # TODO check to see if different transformation would make more sense WGS_1984_(ITRF00)_To_NAD_1983
+                arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, prj_sr, "NEAREST", "30", "NAD_1983_To_WGS_1984_1")
 
             else:
                 print str(prj_raster) + " already exists"
 
-        print 'Completed projection of {0} in: {1}\n'.format(prj_name, (datetime.datetime.now() - start_raster))
+
+        else:
+
+            if not arcpy.Exists(prj_raster):
+
+                arcpy.Delete_management("inital_r_lyr")
+                arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
+
+                # Set the processing extent to be equal to the use layer; only species within the extent will be
+                # included in the output species file
+                myExtent = snap_raster.extent
+                arcpy.env.extent = myExtent
+
+                print 'Projecting {0} into {1}'.format(inraster, prj_name)
+                arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, prj_sr, 'NEAREST', "30")
+
+
+            else:
+                print str(prj_raster) + " already exists"
+        print 'Completed loop of {0} in: {1}\n'.format(prj_name, (datetime.datetime.now() - start_raster))
+
+
     except Exception as error:
         print 'Error in loop'
         print(error.args[0])
 
 
+# Identifies the species groups found in each the region; only the species files for the groups in the regions need to
+# be projected
 def sp_group_in_region(regional_table, c_region):
     check_extention = (regional_table.split('.'))[1]
     if check_extention == 'xlsx':
@@ -172,7 +173,8 @@ for region in list_regions:
             split_group = v.split(" ")
             final_sp_group_region.append(split_group[0])
 
-        print final_sp_group_region
+        print final_sp_group_region  # list of species groups found in region; only include first work if there is a
+        # "_" in the species group name ie Flowering_Plants is loaded as Flowering
         regional_prj = Region_Dict[region]
         for raster in raster_list:
             sp_group = (raster.split)("_")[1]
