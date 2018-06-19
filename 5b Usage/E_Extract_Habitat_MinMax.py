@@ -12,7 +12,7 @@ print "Start Time: " + start_time.ctime()
 
 in_directory_species_grids = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined'
 look_up_fc_ab = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-look_up_fc = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_SpGroup_Union_final_20180110.gdb\CH_Mammals_Union_20180110'
+look_up_fc = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_SpGroup_Union_final_20180110.gdb'
 raster_layer_libraries = r'D:\Workspace\UseSites\ByProjection'
 
 arcpy.env.workspace = look_up_fc

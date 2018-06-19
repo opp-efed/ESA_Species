@@ -24,7 +24,7 @@ in_directory_species_grids = 'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUC
 
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined_Smoothed'
 #'AK', 'HI', 'AS','CNMI','GU', 'VI', 'PR',
-skip_region = [ 'AK' ]
+skip_region = [ 'AK', 'GU']
 #skip_region = [ 'CONUS', 'CNMI','PR','VI', 'AK', 'GU']
 #skip_species = ['r', 'ch', 'amphi', 'amphib', 'birds', 'clams', 'conife', 'crust', 'crusta', 'ferns', 'fishes', 'fishe',
 #                'flower',
