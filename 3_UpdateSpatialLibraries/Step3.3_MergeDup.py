@@ -4,10 +4,11 @@ import datetime
 import arcpy
 import pandas as pd
 
-# Tile: Merge files for a species that represent different sections of a range, ie nest and forageing, or buffered line
+# Tile: Merge files for a species that represent different sections of a range, ie nest and foraging, or buffered line
 # and associated polygon then archives the individual files
 
-#TODO Set up archive as fuvction so it can be use on other scripts
+# TODO Set up archive as fuvction so it can be use on other scripts
+# Merged files discussed and agreed upon with the ESA team fall 2015; revisited and stayed the same fall 2017
 
 # User input variable
 masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \

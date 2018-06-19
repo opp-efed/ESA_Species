@@ -8,14 +8,15 @@ import pandas as pd
 # NOTE  Make sure all commas are removed from master table before running this script to a find all and replace
 # TODO Update loopspecies to pandas df so that the commas are no longer a problem
 # THIS IS HARD CODED TO ONLY WORK WITH CH FILES
+# TODO update to filter qualitative species that are excluded from overlap out of the counts
 
+#CONFIRMED with ESA team that CH for qualtitave species should also be excluded from overlap # Fall 2017
 
 # User input variable
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
+masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
 # Spatial library for critical habitat files
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-           '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+infolder = 'D:\ESA\SpatialLibrary\Generalized files\CriticalHabitat'
 # also need to set the hard code to the index number for the cols reference in loop species
 
 
@@ -77,6 +78,7 @@ for group in alpha_group:
 
     # print removed, devlist
     group_gdb = infolder + os.sep + str(group) + '.gdb'
+    print group_gdb
 
     arcpy.env.workspace = group_gdb
     fclist = arcpy.ListFeatureClasses()

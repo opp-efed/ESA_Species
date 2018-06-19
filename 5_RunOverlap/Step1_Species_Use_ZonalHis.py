@@ -28,7 +28,8 @@ out_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EP
 
 
 # Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
-in_location_species_base = r'D:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined'
+in_location_species_base = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection' \
+                           r'\Grid_byProjections_Combined'
 in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # Range
 # AK_WGS_1984_Albers
@@ -38,7 +39,7 @@ in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # PR_Albers_Conical_Equal_Area
 # CONUS_Albers_Conical_Equal_Area
 
-#CH
+# CH
 # CONUS_Albers_Conical_Equal_Area
 # VI_WGS_1984_UTM_Zone_20N
 temp_file = "temp_table3"  # Should not use the same temp file name when running multiple instances at the same time
@@ -50,7 +51,7 @@ use_list = []
 
 # ################Static variables
 arcpy.CheckOutExtension("Spatial")
-in_location_species = in_location_species_base +os.sep+in_location_species_folder
+in_location_species = in_location_species_base + os.sep + in_location_species_folder
 region = os.path.basename(in_location_species).split("_")[0]  # folder with species composite must start with region abb
 use_location = use_location_base + os.sep + str(region) + "_" + run_group + ".gdb"
 arcpy.env.workspace = use_location
@@ -115,6 +116,7 @@ def zone(zone_lyr, raster_lyr, temp_table, snap):
     # Set Snap Raster environment
     arcpy.env.snapRaster = Raster(snap)
     start_zone = datetime.datetime.now()
+    arcpy.Delete_management("in_memory" + os.sep + temp_table)
     arcpy.CreateTable_management("in_memory", temp_table)
     temp = "in_memory" + os.sep + temp_table
     arcpy.env.overwriteOutput = True
@@ -135,8 +137,8 @@ def zonal_hist(in_zone, in_value_raster, set_raster_symbology, region_c, use_nam
     use_nm_folder = region_c  # starting point that will be used for use_nm_folder
 
     for v in break_use:  # SEE TODO
-        if v != region and  v != 'CDL':
-            #'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
+        if v != region_c and v != 'CDL':
+            # 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
             pass
         else:
             break_bool = True
@@ -166,15 +168,15 @@ def zonal_hist(in_zone, in_value_raster, set_raster_symbology, region_c, use_nam
         # arcpy.CheckOutExtension("Spatial")
 
         arcpy.MakeRasterLayer_management(Raster(in_zone), "zone")
-        myExtent = Raster(in_zone).extent
-        arcpy.env.extent = myExtent
+        # my_extent = Raster(in_zone).extent
+        # arcpy.env.extent = my_extent
         arcpy.MakeRasterLayer_management(Raster(in_value_raster), "rd_lyr")
 
         arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
         temp_return, zone_time = zone("zone", "rd_lyr", temp_table, snap)
 
         list_fields = [f.name for f in arcpy.ListFields(temp_return)]
-        att_array = arcpy.da.TableToNumPyArray((temp_return), list_fields)
+        att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
         att_df = pd.DataFrame(data=att_array)
         att_df['LABEL'] = att_df['LABEL'].map(lambda x: x).astype(str)
         att_df.to_csv(out_path_final + os.sep + csv)
@@ -207,27 +209,27 @@ for raster_in in list_raster:
     for use_nm in use_list:
         out_folder = out_results
         if region != 'CONUS':
-            snap_raster = snap_raster_dict[region]
+            snap_raster = snap_raster_dict[str(region)]
             if use_location.endswith('UseLayers.gdb'):
-                symbologyLayer = symbology_dict[region][0]
+                symbologyLayer = symbology_dict[str(region)][0]
                 out_folder = out_folder + os.sep + 'Agg_Layers'
                 create_directory(out_folder)
             elif use_location.endswith('OnOffField.gdb'):
-                symbologyLayer = symbology_dict[region][1]
+                symbologyLayer = symbology_dict[str(region)][1]
                 out_folder = out_folder + os.sep + 'OnOffField'
                 create_directory(out_folder)
         else:
-            snap_raster = snap_raster_dict[region]
+            snap_raster = snap_raster_dict[str(region)]
             if use_location.endswith('UseLayers.gdb'):
-                symbologyLayer = symbology_dict[region][0]
+                symbologyLayer = symbology_dict[str(region)][0]
                 out_folder = out_folder + os.sep + 'Agg_Layers'
                 create_directory(out_folder)
             elif use_location.endswith('OnOffField.gdb'):
-                symbologyLayer = symbology_dict[region][1]
+                symbologyLayer = symbology_dict[str(region)][1]
                 out_folder = out_folder + os.sep + 'OnOffField'
                 create_directory(out_folder)
             elif use_location.endswith('Yearly.gdb'):
-                symbologyLayer = symbology_dict[region][2]
+                symbologyLayer = symbology_dict[str(region)][2]
                 out_folder = out_folder + os.sep + 'Indiv_Year_raw'
                 create_directory(out_folder)
         use_path = use_location + os.sep + use_nm

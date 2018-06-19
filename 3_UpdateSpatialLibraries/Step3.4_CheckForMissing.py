@@ -9,13 +9,13 @@ import pandas as pd
 # NOTE  Make sure all commas are removed from master table before running this script to a find all and
 # replace
 # TODO Update cross check to pandas df so that the commas are no longer a problem
+# TODO update to filter qualitative species that are excluded from overlap out of the counts
 
-# User input variable
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
+masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
 # Spatial Library for range files
-infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
-           '\SpatialLibrary\Generalized files\Range'
+infolder = 'D:\ESA\SpatialLibrary\Generalized files\Range'
+
 # also need to set the hard code to the index number for the cols reference in loop species
 
 group_colindex = 'Group'

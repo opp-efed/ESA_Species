@@ -10,12 +10,12 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 arcpy.CheckOutExtension("Spatial")
 
-in_directory_species_grids = r'D:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
+in_directory_species_grids = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
 raster_layer_libraries = r'D:\Workspace\UseSites\ByProjection'
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined'
 
-skip_region = ['AS','CNMI','GU','HI','PR','VI','AK']
-skip_species = ['r','ch','amphi','amphib','birds','clams','conife','crust','crusta','ferns','fishes','fishe','flower','flowe',
+skip_region = ['AS','CNMI','CONUS','HI','PR','VI','AK']
+skip_species = ['r','ch','amphi','amphib','clams','conife','crust','crusta','ferns','fishes','fishe','flower','flowe',
                 'insect','insec','mammal','mamma','reptil','repti','snails']
 
 snap_dict = {'CONUS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
@@ -45,11 +45,11 @@ for folder in list_dir:
             os.mkdir(out_folder)
         print('Generating lists of rasters to combine')
         # get list of on/off field layers for region
-        #on_off_field = raster_layer_libraries + os.sep + region + '_' + 'OnOffField.gdb'
-        #arcpy.env.workspace = on_off_field
-        #raster_list_on_off = arcpy.ListRasters()
+        on_off_field = raster_layer_libraries + os.sep + region + '_' + 'OnOffField.gdb'
+        arcpy.env.workspace = on_off_field
+        raster_list_on_off = arcpy.ListRasters()
         # add path to the raster name for combine because the workspace is changing
-        #raster_list_combine = [on_off_field + os.sep + v for v in raster_list_on_off]
+        raster_list_combine = [on_off_field + os.sep + v for v in raster_list_on_off]
         # get list of the habitat and elevation files for region
         raster_list_combine = []
         elevation_habitat = raster_layer_libraries + os.sep + region + '_' + 'HabitatElevation.gdb'
@@ -96,6 +96,7 @@ for folder in list_dir:
 
                         # add meaningful col headers for raster as they all start with the projection
                         field = [f.name for f in arcpy.ListFields(out_folder + os.sep + spe_raster[:8])]
+
                         for f in [u'Rowid', u'VALUE', u'COUNT']:  # remove count columns
                             field.remove(f)
                         current_header = []
@@ -135,6 +136,14 @@ for folder in list_dir:
                             out_df['Desired output header'] = pd.Series(merge_list_d).values
                             out_df['Path to original raster'] = pd.Series(merge_list_p).values
                             out_df.to_csv(out_folder + os.sep + spe_raster + '_lookup_rasters.csv')
+
+                            # when exporting to array cols after the rowid, count and value are 0. Export using the table
+                            # converstion then will join table back to the '_lookup_rasters.csv' exported above to get
+                            # meaningful columns
+                            arcpy.TableToTable_conversion(out_folder + os.sep + spe_raster[:8], out_folder, spe_raster[:8] +'_att.csv')
+
+
+
 
                         # removes current spe file to loop to next one; other rasters stay the same
                         raster_list_combine.remove(in_spe)

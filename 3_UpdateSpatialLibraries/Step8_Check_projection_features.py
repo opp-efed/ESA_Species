@@ -7,7 +7,7 @@ import functions
 
 import arcpy
 
-# Title : Checks projection for all fc infolder to make sure they are in the STD geo projection before moving forward
+# Title : Checks projection for all fc in folder to make sure they are in the STD geo projection before moving forward
 
 # infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
 #           '\SpatialLibrary\Generalized files\Range'

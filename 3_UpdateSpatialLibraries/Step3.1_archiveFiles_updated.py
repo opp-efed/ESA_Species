@@ -4,28 +4,36 @@ import arcpy
 import pandas as pd
 
 # Tile: Archived files that were updated- uses output from checkDuplicate, be sure to buffer and merge any point or
-# line files before executing.
+# line files before executing.  Generate a look up dictionary of the update date for the file based on the entity ids in
+# the species_dulplicate_file list.  After generating the look-up, the older files is archived.  Output will tell you
+# if there are multiple files to archive and no archive will occur.  Archive only occurs if there are two files with
+# different dates.
+
+# NOTE Files that are being replaced with multiple files must be manually archived before running!!!!!
+# TODO find automated way to address issue of files being updated by multiple files; perhaps they should be merged
+# before moving them to the spatial libraries
 
 # User input variable
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
+masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
 group_colindex = 16
-infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\Range'
-archivefolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\Range\ArchivedRange'
+infolder = r'D:\ESA\SpatialLibrary\CriticalHabitat'
+archivefolder = 'D:\ESA\SpatialLibrary\CriticalHabitat\Archived'
 
 skipgroup = []
 
 # all groups
 # ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans','Ferns and Allies',
 # 'Flowering Plants', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
+
 # list of species with updated from from the Check Duplicates script Step 4.0; only include species that have a
 # replacement file.  If files should be merged together, then it should continue through to step 4.3
-# NOTE Files that are being replaced with multiple files must be manually archived!!!!!
+# NOTE Files that are being replaced with multiple files must be manually archived before running!!!!!
 species_dulplicate_file = ['192', '200', '116', '140', '83', '139', '129', '142', '138', '1509', '2448', '2514', '2528',
                            '2842', '3398', '3654', '4112', '4274', '4300', '4799', '4992', '5180', '5265', '5815',
                            '6220', '6578', '6843', '6966', '7590', '7834', '7855', '7989', '8241', '8278', '9021', '20',
                            '4', '18', '51', '1240', '175', '151', '173']
-
+species_dulplicate_file = ['4093', '7855', '8181', '154',  '9707']
 
 # Create a new GDB
 def create_gdb(out_folder, out_name, out_path):

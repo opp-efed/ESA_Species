@@ -4,12 +4,12 @@ import datetime
 import arcpy
 import pandas as pd
 
-# Title : Updates all fc to std att need for composite files using the master list.
+# Title : Updates all fc to std att needed for composite files using the master list.
 
 # This script is meant for the indv spe file not composite; it will dissolve the files with multiple rows
 # this is a different script to update all atts of the composites
 
-# TODO This can be optimize by att  loading data into an array rather than dicts
+# TODO This can be optimize by att loading data into an array rather than dicts
 # TODO update files so that character limits in the attribute table doesn't block data update
 # TODO set up so that only the incorrect col is deleted and updated
 

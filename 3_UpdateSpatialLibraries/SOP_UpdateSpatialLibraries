@@ -1,17 +1,20 @@
 
-Author J. Connolly updated December 201
+Author J. Connolly updated December 2017
 
-Purpose: Standardized files are then moved the species spatial libraries, points and line are buffered by 30 meter so
-they have an area associated with the file need for overlap, species with multiple files are merged into a single file,
-old files are archive and attribute updated to match the current master list.Standardized files are then moved the
-species spatial libraries, points and line are buffered by 30 meter so they have an area associated with the file
-need for overlap, species with multiple files are merged into a single file, old files are archive and attribute
-updated to match the current master list.
+Purpose: Moves standardized location files from Step 1 to species spatial libraries. Additional updates include points
+and line buffered by 15 meters so they are area based for overlap, species with multiple files are merged into a single
+file, attributes updated to match the current master list, and old files/files for delisted species are archived.
+
+If the file is removed from the overlap analysis the reason is appended to the beginning of the file name.  Multiple
+files that were merged into a single file are also moved to the archived folder.  All archived files have the date of
+the archive appended to the end of the file.
 
 15 meter buffer on either side for a total of 30 meters set by ESA team Fall 2016-  matched the pixel size of the
 rasters
 
 NOTE BEFORE STARTING CREATE AN ARCHIVED BACK-UP OF THE MOST RECENT SPATIAL LIBRARY
+NOTE: Steps are completed on both the generalized and non-generalized files
+#TODO do we need to retain the non-generalized files?
 
 # TODO Streamline so of the steps if possible
 Step 1: After creating an archived of the current spatial libraries, moved  new or updated files into the libraries.

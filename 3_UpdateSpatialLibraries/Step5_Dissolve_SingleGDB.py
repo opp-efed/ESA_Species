@@ -4,9 +4,10 @@ import datetime
 
 import arcpy
 
-# Tile: Dissolve files identify in Step 5 so that there is a singel multipart polygon for each species.
+# Tile: Dissolve files identify in Step 5 so that there is a single multipart polygon for each species.
 
-# TODo General clean up to make it more useful in this step, pull from a different dissolve script can me optimize for this step of the process
+# TODo General clean up to make it more useful in this step, pull from a different dissolve script can me optimize
+# for this step of the process
 
 # Final fields to be kept
 #dissolveFields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID','Status', 'Pop_Abb']

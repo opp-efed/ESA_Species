@@ -22,6 +22,11 @@ species list is also used in Step 6
     cartridge effor for Bulletins, GAP-polygon file generated from the GAP pilot the files were generated from the GAP
     land cover layer and habitat assigned by the Services - Fall 2016
     - date - date  received
+    - After files are moved to spatial library, point and line are buffered and species with multiple files are merger
+        - these are identified in the featuretype part of the name
+        - lineBuffer or pointBuffer means the file was buffered to a polygon
+        - merged files will have _merged in the file name and the dates of the two orginal files and the date of the
+        final file in the file name
 
 # TODO Combine Step 3,4,5,6 into a single script
 

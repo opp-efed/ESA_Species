@@ -4,10 +4,15 @@ import arcpy
 import pandas as pd
 import sys
 
-# Tile: Archives species files for species that have been removed from the ESA list
+# Tile: Archives species files for species that have been removed from the ESA list or overlap analysis.  The reason the
+# species is removed from the overlap analysis is appended to the beginning of the file name and the date of the archive
+# is appended to the end.  A csv is outputs to track why a files was archived. The files to be removed are identified by
+# comparing the previous master species list to the current one.
 
-# compares new master list to old master and archives any species that has been removed
+# compares new master list to old master and archives any species that has been removed.  User identifies reason for
+# removal
 
+#TODO Make the archive of the qualitative species dynamic
 # User input variable
 # input tables
 
@@ -16,19 +21,14 @@ masterlist_old = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (
 masterlist_current = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                  '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109_dropped_QualSpeciesCheck.csv'
 
-# masterlist_current = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#              '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
-# masterlist_old = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#                  '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_June2016_20160907.csv'
+
 
 # Reasons = Qual_, Delisted_, Extinct_,UninhabIsland_, PosExtinct_, CaveDweller_, DraftBEOther_,MostlyOutsideUS_,
 # CaptivityOnly_, QualOther_
-reason_removed = 'QualOther_'
+reason_removed = 'QualOther_'  # Prefix is appended to the beginning of the file name
 
 today = datetime.datetime.today()
 archive_date = today.strftime('%Y%m%d')
-
-
 
 # in spatial library
 

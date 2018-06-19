@@ -13,11 +13,13 @@ import pandas as pd
 masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
              '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
 # Spatial Library for range files
-in_folder = 'D:\ESA\SpatialLibrary\Generalized files\Range'
+in_folder = 'D:\ESA\SpatialLibrary\CriticalHabitat'
 group_colindex = 16  # Index position of the group column in the master species list
 # #########Functions
 
-# generates a list of sp groups from masterlist
+# generates a list of sp groups from master list
+
+
 def get_group_list(master_list):
     grouplist = []
     with open(master_list, 'rU') as inputFile:

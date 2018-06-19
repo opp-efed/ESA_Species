@@ -5,6 +5,7 @@ import pandas as pd
 
 # TODO remove hard code to col index in the loop master function
 # ToDO merge with other step 1 scripts and add the user prompts
+
 # Tile: Moves CH files found in the current update gdb and moves them to the corresponding group gdb in the
 # the spatial library found at the outfolder location; second generalized file is also generate that removed extraneous
 # # vertices

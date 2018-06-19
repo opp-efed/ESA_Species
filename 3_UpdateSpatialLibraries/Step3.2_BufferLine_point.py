@@ -5,7 +5,7 @@ import pandas as pd
 
 # #TODO archive line feature class to line GDB
 # Tile: Will buffer point and line features by 15 meters, this buffer distance can be adjust with the buffer_distance
-# variable
+# variable.  This is need so the file is area based for the overlap analysis
 
 # #################User input variable
 # in and out workspaces
@@ -16,7 +16,7 @@ archivefolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA
 
 masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
              '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
-buffer_distance = "15 METERS"  # Buffer distance set by ESA team fall 2016
+buffer_distance = "15 METERS"  # Buffer distance set by ESA team fall 2016 - 30 meter total
 date = 20171204
 group_colindex = 16
 
