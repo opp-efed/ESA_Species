@@ -14,24 +14,24 @@ import datetime
 # #TODO make this a dynamaic process so the number of vector files can be dynamic
 
 # Input files to be intersect with species must cover the extent of the regions, IE include AS, GU etc
-in_huc_vector = r'D:\ESA\NHDPlusNationalData\InfoAddedForESA\FilesAppended_ESA.gdb\HUC12_Merge'
-in_sum_file = r'D:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+in_huc_vector = r'L:\ESA\NHDPlusNationalData\InfoAddedForESA\FilesAppended_ESA.gdb\HUC12_Merge'
+in_sum_file = r'L:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
 
-# # Union species files in vector format
-# invector_location = r'D:\ESA\UnionFiles_Winter2018\Range' \
-#                     r'\R_Clipped_Union_20180110.gdb'
-# # Output location for union species files intersected with counties and HUC12 (both vector) used for usage
-# # adjustments
-# out_vector_projected = r'D:\ESA\UnionFiles_Winter2018\Range' \
-#                        r'\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+# Union species files in vector format
+invector_location = r'L:\ESA\UnionFiles_Winter2018\Range' \
+                    r'\R_Clipped_Union_20180110.gdb'
+# Output location for union species files intersected with counties and HUC12 (both vector) used for usage
+# adjustments
+out_vector_projected = r'L:\ESA\UnionFiles_Winter2018\Range' \
+                       r'\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
 
-# Union ch files in vector format
-invector_location = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-                    r'\CH_Clipped_Union_20180110.gdb'
-# Output location for union ch files intersected with counties and HUC12 (both vector) used for usage adjustments
-out_vector_projected = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-                       r'\CH_lipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+# # Union ch files in vector format
+# invector_location = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat' \
+#                     r'\CH_Clipped_Union_20180110.gdb'
+# # Output location for union ch files intersected with counties and HUC12 (both vector) used for usage adjustments
+# out_vector_projected = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat' \
+#                        r'\CH_lipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
 
 
 # FUNCTIONS
@@ -89,7 +89,7 @@ for species_comp in list_species_vector:
                                   r"in_memory\\vector_" + str(species_comp) + 'd',
                                   ['GEOID', 'ZoneID', 'STUSPS', 'Region'])
         cnty_dissolve_completed = datetime.datetime.now()  # time tracker for intersection
-        print ' Adding InterID...cnty dissolve took {1}'.format(cnty_dissolve_completed - cnty_inter_completed)
+        print ' Adding InterID...cnty dissolve took {0}'.format(cnty_dissolve_completed - cnty_inter_completed)
         arcpy.AddField_management(r"in_memory\\vector_" + str(species_comp) + 'd', "InterID", "DOUBLE")
         with arcpy.da.UpdateCursor(r"in_memory\\vector_" + str(species_comp) + 'd', ['OBJECTID', 'InterID']) as cursor:
             for row in cursor:

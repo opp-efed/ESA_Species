@@ -3,17 +3,17 @@ import os
 import datetime
 from arcpy.sa import *
 
-in_folder = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\PR_Albers_Conical_Equal_Area.gdb'
+in_folder = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\AK_WGS_1984_Albers.gdb'
 
 RegionalProjection_Dict = {
-    'CONUS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 def create_folder(folder):
@@ -30,8 +30,10 @@ def raster_other_format(in_gdb_path, snap_dict, region_c, c_gdb, out_path):
     raster_list = arcpy.ListRasters()
     snap_raster = Raster(snap_dict[region_c])
     arcpy.Delete_management("snap")
-    arcpy.MakeRasterLayer_management(snap_raster, "snap")
+    arcpy.MakeRasterLayer_management(snap_dict[region_c], "snap")
     arcpy.env.snapRaster = "snap"
+    myExtent = snap_raster.extent
+    arcpy.env.extent = myExtent
     start_conversion = datetime.datetime.now()
     print 'Starting the conversion for {0} in {1}\n'.format(raster_list, c_gdb)
     arcpy.RasterToOtherFormat_conversion(raster_list, out_path, "GRID")
@@ -43,8 +45,10 @@ def raster_other_format(in_gdb_path, snap_dict, region_c, c_gdb, out_path):
 if in_folder.endswith('gdb'):
     in_gdb = in_folder
     director_name, gdb = os.path.split(in_folder)
+    create_folder(director_name)
 
     out_folder = director_name + os.sep + 'Grids_byProjection'
+    create_folder(out_folder)
     out_location = out_folder + os.sep + gdb.replace('.gdb', '')
     create_folder(out_location)
     c_region = gdb.split("_")[0]

@@ -5,23 +5,16 @@ import arcpy
 
 # Title- converts all polygons in the inlocation to raster to be used in zonal historgram
 
-# # in and out location
-# inlocation = 'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-# outlocation = 'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-# # ZoneID (species only), InterID (species and political boundaries) or HUCID (species political boundaries and HUC2s)
-# id_field = 'HUCID'    # ZoneID, InterID or HUCID
+inlocation = 'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+outlocation = 'L:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
 
-
-inlocation = 'D:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-
-outlocation = 'D:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
 # #ZoneID (species only), InterID (species and political boundaries) or HUCID (species political boundaries and HUC2s)
 id_field = 'HUCID'  #  ZoneID, InterID or HUCID
 
 
 skip_group =[]
 # snap raster for conversion must be a NAD 83 geographic project with 30 meter cells; default cell is very large
-snapRaster = r"D:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
+snapRaster = r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
 #
 
 # ###Functions

@@ -8,35 +8,38 @@ import pandas as pd
 # NAD_1983_To_WGS_1984_1" is used
 # in and out location
 #
-# inGDB = 'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-# outfolder = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection'
+# inGDB = 'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+# outfolder = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection'
 # regional_acres_table = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv'
 
 
-inGDB = 'D:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-outfolder = r'D:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection'
-regional_acres_table = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
+inGDB = 'L:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+outfolder = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2'
+regional_acres_table = r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\R_Acres_Pixels_20180428.csv'
 
+#'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\R_Acres_Pixels_20180428.csv'
+# r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\CH_Acres_Pixels_20180430.csv'
 
-skip_region = ['PR','AK', 'VI', 'AS', 'CNMI', 'GU', 'HI']
-skip_group = ['Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Flowering', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
+# 'PR','AK', 'HI'
+skip_region = ['AK', 'HI', 'AS','CNMI', 'GU', 'PR','VI' ]
+# 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
+skip_group = ['Flowering', ]
 #Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Flowering', 'Insects',
 # 'Lichens', 'Mammals','Snails'
 #'Ferns', 'Fishes',
 # projection folder
-prjFolder = r'D:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
-            r'\Projects\ESA\_ExternalDrive\projections\FinalBE'
+prjFolder = r'C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE'
 
 # Also use as snap rasters when projecting with will set the extent of the output projected raster to just the region
 RegionalProjection_Dict = {
-    'CONUS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
 # TODO can the snap raster be used as the spatial reference for the projection?
@@ -73,9 +76,13 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
 
     snap_raster = Raster(RegionalProjection_Dict[c_region])
     arcpy.Delete_management("snap")
-    arcpy.MakeRasterLayer_management(snap_raster, "snap")
+    arcpy.MakeRasterLayer_management(RegionalProjection_Dict[c_region], "snap")
     arcpy.env.snapRaster = "snap"
     print str(snap_raster)
+    # Set the processing extent to be equal to the use layer; only species within the extent will be
+    # included in the output species file
+    myExtent = snap_raster.extent
+    arcpy.env.extent = myExtent
 
     # location prj files
     prj_file_path = prj_folder + os.sep + prj_current
@@ -96,10 +103,10 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
                 arcpy.Delete_management("inital_r_lyr")
                 arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
 
-                # Set the processing extent to be equal to the use layer; only species within the extent will be
-                # included in the output species file
-                myExtent = snap_raster.extent
-                arcpy.env.extent = myExtent
+                # # Set the processing extent to be equal to the use layer; only species within the extent will be
+                # # included in the output species file
+                # myExtent = snap_raster.extent
+                # arcpy.env.extent = myExtent
 
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
                 # "NAD_1983_To_WGS_1984_1" is a geographic transformation used to go from NAD_1983 to WGS 84 for the US
@@ -116,11 +123,11 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
 
                 arcpy.Delete_management("inital_r_lyr")
                 arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
-
-                # Set the processing extent to be equal to the use layer; only species within the extent will be
-                # included in the output species file
-                myExtent = snap_raster.extent
-                arcpy.env.extent = myExtent
+                #
+                # # Set the processing extent to be equal to the use layer; only species within the extent will be
+                # # included in the output species file
+                # myExtent = snap_raster.extent
+                # arcpy.env.extent = myExtent
 
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
                 arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, prj_sr, 'NEAREST', "30")
