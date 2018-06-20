@@ -24,12 +24,12 @@ in_directory_species_grids = 'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUC
 
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined_Smoothed'
 #'AK', 'HI', 'AS','CNMI','GU', 'VI', 'PR',
-skip_region = [ 'AK', 'GU']
+skip_region = [ 'AK', 'GU','HI','AS','CNMI','PR','VI']
 #skip_region = [ 'CONUS', 'CNMI','PR','VI', 'AK', 'GU']
 #skip_species = ['r', 'ch', 'amphi', 'amphib', 'birds', 'clams', 'conife', 'crust', 'crusta', 'ferns', 'fishes', 'fishe',
 #                'flower',
 #                'flowe', 'mammal', 'mamma', 'reptil', 'repti', 'snails', 'snail']
-skip_species = []
+skip_species = ['flower']
 snap_dict =     {'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
     'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
     'AK': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',

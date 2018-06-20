@@ -10,14 +10,16 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 arcpy.CheckOutExtension("Spatial")
 
-in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
+in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grids_byProjection'
 raster_layer_libraries = r'L:\Workspace\UseSites\ByProjection'
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined'
 
 # 'AS','GU','CONUS','HI','PR','VI','AK'
 skip_region = ['AK', 'CNMI','GU','HI','PR','VI']
-# 'r','ch','amphi','amphib','clams','conife','crust','crusta','ferns','fishes','fishe','flower','flowe','insect','insec','mammal','mamma','reptil','repti','snails'
-skip_species = []
+# 'fishes','fishe','flower', 'flowe','conife','crust','crusta','snails''ferns','insect','insec',
+
+#
+skip_species = ['r','ch','mammal','mamma',  'birds','amphi','amphib','clams','mammal','mamma','reptil','repti','birds','conife','crust','crusta','snails''ferns','insect','insec','r_ferns']
 
 snap_dict = {'CONUS': r'L:\\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
              'HI': r'L:\\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
