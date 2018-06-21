@@ -54,6 +54,32 @@ use_list = ['Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
             'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
             'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc', ]
 
+# 'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
+#             'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
+#             'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
+#             'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
+#             'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc',
+
+
+# [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
+#  u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
+#  u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc',
+#
+#
+# u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc',
+#  u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc',
+#  u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
+#
+# u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc', u'Albers_Conical_Equal_Area_CONUS_OSD_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_FederalLands_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_euc',
+#
+# u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
+#  u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc', u'Albers_Conical_Equal_Area_CDL_1016_110_euc']
+
 # ################Static variables
 arcpy.CheckOutExtension("Spatial")
 in_location_species = in_location_species_base + os.sep + in_location_species_folder
