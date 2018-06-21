@@ -22,15 +22,14 @@ from arcpy.sa import *
 # #### User input variables
 
 # Update once then remains static to set file structure
-use_location_base = 'D:\Workspace\UseSites\ByProjection'
-out_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ED_results\Results_Usage'
+use_location_base = 'L:\Workspace\UseSites\ByProjection'
+out_results = r'L:\ESA\Results_Usage'
 
 
 # Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
-in_location_species_base = r'D:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection' \
+in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
                            r'\Grid_byProjections_Combined'
-in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
+in_location_species_folder = 'AK_WGS_1984_Albers'
 # Range
 # AK_WGS_1984_Albers
 # VI_WGS_1984_UTM_Zone_20N
@@ -42,7 +41,7 @@ in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # CH
 # CONUS_Albers_Conical_Equal_Area
 # VI_WGS_1984_UTM_Zone_20N
-temp_file = "temp_table3"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table1"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
@@ -79,33 +78,33 @@ else:
 
 # Each region is a list pos 0 euc distance, pos 1 on/off, pos 2 Yearly (CONUS only)
 symbology_dict = {'CONUS': [
-    'D:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr',
-    r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_OnOff_X7072_171227.lyr',
-    r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_2010_rec.lyr'],
-    'HI': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_HI_Ag_euc.lyr',
-           r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_CCAP_HI_6.lyr'],
-    'AK': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
-           r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_NLCD_2011_81.lyr'],
-    'AS': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_AS_Ag_euc.lyr',
-           r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_CCAP_AS_6.lyr'],
-    'CNMI': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
-             r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_CNMI_6.lyr'],
-    'GU': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
-           r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_GU_6_30.lyr'],
-    'PR': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_Ag_euc.lyr',
-           r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_NLCD_81.lyr'],
-    'VI': [r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr',
-           r'D:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_CCAP_VI_6_30.lyr']}
+    r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr',
+    r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_OnOff_X7072_171227.lyr',
+    r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_2010_rec.lyr'],
+    'HI': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_HI_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_CCAP_HI_6.lyr'],
+    'AK': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_NLCD_2011_81.lyr'],
+    'AS': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_AS_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_CCAP_AS_6.lyr'],
+    'CNMI': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
+             r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_CNMI_6.lyr'],
+    'GU': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_GU_6_30.lyr'],
+    'PR': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_NLCD_81.lyr'],
+    'VI': [r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr',
+           r'L:\Workspace\UseSites\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_CCAP_VI_6_30.lyr']}
 
-snap_raster_dict = {'CONUS': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb'
+snap_raster_dict = {'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb'
                              r'\Albers_Conical_Equal_Area_cultmask_2016',
-                    'HI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-                    'AK': 'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-                    'AS': 'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-                    'CNMI': 'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-                    'GU': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-                    'PR': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-                    'VI': r'D:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+                    'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+                    'AK': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+                    'AS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+                    'CNMI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+                    'GU': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+                    'PR': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+                    'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 current_use = 1
 
@@ -113,13 +112,17 @@ current_use = 1
 
 
 def zone(zone_lyr, raster_lyr, temp_table, snap):
-    # Set Snap Raster environment
+    # Set Snap Raster environment and set extent
     arcpy.env.snapRaster = Raster(snap)
+    my_extent = Raster(snap).extent
+    arcpy.env.extent = my_extent
+
     start_zone = datetime.datetime.now()
     arcpy.Delete_management("in_memory" + os.sep + temp_table)
     arcpy.CreateTable_management("in_memory", temp_table)
     temp = "in_memory" + os.sep + temp_table
     arcpy.env.overwriteOutput = True
+
     arcpy.gp.ZonalHistogram_sa(zone_lyr, "Value", raster_lyr, temp)
     print "Completed Zonal Histogram"
 
@@ -168,8 +171,7 @@ def zonal_hist(in_zone, in_value_raster, set_raster_symbology, region_c, use_nam
         # arcpy.CheckOutExtension("Spatial")
 
         arcpy.MakeRasterLayer_management(Raster(in_zone), "zone")
-        # my_extent = Raster(in_zone).extent
-        # arcpy.env.extent = my_extent
+
         arcpy.MakeRasterLayer_management(Raster(in_value_raster), "rd_lyr")
 
         arcpy.ApplySymbologyFromLayer_management("rd_lyr", set_raster_symbology)
@@ -199,6 +201,8 @@ arcpy.env.workspace = in_location_species
 count_sp = len(arcpy.ListRasters())
 count = 0
 list_raster = (arcpy.ListRasters())
+list_raster = [v for v in list_raster if v.split('_')[0] =='r']
+print list_raster
 
 for raster_in in list_raster:
     count += 1

@@ -15,11 +15,11 @@ raster_layer_libraries = r'L:\Workspace\UseSites\ByProjection'
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined'
 
 # 'AS','GU','CONUS','HI','PR','VI','AK'
-skip_region = ['AK', 'CNMI','GU','HI','PR','VI']
+skip_region = ['AK', 'CONUS','PR']
 # 'fishes','fishe','flower', 'flowe','conife','crust','crusta','snails''ferns','insect','insec',
 
 #
-skip_species = ['r','ch','mammal','mamma',  'birds','amphi','amphib','clams','mammal','mamma','reptil','repti','birds','conife','crust','crusta','snails''ferns','insect','insec','r_ferns']
+skip_species = ['r','ch','combine']
 
 snap_dict = {'CONUS': r'L:\\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
              'HI': r'L:\\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',

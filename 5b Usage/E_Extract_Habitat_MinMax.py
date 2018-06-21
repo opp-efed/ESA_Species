@@ -10,10 +10,12 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 
-in_directory_species_grids = r'E:\Habitat\Grid_byProjections_Combined'
-look_up_fc_ab = r'E:\Habitat\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-look_up_fc = r'E:\Habitat\R_Clipped_Union_20180110.gdb'
-out_path = r'E:\test.csv'
+in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
+                             r'\Grid_byProjections_Combined'
+look_up_fc_ab = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+out_path = r'L:\ESA\UnionFiles_Winter2018\input tables\Elevation_Summary.csv'
+out_path_2 = r'L:\ESA\UnionFiles_Winter2018\input tables\Elevation_Summary_b.csv'
 
 
 arcpy.env.workspace = look_up_fc
@@ -47,6 +49,7 @@ def melt_df(df_melt):
     out_elev =pd.merge(min_by_ent,max_by_ent,on='EntityID',how='left')
     return out_elev
 
+
 def parse_tables(in_table, in_row_sp):
     in_table['ZoneID'] = in_table['ZoneID'].map(lambda x: x.replace(',', '')).astype(str)
     in_row_sp['ZoneSpecies'] = in_row_sp['ZoneSpecies'].apply(
@@ -68,6 +71,7 @@ def parse_tables(in_table, in_row_sp):
 
 
     return out_elevation
+
 out_elevation = pd.DataFrame(columns=['EntityID','Min Elevation GIS','Max Elevation GIS'])
 for folder in list_dir:
     region = folder.split('_')[0]
@@ -121,5 +125,17 @@ for folder in list_dir:
         out_elevation_working = parse_tables(merg_dem_par , sp_zone_df)
         out_elevation = pd.concat([out_elevation,out_elevation_working])
         print out_elevation
+out_elevation.to_csv(out_path_2)
+min_by_ent =out_elevation[['EntityID','Min Elevation GIS']]
+max_by_ent = out_elevation[['EntityID','Max Elevation GIS']]
 
-out_elevation.to_csv(out_path)
+min_by_ent = min_by_ent.groupby('EntityID').min()
+max_by_ent = max_by_ent.groupby('EntityID').max()
+min_by_ent = min_by_ent.reset_index()
+min_by_ent.columns = ['EntityID', 'Min Elevation GIS']
+
+max_by_ent = max_by_ent.reset_index()
+max_by_ent.columns = ['EntityID', 'Max Elevation GIS']
+out_elev = pd.merge(min_by_ent, max_by_ent, on='EntityID', how='left')
+
+out_elev.to_csv(out_path)

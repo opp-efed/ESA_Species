@@ -21,9 +21,9 @@ regional_acres_table = r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\R
 # r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\CH_Acres_Pixels_20180430.csv'
 
 # 'PR','AK', 'HI'
-skip_region = ['AK', 'HI', 'AS','CNMI', 'GU', 'PR','VI' ]
+skip_region = [ 'CNMI','CONUS']
 # 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
-skip_group = ['Flowering', ]
+skip_group = [ 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes',  'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 #Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Flowering', 'Insects',
 # 'Lichens', 'Mammals','Snails'
 #'Ferns', 'Fishes',
@@ -81,6 +81,7 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
     print str(snap_raster)
     # Set the processing extent to be equal to the use layer; only species within the extent will be
     # included in the output species file
+    #ToDO see why flowering plant in PR is plant when extent is sent
     myExtent = snap_raster.extent
     arcpy.env.extent = myExtent
 

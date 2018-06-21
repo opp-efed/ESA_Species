@@ -3,7 +3,7 @@ import os
 import datetime
 from arcpy.sa import *
 
-in_folder = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\AK_WGS_1984_Albers.gdb'
+in_folder = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\CNMI_WGS_1984_UTM_Zone_55N.gdb'
 
 RegionalProjection_Dict = {
     'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
