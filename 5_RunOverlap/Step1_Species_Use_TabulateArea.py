@@ -23,14 +23,15 @@ from arcpy.sa import *
 
 # Update once then remains static to set file structure
 use_location_base = 'L:\Workspace\UseSites\ByProjection'
-out_results = r'L:\ESA\Results'
+out_results = r'L:\ESA\Results_Usage'
 
 
 # Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
-in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection' \
-                           r'\Grids_byProjection'
+in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection' \
+                           r'\Grid_byProjections_Combined'
 
-in_location_species_folder = 'VI_WGS_1984_UTM_Zone_20N'
+
+in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # Range
 # AK_WGS_1984_Albers
 # VI_WGS_1984_UTM_Zone_20N
@@ -42,12 +43,16 @@ in_location_species_folder = 'VI_WGS_1984_UTM_Zone_20N'
 # CH
 # CONUS_Albers_Conical_Equal_Area
 # VI_WGS_1984_UTM_Zone_20N
-temp_file = "temp_table9"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table7"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 
-use_list = []
+use_list = ['Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
+            'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
+            'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
+            'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
+            'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc', ]
 
 # ################Static variables
 arcpy.CheckOutExtension("Spatial")
@@ -58,6 +63,7 @@ arcpy.env.workspace = use_location
 if len(use_list) == 0:
     use_list = (arcpy.ListRasters())  # run all layers in use location
 print use_list
+
 count_use = len(use_list)
 find_file_type = in_location_species.split(os.sep)
 
@@ -202,7 +208,7 @@ arcpy.env.workspace = in_location_species
 count_sp = len(arcpy.ListRasters())
 count = 0
 list_raster = (arcpy.ListRasters())
-list_raster = [v for v in list_raster if v.split('_')[0] =='ch']
+# list_raster = [v for v in list_raster if v.split('_')[0] =='r']
 print list_raster
 
 for raster_in in list_raster:
