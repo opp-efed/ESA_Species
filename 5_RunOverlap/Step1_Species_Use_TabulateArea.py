@@ -27,8 +27,9 @@ out_results = r'L:\ESA\Results_Usage'
 
 
 # Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
-in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection' \
-                           r'\Grid_byProjections_Combined'
+in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined'
+#in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
+
 
 
 in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
@@ -43,16 +44,16 @@ in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # CH
 # CONUS_Albers_Conical_Equal_Area
 # VI_WGS_1984_UTM_Zone_20N
-temp_file = "temp_table7"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table9"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 
 use_list = ['Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
-            'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
-            'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
-            'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
-            'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc', ]
+             'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
+             'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
+             'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
+             'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc',]
 
 # 'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
 #             'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',

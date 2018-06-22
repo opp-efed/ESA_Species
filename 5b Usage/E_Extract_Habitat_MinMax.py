@@ -3,10 +3,6 @@ import arcpy
 import datetime
 import os
 
-today = datetime.datetime.today()
-date = today.strftime('%Y%m%d')
-start_time = datetime.datetime.now()
-print "Start Time: " + start_time.ctime()
 
 in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
                              r'\Grid_byProjections_Combined'
@@ -104,6 +100,8 @@ def merge_to_hucid(table_lookup, spe_table, spe_cols, id_cols, join_col):
         table_lookup[z] = table_lookup[z].map(lambda x: str(x).split('.')[0]).astype(str)
 
     table_lookup = table_lookup[table_lookup[join_col].isin(spe_cols)]
+    print table_lookup.columns.values.tolist()
+    print spe_table.columns.values.tolist()
     merg_table = pd.merge(spe_table, table_lookup, on=join_col, how='left')
     zones_in_table = merg_table['ZoneID'].values.tolist()
     return merg_table, zones_in_table
@@ -168,7 +166,7 @@ for folder in list_dir:
 
         # extract columns associated with dem from csv, value, count, species HUCID Value (value in the species raster)
         # col and dem value
-        dem_col = [u'VALUE', u'COUNT']
+        dem_col = [u'VALUE', u'COUNT', u”HUCID”]
         for col in spe_att:
             if col.startswith('ch_') or col.startswith('r_') or col.startswith('dem'):
                 dem_col.append(col)

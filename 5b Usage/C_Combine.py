@@ -15,7 +15,7 @@ raster_layer_libraries = r'L:\Workspace\UseSites\ByProjection'
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined'
 
 # 'AS','GU','CONUS','HI','PR','VI','AK'
-skip_region = ['AK', 'CONUS','PR']
+skip_region = ['AK','AS','GU','HI','VI', 'PR']
 # 'fishes','fishe','flower', 'flowe','conife','crust','crusta','snails''ferns','insect','insec',
 
 #
@@ -122,7 +122,7 @@ for folder in list_dir:
                         desired_header = []
                         path_to_raster = []
                         if len(field) == len(raster_list_combine):
-                            out_df = pd.DataFrame(index=(list(range(0, 10))))  # empty df to store look values w/ 10 rows
+                            out_df = pd.DataFrame(index=(list(range(0, 10))))  # empty df to store look values  10 rows
                             for raster in raster_list_combine:
                                 current_header.append(field[raster_list_combine.index(raster)])
                                 path_to_raster.append(raster)
