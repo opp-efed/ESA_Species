@@ -4,6 +4,13 @@ import datetime
 import arcpy
 
 # Title- converts all polygons in the inlocation to raster to be used in zonal historgram
+# This is done as recommend by ESRI to have greater control oer the conversion
+
+# http://desktop.arcgis.com/en/arcmap/10.3/tools/spatial-analyst-toolbox/tabulate-area.htm
+# It is generally recommended to only use rasters as the zone and class inputs. If your inputs are feature, consider
+# converting them to rasters first with the To Raster conversion tools. This offers you greater control over the
+# vector-to-raster conversion, helping to ensure you consistently get the expected results.
+
 
 inlocation = 'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
 outlocation = 'L:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
