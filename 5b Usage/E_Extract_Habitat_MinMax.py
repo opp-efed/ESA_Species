@@ -186,7 +186,8 @@ for folder in list_dir:
         sp_zone_dem_df = sp_zone_df[sp_zone_df['ZoneID'].isin(dem_zones)]
         # merges working table with the EntityID from parent lookup table based on the ZoneID
         out_elevation_working, id_var_list = parse_tables(merg_dem_par, sp_zone_dem_df, ['dem'])
-        # extracts min and max elevation for as species and merges it to working output table from previous csv
+        # Converts ZoneID to EntityID and extracts min and max elevation for as species and merges it to working output
+        # table from previous csv
         out_elevation_working = min_max_elev(out_elevation_working, id_var_list)
         out_elevation = pd.concat([out_elevation, out_elevation_working])
 
@@ -206,12 +207,17 @@ for folder in list_dir:
         # # add col HUCID mirror from the species parent column in table needed for join
         # habitat_df['HUCID'] = habitat_df[parent_id_hab_col[0]].map(lambda x: str(x).split('.')[0]).astype(str)
         # c_hab_parent_id = habitat_df[parent_id_hab_col[0]].values.tolist()
+
+        # merges working table with the EntityID from parent lookup table based on the ZoneID
         merg_hab_par, hab_zones = merge_to_hucid(par_zone_df, habitat_df, c_parent_id, ['ZoneID', 'HUCID'], 'HUCID')
-        # list of all HUCID values in the species raster col
+         # filters parent species lookup table from FC to just the zones in current table
         sp_zone_hab_df = sp_zone_df[sp_zone_df['ZoneID'].isin(hab_zones)]
+        # tranforma ZoneID to EntityID and extracts habitat values for as species and merges it to working output table
+        # from previous csv
         out_habitat_working, id_var_list = parse_tables(merg_hab_par, sp_zone_hab_df, ['Habit', 'gap', '2011'])
         out_habitat_working = habitat_xwalk(out_habitat_working)
         out_habitat = pd.concat([out_habitat, out_habitat_working])
+    # tranform regional habitat tabe from having species by row to by column
     out_habitat = out_habitat.T
     out_habitat.to_csv(out_path + os.sep + region + "_" + 'species_habitat_classes_' + date + '.csv')
 
