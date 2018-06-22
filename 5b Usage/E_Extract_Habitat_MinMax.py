@@ -39,19 +39,19 @@ def min_max_elev(df_melt_row, id_vars_melt):
     df_melt_row.drop('melt_var', axis=1, inplace=True)
     df_melt_row.ix[:, id_vars_melt] = df_melt_row.ix[:, id_vars_melt].apply(pd.to_numeric)  # forces numeric types
     df_melt_row = df_melt_row.loc[df_melt_row[id_vars_melt[0]] != -9990.0]  # filters out the -99990 found in GIS layer
-    min_by_ent = df_melt_row.groupby('EntityID').min()  # finds min value for the groupby variable
-    max_by_ent = df_melt_row.groupby('EntityID').max()  # finds max value for the groupby variable
+    min_ent = df_melt_row.groupby('EntityID').min()  # finds min value for the groupby variable
+    max_ent = df_melt_row.groupby('EntityID').max()  # finds max value for the groupby variable
 
     # resets the groupby index and assigns col headers
-    min_by_ent = min_by_ent.reset_index()
-    min_by_ent.columns = ['EntityID', 'Min Elevation GIS']
+    min_ent = min_ent.reset_index()
+    min_ent.columns = ['EntityID', 'Min Elevation GIS']
 
-    max_by_ent = max_by_ent.reset_index()
-    max_by_ent.columns = ['EntityID', 'Max Elevation GIS']
+    max_ent = max_ent.reset_index()
+    max_ent.columns = ['EntityID', 'Max Elevation GIS']
 
     # merges dfs with the min and max values
-    out_elev = pd.merge(min_by_ent, max_by_ent, on='EntityID', how='left')
-    return out_elev
+    out_elev_w = pd.merge(min_ent, max_ent, on='EntityID', how='left')
+    return out_elev_w
 
 
 def habitat_xwalk(df_melt_row):
@@ -86,24 +86,24 @@ def parse_tables(in_table, in_row_sp, col_prefix):
     # drops extra columns from the merged tables
     include_col = []
     for t in col_prefix:  # col_prefix ids the associated with data being extracted
-        for j in merged_df.columns.values.tolist():
-            if j.startswith(t):
+        for p in merged_df.columns.values.tolist():
+            if p.startswith(t):
                 include_col.append(t)
 
-    for col in merged_df.columns.values.tolist():
-        if type(col) is long or col in include_col:
+    for q in merged_df.columns.values.tolist():
+        if type(q) is long or q in include_col:
             pass
         else:
-            merged_df.drop(col, axis=1, inplace=True)
-    out_df, id_var_list = melt_df(merged_df)
-    return out_df, id_var_list
+            merged_df.drop(q, axis=1, inplace=True)
+    out_df, id_vars_list = melt_df(merged_df)
+    return out_df, id_vars_list
 
 
-def merge_to_hucid(table_lookup, spe_table, spe_col, id_cols, join_col):
-    for col in id_cols:
-        table_lookup[col] = table_lookup[col].map(lambda x: str(x).split('.')[0]).astype(str)
+def merge_to_hucid(table_lookup, spe_table, spe_cols, id_cols, join_col):
+    for z in id_cols:
+        table_lookup[z] = table_lookup[z].map(lambda x: str(x).split('.')[0]).astype(str)
 
-    table_lookup = table_lookup[table_lookup[join_col].isin(spe_col)]
+    table_lookup = table_lookup[table_lookup[join_col].isin(spe_cols)]
     merg_table = pd.merge(spe_table, table_lookup, on=join_col, how='left')
     zones_in_table = merg_table['ZoneID'].values.tolist()
     return merg_table, zones_in_table
@@ -210,14 +210,14 @@ for folder in list_dir:
 
         # merges working table with the EntityID from parent lookup table based on the ZoneID
         merg_hab_par, hab_zones = merge_to_hucid(par_zone_df, habitat_df, c_parent_id, ['ZoneID', 'HUCID'], 'HUCID')
-         # filters parent species lookup table from FC to just the zones in current table
+        # filters parent species lookup table from FC to just the zones in current table
         sp_zone_hab_df = sp_zone_df[sp_zone_df['ZoneID'].isin(hab_zones)]
-        # tranforma ZoneID to EntityID and extracts habitat values for as species and merges it to working output table
+        # transforms ZoneID to EntityID and extracts habitat values for as species and merges it to working output table
         # from previous csv
         out_habitat_working, id_var_list = parse_tables(merg_hab_par, sp_zone_hab_df, ['Habit', 'gap', '2011'])
         out_habitat_working = habitat_xwalk(out_habitat_working)
         out_habitat = pd.concat([out_habitat, out_habitat_working])
-    # tranform regional habitat tabe from having species by row to by column
+    # transform regional habitat table from having species by row to by column
     out_habitat = out_habitat.T
     out_habitat.to_csv(out_path + os.sep + region + "_" + 'species_habitat_classes_' + date + '.csv')
 
