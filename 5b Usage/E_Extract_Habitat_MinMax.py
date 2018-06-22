@@ -166,7 +166,7 @@ for folder in list_dir:
 
         # extract columns associated with dem from csv, value, count, species HUCID Value (value in the species raster)
         # col and dem value
-        dem_col = [u'VALUE', u'COUNT', u”HUCID”]
+        dem_col = [u'VALUE', u'COUNT', u'HUCID']
         for col in spe_att:
             if col.startswith('ch_') or col.startswith('r_') or col.startswith('dem'):
                 dem_col.append(col)
@@ -191,7 +191,7 @@ for folder in list_dir:
 
         # extract columns associated with habitat from csv, value, count, species HUCID Value (value in the species
         # raster) col and dem value
-        habitat_col = [u'VALUE', u'COUNT']
+        habitat_col = [u'VALUE', u'COUNT', u'HUCID']
         for col in spe_att:
             if col.startswith('ch_') or col.startswith('r_') or col.startswith('Habit') or col.startswith(
                     'gap') or col.startswith('2011'):
