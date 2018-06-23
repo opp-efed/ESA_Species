@@ -44,16 +44,14 @@ in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # CH
 # CONUS_Albers_Conical_Equal_Area
 # VI_WGS_1984_UTM_Zone_20N
-temp_file = "temp_table9"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table11"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 
-use_list = ['Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
-             'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
-             'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
-             'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
-             'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc',]
+use_list = [u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc',
+u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc',
+u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc']
 
 # 'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
 #             'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',

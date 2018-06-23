@@ -25,16 +25,19 @@ def melt_df(df_melt):
         val_vars.append(k) if type(k) is long else id_vars_melt.append(k)
     df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
                           value_name='EntityID')
+
     return df_melt_row, id_vars_melt
 
 
 def min_max_elev(df_melt_row, id_vars_melt):
     # takes any blank rows and fills then with None so they can be filtered
+
     df_melt_row['EntityID'].fillna('None', inplace=True)
     df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
     df_melt_row.drop('melt_var', axis=1, inplace=True)
     df_melt_row.ix[:, id_vars_melt] = df_melt_row.ix[:, id_vars_melt].apply(pd.to_numeric)  # forces numeric types
     df_melt_row = df_melt_row.loc[df_melt_row[id_vars_melt[0]] != -9990.0]  # filters out the -99990 found in GIS layer
+
     min_ent = df_melt_row.groupby('EntityID').min()  # finds min value for the groupby variable
     max_ent = df_melt_row.groupby('EntityID').max()  # finds max value for the groupby variable
 
@@ -51,26 +54,32 @@ def min_max_elev(df_melt_row, id_vars_melt):
 
 
 def habitat_xwalk(df_melt_row):
-    # takes any blank rows and fills then with None so they can be filtered
-    df_melt_row['EntityID'].fillna('None', inplace=True)
-    df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
-    # dropts the col added during melt with the variable anme
-    df_melt_row.drop('melt_var', axis=1, inplace=True)
-    # # confirms all values are numeric
-    # df_melt_row.ix[:, id_vars_melt] = df_melt_row.ix[:, id_vars_melt].apply(pd.to_numeric)
-    hab_by_ent = df_melt_row.groupby('EntityID').reset_index()  # creating sequential index
-    hab_by_ent["i"] = hab_by_ent.index  # move this index into column
-    hab_by_ent["rn"] = hab_by_ent.groupby('EntityID')["i"].rank()  # add row_number inside each value in groupby term
-    # pivot results into individual columns, each row list the EntityID follow by all of the habitats
-    hab_by_ent.pivot_table(rows='EntityID', cols="rn", values=0)
-    return hab_by_ent
+    if region == 'AK':
+        return pd.DataFrame(columns=['EntityID'])
+    else:
+        # takes any blank rows and fills then with None so they can be filtered
+        df_melt_row['EntityID'].fillna('None', inplace=True)
+        df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
+        # drops the col added during melt with the variable name
+        df_melt_row.drop('melt_var', axis=1, inplace=True)
+
+        # # confirms all values are numeric
+        # df_melt_row.ix[:, id_vars_melt] = df_melt_row.ix[:, id_vars_melt].apply(pd.to_numeric)
+        hab_by_ent = df_melt_row.groupby('EntityID').apply(lambda x: x['Habitat_AllIslands'])
+        hab_by_ent = hab_by_ent.reset_index()  # creating sequential index
+        print hab_by_ent
+        # hab_by_ent["i"] = hab_by_ent.index  # move this index into column
+        # hab_by_ent["rn"] = hab_by_ent.groupby('EntityID')["i"].rank()  # add row_number for each value in groupby term
+        # # pivot results into individual columns, each row list the EntityID follow by all of the habitats
+        # hab_by_ent = hab_by_ent.pivot(index='EntityID', columns="rn").reset_index()
+        # print hab_by_ent
+        return hab_by_ent
 
 
 def parse_tables(in_table, in_row_sp, col_prefix):
     # Sets data type and replaces extra characters found in the ZoneSpecies field do they are just separted by a comma
     in_table['ZoneID'] = in_table['ZoneID'].map(lambda x: x.replace(',', '')).astype(str)
-    in_row_sp['ZoneSpecies'] = in_row_sp['ZoneSpecies'].apply(
-        lambda x: x.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
+    in_row_sp['ZoneSpecies'] = in_row_sp['ZoneSpecies'].apply(lambda x: x.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
 
     # EntityIDs in ZoneSpecies are split into their own columns, headers for these fields are number and can be id
     # as type(col) is long
@@ -81,16 +90,18 @@ def parse_tables(in_table, in_row_sp, col_prefix):
     merged_df = pd.merge(in_table, spl, on='ZoneID', how='left')
     # drops extra columns from the merged tables
     include_col = []
+
     for t in col_prefix:  # col_prefix ids the associated with data being extracted
         for p in merged_df.columns.values.tolist():
-            if p.startswith(t):
-                include_col.append(t)
+            if str(p).startswith(str(t)):
+                include_col.append(p)
 
     for q in merged_df.columns.values.tolist():
         if type(q) is long or q in include_col:
             pass
         else:
             merged_df.drop(q, axis=1, inplace=True)
+
     out_df, id_vars_list = melt_df(merged_df)
     return out_df, id_vars_list
 
@@ -100,8 +111,6 @@ def merge_to_hucid(table_lookup, spe_table, spe_cols, id_cols, join_col):
         table_lookup[z] = table_lookup[z].map(lambda x: str(x).split('.')[0]).astype(str)
 
     table_lookup = table_lookup[table_lookup[join_col].isin(spe_cols)]
-    print table_lookup.columns.values.tolist()
-    print spe_table.columns.values.tolist()
     merg_table = pd.merge(spe_table, table_lookup, on=join_col, how='left')
     zones_in_table = merg_table['ZoneID'].values.tolist()
     return merg_table, zones_in_table
@@ -120,13 +129,14 @@ out_elevation = pd.DataFrame(columns=['EntityID', 'Min Elevation GIS', 'Max Elev
 for folder in list_dir:
     print folder
     # empty df for regional output habitat table
-    out_habitat = pd.DataFrame(columns=['EntityID'])
+    out_habitat = pd.DataFrame(columns=[])
     region = folder.split('_')[0]  # extracts regions from folder title
     list_csv = os.listdir(in_directory_species_grids + os.sep + folder)  # list of csv in folder
     list_csv = [csv for csv in list_csv if csv.endswith('_att.csv')]  # list of att csvs
     # loops on each csv added the HUCIDs and ZoneIDs from parent fc att table to working dfs, then transforms table
     # so it is entityID by elevation or habitat
     for csv in list_csv:
+        print csv
         # parent fc att table with all input ID field (list_fc_ab) and ZoneID and associated EntityID (list_fc)
         # for species listed in the csv title
         par_zone_fc = [j for j in list_fc_ab if
@@ -214,9 +224,16 @@ for folder in list_dir:
         # from previous csv
         out_habitat_working, id_var_list = parse_tables(merg_hab_par, sp_zone_hab_df, ['Habit', 'gap', '2011'])
         out_habitat_working = habitat_xwalk(out_habitat_working)
-        out_habitat = pd.concat([out_habitat, out_habitat_working])
+        transform = out_habitat_working.T
+        # print transform
+        for col in transform:
+            hab_values = transform.drop_duplicates(subset=col)
+            out_habitat = pd.concat([out_habitat,hab_values], axis= 1)
+
+        # print out_habitat
+
     # transform regional habitat table from having species by row to by column
-    out_habitat = out_habitat.T
+
     out_habitat.to_csv(out_path + os.sep + region + "_" + 'species_habitat_classes_' + date + '.csv')
 
 min_by_ent = out_elevation[['EntityID', 'Min Elevation GIS']]
