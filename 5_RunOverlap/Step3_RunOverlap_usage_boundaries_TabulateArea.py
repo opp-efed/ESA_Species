@@ -21,7 +21,19 @@ temp_file = 'table_1'
 use_location = 'L:\Workspace\UseSites\ByProjection\CONUS_UseLayers.gdb'
 arcpy.env.workspace = use_location
 
-use_list = []  # runs specified layers in use location
+use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc', u'Albers_Conical_Equal_Area_CONUS_OSD_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Developed_euc',    u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
+            u'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_110_euc']  # runs specified layers in use location
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
@@ -32,11 +44,11 @@ out_results = r'L:\ESA\Results_Usage\PolBoundaries\Agg_layers'
 # STATIC Variables
 # Symbology layer so that the unique values can be applied to use layer before running zonal stats
 
-symbology_dict = {"CONUS": r"L:\Workspace\_MovedOneDrive\UseSites\ByProject\Diaz_Moasics\Sym_Layers"
-                           r"\Albers_Conical_Equal_Area_CONUS_CDL_1015_60x2_euc.lyr"}
+symbology_dict = {
+    "CONUS": r"L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr"}
 
 snap_raster_dict = {
-    'CONUS': r"L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.img"}
+    'CONUS': r"L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016"}
 
 
 def zone(zone_lyr, raster_lyr, temp_table, snap):
