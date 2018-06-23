@@ -35,7 +35,9 @@ Data sources used to supplement overlap date for usage:
         - used original file; but reprojected as needed
         -(Back up Use_layer library F, files used for analysis oneDrive)
 
-A_Intersect_Cnty_HUC2.py - Intersects the unioned species/CH vector files with the political boundaries from TIGER and
+Note Step 1 and Step 3 can be done at the same time both need to be complete to move to step 4
+
+1_Intersect_Cnty_HUC2.py - Intersects the unioned species/CH vector files with the political boundaries from TIGER and
 the supplemented HUC12/HUC2 boundaries from the NHDPlus.  After completed this step Step 4, 5 and 6 from
 4b_GenerateSpatialFiles_forOverlap_Species can be implements to convert these files to raster, project them by region
 and export to GRIDs used for the combine (D_Combine) - Replaced original usage input file generation
@@ -43,12 +45,12 @@ A_Intersect_Cnty.py and  B_Select_L48.py to accommodate the output needed for th
     - Run time  CH files = ~ 1 hour; Range files = ~ ~4 hours
     - (Back up Union Composites_ESA on library F, files used for analysis oneDrive)
 
-B_StandardizeProject_move_Rasters.py : Standardize projection of raster files used in combine and moves them the the
+3_StandardizeProject_move_Rasters.py : Standardize projection of raster files used in combine and moves them the the
 spatial library for the appropriate region
     -(Back up Use_layer library F)
 
 
-C_Combine.py: NOTE must increase the number of unique value for raster (used 2,000,000,000) under option then raster
+4_Combine.py: NOTE must increase the number of unique value for raster (used 2,000,000,000) under option then raster
 run combine on the species files with cnty and huc information from A_Intersect_Cnty_HUC2.py with the
 support raster information found in the raster spatial libraries; on/off field and residential and habitat/elevation.
 These are the input files used to run the overlap so the usage overlap  tables can include the additional supporting
@@ -56,13 +58,20 @@ information identified above  - Overlap is run using  (Step1_Species_Use_ZonalHi
 joining output tables using the various data source IDs (ZoneID, InterID, HUCID and ROWID from combine)
     -- (Back up Union Composites_ESA on library F, files used for analysis oneDrive)
     -- Combine in the L48 takes a long time - had to reduce to just elevation and habitat
-    #TODO look at do a second combine for on off field
+    #TODO look at doing a second combine for on off field - with the elevation/habitat plus on/off too many unquie val
+    in CONUS
         - Split out by species group, Birds took over 15.5 hours, mammals 16 hours, fishes 22 hours, flowers 10 hours
         - ran conifers- crust; ran amphib - bird, clams, insect - reptiles, snails, ferns, fishes, flower,
           'insect', -'reptil','snails ; took between 45 minutes and 15.5 hours most ~3.5
     --Split it out by regions - HI took second longest
 
+5_Extract_Habitat_MinMax- Extracts the observed elevation and habitat values from within the species files.  This is
+used as inputs to adjusted the overlap results
 
+D_SimplifyInputRasters - smooth values and simplify the combined input raster following guidance from ESRI - this could
+be done to speed up processing due to the number of unique zone generated during the combination -
+TODO - Processing took too long, change zonal histogram to tabulate area to process combined file - projection is very
+important now
 
 
 
