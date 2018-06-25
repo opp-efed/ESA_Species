@@ -3,7 +3,6 @@ import arcpy
 import datetime
 import os
 
-
 in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
                              r'\Grid_byProjections_Combined'
 look_up_fc_ab = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
@@ -55,8 +54,12 @@ def min_max_elev(df_melt_row, id_vars_melt):
 
 def habitat_xwalk(df_melt_row):
     if region == 'AK':
-        return pd.DataFrame(columns=['EntityID'])
+        return pd.DataFrame(columns=[]), []
     else:
+        hab_col = []
+        for o in df_melt_row.columns.values.tolist():
+            if o.startswith('Habit') or o.startswith('gap') or o.startswith('2011'):
+                hab_col.append(o)
         # takes any blank rows and fills then with None so they can be filtered
         df_melt_row['EntityID'].fillna('None', inplace=True)
         df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
@@ -65,21 +68,19 @@ def habitat_xwalk(df_melt_row):
 
         # # confirms all values are numeric
         # df_melt_row.ix[:, id_vars_melt] = df_melt_row.ix[:, id_vars_melt].apply(pd.to_numeric)
-        hab_by_ent = df_melt_row.groupby('EntityID').apply(lambda x: x['Habitat_AllIslands'])
-        hab_by_ent = hab_by_ent.reset_index()  # creating sequential index
+
+        hab_by_ent = (df_melt_row.groupby('EntityID')[hab_col[0]]).apply(list)
+        list_sp = hab_by_ent.index.values.tolist()
         print hab_by_ent
-        # hab_by_ent["i"] = hab_by_ent.index  # move this index into column
-        # hab_by_ent["rn"] = hab_by_ent.groupby('EntityID')["i"].rank()  # add row_number for each value in groupby term
-        # # pivot results into individual columns, each row list the EntityID follow by all of the habitats
-        # hab_by_ent = hab_by_ent.pivot(index='EntityID', columns="rn").reset_index()
-        # print hab_by_ent
-        return hab_by_ent
+
+        return hab_by_ent, list_sp
 
 
 def parse_tables(in_table, in_row_sp, col_prefix):
     # Sets data type and replaces extra characters found in the ZoneSpecies field do they are just separted by a comma
     in_table['ZoneID'] = in_table['ZoneID'].map(lambda x: x.replace(',', '')).astype(str)
-    in_row_sp['ZoneSpecies'] = in_row_sp['ZoneSpecies'].apply(lambda x: x.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
+    in_row_sp['ZoneSpecies'] = in_row_sp['ZoneSpecies'].apply(
+        lambda x: x.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
 
     # EntityIDs in ZoneSpecies are split into their own columns, headers for these fields are number and can be id
     # as type(col) is long
@@ -127,16 +128,16 @@ date = today.strftime('%Y%m%d')
 out_elevation = pd.DataFrame(columns=['EntityID', 'Min Elevation GIS', 'Max Elevation GIS'])
 
 for folder in list_dir:
-    print folder
+    print (folder)
     # empty df for regional output habitat table
-    out_habitat = pd.DataFrame(columns=[])
+    out_habitat = pd.DataFrame(index=(list(range(0, 550))))
     region = folder.split('_')[0]  # extracts regions from folder title
     list_csv = os.listdir(in_directory_species_grids + os.sep + folder)  # list of csv in folder
     list_csv = [csv for csv in list_csv if csv.endswith('_att.csv')]  # list of att csvs
     # loops on each csv added the HUCIDs and ZoneIDs from parent fc att table to working dfs, then transforms table
     # so it is entityID by elevation or habitat
     for csv in list_csv:
-        print csv
+        print ('   Working file {0}...number{1} of {2}'.format(csv, list_csv.index(csv)+1, len(list_csv)))
         # parent fc att table with all input ID field (list_fc_ab) and ZoneID and associated EntityID (list_fc)
         # for species listed in the csv title
         par_zone_fc = [j for j in list_fc_ab if
@@ -148,7 +149,7 @@ for folder in list_dir:
         sp_zone_df = pd.DataFrame(data=zone_array, dtype=object)
         sp_zone_df['ZoneID'] = sp_zone_df['ZoneID'].map(lambda x: str(x).split('.')[0]).astype(str)
         # reads in csv to df
-        spe_att = pd.read_csv(in_directory_species_grids + os.sep + folder + os.sep + csv)
+        spe_att = pd.read_csv(in_directory_species_grids + os.sep + folder + os.sep + csv, dtype='object')
         # reads in the desire col headers from the look up raster df (raster col header have a limited number of
         # characters)
         col_header = pd.read_csv(
@@ -208,14 +209,6 @@ for folder in list_dir:
                 habitat_col.append(col)
         habitat_df = spe_att[habitat_col].copy()
 
-        # # find species parent column (values are the hucids), col header will be species raster name, set dtype to str
-        # parent_id_hab_col = [v for v in dem_df.columns.values.tolist() if v.startswith('ch_') or v.startswith('r_')]
-        # habitat_df[parent_id_hab_col[0]] = habitat_df[parent_id_hab_col[0]].map(lambda x: str(x).split('.')[0]).astype(
-        #     str)
-        # # add col HUCID mirror from the species parent column in table needed for join
-        # habitat_df['HUCID'] = habitat_df[parent_id_hab_col[0]].map(lambda x: str(x).split('.')[0]).astype(str)
-        # c_hab_parent_id = habitat_df[parent_id_hab_col[0]].values.tolist()
-
         # merges working table with the EntityID from parent lookup table based on the ZoneID
         merg_hab_par, hab_zones = merge_to_hucid(par_zone_df, habitat_df, c_parent_id, ['ZoneID', 'HUCID'], 'HUCID')
         # filters parent species lookup table from FC to just the zones in current table
@@ -223,18 +216,21 @@ for folder in list_dir:
         # transforms ZoneID to EntityID and extracts habitat values for as species and merges it to working output table
         # from previous csv
         out_habitat_working, id_var_list = parse_tables(merg_hab_par, sp_zone_hab_df, ['Habit', 'gap', '2011'])
-        out_habitat_working = habitat_xwalk(out_habitat_working)
-        transform = out_habitat_working.T
-        # print transform
-        for col in transform:
-            hab_values = transform.drop_duplicates(subset=col)
-            out_habitat = pd.concat([out_habitat,hab_values], axis= 1)
+        hab_result, ent_list = habitat_xwalk(out_habitat_working)
 
+        # print transform
+        for ent in ent_list:
+            list_habitats = hab_result[ent]
+            list_habitats = list(set(list_habitats))
+            count = len(list_habitats)
+            remaining = [None] * (1000 - count)  # all columns need to 1000 rows - makes additional rows with value none
+            mergelist = list_habitats  + remaining
+
+            se = pd.Series(mergelist)
+            out_habitat[ent] = se.values
         # print out_habitat
 
-    # transform regional habitat table from having species by row to by column
-
-    out_habitat.to_csv(out_path + os.sep + region + "_" + 'species_habitat_classes_' + date + '.csv')
+    out_habitat.to_csv(out_path + os.sep + region + "_" + 'Species_habitat_classes_' + date + '.csv')
 
 min_by_ent = out_elevation[['EntityID', 'Min Elevation GIS']]
 max_by_ent = out_elevation[['EntityID', 'Max Elevation GIS']]

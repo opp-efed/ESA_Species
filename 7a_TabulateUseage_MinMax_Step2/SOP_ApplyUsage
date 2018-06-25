@@ -4,14 +4,19 @@ Author J. Connolly  Updated 6/2018, 2/2018
 # Step 2 is use as inputs for Step 2b of 7B
 # TODO Will need to make a table that is used for Step 1 and Step of 7b that excludes elevation
 
-Step A: - updates summer 2018 changed overlap run to Tabulate area from Zonal histigram due to processing time of
+Step A: - updates summer 2018 changed overlap run to Tabulate area from Zonal histogram due to processing time of
 zonal histogram with the combined input files
 
-Scripts in 5_RunOverlap
+Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal
     Run overlap on the political boundaries using Step3_RunOverlap_usage_boundaries. This information is needed to
     do the state adjustments of use within the species range and use outside the species range.
+        - Run time ~ 2 hours/ use split into groups to speed up
+        -TODO find lost scratch path - temp files saving in current directory
 
     Run Overlap to species input files with the additional information added during the combine
+        - Run time ~ NL48 takes a couple of hours to run combined input files, L48 CH tales be 1.5 -10 mins for a use
+        depending on species (ch_fishes is the longest; range takes between 8 hours and 1 hour per use (r_birds longest)
+        split up uses and or species input to speed up
 
 
  Step B: Create master input files for species, extracting the species by entity ID, HUCS, Elevation, Habitat, FIPS and

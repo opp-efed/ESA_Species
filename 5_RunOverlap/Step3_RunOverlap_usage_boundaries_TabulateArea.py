@@ -21,19 +21,11 @@ temp_file = 'table_1'
 use_location = 'L:\Workspace\UseSites\ByProjection\CONUS_UseLayers.gdb'
 arcpy.env.workspace = use_location
 
-use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc', u'Albers_Conical_Equal_Area_CONUS_OSD_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Developed_euc',    u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
+use_list = [u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_Developed_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
             u'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
-            u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
-            u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_110_euc']  # runs specified layers in use location
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',]  # runs specified layers in use location
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
@@ -51,7 +43,7 @@ snap_raster_dict = {
     'CONUS': r"L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016"}
 
 
-def zone(zone_lyr, raster_lyr, temp_table, snap):
+def zone(zone_lyr, raster_lyr, temp_table, snap, zone_headers):
     # Set Snap Raster environment and set extent
     arcpy.env.snapRaster = Raster(snap)
     my_extent = Raster(snap).extent
@@ -62,7 +54,7 @@ def zone(zone_lyr, raster_lyr, temp_table, snap):
     arcpy.CreateTable_management("in_memory", temp_table)
     temp = "in_memory" + os.sep + temp_table
     arcpy.env.overwriteOutput = True
-    TabulateArea(zone_lyr, "Value", raster_lyr, "Value", temp)
+    TabulateArea(zone_lyr, zone_headers, raster_lyr, "Value", temp)
 
     print "Completed Tabulate Area"
 
@@ -71,20 +63,26 @@ def zone(zone_lyr, raster_lyr, temp_table, snap):
 
 def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, results_folder, temp_table, region_c, snap,
                cnt):
-    break_use = use_path.split("_")
+    # out paths
+    break_use = os.path.basename(use_path).split("_")
     break_bool = False
     use_nm_folder = region_c  # starting point that will be used for use_nm_folder
 
-    for v in break_use:
-        if v != region_c:
+    for v in break_use:  # SEE TODO
+        if v != region_c and v != 'CDL':
+            # 'Area' and v != 'AK' and v != '2S'and v != '55N' and v != 'Area' and v != '4N' and v != '20N':
             pass
         else:
             break_bool = True
         if break_bool:
             if v == region_c:
-                continue
+                pass
             else:
                 use_nm_folder = use_nm_folder + "_" + v
+
+    use_nm_folder = use_nm_folder.split(".")[0]
+    print use_nm_folder
+
 
     out_use_folder = results_folder + os.sep + use_nm_folder
     create_directory(out_use_folder)
@@ -102,6 +100,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
 
         create_directory(out_use_folder)
         csv = out_use_folder + os.sep + run_id + '.csv'
+        print csv
         if os.path.exists(csv):
             print ("Already completed run for {0}".format(run_id))
         elif not os.path.exists(csv):
@@ -121,7 +120,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             list_fields = [f.name for f in arcpy.ListFields(temp_return)]
             att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
             att_df = pd.DataFrame(data=att_array)
-            att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
+            #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
             print 'Final file can be found at {0}'.format(csv)
             arcpy.Delete_management("in_memory" + os.sep + table)

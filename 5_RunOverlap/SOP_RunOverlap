@@ -32,7 +32,7 @@ Step 2b- Overlap for aquatic species based HUC12:
         in this tool
 
 Step 3 - Run overlap against political boundaries used for usage :
-    - Only need for usage
+    - Only need for usage see ApplyUsage SOP
 
 Step 4 - Place holder for running a vector use:
     # TODO finished this script then update table automation to account for a vector use
