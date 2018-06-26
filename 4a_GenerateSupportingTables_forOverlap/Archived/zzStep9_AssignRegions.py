@@ -23,8 +23,6 @@ outfile = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables
 # TODO split this so that it generates one file for the Range and one for the Critical habitat in one run
 # TODO clean up code to be more streamlined see acres table
 
-
-
 # dictionary, col name and index number- base 0 from master list above
 # Note entid if hard code for tracking!!!!
 colincluded = {'EntityID': 0,

@@ -1,6 +1,28 @@
 When Spatial libraries are considered locked for a given overlap update Steps 4 a, b c - Notes withing the directories
 will prompt what steps can be run simultaneously
 
+Input parameters/Decisions/Agreements made by ESA team
+
+ESA Team Spring 2016; updated Fall 2017
+•	Acres calculated for the whole range used web Mercator (WGS 1984 Web Mercator (auxiliary sphere.prj)
+•	Acres for a specific region uses the projection specified for that region - see UseList documentation or projection dictionary in python script
+•	Total acres on land is the sum of the individual region value; Total NL48 is the sum of the NL48 regions
+
+ESA Team Spring 2016
+•   Composite files are clipped to land using the TIGER census boundaries
+•	Polygons converted to raster using "MAXIMUM_COMBINED_AREA" assignment
+•	Snap raster used for polygon to raster conversion – same snap raster used for all analyses
+
+•	Files used to supplement species location files: Agreements spring 201
+o	County/State boundaries – usage
+o	HUC 2- Aquatic MagTool
+	Seamless data set is supplemented with island boundaries for AK, AS, CNMI and HI from Tiger Census that are not found in the original file.
+	A/B splits are included for the HUC_2 by joining the current output from A_Bins\Step_A2_splitHUC2_A_B_Summarize.py to the HUC12s and updated the HUC2_AB column
+o	Elevation – WoE –
+	Smoothed to 10 meter due to number of unique values generated with raw files
+o	Habitat – WoE
+	Projected in the projection for region as needed
+
 Step 4a:
 
  Step A - Time estimate ~ 3 hours

@@ -9,6 +9,7 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename']
 
+# set as Range of CH acres tables
 in_csv = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv'
 out_csv = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_Region_20180110.csv'
 in_range = pd.read_csv(in_csv)

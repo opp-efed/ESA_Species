@@ -21,3 +21,10 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal
 
  Step B: Create master input files for species, extracting the species by entity ID, HUCS, Elevation, Habitat, FIPS and
  STATEs
+    From 7a_ TabulateUsage_MinMax
+        1_CreateUsageOverlapTables_PolBoundaries_TabArea- add area and column and sums by fips and state then exports
+        tables to Counties and state folder with all uses rather than use layer folder
+
+        update 1C to pull in no adjustment, habitat, elevation and habitat and elevation by political boundaries
+
+        run step 2 against each interation of files
