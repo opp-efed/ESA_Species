@@ -1,9 +1,11 @@
+
 import datetime
 import os
 import arcpy
 
 import pandas as pd
 
+# Example file https://usepa-my.sharepoint.com/:f:/r/personal/connolly_jennifer_epa_gov/Documents/Documents_C_drive/Projects/ESA/_ED_results/Archive/Tabulated_Jan2018/PolticalBoundaries/Range/Agg_Layers/SumSpecies/Counties?csf=1&e=qUhSzq
 # Title- Generate overlap tables from zone species rasters to use layers results;
 #               1) Generates tables for aggregated layers, AA, Ag and NonAG
 #                       1a) The final merged output are used to generate distance interval table for spray drift; and

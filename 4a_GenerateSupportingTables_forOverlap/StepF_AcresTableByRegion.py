@@ -2,7 +2,12 @@ import arcpy
 import pandas as pd
 import datetime
 # Title - generates acres table for all species in each region and full spatial file
-#TODO Add in a sum of just the NL48 values to the header of TotalAcresNL48
+# TODO Add in a sum of just the NL48 values to the header of TotalAcresNL48
+# ASSUMPTIONS/Agreements  - ESA Team Fall 2016; updated Fall 2017
+#       - Acres calculated for the whole range used web mercator
+#       - Acres for a specific region uses the projection specified for that region - see UseList documentation
+#       - Total acres on land is the sum of the individual region value; Total NL48 is the sum of the NL48 regions
+
 out_csv = 'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110.csv'
 # out table
 # in GDB with projected comp files, regional and world projection for full spatial file
