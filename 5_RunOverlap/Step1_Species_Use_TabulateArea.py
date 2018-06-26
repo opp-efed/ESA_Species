@@ -30,8 +30,8 @@ out_results = r'L:\ESA\Results_Usage'
 # in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined'
 in_location_species_base = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
 # [u'r_amphib', u'r_birds', u'r_clams',  u'r_fishes',  u'r_insect', u'r_lichen', u'r_mammal', u'r_reptil', u'r_snails']
-#
-skip_species =[u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower',  u'r_mammal']
+# [u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower',  u'r_mammal']
+skip_species = [u'r_amphib', u'r_birds', u'r_flower', u'r_fishes',   u'r_mammal']
 
 
 in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
@@ -39,37 +39,41 @@ in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 
 # CONUS_Albers_Conical_Equal_Area
 
-temp_file = "temp_table19"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table3"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 
-use_list = [u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_euc',u'Albers_Conical_Equal_Area_CONUS_OSD_euc',
-u'Albers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_FederalLands_euc',
-u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_euc']
+use_list = [ 'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
+ 'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
+ u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_euc',
+ 'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc',
+ u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_euc']
 
+# Running
 # 'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
 # 'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
 # u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_euc',
 # 'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc',
 # u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_euc'
 
-
+# Running
 # 'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
 #  'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
 #  u'Albers_Conical_Equal_Area_CONUS_OSD_euc',
 #  u'Albers_Conical_Equal_Area_CONUS_Developed_euc', u'Albers_Conical_Equal_Area_CONUS_FederalLands_euc',
 
+# Complete
 # [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
 #  u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
 #  u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc',
 #
-#
+# Complete
 # u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc',
 #  u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc',
 #  u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
 #
-
+# Complete
 # u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc',
 #  u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
 #  u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',

@@ -18,7 +18,7 @@ import pandas as pd
 # ###############user input variables
 overwrite_inter_data = True
 
-raw_results_csv = r'L:\ESA\Results\diazinon\Usage\Results_PolBoundaries\Agg_Layers'
+raw_results_csv = r'L:\ESA\Results_Usage\PolBoundaries\Agg_layers'
 
 # raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
 #                   r'\ESA\_ExternalDrive\_CurrentResults\Results_diaz\L48\Agg_Layers\Range'
@@ -27,20 +27,17 @@ raw_results_csv = r'L:\ESA\Results\diazinon\Usage\Results_PolBoundaries\Agg_Laye
 find_file_type = raw_results_csv.split(os.sep)
 # ########### Updated once per run-variables
 
-look_up_fips = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap_albers'
-look_up_use = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
+look_up_fips = r'L:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
 
 find_file_type = raw_results_csv.split(os.sep)
 
-out_root = r'L:\ESA\Results\diazinon\Tabulated_PolBoundaries' + os.sep + 'PoliticalBoundaries'
+out_root = r'L:\ESA\Tabulates_Usage' + os.sep + 'PoliticalBoundaries'
 
 out_results = out_root + os.sep + 'Agg_Layers'
 
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
-
-use_lookup = pd.read_csv(look_up_use)
 
 
 # ###Functions
@@ -125,12 +122,10 @@ for folder in list_folders:
     out_folder_sum_use_fips = out_results + os.sep + 'Counties'
     out_folder_sum_use_state = out_results + os.sep + 'States'
 
-
     create_directory(out_folder_sum_use_fips)
     create_directory(out_folder_sum_use_state)
 
-    # parse out use name and region from folder name load use support info from look_up_use and acres info for region
-    # and whole range of species
+    # parse out use name and region from folder name
 
     print '\nWorking on {0}: {1} of {2}'.format(folder, (list_folders.index(folder)) + 1, len(list_folders))
     # set up list of result csv files
