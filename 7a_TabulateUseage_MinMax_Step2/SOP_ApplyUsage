@@ -34,9 +34,9 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal
             # TODO $ of species range in huc/state combo
         run step 2 - adjust the species by state based on PCT - pulls in parent species table and political usage
         overlap
-            #TODO do we need to adjust for redunacy first
+            #TODO do we need to adjust for redunacy first; I can pull the factors from the unadjust table then apply them
          Step 3: generated parent drift tables for each filter category
-         Step 4: generates the 'all uses' table for each filter catefory
+         Step 4: generates the 'all uses' table for each filter category
 
       Run 7b: step 2a and 2b
         # run for each parent table generate ie, elevation, elevation usage min, max, averaage, lower, upper, uniform etc
