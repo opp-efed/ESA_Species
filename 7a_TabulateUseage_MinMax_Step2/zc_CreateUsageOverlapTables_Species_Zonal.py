@@ -103,7 +103,8 @@ def melt_df(df_melt):
     df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
     df_melt_row.drop('melt_var', axis=1, inplace=True)
     num_cols = [v for v in id_vars_melt if v not in str_cols]
-    df_melt_row.ix[:, num_cols] = df_melt_row.ix[:, num_cols].apply(pd.to_numeric)
+
+
     sum_by_ent = df_melt_row.groupby(['EntityID','GEOID','STUSPS','STATEFP'],as_index=False).sum()
     return sum_by_ent
 

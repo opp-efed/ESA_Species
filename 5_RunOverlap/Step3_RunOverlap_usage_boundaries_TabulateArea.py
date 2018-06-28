@@ -21,11 +21,11 @@ temp_file = 'table_1'
 use_location = 'L:\Workspace\UseSites\ByProjection\CONUS_UseLayers.gdb'
 arcpy.env.workspace = use_location
 
-use_list = [u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc',
-            u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_Developed_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
-            u'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',]  # runs specified layers in use location
+use_list = [ u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_euc',
+             u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_euc',
+             u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc',
+             u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
+             u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc']  # runs specified layers in use location
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb

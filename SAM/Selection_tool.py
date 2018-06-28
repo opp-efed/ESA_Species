@@ -65,9 +65,14 @@ data_df = pd.read_csv(matrix_table, dtype=object)
 # list_cdl = list(set(data_df['cdl'].values.tolist()))
 # print list_cdl
 
+# if gen_class col is blank it is filtered - see email to Trip- these should be not be meaningful for PWC  - everything
+# over 110 is also filtered only the keys in the useLookup are in the selections process.  If we need to included more
+# 'crops' we can add it ot the lookup so it is no longer filtered
+
 data_df['gen_class'] = (data_df['gen_class']).map(lambda x: x).astype(str)  # TODO Check col name against Trips matrix and QA Table
 data_df['gen_class'] = (data_df['gen_class']).map(lambda x: x.split('.')[0]).astype(str)
 # data_df['gen_class'] = (data_df['gen_class']).map(lambda x: x).astype(int)  # TODO add back and update dict if blanks will be resolved
+
 
 list_cdl = list(set(data_df['gen_class'].values.tolist()))
 filtered_dict = {k: v for k, v in useLookup.items() if k in list_cdl}

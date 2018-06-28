@@ -25,6 +25,19 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal
         1_CreateUsageOverlapTables_PolBoundaries_TabArea- add area and column and sums by fips and state then exports
         tables to Counties and state folder with all uses rather than use layer folder
 
-        update 1C to pull in no adjustment, habitat, elevation and habitat and elevation by political boundaries
+        1_B tranforms table from zone to species
 
-        run step 2 against each interation of files
+        update 1C to pull in pull species parent table for filter table , aqu, ele, hab, hab, elevation
+            # TODO acres of species range filtered category
+        1_D Merged the AQU tables into one with the use layers across the top and species in the cols include % ares
+        of huc - see schemia in OneNote
+            # TODO $ of species range in huc/state combo
+        run step 2 - adjust the species by state based on PCT - pulls in parent species table and political usage
+        overlap
+            #TODO do we need to adjust for redunacy first
+         Step 3: generated parent drift tables for each filter category
+         Step 4: generates the 'all uses' table for each filter catefory
+
+      Run 7b: step 2a and 2b
+        # run for each parent table generate ie, elevation, elevation usage min, max, averaage, lower, upper, uniform etc
+        # TODO set up to use the file name to put to the correct out file directory
