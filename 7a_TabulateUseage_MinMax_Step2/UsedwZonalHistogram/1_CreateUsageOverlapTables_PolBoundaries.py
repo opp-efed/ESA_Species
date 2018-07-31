@@ -4,6 +4,7 @@ import arcpy
 
 import pandas as pd
 
+# **TOOL uses converts poltical boundary tables that were generated using zonal histogram into the needed input tables*
 # Title- Generate overlap tables from geoid to use layers results;
 #               1) Generates tables for aggregated layers, AA, Ag and NonAG
 #                       1a) The final merged output are used to generate distance interval table for spray drift; and

@@ -232,7 +232,7 @@ for folder in list_dir:
                 aqu = export_aquatics(out_folder + os.sep + csv.replace('.csv', '_HUC2AB.csv'), out_sp_table)
                 aqu.to_csv(out_folder + os.sep + csv.replace('.csv', '_HUC2AB.csv'))
                 print '  Exported {0}'.format(out_folder + os.sep + csv.replace('.csv', '_HUC2AB.csv'))
-                aqu = pd.concat([aqu, aqu_w])
+                # aqu = pd.concat([aqu, aqu_w])
 
                 elev_hab_working, out_ele, out_ele_cnty, out_ele_state = adjust_elevation(out_sp_table,
                                                                                           elevation_adjustments,

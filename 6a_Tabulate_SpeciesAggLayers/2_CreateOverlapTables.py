@@ -20,11 +20,10 @@ import pandas as pd
 #overwrite boolean - set to false tables were already generated for some uses and new ones need to be added.  If a use
 # layer was updated delete or archive the tables for the dated version and set this to false.  If this variable is set
 # to TRUE than all tables will be recalculated.
-overwrite_inter_data = False
+overwrite_inter_data = True
 # file structure is standard for raw result outputs and tabulated results outputs
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
-raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ED_results\Results\L48\Range\Agg_Layers'
+raw_results_csv = r''
 
 # ########### Updated once per run-variables
 
@@ -36,8 +35,7 @@ if 'Range' in find_file_type or 'range' in find_file_type:
     file_type = 'R_'
     species_file_type = 'Range'
     # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'  # vector table
-    in_acres_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                     r'\_ED_results\R_Acres_Pixels_20180428.csv'
+    in_acres_table = r'L:\ESA\R_Acres_Pixels_20180428.csv'
 else:
     look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
     look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
@@ -61,8 +59,7 @@ if 'L48' in find_file_type:
     p_region = 'L48'
 else:
     p_region = 'NL48'
-out_root = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated' + os.sep + p_region + os.sep + species_file_type
+out_root = r'L:\ESA\Tabulated' + os.sep + p_region + os.sep + species_file_type
 out_results = out_root + os.sep + 'Agg_Layers'
 
 

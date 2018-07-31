@@ -19,9 +19,9 @@ import pandas as pd
 # All raster are 30 meter cells - note previously VI and CNMI has some use with a different cell size
 
 # ###############user input variables
-overwrite_inter_data = True
+overwrite_inter_data = False
 
-raw_results_csv = r'L:\ESA\Results\diazinon\Usage\L48\Range\Agg_Layers'
+raw_results_csv = r'L:\ESA\Results_Usage_NoCombine\L48\Range\Agg_Layers'
 
 # raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
 #                   r'\ESA\_ExternalDrive\_CurrentResults\Results_diaz\L48\Agg_Layers\Range'
@@ -38,11 +38,14 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
 
 if 'Range' in find_file_type or 'range' in find_file_type:
     look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-    look_up_use = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
     file_type = 'R_'
     species_file_type = 'Range'
-    in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'
-    look_up_fips = r'L:\ESA\UnionFiles_Winter2018\R_Clipped_union_IntersectCntys.gdb'
+    # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'  # vector table
+    in_acres_table = r'L:\ESA\R_Acres_Pixels_20180428.csv'
+
+    look_up_fips = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_union_IntersectCntys.gdb'
 else:
     look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
     look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
@@ -56,7 +59,7 @@ else:
 
 find_file_type = raw_results_csv.split(os.sep)
 
-out_root = r'L:\ESA\Results\diazinon\Tabulated_PolBoundaries' + os.sep + species_file_type
+out_root = r'L:\ESA\Tabulate_zonal_Usage_NoCombine' + os.sep + species_file_type
 
 out_results = out_root + os.sep + 'Agg_Layers'
 
@@ -103,6 +106,7 @@ def melt_df(df_melt):
     df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']
     df_melt_row.drop('melt_var', axis=1, inplace=True)
     num_cols = [v for v in id_vars_melt if v not in str_cols]
+    df_melt_row.ix[:, num_cols] = df_melt_row.ix[:, num_cols].apply(pd.to_numeric)
 
 
     sum_by_ent = df_melt_row.groupby(['EntityID','GEOID','STUSPS','STATEFP'],as_index=False).sum()
@@ -111,7 +115,8 @@ def melt_df(df_melt):
 
 def collapse_state(df):
     print df.columns.values.tolist()
-
+    number_cols = [x for x in df.columns.values.tolist() if x not in ['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] ]
+    df.ix[:, number_cols] = df.ix[:, number_cols].apply(pd.to_numeric)
     sum_by_state = df.groupby(['EntityID','STATEFP','STUSPS'],as_index=False).sum()
     print sum_by_state.columns.values.tolist()
     print sum_by_state
@@ -250,14 +255,18 @@ for folder in list_folders:
                 pass
             else:
                 print '   Summing tables species by fips...species group:{0} for use {1}'.format(csv.split('_')[1],
-                                                                                                 folder)
-                use_fips_direct = use_by_fips(df_use, csv.split('_')[1] )
-                out_df_direct = pd.concat([out_df_direct, use_fips_direct], axis=0)
+                                                                                           folder)
+                try:
+                    use_fips_direct = use_by_fips(df_use, csv.split('_')[1] )
+                    out_df_direct = pd.concat([out_df_direct, use_fips_direct], axis=0)
+                except Exception as error:
+                    print(error.args[0])
+                    print '     Failed on group {0} for use {1}'.format(csv.split('_')[1], folder)
 
 
         if not overwrite_inter_data and (os.path.exists(out_sum_direct)):
             out_df_direct = pd.read_csv(out_sum_direct)
-            [use_fips_direct.drop(m, axis=1, inplace=True) for m in use_fips_direct.columns.values.tolist() if
+            [out_df_direct.drop(m, axis=1, inplace=True) for m in out_df_direct.columns.values.tolist() if
              m.startswith('Unnamed')]
         else:
             out_df_direct.to_csv(out_sum_direct)

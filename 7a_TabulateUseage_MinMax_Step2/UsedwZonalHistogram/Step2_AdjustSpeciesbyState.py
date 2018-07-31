@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-chemical_name = 'Diazinon'
+chemical_name = 'Carbaryl'
 st_cnty = 'States'  # if running on cnty change to Counties
 # use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
 #              r'\SupportingTables' + os.sep + chemical_name + "_RangeUses_lookup.csv"
@@ -14,8 +14,8 @@ pct_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Carbaryl\Carbaryl_min_test.csv'
 
 out_location = r'L:\ESA\Tabulates_Usage'
-in_location_species = r'L:\ESA\Tabulated_PolBoundaries\L48\Range\Agg_Layers'
-in_locations_states = 'L:\ESA\Tabulated_PolBoundaries\PoliticalBoundaries\Agg_Layers\States'
+in_location_species = r'L:\ESA\Test_usage\Agg_Layers\ByPolBoundary\PolBoundaries\States'
+in_locations_states = 'L:\ESA\Tabulate_Usage_TabArea\PolBoundaries\States'
 
 # state_df = pd.read_csv(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects"
 #                        r"\ESA\_ED_results\Tabulated_Jan2018\PolticalBoundaries\PolticalBoundaries\Agg_Layers\States")

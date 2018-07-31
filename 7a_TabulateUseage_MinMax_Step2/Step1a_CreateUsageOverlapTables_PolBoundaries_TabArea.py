@@ -4,11 +4,12 @@ import arcpy
 
 import pandas as pd
 
-# Title- Generate overlap tables from geoid to use layers results;
-#               1) Generates tables for aggregated layers, AA, Ag and NonAG
-#                       1a) The final merged output are used to generate distance interval table for spray drift; and
-#                           summarized BE table (0, 305m and 765)
-# TODO Add look to read in vector table once vector overlap final
+# **TOOL uses converts political boundary tables that were generated using Tabulate area into the needed input tables*
+# Title- Generate overlap tables from geoid to use layers results; - overlap found within political boundaries
+# this is used as an input variable fo usage
+
+
+# TODO Check if needed - can I just copy the raw outputs to the new location or are the tables being transformed
 
 # Static variables are updated once per update; user input variables update each  run
 
@@ -16,7 +17,7 @@ import pandas as pd
 
 # # https://usepa-my.sharepoint.com/personal/connolly_jennifer_epa_gov/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fconnolly%5Fjennifer%5Fepa%5Fgov%2FDocuments%2FDocuments%5FC%5Fdrive%2FProjects%2FESA%2F%5FED%5Fresults%2FArchive%2FTabulated%5FJan2018%2FPolticalBoundaries%2FPolticalBoundaries%2FAgg%5FLayers%2FCounties
 # ###############user input variables
-overwrite_inter_data = True
+overwrite_inter_data = False
 
 raw_results_csv = r'L:\ESA\Results_Usage\PolBoundaries\Agg_layers'
 
@@ -58,6 +59,8 @@ def sum_df(df):
 
 
 def collapse_state(df):
+    print df
+    df['STATEFP'] = df['GEOID'].map(lambda (n): str(n)[:2] if len(n) == 5 else '0' + n[:1]).astype(str)
     sum_by_state = df.groupby(['STATEFP', 'STUSPS'], as_index=False).sum()
     return sum_by_state
 
@@ -146,12 +149,15 @@ for folder in list_folders:
                 pass
             else:
                 print '   Summing tables by fips...for use {0}'.format(folder)
-                use_fips_direct = use_by_fips(df_use)
-                out_df_direct = pd.concat([out_df_direct, use_fips_direct], axis=0)
+                if len(df_use)> 0:
+                    use_fips_direct = use_by_fips(df_use)
+                    out_df_direct = pd.concat([out_df_direct, use_fips_direct], axis=0)
+                else:
+                    print"****Check overlap tables for above run, no row confirm this is correct***"
 
         if not overwrite_inter_data and (os.path.exists(out_sum_direct)):
             out_df_direct = pd.read_csv(out_sum_direct)
-            [use_fips_direct.drop(m, axis=1, inplace=True) for m in use_fips_direct.columns.values.tolist() if
+            [out_df_direct.drop(m, axis=1, inplace=True) for m in out_df_direct.columns.values.tolist() if
              m.startswith('Unnamed')]
         else:
             out_df_direct.to_csv(out_sum_direct)
@@ -161,8 +167,11 @@ for folder in list_folders:
         out_sum_direct_st = out_folder_sum_use_state + os.sep + folder + '.csv'
 
         if not os.path.exists(out_sum_direct_st):
-            out_df_state_use = collapse_state(out_df_direct)
-            out_df_state_use.to_csv(out_sum_direct_st)
+            if len(out_df_direct)> 0:
+                out_df_state_use = collapse_state(out_df_direct)
+                out_df_state_use.to_csv(out_sum_direct_st)
+            else:
+                print"****Check overlap tables for above run, no row confirm this is correct***"
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

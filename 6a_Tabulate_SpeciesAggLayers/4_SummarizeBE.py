@@ -51,6 +51,7 @@ temp_folder = path_intable
 out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' +p_region +"_"+date+ '.csv'
 
 # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
+# Limits for AgDrift for ground and aerial
 bins = [0, 305, 765]
 
 use_lookup = pd.read_csv(look_up_use)
