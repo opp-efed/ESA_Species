@@ -28,6 +28,10 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal - Zonal scripts ar
         tables to Counties and state folder with all uses rather than use layer folder
 
         1b_tranforms table from zone to species, extract HUC, States and does the filters for habitat and elevations
+        THere will be one parent table each types )(elevation, no adjest habitat etc).
+        NL48 takes ~ 45 minutes
+        L48 tales ~ 10 hour when do all species and uses at once, can split out species using spcies spkit
+
 
         run step 2 - adjust the species by state based on PCT - pulls in parent species table and political usage
         overlap

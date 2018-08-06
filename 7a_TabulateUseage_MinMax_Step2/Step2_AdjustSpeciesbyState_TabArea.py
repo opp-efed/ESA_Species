@@ -15,7 +15,7 @@ pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)'
 
 out_location = r'L:\ESA\Tabulates_Usage'
 # species overlap with uses include the state or cnty breaks
-in_location_species = r'L:\ESA\Test_usage\Agg_Layers\ByPolBoundary\PolBoundaries\States'
+in_location_species = r'L:\ESA\Tabulate_Usage_TabArea\PolBoundaries\States'
 # totals for states actual overlap for the political boundary
 in_locations_states = 'L:\ESA\Tabulated_PolBoundaries\PoliticalBoundaries\Agg_Layers\States'
 regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
@@ -77,10 +77,13 @@ for group in ['min','max','avg']:
     # assumes identifier is in this postion
     out_path = out_location +os.sep+chemical_name+os.sep+os.path.basename(pct_table[0]).split("_")[1]
 
+
     if not os.path.exists(os.path.dirname(out_path)):
         os.mkdir(os.path.dirname(out_path))
     if not os.path.exists(out_path):
         os.mkdir(out_path)
+    if not os.path.exists(out_location +os.sep+chemical_name+os.sep+' no adjustment'):
+        os.mkdir(out_location +os.sep+chemical_name+os.sep+' no adjustment')
 
     t_pct = pct_df.T
     t_pct = t_pct.reset_index()
@@ -92,13 +95,21 @@ for group in ['min','max','avg']:
 
     list_csv = os.listdir(in_location_species)
 
-
     for value in suffixes:
+        if value == 'noadjust':
+            c_list = [v for v in list_csv if v.endswith(value+'.csv')]
+            for csv in c_list:
+                if not os.path.exists(out_location +os.sep+chemical_name+os.sep+' no adjustment'+os.sep+csv):
+                    csv_out = csv.replace('.csv',"_"+os.path.basename(pct_table[0]).split("_")[1]+'.csv')
+                    species_df = pd.read_csv(in_location_species + os.sep +csv)
+                    species_df .to_csv(out_location +os.sep+chemical_name+os.sep+' no adjustment'+os.sep+csv)
+
             c_list = [v for v in list_csv if v.endswith(value+'.csv')]  # break csv into suffix groups
             # in_results_sp = in_location_species + os.sep +folder+ os.sep + st_cnty
             # Load state overlap result for state # NOTE file names must be the same as species filter to just direct overlap
             # and other important cols
 
+        else:
             for csv in c_list:
                 state_csv = csv.replace("_"+value +'.csv', ".csv")
                 for v in  state_csv.split("_"):
@@ -106,7 +117,6 @@ for group in ['min','max','avg']:
                         state_csv = state_csv.replace(v+"_", "")
                     else:
                         break
-
 
                 state_df = pd.read_csv(in_locations_states + os.sep + state_csv)
                 state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(str)

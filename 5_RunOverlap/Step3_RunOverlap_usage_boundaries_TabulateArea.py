@@ -13,7 +13,7 @@ from arcpy.sa import *
 # sub-directory folder where shapefile
 in_sum_file = r'L:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
-region = 'HI'
+region = 'CONUS'
 temp_file = 'table_3'
 run_group = 'UseLayers'
 
@@ -24,7 +24,7 @@ use_location = 'L:\Workspace\UseSites\ByProjection' + os.sep + str(region) + "_"
 
 arcpy.env.workspace = use_location
 
-use_list = [ ]  # runs specified layers in use location
+use_list = []  # runs specified layers in use location
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb

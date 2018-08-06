@@ -89,8 +89,8 @@ def create_directory(dbf_dir):
 
 def melt_df(df_melt):
     cols = df_melt.columns.values.tolist()
-    id_vars_melt = []
-    val_vars = []
+    id_vars_melt = []# other columns (non EntityID columns)
+    val_vars = [] # EntityID columns
     for k in cols:
         val_vars.append(k) if type(k) is long else id_vars_melt.append(k)
     df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
