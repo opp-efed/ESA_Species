@@ -1,0 +1,12 @@
+Run completed on 8/7/2018 for usage:
+species:
+F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
+F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
+    # Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
+    # AK, AS, CNMI and HI
+    # NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
+    # scripts
+Supplemented NHD files:
+F:\AquaticTables_ESA\Spring 2018\InfoAddedForESA\FilesAppended_ESA.gdb
+Use Layers:
+F:\UseSite_ESA\May 2018\ByProjection

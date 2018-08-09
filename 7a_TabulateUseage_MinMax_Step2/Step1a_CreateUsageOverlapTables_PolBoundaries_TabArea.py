@@ -19,10 +19,7 @@ import pandas as pd
 # ###############user input variables
 overwrite_inter_data = False
 
-raw_results_csv = r'L:\ESA\Results_Usage\PolBoundaries\Agg_layers'
-
-# raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-#                   r'\ESA\_ExternalDrive\_CurrentResults\Results_diaz\L48\Agg_Layers\Range'
+raw_results_csv = r'L:\Workspace\StreamLine\ESA\Results_Usage\PolBoundaries\Agg_layers'
 
 
 find_file_type = raw_results_csv.split(os.sep)
@@ -34,7 +31,7 @@ look_up_fips = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (E
 
 find_file_type = raw_results_csv.split(os.sep)
 
-out_root = r'L:\ESA\Tabulated_PolBoundaries' + os.sep + 'PoliticalBoundaries'
+out_root = r'L:\Workspace\StreamLine\ESA\Tabulated_PolBoundaries' + os.sep + 'PoliticalBoundaries'
 
 out_results = out_root + os.sep + 'Agg_Layers'
 
