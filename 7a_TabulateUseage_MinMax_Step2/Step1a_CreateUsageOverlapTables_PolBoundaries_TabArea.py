@@ -26,7 +26,7 @@ find_file_type = raw_results_csv.split(os.sep)
 # ########### Updated once per run-variables
 
 look_up_fips = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap_albers'
+               r'\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap_Mercator'
 
 
 find_file_type = raw_results_csv.split(os.sep)
@@ -56,7 +56,6 @@ def sum_df(df):
 
 
 def collapse_state(df):
-    print df
     df['STATEFP'] = df['GEOID'].map(lambda (n): str(n)[:2] if len(n) == 5 else '0' + n[:1]).astype(str)
     sum_by_state = df.groupby(['STATEFP', 'STUSPS'], as_index=False).sum()
     return sum_by_state
@@ -64,7 +63,7 @@ def collapse_state(df):
 
 def extract_overlap_interval(use_df):
     # removed all extraneous columns only import columns are the VALUE_[zoneID] and default Label col from tool export
-    drop_cols = [z for z in df_use.columns.values.tolist() if  not z.startswith('VALUE')]
+    drop_cols = [z for z in df_use.columns.values.tolist() if not z.startswith('VALUE')]
     drop_cols.remove('GEOID')
     [use_df.drop(j, axis=1, inplace=True) for j in drop_cols if j in drop_cols]
     # Limits table to GeoID and use overlap by distance

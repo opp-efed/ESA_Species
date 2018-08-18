@@ -20,7 +20,7 @@ import pandas as pd
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
 
 
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byState_Merge\CONUS_CDL_1016_20x2_euc.csv'
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge\CONUS_CDL_1016_40x2_euc.csv'
 out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba'
 id_value = 'Dicamba'
 regions = ['CONUS']
@@ -61,8 +61,8 @@ columns_uses = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0
 columns_species = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0] not in regions]
 # print sp_table_df
 sp_info_df = sp_table_df.loc[:, columns_species]
+sp_info_df ['GEOID'] = sp_info_df['GEOID'].map(lambda x: x).astype(str)
 use_df = sp_table_df.loc[:, columns_uses]
-
 use_list = use_df.columns.values.tolist()
 
 uses = []

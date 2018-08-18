@@ -23,9 +23,9 @@ import pandas as pd
 overwrite_inter_data = True
 # file structure is standard for raw result outputs and tabulated results outputs
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
-raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated_byState'
-out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byState'
-out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byState_Merge'
+raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated_byCounties'
+out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties'
+out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge'
 in_acres_table = r'L:\Workspace\StreamLine\ESA\R_Acres_Pixels_20180428.csv'
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
               r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
@@ -63,6 +63,9 @@ def create_directory(dbf_dir):
 def calculation(type_fc, in_sum_df, c_region, percent_type):
     # ASSUMES ONLY NUMERIC COLS ARE USE COLS AND ACRES COLS
     use_cols = in_sum_df.select_dtypes(include=['number']).columns.values.tolist()
+    if 'GEOID' in use_cols:
+        use_cols.remove("GEOID")
+        in_sum_df ['GEOID'] = in_sum_df['GEOID'].map(lambda x: x).astype(str)
     if percent_type == 'full range':
         acres_col = 'TotalAcresOnLand'
         in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
@@ -132,12 +135,21 @@ for csv in list_csv:
     use_array = pd.read_csv(raw_results_csv + os.sep + csv)
     use_array ['EntityID'] = use_array ['EntityID'].map(lambda x: x).astype(str)
 
+
     # STEP 2: Run percent overlap for both the full range and the regional; set up acres table to include only
     # species found on the current use table (use_array)
 
     sum_df_acres = pd.merge(use_array, acres_for_calc, on='EntityID', how='left')
     print 'Generating regional range percent overlap...:{0}'.format(csv)
     percent_overlap_df_region = calculation(type_use, sum_df_acres, region, 'regional range')
+    out_col = []
+    for col in percent_overlap_df_region.columns.values.tolist():
+        if col.startswith("VALUE"):
+            i = col.replace("VALUE", use_nm)
+            out_col.append(i)
+        else:
+            out_col.append(col)
+    percent_overlap_df_region.columns = out_col
     # print list(set(percent_overlap_df_region ['EntityID'].values.tolist()))
     [percent_overlap_df_region.drop(m, axis=1, inplace=True) for m in
     percent_overlap_df_region.columns.values.tolist() if m.startswith('Unnamed')]

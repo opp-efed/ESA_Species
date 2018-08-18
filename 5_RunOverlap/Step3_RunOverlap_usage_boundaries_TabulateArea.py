@@ -13,7 +13,7 @@ from arcpy.sa import *
 # sub-directory folder where shapefile
 in_sum_file = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
-region = 'AK'
+region = 'CONUS'
 temp_file = 'table3'
 run_group = 'UseLayers'
 
@@ -22,9 +22,21 @@ run_group = 'UseLayers'
 
 use_location = 'L:\Workspace\StreamLine\ByProjection' + os.sep + str(region) + "_" + run_group + ".gdb"
 
+
 arcpy.env.workspace = use_location
 
-use_list = []  # runs specified layers in use location
+use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_110_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc']  # runs specified layers in use location
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
@@ -113,7 +125,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
 
     # parse out information needed for file names
 
-    for zone_title in ["STATEFP", "GEOID"]:
+    for zone_title in ["GEOID","STATEFP"]:
         if zone_title.startswith("STATE"):
             run_id = use_nm_folder + "_State"
         else:
@@ -144,7 +156,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
             print 'Final file can be found at {0}'.format(csv)
-            arcpy.Delete_management("in_memory" + os.sep + table)
+            arcpy.Delete_management(temp_return)
 
             print "Completed in {0}".format((datetime.datetime.now() - zone_time))
 

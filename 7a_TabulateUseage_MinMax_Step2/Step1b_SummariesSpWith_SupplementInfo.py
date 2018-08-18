@@ -1,15 +1,15 @@
 import pandas as pd
-import arcpy
+
 import datetime
 import os
 
-in_directory_csv = r'L:\ESA\Results_Usage\L48\Range\Agg_Layers'
-out_path = r'L:\ESA\Tabulate_Usage_TabArea_nointeration'
-out_poltical = r'L:\ESA\Tabulate_Usage_TabArea_nointeration\PolBoundaries'
+in_directory_csv = r'L:\Workspace\StreamLine\ESA\Results_Usage\L48\Range\Agg_Layers'
+out_path = r'L:\Workspace\StreamLine\ESA\Tabulated_Usage'
+out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated_Usage\PolBoundaries'
 
-in_directory_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
-look_up_fc_ab = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+in_directory_grids = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
+look_up_fc_ab = r'D:\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
+# look_up_fc = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
 
 grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
                       'AS': 'AS_WGS_1984_UTM_Zone_2S',
@@ -20,8 +20,8 @@ grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
                       'PR': 'PR_Albers_Conical_Equal_Area',
                       'VI': 'VI_WGS_1984_UTM_Zone_20N'}
 
-elevation_adjustments = r'L:\ESA\UnionFiles_Winter2018\input tables\Elevation_Summary_test.csv'
-habitat_adjustment_path = r'L:\ESA\UnionFiles_Winter2018\input tables'
+elevation_adjustments = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\input tables\Elevation_Summary_test.csv'
+habitat_adjustment_path = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\input tables'
 habitat_dict = {'AK': 'AK_Species_habitat_classes_20180624_test.csv',
                 'AS': 'AS_Species_habitat_classes_20180624_test.csv',
                 'CNMI': 'CNMI_Species_habitat_classes_20180624_test.csv',
@@ -30,6 +30,11 @@ habitat_dict = {'AK': 'AK_Species_habitat_classes_20180624_test.csv',
                 'HI': 'HI_Species_habitat_classes_20180624_test.csv',
                 'PR': 'PR_Species_habitat_classes_20180624_test.csv',
                 'VI': 'VI_Species_habitat_classes_20180624_test.csv'}
+
+run_habitat = True
+run_elevation = True
+run_elevation_hab = True
+run_aqu = True
 
 skip_species = []
 
@@ -250,130 +255,9 @@ types_dict = {'VALUE_1380': int, 'VALUE_1381': int, 'VALUE_1382': int,
               'VALUE_635': int, 'VALUE_636': int, 'VALUE_637': int,
               'VALUE_630': int, 'VALUE_632': int}
 
-arcpy.env.workspace = look_up_fc
-list_fc = arcpy.ListFeatureClasses()
-arcpy.env.workspace = look_up_fc_ab
-list_fc_ab = arcpy.ListFeatureClasses()
+list_fc = os.listdir(look_up_fc_ab)
+list_fc_ab = os.listdir(look_up_fc_ab)
 list_dir = os.listdir(in_directory_csv)
-
-
-def melt_df(df_melt):
-    cols = df_melt.columns.values.tolist()
-    id_vars_melt = []  # other columns (non EntityID columns)
-    val_vars = []  # columns with EntityID
-    for k in cols:
-        val_vars.append(k) if k.startswith('entityid') else id_vars_melt.append(k)
-    # print id_vars_melt
-    # print val_vars
-
-    df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
-                          value_name='EntityID')
-    df_melt_row['EntityID'].fillna('None', inplace=True)
-    if 'None' in df_melt_row['EntityID'].values.tolist():
-        df_melt_row = df_melt_row.loc[df_melt_row['EntityID'] != 'None']  # When unpivioting any empty cell ie a cell
-        # when only on col in the val_vars has a value is  mark as none.  These are places holders for the col with a
-        # val_vars value.  Species are capture with the val in the val_var col that is not none
-    df_melt_row.drop('melt_var', axis=1, inplace=True)
-
-    numeric_cols = []
-    group_cols = []
-
-    for r in df_melt_row.columns.values.tolist():
-        if str(r).startswith('VALUE'):
-            numeric_cols.append(r)
-        else:
-            group_cols.append(r)
-
-    df_melt_row.ix[:, numeric_cols] = df_melt_row.ix[:, numeric_cols].apply(pd.to_numeric)
-    # df_melt_row.to_csv(out_path+os.sep+'test_melt_1.csv')
-
-    df_out = df_melt_row.groupby(group_cols)[numeric_cols].sum().reset_index()
-    # df_out.to_csv(out_path+os.sep+'test_melt_2.csv')
-
-    return df_out
-
-
-def parse_tables(in_table, in_row_sp, col_pre):
-    # parse_tables(merge_par, c_sp_zone_df, col_prefix)
-
-    # Sets data type and replaces extra characters found in the ZoneSpecies field do they are just separated by a comma
-    in_table['ZoneID'] = in_table['ZoneID'].map(lambda y: str(y).replace(',', '')).astype(str)
-    c_in_row_sp = in_row_sp.copy()
-    c_in_row_sp['ZoneSpecies'] = c_in_row_sp['ZoneSpecies'].apply(
-        lambda d: d.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
-
-    # EntityIDs in ZoneSpecies are split into their own columns, headers for these fields are number and can be id
-    # as type(col) is long
-    spl = c_in_row_sp['ZoneSpecies'].str.split(',', expand=True)
-    # Adds the ZoneID field to the spl dataframes
-    spl['ZoneID'] = c_in_row_sp['ZoneID'].map(lambda u: u.replace(',', '')).astype(str)
-    # merges table to the split dataframe, now it is in the format needed for the melt
-    # merged_df = pd.merge(in_table, spl, on='ZoneID', how='left')
-    merged_df = pd.merge(in_table, spl, on='ZoneID', how='outer')
-    [merged_df.drop(m, axis=1, inplace=True) for m in merged_df.columns.values.tolist() if str(m).startswith('Unnamed')
-     or str(m).startswith('OBJECTID')]
-    # merged_df.to_csv(out_path+os.sep+'test.csv')
-
-    # drops extra columns from the merged tables
-    for q in merged_df.columns.values.tolist():
-        if type(q) is long or q in col_pre or str(q).startswith('VALUE'):
-            pass
-        else:
-            merged_df.drop(q, axis=1, inplace=True)
-    merged_df.drop('VALUE', axis=1, inplace=True)
-    val_cols = [x for x in merged_df.columns.tolist() if str(x).startswith('VALUE')]
-    entityid_col = [x for x in merged_df.columns.tolist() if type(x) is long]
-    entityid_col_final = []
-    for col in entityid_col:  # added because when calling the interger col 0L etc rows were dropped
-        merged_df['entityid_col_' + str(col)] = merged_df[col].map(lambda t: str(t).split('.')[0]).astype(str)
-        entityid_col_final.append('entityid_col_' + str(col))
-        merged_df.drop(col, axis=1, inplace=True)
-
-    hab_col = [v for v in merged_df.columns.values.tolist() if str(v).startswith('Habit') or str(v).startswith(
-        'gap') or str(v).startswith('2011')]
-    dem_col = [v for v in merged_df.columns.values.tolist() if str(v).startswith('dem')]
-    merged_df['GEOID'] = merged_df['GEOID'].map(lambda (n): n).astype(str)
-    merged_df.ix[:, 'STATEFP'] = merged_df.ix[:, 'GEOID'].map(
-        lambda (n): str(n)[:2] if len(n) == 5 else '0' + n[:1]).astype(str)
-
-    merged_df_huc = merged_df[['STUSPS', 'STATEFP', 'HUC2_AB'] + entityid_col_final + val_cols]
-    huc_df = merged_df_huc.groupby(['STUSPS', 'STATEFP', 'HUC2_AB'] + entityid_col_final)[val_cols].sum().reset_index()
-
-    merged_df_other = merged_df[['GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col + entityid_col_final + val_cols]
-    other_df = merged_df_other.groupby(['GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col + entityid_col_final)[
-        val_cols].sum().reset_index()
-    # merged_df_other.to_csv(out_path+os.sep+'test_huc.csv')
-    # other_df.to_csv(out_path+os.sep+'test_oth.csv')
-
-    if len(entityid_col_final) > 1:
-        out_df_huc = melt_df(huc_df)
-        out_df_other = melt_df(other_df)
-
-    else:
-        huc_col = huc_df.columns.values.tolist()
-        huc_col[huc_col.index('entityid_col_0')] = 'EntityID'
-        huc_df.columns = huc_col
-        out_df_huc = huc_df
-
-        other_col = other_df.columns.values.tolist()
-        other_col[other_col.index('entityid_col_0')] = 'EntityID'
-        other_df.columns = other_col
-        out_df_other = other_df
-    out_df_huc['EntityID'] = out_df_huc['EntityID'].apply(
-        lambda d: d.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
-    out_df_other['EntityID'] = out_df_other['EntityID'].apply(
-        lambda d: d.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
-    return out_df_huc, out_df_other
-
-
-def merge_to_hucid(table_lookup, spe_table, spe_cols, id_cols, join_col):
-    for z in id_cols:
-        table_lookup[z] = table_lookup[z].map(lambda t: str(t).split('.')[0]).astype(str)
-
-    table_lookup = table_lookup[table_lookup[join_col].isin(spe_table[spe_cols].values.tolist())]
-    merg_table = pd.merge(spe_table, table_lookup, on=join_col, how='left')
-    zones_in_table = merg_table['ZoneID'].values.tolist()
-    return merg_table, zones_in_table
 
 
 def no_adjust(out_df, final_df, cnty_all, sta_all):
@@ -547,7 +431,7 @@ def export_aquatics(df, df_final):
     return df_final
 
 
-def split_csv_chucks(in_path):
+def split_csv_chucks(in_path, look_up):
     chunksize = 100000
     pp = 0
     j = 1
@@ -563,6 +447,8 @@ def split_csv_chucks(in_path):
             pp += 1
             c_csv = df.copy()
             c_csv['VALUE'] = c_csv['VALUE'].map(lambda k: str(k).split('.')[0]).astype(str)
+            list_zones = c_csv['VALUE'].values.tolist()  # list of zones in raw output table
+            look_up_huc = look_up[look_up['HUCID'].isin(list_zones)]  # filter lookup to just zones in current output
 
             # reads in the desire col headers from the look up raster df (raster col header have a limited number
             # of characters) for the parent attribute table
@@ -608,22 +494,35 @@ def split_csv_chucks(in_path):
 
             # converts att from species input intersect fc, with all ID field, into df, captures the
             # ZoneID, InterID and HUCID to be joined to working table
-            par_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + par_zone_fc[0],
-                                                        ['ZoneID', 'InterID', 'HUCID', 'GEOID',
-                                                         'STUSPS', 'Region',
-                                                         'HUC2_AB'])
-            par_zone_df = pd.DataFrame(data=par_zone_array, dtype=object)
+            # par_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + par_zone_fc[0],
+            #                                             ['ZoneID', 'InterID', 'HUCID', 'GEOID',
+            #                                              'STUSPS', 'Region',
+            #                                              'HUC2_AB'])
+            # par_zone_df = pd.DataFrame(data=par_zone_array, dtype=object)
             for x in ['GEOID', 'STUSPS', 'Region', 'HUC2_AB']:
                 col_prefix.append(x)
             # merges working table with HUCID field
-            merge_par, sp_zones = merge_to_hucid(par_zone_df, merge_combine, 'HUCID',
-                                                 ['ZoneID', 'HUCID'], 'HUCID')
-            # try:
-            # Filter so on the zone from the current use table is in the working df
-            # filters parent species lookup table from FC to just the zones in current table
-            c_sp_zone_df = sp_zone_df[sp_zone_df['ZoneID'].isin(sp_zones)]
-            # merges working table with the EntityID from parent lookup table based on the ZoneID
-            out_sp_table_huc, out_sp_table_other = parse_tables(merge_par, c_sp_zone_df, col_prefix)
+            merge_par = pd.merge(merge_combine, look_up_huc, how='outer', left_on=parent_id_col, right_on='HUCID')
+            hab_col = [v for v in merge_par.columns.values.tolist() if str(v).startswith('Habit') or str(v).startswith(
+                'gap') or str(v).startswith('2011')]
+            dem_col = [v for v in merge_par.columns.values.tolist() if str(v).startswith('dem')]
+            val_cols = [x for x in merge_par.columns.tolist() if str(x).startswith('VALUE')]
+            if 'VALUE' in val_cols:
+                val_cols.remove('VALUE')
+            merged_df_huc = merge_par[['EntityID', 'STUSPS', 'STATEFP', 'HUC2_AB'] + val_cols].copy()
+            out_sp_table_huc = merged_df_huc.groupby(['EntityID', 'STUSPS', 'STATEFP', 'HUC2_AB'])[
+                val_cols].sum().reset_index()
+
+            merge_par['GEOID'] = merge_par['GEOID'].map(lambda (n): n).astype(str)
+            merge_par.ix[:, 'STATEFP'] = merge_par.ix[:, 'GEOID'].map(
+                lambda (n): str(n)[:2] if len(n) == 5 else '0' + n[:1]).astype(str)
+
+            merged_df_other = merge_par[
+                ['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col + val_cols].copy()
+            out_sp_table_other = \
+            merged_df_other.groupby(['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col)[
+                val_cols].sum().reset_index()
+
             if len(out_sp_table_huc) > 0:
                 if 'VALUE_0' not in out_sp_table_huc.columns.values.tolist():
                     out_sp_table_huc['VALUE_0'] = 0
@@ -698,15 +597,9 @@ for folder in list_dir:
                 print ("   Working on {0}...table {1} of {2}".format(csv, (list_csv.index(csv) + 1), len(list_csv)))
                 # parent fc att table with all input ID field (list_fc_ab) and ZoneID and associated EntityID (list_fc)
                 # for species listed in the csv title
-                par_zone_fc = [j for j in list_fc_ab if
-                               j.startswith(
-                                   os.path.basename(look_up_fc).split("_")[0] + "_" + csv.split("_")[1].title())]
-                zone_fc = [j for j in list_fc if
-                           j.startswith(os.path.basename(look_up_fc).split("_")[0] + "_" + csv.split("_")[1].title())]
-                # converts att from species fc with ZoneID and association entityID  to dfs
-                zone_array = arcpy.da.TableToNumPyArray(look_up_fc + os.sep + zone_fc[0], ['ZoneID', 'ZoneSpecies'])
-                sp_zone_df = pd.DataFrame(data=zone_array, dtype=object)
-                sp_zone_df['ZoneID'] = sp_zone_df['ZoneID'].map(lambda f: str(f).split('.')[0]).astype(str)
+                lookup_csv = [t for t in list_fc_ab if t.startswith(csv.split("_")[0].upper()
+                                                                    + "_" + csv.split("_")[1].capitalize())]
+                lookup_df = pd.read_csv(look_up_fc_ab + os.sep + lookup_csv[0], dtype=object)
 
                 # reads in csv to df for species and the parent raster attribute table for species
                 if os.path.exists(in_directory_species_grids + os.sep + csv.split("_")[0] + "_" +
@@ -719,7 +612,7 @@ for folder in list_dir:
                     in_csv_path = in_directory_csv + os.sep + folder + os.sep + csv
 
                     # out_all, out_all_cnty, out_all_state = split_csv_chucks (in_csv_path)
-                    out_all_huc, out_all_other = split_csv_chucks(in_csv_path)
+                    out_all_huc, out_all_other = split_csv_chucks(in_csv_path, lookup_df)
                     # print len(out_all_other), len (out_all_huc)
 
                     # Generates very large files run transforms and summarize to species in memory to keep file size low
@@ -753,15 +646,17 @@ for folder in list_dir:
                         loop_sp_table = out_all_huc.copy()
                         if not os.path.exists(out_path + os.sep + 'Agg_Layers' + os.sep + folder):
                             os.mkdir(out_path + os.sep + 'Agg_Layers' + os.sep + folder)
-                        if not os.path.exists(
-                                out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
-                                                                                                          '_HUC2AB.csv')):
-                            aqu = export_aquatics(loop_sp_table, aqu)
-                            aqu.to_csv(out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
-                                                                                                                 '_HUC2AB.csv'))
-                            print '  Exported {0}'.format(
-                                out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
-                                                                                                          '_HUC2AB.csv'))
+                        if run_aqu:
+                            if not os.path.exists(
+                                    out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
+                                                                                                              '_HUC2AB.csv')):
+                                aqu = export_aquatics(loop_sp_table, aqu)
+                                aqu.to_csv(
+                                    out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
+                                                                                                              '_HUC2AB.csv'))
+                                print '  Exported {0}'.format(
+                                    out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
+                                                                                                              '_HUC2AB.csv'))
                         #     min_row = max_row
                         #     max_row = max_row + chunksize
                         # # min_row = 0
@@ -783,63 +678,64 @@ for folder in list_dir:
                             no_adjust_state.to_csv(out_pol_folder_st + os.sep + csv.replace('.csv', '_noadjust.csv'))
                             print '  Exported {0}'.format(
                                 out_pol_folder_st + os.sep + csv.replace('.csv', '_noadjust.csv'))
-
-                        if not os.path.exists(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEle.csv')):
-                            elev_hab_working, out_ele, out_ele_cnty, out_ele_state = adjust_elevation(loop_sp_table,
-                                                                                                      elevation_adjustments,
-                                                                                                      out_ele,
-                                                                                                      out_ele_cnty,
-                                                                                                      out_ele_state)
-                            out_ele.to_csv(
-                                out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
-                                                                                                          '_adjEle.csv'))
-                            out_ele_cnty.to_csv(out_pol_folder_cny + os.sep + csv.replace('.csv', '_adjEle.csv'))
-                            out_ele_state.to_csv(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEle.csv'))
-                            print '  Exported {0}'.format(
-                                out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEle.csv'))
-                        else:
-                            elev_hab_working, out_ele, out_ele_cnty, out_ele_state = adjust_elevation(loop_sp_table,
-                                                                                                      elevation_adjustments,
-                                                                                                      out_ele,
-                                                                                                      out_ele_cnty,
-                                                                                                      out_ele_state)
+                        if run_elevation:
+                            if not os.path.exists(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEle.csv')):
+                                elev_hab_working, out_ele, out_ele_cnty, out_ele_state = adjust_elevation(loop_sp_table,
+                                                                                                          elevation_adjustments,
+                                                                                                          out_ele,
+                                                                                                          out_ele_cnty,
+                                                                                                          out_ele_state)
+                                out_ele.to_csv(
+                                    out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
+                                                                                                              '_adjEle.csv'))
+                                out_ele_cnty.to_csv(out_pol_folder_cny + os.sep + csv.replace('.csv', '_adjEle.csv'))
+                                out_ele_state.to_csv(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEle.csv'))
+                                print '  Exported {0}'.format(
+                                    out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEle.csv'))
+                            else:
+                                elev_hab_working, out_ele, out_ele_cnty, out_ele_state = adjust_elevation(loop_sp_table,
+                                                                                                          elevation_adjustments,
+                                                                                                          out_ele,
+                                                                                                          out_ele_cnty,
+                                                                                                          out_ele_state)
 
                         if region != 'AK':
-                            if not os.path.exists(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjHab.csv')):
-                                hab_sp_adjust, hab_df, out_habitat, out_habitat_cnty, out_habitat_state = adjust_habitat(
-                                    habitat_adjustment_path + os.sep + habitat_dict[region], loop_sp_table, out_habitat,
-                                    out_habitat_cnty, out_habitat_state)
-                                out_habitat.to_csv(
-                                    out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
-                                                                                                              '_adjHab.csv'))
-                                out_habitat_cnty.to_csv(
-                                    out_pol_folder_cny + os.sep + csv.replace('.csv', '_adjHab.csv'))
-                                out_habitat_state.to_csv(
-                                    out_pol_folder_st + os.sep + csv.replace('.csv', '_adjHab.csv'))
-                                print '  Exported {0}'.format(
-                                    out_pol_folder_st + os.sep + csv.replace('.csv', '_adjHab.csv'))
-                            else:
-                                hab_sp_adjust, hab_df, out_habitat, out_habitat_cnty, out_habitat_state = adjust_habitat(
-                                    habitat_adjustment_path + os.sep + habitat_dict[region], loop_sp_table, out_habitat,
-                                    out_habitat_cnty, out_habitat_state)
-
-                            if not os.path.exists(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEleHaB.csv')):
-                                out_hab_ele, out_hab_ele_cnty, out_hab_ele_state = adjust_elv_habitat(elev_hab_working,
-                                                                                                      loop_sp_table,
-                                                                                                      hab_sp_adjust,
-                                                                                                      hab_df,
-                                                                                                      out_hab_ele,
-                                                                                                      out_hab_ele_cnty,
-                                                                                                      out_hab_ele_state)
-                                out_hab_ele.to_csv(
-                                    out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
-                                                                                                              '_adjEleHab.csv'))
-                                out_hab_ele_cnty.to_csv(
-                                    out_pol_folder_cny + os.sep + csv.replace('.csv', '_adjEleHab.csv'))
-                                out_hab_ele_state.to_csv(
-                                    out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEleHab.csv'))
-                                print '  Exported {0}'.format(
-                                    out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEleHaB.csv'))
+                            if run_habitat:
+                                if not os.path.exists(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjHab.csv')):
+                                    hab_sp_adjust, hab_df, out_habitat, out_habitat_cnty, out_habitat_state = adjust_habitat(
+                                        habitat_adjustment_path + os.sep + habitat_dict[region], loop_sp_table, out_habitat,
+                                        out_habitat_cnty, out_habitat_state)
+                                    out_habitat.to_csv(
+                                        out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
+                                                                                                                  '_adjHab.csv'))
+                                    out_habitat_cnty.to_csv(
+                                        out_pol_folder_cny + os.sep + csv.replace('.csv', '_adjHab.csv'))
+                                    out_habitat_state.to_csv(
+                                        out_pol_folder_st + os.sep + csv.replace('.csv', '_adjHab.csv'))
+                                    print '  Exported {0}'.format(
+                                        out_pol_folder_st + os.sep + csv.replace('.csv', '_adjHab.csv'))
+                                else:
+                                    hab_sp_adjust, hab_df, out_habitat, out_habitat_cnty, out_habitat_state = adjust_habitat(
+                                        habitat_adjustment_path + os.sep + habitat_dict[region], loop_sp_table, out_habitat,
+                                        out_habitat_cnty, out_habitat_state)
+                            if run_habitat and run_elevation and run_elevation_hab:
+                                if not os.path.exists(out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEleHaB.csv')):
+                                    out_hab_ele, out_hab_ele_cnty, out_hab_ele_state = adjust_elv_habitat(elev_hab_working,
+                                                                                                          loop_sp_table,
+                                                                                                          hab_sp_adjust,
+                                                                                                          hab_df,
+                                                                                                          out_hab_ele,
+                                                                                                          out_hab_ele_cnty,
+                                                                                                          out_hab_ele_state)
+                                    out_hab_ele.to_csv(
+                                        out_path + os.sep + 'Agg_Layers' + os.sep + folder + os.sep + csv.replace('.csv',
+                                                                                                                  '_adjEleHab.csv'))
+                                    out_hab_ele_cnty.to_csv(
+                                        out_pol_folder_cny + os.sep + csv.replace('.csv', '_adjEleHab.csv'))
+                                    out_hab_ele_state.to_csv(
+                                        out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEleHab.csv'))
+                                    print '  Exported {0}'.format(
+                                        out_pol_folder_st + os.sep + csv.replace('.csv', '_adjEleHaB.csv'))
                         # min_row = max_row
                         # max_row = max_row + chunksize
 

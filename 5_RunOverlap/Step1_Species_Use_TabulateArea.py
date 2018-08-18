@@ -25,33 +25,34 @@ from arcpy.sa import *
 
 use_location_base = r'L:\Workspace\StreamLine\ByProjection'
 out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage'
-# out_results = r'L:\Workspace\StreamLine\ESA\Results'
+out_results = r'L:\Workspace\StreamLine\ESA\Results'
 # out_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba'
 
 # Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
 
 in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
 
-# in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection'
 
 # [u'r_amphib', u'r_birds', u'r_clams',  u'r_fishes',  u'r_insect', u'r_lichen', u'r_mammal', u'r_reptil', u'r_snails']
 # [u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower',  u'r_mammal']
-# skip_species = [  u'r_fishes',  u'r_birds', u'r_flower'  ]
+skip_species = [  u'r_fishes',  u'r_birds', u'r_mammal' ]
+skip_species = []
 # [u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower', u'r_insect', u'r_lichen', u'r_mammal', u'r_reptil', u'r_snails
 # #[ u'r_ferns',  u'r_insect', u'r_lichen',  u'r_reptil', u'r_snails
 
 
-# skip_species = []
+
 in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 # in_location_species_folder = 'AK_WGS_1984_Albers'
 
 # CONUS_Albers_Conical_Equal_Area
 
-temp_file = "temp_table_113"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table_1"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
-
+# use_list =[]
 use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
             u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
             u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc',
@@ -63,7 +64,7 @@ use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Eq
             u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
             u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc',
             u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
-            u'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',]
+            u'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc']
 
 # u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc',
 
