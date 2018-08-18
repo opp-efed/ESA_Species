@@ -21,25 +21,15 @@ Step 1 - Generate list in a csv of all uses names using the standard file struct
    - use to generate the look-up table to standardize columns headers; and to pull chemical specific information
    such as sub-set of layer, max drift, application method etc
 
-   - Output table will include the list of all available use layer results and the standard structure for the table.
-   This is used as input for other scripts.  **User must populated the additional columns that are blank in the output
-   and confirm chemical information with chemical team**
+   - Output table will include the list of all available use layer results and the standard structure for the table so
+   it can be read into the other scripts.  **User must populated the additional columns that are blank in the output and
+   confirm chemical information with chemical team**
 
    ** Note to run just the Step 1 use layer, or a different sub-set of layers generate a new table will just the layers
    of interest and update the variable**
 
-Step 2-  Transforms table from zones to species, and convert numbers from pixels to percentage
-    Run Time CONUS ~ 1.5 - 2 hours for 26 uses  NL48~ 1.5 hours for 80 uses
-    Input: Raw overlap results, Use Look up file generated from Step 1 and confirmed by team MagTool model developers
-    Output: output tables of percent overlap by species
+Step 2-  Transforms table from zones to species, sum results by species and calculates percentage overlap
 Step 3 - Breaks tables into the desired distance interval - default 30m
-    Run Time CONUS ~ 5 minutes for 26 uses  NL48~ 1.5 hours for 80 uses
-    Input: Output from step 2 tables of percent overlap by species; Use Look up file generated from Step 1 and confirmed
-    by team MagTool model developers
-    Output: Parent Distance Interval tables
 Step 4- Generates the summary tables for the BE - ie direct use overlap, overlap for ground and aerial
-    Input: Parent Distance Interval tables; Use Look up file generated from Step 1 and confirmed by team MagTool model
-    developers
-    Output: Parent Summarized tables
 Step 5- Collapses table across regions - Step was Archived spring 2018
 

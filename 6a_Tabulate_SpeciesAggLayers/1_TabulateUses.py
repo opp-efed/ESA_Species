@@ -3,6 +3,18 @@ import os
 
 import pandas as pd
 
+# Title- Generate overlap table of all use based on the use layer folder name in results; Author J Connolly
+#       1) Use to generate the look-up table to standardize columns headers; and to pull chemical specific information
+#          such as sub-set of layer, max drift, application method etc
+#        2) Output table will include the list of all available use layer results and the standard structure for the
+#             table.
+#        3) This is used as input for other scripts.  **User must populated the additional columns that are blank in
+#            the output and confirm chemical information with chemical team**
+
+# NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
+# will not hist the limit.  If the limit is hit you will receive and error that the file does not exist.  Can over ride
+# error by pausing syncing
+
 agg_layers = r'L:\ESA\Results_Usage_NoCombine\L48\Range\Agg_Layers'
 nl48 = r'L:\ESA\Results_Usage_NoCombine\NL48\Range\Agg_Layers'
 outlocation = r'L:\ESA\Tabulate_Usage_NoCombine'
