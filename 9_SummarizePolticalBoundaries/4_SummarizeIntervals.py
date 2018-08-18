@@ -3,67 +3,51 @@ import os
 
 import pandas as pd
 
-# Title- Generate BE summary table from master percent overlap tables; Author J Connolly
-#               1) Generates BE summary table at user define intervals default  0, 305 and 765 interval; for aggregated
-#                   layers, AA, Ag and NonAG
-#                   1a) NOTE these intervals included the  lower interval; this can be changed within script
-
-
+# Title- Generate BE summary table from master percent overlap tables - this script is interchangeable with the on
+# under GAP_Species but kept  separate
+#               1) Generates BE summary table at 0, 305 and 765 interval; for aggregated layers, AA, Ag and NonAG
+#                   1a) NOTE these interval included the  lower interval; this can be change within script
 # Static variables are updated once per update; user input variables update each  run
+
 # ASSUMPTIONS
 # col in UsesLook up that represents the Final Use Header - values do not have
 
-# NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
-# will not hist the limit.  If the limit is hit you will receive and error that the file does not exist.  Can over ride
-# error by pausing syncing
 
+# TODO set up bool variable to run interval inclusive of each other and exclusive of each other see title 1a
 # TODO set up separate script so that it will check for missing runs, right now if there is not datat in the master tables
 
 # ###############user input variables
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
 
-# This should be one of the SprayInterval table from step 3- full, region, or NL48
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\R_SprayInterval_20180522_Region.csv'
 
-# Columns from the master species list that should be included in the output tables
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge\CONUS_CDL_1016_40x2_euc.csv'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba'
+id_value = 'Dicamba'
+regions = ['CONUS']
+
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
-                      'CH_Filename', 'Range_Filename', 'L48/NL48']
+                      'CH_Filename', 'Range_Filename', 'L48/NL48','STUSPS']
 
-# Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
-# tables
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
 
-# meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
-# Limits for AgDrift for ground and aerial
-
-bins = [0, 305, 765]  # these can be adjust if we want to look at different bins, there can be more than 3
 # #############Static Variables
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-find_file_type = in_table.split(os.sep)
-if 'L48' in find_file_type:
-    p_region = 'L48'  # can be L48 or
-    regions = ['CONUS']
-else:
-    p_region = 'NL48'
-    regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI', 'AS']
-path_intable, in_table_name = os.path.split(in_table)
-file_type = in_table_name.split("_")[0]
-temp_folder = path_intable
+out_csv = out_location + os.sep + 'AllUses_' + id_value +"_"+date+ '.csv'
 
-out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' + p_region + "_" + date + '.csv'
+# meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
+# Limits for AgDrift for ground and aerial
+bins = [0, 90,  305, 765]
 
 use_lookup = pd.read_csv(look_up_use)
 use_lookup['FinalColHeader'].fillna('none', inplace=True)
 region_lookup = use_lookup.loc[use_lookup['Region'].isin(regions)]
 
-list_regional_uses = list(set(region_lookup['FinalColHeader'].values.tolist()))
+list_regional_uses = list(set(region_lookup ['FinalColHeader'].values.tolist()))
 
 
 start_time = datetime.datetime.now()
@@ -77,8 +61,8 @@ columns_uses = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0
 columns_species = [t for t in sp_table_df.columns.values.tolist() if t.split("_")[0] not in regions]
 # print sp_table_df
 sp_info_df = sp_table_df.loc[:, columns_species]
+sp_info_df ['GEOID'] = sp_info_df['GEOID'].map(lambda x: x).astype(str)
 use_df = sp_table_df.loc[:, columns_uses]
-
 use_list = use_df.columns.values.tolist()
 
 uses = []
@@ -125,10 +109,8 @@ for i in list_regional_uses:
                         get_interval = col.split('_')
                         interval = int(get_interval[(len(get_interval) - 1)])
                         if interval == bins[0]:
-
                             binned_col.append(col)
                 else:
-
                     for col in current_cols:
                         get_interval = col.split('_')
                         interval = int(get_interval[(len(get_interval) - 1)])
@@ -145,6 +127,7 @@ for i in list_regional_uses:
                     previous_col.append(p)
 
             binned_df = grouped_use[binned_col]
+            print binned_col
 
             use_results_df = binned_df.apply(pd.to_numeric, errors='coerce')
             new_df[(str(use_group) + '_' + str(value))] = use_results_df.sum(axis=1)
@@ -156,8 +139,6 @@ col_final = collapsed_df.columns.values.tolist()
 master_col = col_include_output
 for i in col_final:
     master_col.append(i)
-
-# final_df = final_df.reindex(columns=master_col)
 final_df.to_csv(out_csv)
 
 end = datetime.datetime.now()

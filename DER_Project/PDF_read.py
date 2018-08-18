@@ -4,11 +4,10 @@ import PyPDF2
 import datetime
 
 # path_root = r'\\w2032pccth016\EFEDADMINSCANS\Science Documents'
-path_root = r'V:\Science Documents\128994'
+path_root = r'V:\Science Documents\111601'
 # out_path = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\DER" \
 #            r"\SanFiles_content_all_20171213.csv"
-out_path = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects" \
-           r"\Risk Assessments\128994 Dithiopyr\Documents\SanFiles_DERS_20170307.csv"
+out_path = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\Oxyflurofen\Other Documents\DER_111601_search_20180814.csv"
 
 
 def recursive_look_within_folder(working_path, pccode):

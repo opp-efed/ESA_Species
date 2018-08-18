@@ -3,45 +3,35 @@ import os
 
 import pandas as pd
 
-# Title- Generate BE summary table from master percent overlap tables; Author J Connolly
-#               1) Generates BE summary table at user define intervals default  0, 305 and 765 interval; for aggregated
-#                   layers, AA, Ag and NonAG
-#                   1a) NOTE these intervals included the  lower interval; this can be changed within script
-
-
+# Title- Generate BE summary table from master percent overlap tables - this script is interchangeable with the on
+# under GAP_Species but kept  separate
+#               1) Generates BE summary table at 0, 305 and 765 interval; for aggregated layers, AA, Ag and NonAG
+#                   1a) NOTE these interval included the  lower interval; this can be change within script
 # Static variables are updated once per update; user input variables update each  run
+
 # ASSUMPTIONS
 # col in UsesLook up that represents the Final Use Header - values do not have
 
-# NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
-# will not hist the limit.  If the limit is hit you will receive and error that the file does not exist.  Can over ride
-# error by pausing syncing
 
+# TODO set up bool variable to run interval inclusive of each other and exclusive of each other see title 1a
 # TODO set up separate script so that it will check for missing runs, right now if there is not datat in the master tables
 
 # ###############user input variables
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
 
-# This should be one of the SprayInterval table from step 3- full, region, or NL48
+
 in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
            r'\_ED_results\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
            r'\R_SprayInterval_20180522_Region.csv'
 
-# Columns from the master species list that should be included in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-# Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
-# tables
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
 
-# meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
-# Limits for AgDrift for ground and aerial
-
-bins = [0, 305, 765]  # these can be adjust if we want to look at different bins, there can be more than 3
 # #############Static Variables
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
@@ -57,13 +47,18 @@ path_intable, in_table_name = os.path.split(in_table)
 file_type = in_table_name.split("_")[0]
 temp_folder = path_intable
 
-out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' + p_region + "_" + date + '.csv'
+
+out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' +p_region +"_"+date+ '.csv'
+
+# meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
+# Limits for AgDrift for ground and aerial
+bins = [0, 305, 765]
 
 use_lookup = pd.read_csv(look_up_use)
 use_lookup['FinalColHeader'].fillna('none', inplace=True)
 region_lookup = use_lookup.loc[use_lookup['Region'].isin(regions)]
 
-list_regional_uses = list(set(region_lookup['FinalColHeader'].values.tolist()))
+list_regional_uses = list(set(region_lookup ['FinalColHeader'].values.tolist()))
 
 
 start_time = datetime.datetime.now()

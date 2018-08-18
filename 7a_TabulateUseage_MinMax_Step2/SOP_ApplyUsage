@@ -1,19 +1,21 @@
-Author J. Connolly  Updated 6/2018, 2/2018
+Author J. Connolly  Updated 7/2018, 6/2018, 2/2018
 # Steps 1 4 are completed ont he usage overlap output results
 # Step 2 is then used as inpute for Step 2a ofr 7b
 # Step 2 is use as inputs for Step 2b of 7B
 # TODO Will need to make a table that is used for Step 1 and Step of 7b that excludes elevation
 
-Step A: - updates summer 2018 changed overlap run to Tabulate area from Zonal histogram due to processing time of
-zonal histogram with the combined input files
 
-Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal
-    Run overlap on the political boundaries using Step3_RunOverlap_usage_boundaries. This information is needed to
-    do the state adjustments of use within the species range and use outside the species range.
-        - Run time ~ 2 hours/ use split into groups to speed up
-        -TODO find lost scratch path - temp files saving in current directory
+Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal - Zonal scripts archived for comparision
+    - updatesd summer 2018 changed overlap run to Tabulate area from Zonal histogram due to processing time of
+    zonal histogram with the combined input files - spot checked outputs using both tools and results
 
-    Run Overlap to species input files with the additional information added during the combine
+        Step3_RunOverlap_usage_boundaries_TabulateArea: Run overlap on the political boundaries using Step3_RunOverlap_usage_boundaries. This information is needed to
+            do the state adjustments of use within the species range and use outside the species range.
+                - Run time ~ 2 hours/ use split into groups to speed up
+                -TODO find lost scratch path - temp files saving in current directory
+                - Used in 7a - Step 2 - variable in_locations_states # totals for states
+
+        Step1_Species_Use_TabulateArea: Run Overlap to species input files with the additional information added during the combine
         - Run time ~ NL48 takes a couple of hours to run combined input files, L48 CH tales be 1.5 -10 mins for a use
         depending on species (ch_fishes is the longest; range takes between 8 hours and 1 hour per use (r_birds longest)
         split up uses and or species input to speed up
@@ -22,9 +24,26 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal
  Step B: Create master input files for species, extracting the species by entity ID, HUCS, Elevation, Habitat, FIPS and
  STATEs
     From 7a_ TabulateUsage_MinMax
-        1_CreateUsageOverlapTables_PolBoundaries_TabArea- add area and column and sums by fips and state then exports
+        1a_CreateUsageOverlapTables_PolBoundaries_TabArea- add area and column and sums by fips and state then exports
         tables to Counties and state folder with all uses rather than use layer folder
 
-        update 1C to pull in no adjustment, habitat, elevation and habitat and elevation by political boundaries
+        1b_tranforms table from zone to species, extract HUC, States and does the filters for habitat and elevations
+        THere will be one parent table each types )(elevation, no adjest habitat etc).
+        NL48 takes ~ 45 minutes
+        L48 tales ~ 10 hour when do all species and uses at once, can split out species using spcies spkit
 
-        run step 2 against each interation of files
+
+        run step 2 - adjust the species by state based on PCT - pulls in parent species table and political usage
+        overlap
+            #TODO do we need to adjust for redunacy first; I can pull the factors from the unadjust table then apply them
+        Step 3: generated parent drift tables for each filter category
+        Step 4: generates the 'all uses' table for each filter category
+        Step 5 Merged the AQU tables into one with the use layers across the top and species in the cols include % ares
+        of huc - see schema in OneNote
+            # TODO $ of species range in huc/state combo
+      Run 7b: B and step 2a and 2b
+        # run for each parent table generate in step 2 and 3 ie, elevation, elevation usage min, max, averaage, lower,
+        upper, uniform etc
+        # TODO set up to use the file name to put to the correct out file directory
+        Step B and generates the input pct tables needed to adjusted the outputs
+

@@ -2,12 +2,10 @@ import pandas as pd
 import arcpy
 import datetime
 import os
-
-in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
-                             r'\Grid_byProjections_Combined'
-look_up_fc_ab = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-out_path = r'L:\ESA\UnionFiles_Winter2018\input tables'
+in_directory_species_grids = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
+look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+look_up_fc = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+out_path = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\input tables'
 
 arcpy.env.workspace = look_up_fc
 list_fc = arcpy.ListFeatureClasses()
@@ -130,7 +128,7 @@ out_elevation = pd.DataFrame(columns=['EntityID', 'Min Elevation GIS', 'Max Elev
 for folder in list_dir:
     print (folder)
     # empty df for regional output habitat table
-    out_habitat = pd.DataFrame(index=(list(range(0, 550))))
+    out_habitat = pd.DataFrame(index=(list(range(0, 1000))))
     region = folder.split('_')[0]  # extracts regions from folder title
     list_csv = os.listdir(in_directory_species_grids + os.sep + folder)  # list of csv in folder
     list_csv = [csv for csv in list_csv if csv.endswith('_att.csv')]  # list of att csvs

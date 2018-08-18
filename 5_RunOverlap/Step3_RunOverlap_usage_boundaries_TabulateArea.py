@@ -11,37 +11,70 @@ from arcpy.sa import *
 
 
 # sub-directory folder where shapefile
-in_sum_file = r'L:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+in_sum_file = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
 region = 'CONUS'
-temp_file = 'table_1'
+temp_file = 'table3'
+run_group = 'UseLayers'
 
 # # location of use site to runt
 # use_location = r"L:\Workspace\UseSites\CDL_Reclass\161031\CDL_Reclass_1015_161031.gdb"
-use_location = 'L:\Workspace\UseSites\ByProjection\CONUS_UseLayers.gdb'
+
+use_location = 'L:\Workspace\StreamLine\ByProjection' + os.sep + str(region) + "_" + run_group + ".gdb"
+
+
 arcpy.env.workspace = use_location
 
-use_list = [u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc',
-            u'Albers_Conical_Equal_Area_CONUS_OSD_euc', u'Albers_Conical_Equal_Area_CONUS_Developed_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc',
-            u'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',]  # runs specified layers in use location
+use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
+            u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_110_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',
+            u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc',
+            u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc']  # runs specified layers in use location
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
 
 # location of results
-out_results = r'L:\ESA\Results_Usage\PolBoundaries\Agg_layers'
+out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage\PolBoundaries\Agg_layers'
 
 # STATIC Variables
 # Symbology layer so that the unique values can be applied to use layer before running zonal stats
 
-symbology_dict = {
-    "CONUS": r"L:\Workspace\UseSites\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr"}
+symbology_dict = {'CONUS': [
+    r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr',
+    r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_OnOff_X7072_171227.lyr',
+    r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_2010_rec.lyr'],
+    'HI': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_HI_Ag_euc.lyr',
+           r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_CCAP_HI_6.lyr'],
+    'AK': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
+           r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_NLCD_2011_81.lyr'],
+    'AS': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_AS_Ag_euc.lyr',
+           r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_CCAP_AS_6.lyr'],
+    'CNMI': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
+             r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_CNMI_6.lyr'],
+    'GU': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
+           r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_GU_6_30.lyr'],
+    'PR': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_Ag_euc.lyr',
+           r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_NLCD_81.lyr'],
+    'VI': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr',
+           r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_CCAP_VI_6_30.lyr']}
 
-snap_raster_dict = {
-    'CONUS': r"L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016"}
-
+snap_raster_dict = {'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb'
+                             r'\Albers_Conical_Equal_Area_cultmask_2016',
+                    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+                    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+                    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+                    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+                    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+                    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+                    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 def zone(zone_lyr, raster_lyr, temp_table, snap, zone_headers):
     # Set Snap Raster environment and set extent
@@ -92,7 +125,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
 
     # parse out information needed for file names
 
-    for zone_title in ["STATEFP", "GEOID"]:
+    for zone_title in ["GEOID","STATEFP"]:
         if zone_title.startswith("STATE"):
             run_id = use_nm_folder + "_State"
         else:
@@ -123,7 +156,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
             print 'Final file can be found at {0}'.format(csv)
-            arcpy.Delete_management("in_memory" + os.sep + table)
+            arcpy.Delete_management(temp_return)
 
             print "Completed in {0}".format((datetime.datetime.now() - zone_time))
 
@@ -155,7 +188,7 @@ for use_nm in list_raster_use:  # loops through all use raster to be included
     use_path = use_location + os.sep + use_nm
     split_use_nm = use_nm.split("_")
 
-    symbologyLayer = symbology_dict[region]
+    symbologyLayer = symbology_dict[str(region)][0]
     snap_raster = snap_raster_dict[region]
 
     # try:

@@ -4,6 +4,7 @@ import arcpy
 
 import pandas as pd
 
+# **TOOL uses converts poltical boundary tables that were generated using zonal histogram into the needed input tables*
 # Title- Generate overlap tables from geoid to use layers results;
 #               1) Generates tables for aggregated layers, AA, Ag and NonAG
 #                       1a) The final merged output are used to generate distance interval table for spray drift; and
@@ -14,11 +15,11 @@ import pandas as pd
 
 # ASSUMPTIONS
 
-# # https://usepa-my.sharepoint.com/personal/connolly_jennifer_epa_gov/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fconnolly%5Fjennifer%5Fepa%5Fgov%2FDocuments%2FDocuments%5FC%5Fdrive%2FProjects%2FESA%2F%5FED%5Fresults%2FArchive%2FTabulated%5FJan2018%2FPolticalBoundaries%2FPolticalBoundaries%2FAgg%5FLayers%2FCounties
+
 # ###############user input variables
 overwrite_inter_data = True
 
-raw_results_csv = r'D:\PolBoundaries\Agg_layers'
+raw_results_csv = r'L:\ESA\Results_Usage\PolBoundaries\Agg_layers'
 
 # raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
 #                   r'\ESA\_ExternalDrive\_CurrentResults\Results_diaz\L48\Agg_Layers\Range'
@@ -27,13 +28,12 @@ raw_results_csv = r'D:\PolBoundaries\Agg_layers'
 find_file_type = raw_results_csv.split(os.sep)
 # ########### Updated once per run-variables
 
-look_up_fips = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap_albers'
-
+look_up_fips = r'L:\One_drive_old_computer_20180214\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
 
 find_file_type = raw_results_csv.split(os.sep)
 
-out_root = r'D:\Tabulated_PolBoundaries' + os.sep + 'PoliticalBoundaries'
+out_root = r'L:\ESA\Tabulates_Usage' + os.sep + 'PoliticalBoundaries'
 
 out_results = out_root + os.sep + 'Agg_Layers'
 
@@ -64,20 +64,29 @@ def collapse_state(df):
 
 def extract_overlap_interval(use_df):
     # removed all extraneous columns only import columns are the VALUE_[zoneID] and default Label col from tool export
-    drop_cols = [z for z in df_use.columns.values.tolist() if  not z.startswith('VALUE')]
-    drop_cols.remove('GEOID')
+    drop_cols = [z for z in use_df.columns.values.tolist() if not z.startswith('G')]
+    drop_cols.remove('LABEL')
     [use_df.drop(j, axis=1, inplace=True) for j in drop_cols if j in drop_cols]
-    # Limits table to GeoID and use overlap by distance
-    use_df['GEOID'] = use_df['GEOID'].map(lambda x: str(x) if len(x)==5 else '0'+str(x)).astype(str)
+    # transform table so it is geoid by distance interval; rest index; update column header and remove 'VALUE' form
 
-    return use_df
+    overlap_df = use_df.T
+    overlap_df = overlap_df.reset_index()
+    overlap_df.columns = overlap_df.iloc[0]
+    overlap_df = overlap_df.reindex(overlap_df.index.drop(0))
+    update_cols = overlap_df.columns.values
+    update_cols[0] = 'GEOID'
+    overlap_df.columns = update_cols
+    overlap_df['GEOID'] = overlap_df['GEOID'].map(lambda x: str(x).split('_')[1]).astype(str)
+
+    return overlap_df
 
 
 def use_by_fips(use_df):
     overlap_df = extract_overlap_interval(use_df)
 
-    fips_zone_array = arcpy.da.TableToNumPyArray(look_up_fips, ['GEOID', 'STUSPS', 'STATEFP', 'Acres'])
+    fips_zone_array = arcpy.da.TableToNumPyArray(look_up_fips, ['GEOID', 'STUSPS', 'STATEFP', 'Acres', 'Region'])
     fips_zone_df = pd.DataFrame(data=fips_zone_array, dtype=object)
+    fips_zone_df.drop('Region', axis=1, inplace=True)
     merged_df = pd.merge(overlap_df, fips_zone_df, on='GEOID', how='left')
 
     sum_by_fips = sum_df(merged_df)
@@ -114,12 +123,10 @@ for folder in list_folders:
     out_folder_sum_use_fips = out_results + os.sep + 'Counties'
     out_folder_sum_use_state = out_results + os.sep + 'States'
 
-
     create_directory(out_folder_sum_use_fips)
     create_directory(out_folder_sum_use_state)
 
-    # parse out use name and region from folder name load use support info from look_up_use and acres info for region
-    # and whole range of species
+    # parse out use name and region from folder name
 
     print '\nWorking on {0}: {1} of {2}'.format(folder, (list_folders.index(folder)) + 1, len(list_folders))
     # set up list of result csv files
@@ -136,9 +143,9 @@ for folder in list_folders:
         for csv in list_csv:
             # load outside function due to double _ added by filename by default w. arcpy- corrected moving forward
             df_use = pd.read_csv(raw_results_csv + os.sep + folder + os.sep + csv, dtype=object)
-            csv = csv.replace('__', '_')  # error correction for file names with double _ in name- remove in future
+            csv = csv.replace('__', '_')  # error correction for file names with double _ in name- remove in futurr
 
-            # Step 1: Sum by FIPS, for each interval and add acres columns, export table to Counties folder
+            # Step 1: Sum by species- step up parse  FIPS  then sum so there is one value per species
 
             out_sum_direct = out_folder_sum_use_fips + os.sep + folder + '.csv'
 
@@ -156,7 +163,7 @@ for folder in list_folders:
         else:
             out_df_direct.to_csv(out_sum_direct)
 
-        # Step 2: Sum by to state from ; export table to Counties folder
+        # Step 2: Sum by to state from FIPS
         print '   Summing tables by state...use {0}'.format(folder)
         out_sum_direct_st = out_folder_sum_use_state + os.sep + folder + '.csv'
 

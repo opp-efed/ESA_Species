@@ -16,7 +16,7 @@ Data sources used to supplement overlap date for usage:
     - NHDplus Seamless data set: http://www.horizon-systems.com/nhdplus/ - downloaded Fall 2017
         - Seamless data set is supplemented with island boundaries for AK, AS, CNMI and HI from Tiger Census that are
         not found in the original file.  This is done so these areas are not lost when running the intersect in
-        Aa_Intersect_Cnty_HUC2.py
+        1_Intersect_Cnty_HUC2.py
         - Also A/B splits are included for the HUC_2 by joining the current output from
         A_Bins\Step_A2_splitHUC2_A_B_Summarize.py to the HUC12s and updated the HUC2_AB column. This is down so the
         correct file from the PWC model can be identified in the MagTool
