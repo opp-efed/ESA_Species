@@ -21,11 +21,11 @@ import pandas as pd
 # Species file type to tabulate
 species_file_type = 'Range'   # can be 'Range' or 'CH'
 # Region to include
-p_region = 'NL48'  # can be L48 or NL48
+p_region = 'L48'  # can be L48 or NL48
 # Merges tables to include MO_FullRange (overlap based on the area of full range) MO_Region (overlap based on the area
 # in single regions) or MO_NL48Range (overlap based on the area of just found in the NL48)
 # typically we use MO_Region for the L48 and MO_NL48 for the Nl48
-folder_name_csv = 'MO_NL48Range '  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
+folder_name_csv = 'MO_FullRange'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
 # 'MergeOverlap_Region' L48 or NL48
 interval_step = 30  # default is 30 but can be set by user
 max_dis = 1501  # end distance plus 1; default is 1501 by use can select any value from 0 -1501

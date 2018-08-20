@@ -30,7 +30,7 @@ overwrite_inter_data = False
 
 # Location of raw results
 raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ED_results\Results_HUCAB\L48\Range\Agg_Layers'
+                  r'\_ED_results\Results_HUCAB\NL48\Range\Agg_Layers'
 # Root location where the transformed tables should be saved; 'Tabulated' results this locations should be the same for
 # all steps
 out_root_dir = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
@@ -244,57 +244,62 @@ for folder in list_results_directory:
 
         # Step 1: Sum by species- convert the zoneIDs to the species in the zones, then sums so there is one value
         # per species
-        results_df = pd.read_csv(raw_results_csv + os.sep + folder + os.sep + csv, dtype=object)
-        results_df['VALUE'] = results_df['VALUE'].map(lambda x: str(x).split(".")[0]).astype(str)
-        val_cols = [v for v in results_df.columns.values.tolist() if v.startswith('VALUE')]
-        if 'VALUE' in val_cols:
-            val_cols.remove('VALUE')
-        results_df.ix[:, val_cols] = results_df.ix[:, val_cols].apply(pd.to_numeric, errors='coerce')
-        list_zones = results_df['VALUE'].values.tolist()  # list of zones in raw output table
+        if not overwrite_inter_data and not os.path.exists(out_use_pixel_by_species):
+            if not os.path.exists(out_folder_merge_NL48 + os.sep + 'Merge_' + str(folder) + '.csv'):
+                results_df = pd.read_csv(raw_results_csv + os.sep + folder + os.sep + csv, dtype=object)
+                results_df['VALUE'] = results_df['VALUE'].map(lambda x: str(x).split(".")[0]).astype(str)
+                val_cols = [v for v in results_df.columns.values.tolist() if v.startswith('VALUE')]
+                if 'VALUE' in val_cols:
+                    val_cols.remove('VALUE')
+                results_df.ix[:, val_cols] = results_df.ix[:, val_cols].apply(pd.to_numeric, errors='coerce')
+                list_zones = results_df['VALUE'].values.tolist()  # list of zones in raw output table
 
-        lookup_csv = [t for t in list_lookup if
-                      t.startswith(csv.split("_")[0].upper() + "_" + csv.split("_")[1].capitalize())]
-        lookup_df = pd.read_csv(look_up_fc + os.sep + lookup_csv[0])
-        lookup_df[join_col] = lookup_df[join_col].map(lambda x: str(x).split(".")[0]).astype(str)
-        lookup_df = lookup_df[lookup_df[join_col].isin(list_zones)]  # filter lookup to just zones in current output
-        merged_df = pd.merge(results_df, lookup_df, how='outer', left_on='VALUE', right_on=join_col)
-        # drop cols that start with unnamed
-        [merged_df.drop(col, axis=1, inplace=True) for col in merged_df.columns.values.tolist() if col.startswith('Un')]
-        merged_df['EntityID'] = merged_df['EntityID'].map(lambda x: str(x).split(".")[0]).astype(str)
-        merged_df = merged_df.fillna(0)
-        merged_df = merged_df.drop_duplicates()  # drop duplicate rows generate from outer join
+                lookup_csv = [t for t in list_lookup if
+                              t.startswith(csv.split("_")[0].upper() + "_" + csv.split("_")[1].capitalize())]
+                lookup_df = pd.read_csv(look_up_fc + os.sep + lookup_csv[0])
+                lookup_df[join_col] = lookup_df[join_col].map(lambda x: str(x).split(".")[0]).astype(str)
+                lookup_df = lookup_df[lookup_df[join_col].isin(list_zones)]  # filter lookup to just zones in current output
+                merged_df = pd.merge(results_df, lookup_df, how='outer', left_on='VALUE', right_on=join_col)
+                # drop cols that start with unnamed
+                [merged_df.drop(col, axis=1, inplace=True) for col in merged_df.columns.values.tolist() if col.startswith('Un')]
+                merged_df['EntityID'] = merged_df['EntityID'].map(lambda x: str(x).split(".")[0]).astype(str)
+                merged_df = merged_df.fillna(0)
+                merged_df = merged_df.drop_duplicates()  # drop duplicate rows generate from outer join
 
-        out_cols = ['EntityID'] + val_cols
-        sp_df = merged_df[out_cols].copy()  # subset to desired columns
-        sp_df = sp_df.drop_duplicates()
-        sp_df.ix[:, val_cols] = sp_df.ix[:, val_cols].apply(pd.to_numeric, errors='coerce')
-        sp_df = sp_df.groupby('EntityID').sum().reset_index()
+                out_cols = ['EntityID'] + val_cols
+                sp_df = merged_df[out_cols].copy()  # subset to desired columns
+                sp_df = sp_df.drop_duplicates()
+                sp_df.ix[:, val_cols] = sp_df.ix[:, val_cols].apply(pd.to_numeric, errors='coerce')
+                sp_df = sp_df.groupby('EntityID').sum().reset_index()
 
-        h_cols = [final_col_header + "_" + v.split("_")[1] for v in val_cols]
-        final_cols = ['EntityID'] + h_cols
+                h_cols = [final_col_header + "_" + v.split("_")[1] for v in val_cols]
+                final_cols = ['EntityID'] + h_cols
 
-        sp_df.columns = final_cols
-        zones = sp_df['EntityID'].values.tolist()
-        sp_df.to_csv(out_use_pixel_by_species)
-
-        if not overwrite_inter_data and os.path.exists(out_use_pixel_by_species):
-            sp_df = pd.read_csv(out_use_pixel_by_species)
-            [sp_df.drop(m, axis=1, inplace=True) for m in sp_df.columns.values.tolist() if
-             m.startswith('Unnamed')]
-            if len(sp_df) == 0:
-                zones = []
-            else:
+                sp_df.columns = final_cols
                 zones = sp_df['EntityID'].values.tolist()
+                sp_df.to_csv(out_use_pixel_by_species)
 
-        # STEP 2: Run percent overlap for both the full range and the regional; set up acres table to include only
-        # species found on the current use table (use_array)
+        elif not overwrite_inter_data and os.path.exists(out_use_pixel_by_species):
+                sp_df = pd.read_csv(out_use_pixel_by_species)
+                val_cols = [v for v in sp_df.columns.values.tolist() if v.startswith(final_col_header)]
+                sp_df.ix[:, val_cols] = sp_df.ix[:, val_cols].apply(pd.to_numeric, errors='coerce')
+                [sp_df.drop(m, axis=1, inplace=True) for m in sp_df.columns.values.tolist() if
+                 m.startswith('Unnamed')]
+                if len(sp_df) == 0:
+                    zones = []
+                else:
+                    zones = sp_df['EntityID'].values.tolist()
 
-        # output full acres as denominator for % overlap
+                # STEP 2: Run percent overlap for both the full range and the regional; set up acres table to include only
+                # species found on the current use table (use_array)
+
+                # output full acres as denominator for % overlap
         full_range_overlap_out = out_folder_percent_use + os.sep + csv
         # output regional acres as denominator for % overlap
         regional_range_overlap_out = out_folder_percent_region_use + os.sep + csv
         # output NL48 acres as denominator for % overlap
         NL48_range_overlap_out = out_folder_percent_nl48_use + os.sep + csv
+
 
         if len(zones) == 0:  # no zones in the raw output table no overlap; 0 for these species add at end
             pass
@@ -336,73 +341,74 @@ for folder in list_results_directory:
              percent_overlap_df_NL48.columns.values.tolist() if m.startswith('Unnamed')]
             percent_overlap_df_NL48.to_csv(NL48_range_overlap_out)
 
-        # STEP 3: Merge Tables by use for the full range and regional range
-        out_csv = out_folder_merge + os.sep + 'Merge_' + str(folder) + '.csv'
-        if not overwrite_inter_data and os.path.exists(out_csv):
+    # STEP 3: Merge Tables by use for the full range and regional range
+    out_csv = out_folder_merge + os.sep + 'Merge_' + str(folder) + '.csv'
+    if not overwrite_inter_data and os.path.exists(out_csv):
+        pass
+    else:
+        print('           Merging overlap table full range...{0}'.format(use_nm))
+        list_percent_csv = os.listdir(out_folder_percent_use)
+        list_percent_csv = [csv for csv in list_percent_csv if csv.endswith('.csv')]
+        out_df = pd.DataFrame()
+        for csv_p in list_percent_csv:
+            current_csv = out_folder_percent_use + os.sep + csv_p
+            in_df = pd.read_csv(current_csv, dtype=object)
+            out_df = pd.concat([out_df, in_df], axis=0)
+        if len(out_df) == 0:  # No overlap for any species in the at region use
             pass
         else:
-            print('           Merging overlap table full range...{0}'.format(use_nm))
-            list_percent_csv = os.listdir(out_folder_percent_use)
-            list_percent_csv = [csv for csv in list_percent_csv if csv.endswith('.csv')]
-            out_df = pd.DataFrame()
-            for csv_p in list_percent_csv:
-                current_csv = out_folder_percent_use + os.sep + csv_p
-                in_df = pd.read_csv(current_csv, dtype=object)
-                out_df = pd.concat([out_df, in_df], axis=0)
-            if len(out_df) == 0:  # No overlap for any species in the at region use
-                pass
-            else:
-                out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
-                [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if
-                 m.startswith('Unnamed')]
-                out_df.fillna(0, inplace=True)
-                out_df.to_csv(out_csv)
+            out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
+            [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if
+             m.startswith('Unnamed')]
+            out_df.fillna(0, inplace=True)
+            out_df.to_csv(out_csv)
 
-        # STEP 3: Merge Tables regional range
-        out_csv = out_folder_merge_region + os.sep + 'Merge_' + str(folder) + '.csv'
-        if not overwrite_inter_data and os.path.exists(out_csv):
+    # STEP 3: Merge Tables regional range
+    out_csv = out_folder_merge_region + os.sep + 'Merge_' + str(folder) + '.csv'
+    if not overwrite_inter_data and os.path.exists(out_csv):
+        pass
+    else:
+        print('             Merging overlap table regional range...{0}'.format(use_nm))
+        list_percent_region_csv = os.listdir(out_folder_percent_region_use)
+        list_percent_region_csv = [csv for csv in list_percent_region_csv if csv.endswith('.csv')]
+        out_df = pd.DataFrame()
+        for csv_r in list_percent_region_csv:
+            # print out_folder_percent_region_use + os.sep + csv_r
+            current_csv = out_folder_percent_region_use + os.sep + csv_r
+            in_df = pd.read_csv(current_csv, dtype=object)
+            out_df = pd.concat([out_df, in_df], axis=0)
+        if len(out_df) == 0:  # No overlap for any species in the at region use
             pass
         else:
-            print('             Merging overlap table regional range...{0}'.format(use_nm))
-            list_percent_region_csv = os.listdir(out_folder_percent_region_use)
-            list_percent_region_csv = [csv for csv in list_percent_region_csv if csv.endswith('.csv')]
-            out_df = pd.DataFrame()
-            for csv_r in list_percent_region_csv:
-                current_csv = out_folder_percent_region_use + os.sep + csv_r
-                in_df = pd.read_csv(current_csv, dtype=object)
-                out_df = pd.concat([out_df, in_df], axis=0)
-            if len(out_df) == 0:  # No overlap for any species in the at region use
-                pass
-            else:
-                out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
-                [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if
-                 m.startswith('Unnamed')]
-                out_df.fillna(0, inplace=True)
-                out_df.to_csv(out_csv)
+            out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
+            [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist() if
+             m.startswith('Unnamed')]
+            out_df.fillna(0, inplace=True)
+            out_df.to_csv(out_csv)
 
-        # STEP 3: Merge Tables NL48 range
-        out_csv = out_folder_merge_NL48 + os.sep + 'Merge_' + str(folder) + '.csv'
+    # STEP 3: Merge Tables NL48 range
+    out_csv = out_folder_merge_NL48 + os.sep + 'Merge_' + str(folder) + '.csv'
 
-        if not overwrite_inter_data and os.path.exists(out_csv):
+    if not overwrite_inter_data and os.path.exists(out_csv):
+        pass
+    else:
+        print'                 Merging overlap table NL48 range...{0}'.format(use_nm)
+        list_percent_nl48_csv = os.listdir(out_folder_percent_nl48_use)
+        list_percent_nl48_csv = [csv for csv in list_percent_nl48_csv if csv.endswith('.csv')]
+        out_df = pd.DataFrame()
+        for csv_nl48 in list_percent_nl48_csv:
+            current_csv = out_folder_percent_nl48_use + os.sep + csv_nl48
+            in_df = pd.read_csv(current_csv, dtype=object)
+            out_df = pd.concat([out_df, in_df], axis=0)
+
+        if len(out_df) == 0:  # No overlap for any species in the at region use
             pass
         else:
-            print'                 Merging overlap table NL48 range...{0}'.format(use_nm)
-            list_percent_nl48_csv = os.listdir(out_folder_percent_nl48_use)
-            list_percent_nl48_csv = [csv for csv in list_percent_nl48_csv if csv.endswith('.csv')]
-            out_df = pd.DataFrame()
-            for csv_nl48 in list_percent_nl48_csv:
-                current_csv = out_folder_percent_nl48_use + os.sep + csv_nl48
-                in_df = pd.read_csv(current_csv, dtype=object)
-                out_df = pd.concat([out_df, in_df], axis=0)
-
-            if len(out_df) == 0:  # No overlap for any species in the at region use
-                pass
-            else:
-                out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
-                [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist()
-                 if m.startswith('Unnamed')]
-                out_df.fillna(0, inplace=True)
-                out_df.to_csv(out_csv)
+            out_df = pd.merge(base_sp_df, out_df, on='EntityID', how='left')
+            [out_df.drop(m, axis=1, inplace=True) for m in out_df.columns.values.tolist()
+             if m.startswith('Unnamed')]
+            out_df.fillna(0, inplace=True)
+            out_df.to_csv(out_csv)
 
 end = datetime.datetime.now()
 print ("End Time: " + end.ctime())
