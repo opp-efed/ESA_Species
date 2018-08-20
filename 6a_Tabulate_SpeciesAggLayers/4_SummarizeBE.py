@@ -24,8 +24,8 @@ full_impact = True  # if drift values should include use + drift True if direct 
 
 # This should be one of the SprayInterval table from step 3- full, region, or NL48
 in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\R_SprayInterval_20180522_Region.csv'
+           r'\_ED_results\Tabulated_TabArea_HUCAB\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
+           r'\R_SprayInterval_20180819_Region.csv'
 
 # Columns from the master species list that should be included in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
