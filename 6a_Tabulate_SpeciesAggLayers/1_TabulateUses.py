@@ -18,8 +18,8 @@ import pandas as pd
 agg_layers = r'L:\ESA\Results_Usage_NoCombine\L48\Range\Agg_Layers'
 nl48 = r'L:\ESA\Results_Usage_NoCombine\NL48\Range\Agg_Layers'
 outlocation = r'L:\ESA\Tabulate_Usage_NoCombine'
-lowest_folders = ['Range', 'CriticalHabitat']
-lowest_folders = ['Range']
+lowest_folders = ['Range', 'CriticalHabitat']  # ['Range'] or ['CriticalHabitat'] or ['Range', 'CriticalHabitat
+
 regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
 
 start_time = datetime.datetime.now()
