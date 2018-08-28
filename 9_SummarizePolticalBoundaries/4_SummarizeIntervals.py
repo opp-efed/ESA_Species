@@ -20,14 +20,15 @@ import pandas as pd
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
 
 
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\R_SprayInterval_20180522_Region.csv'
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byState_Merge\CONUS_CDL_1016_20x2_euc.csv'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba'
+id_value = 'Dicamba'
+regions = ['CONUS']
 
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
-                      'CH_Filename', 'Range_Filename', 'L48/NL48']
+                      'CH_Filename', 'Range_Filename', 'L48/NL48','STUSPS']
 
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                   r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
@@ -36,23 +37,11 @@ look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EP
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-find_file_type = in_table.split(os.sep)
-if 'L48' in find_file_type:
-    p_region = 'L48'  # can be L48 or
-    regions = ['CONUS']
-else:
-    p_region = 'NL48'
-    regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI', 'AS']
-path_intable, in_table_name = os.path.split(in_table)
-file_type = in_table_name.split("_")[0]
-temp_folder = path_intable
-
-
-out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' +p_region +"_"+date+ '.csv'
+out_csv = out_location + os.sep + 'AllUses_' + id_value +"_"+date+ '.csv'
 
 # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
 # Limits for AgDrift for ground and aerial
-bins = [0, 305, 765]
+bins = [0, 90,  305, 765]
 
 use_lookup = pd.read_csv(look_up_use)
 use_lookup['FinalColHeader'].fillna('none', inplace=True)
@@ -120,10 +109,8 @@ for i in list_regional_uses:
                         get_interval = col.split('_')
                         interval = int(get_interval[(len(get_interval) - 1)])
                         if interval == bins[0]:
-
                             binned_col.append(col)
                 else:
-
                     for col in current_cols:
                         get_interval = col.split('_')
                         interval = int(get_interval[(len(get_interval) - 1)])
@@ -140,6 +127,7 @@ for i in list_regional_uses:
                     previous_col.append(p)
 
             binned_df = grouped_use[binned_col]
+            print binned_col
 
             use_results_df = binned_df.apply(pd.to_numeric, errors='coerce')
             new_df[(str(use_group) + '_' + str(value))] = use_results_df.sum(axis=1)
@@ -151,8 +139,6 @@ col_final = collapsed_df.columns.values.tolist()
 master_col = col_include_output
 for i in col_final:
     master_col.append(i)
-
-# final_df = final_df.reindex(columns=master_col)
 final_df.to_csv(out_csv)
 
 end = datetime.datetime.now()

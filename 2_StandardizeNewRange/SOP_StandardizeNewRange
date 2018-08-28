@@ -27,7 +27,6 @@ species list is also used in Step 6
         - lineBuffer or pointBuffer means the file was buffered to a polygon
         - merged files will have _merged in the file name and the dates of the two orginal files and the date of the
         final file in the file name
-
 # TODO Combine Step 3,4,5,6 into a single script
 
 Step4_popfilename - Adds the new files to the attribute table

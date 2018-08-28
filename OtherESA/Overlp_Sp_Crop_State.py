@@ -3,10 +3,11 @@ import pandas as pd
 import os
 import datetime
 
-inraster = r'L:\Workspace\ESA_Species\Step3\Step3_Proposal\GAP\National\natgaplandcov_v2_2_1.img'
-in_crops = r'L:\Workspace\UseSites\ByProject\CONUS_UseLayer.gdb\Albers_Conical_Equal_Area_CONUS_CDL_1015_40x2_euc'
-symbologyLayer = "L:\Workspace\UseSites\ByProject\SymblogyLayers\Albers_Conical_Equal_Area_CONUS_CDL_1015_100x2_euc.lyr"
-in_sum_file = r'L:\Workspace\ESA_Species\ForCoOccur\Composites\GDB\ArchivedComposites\20160503\CompositesForClip\Boundaries.gdb\State_territories_Albers'
+inraster = r'F:\Union Composites_ESA\Spring 2018\Range\SpCompRaster_byProjection\Grids_byProjection\CONUS_Albers_Conical_Equal_Area\r_snails'
+in_crops = r'F:\UseSite_ESA\May 2018\ByProjection\CONUS_UseLayers.gdb\Albers_Conical_Equal_Area_CDL_1016_20x2_euc'
+symbologyLayer = "F:\UseSite_ESA\May 2018\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr"
+in_sum_file = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+              r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
 
 outpath_final = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\Refinements\Sp_Use_State'
 out_layers = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\Refinements\Sp_Use_State\Layers'
@@ -24,7 +25,8 @@ arcpy.MakeFeatureLayer_management(in_sum_file, 'fc')
 arcpy.MakeRasterLayer_management(in_crops, "crop")
 arcpy.MakeRasterLayer_management(inraster, "in_raster")
 
-array = arcpy.da.TableToNumPyArray(in_sum_file, [u'STUSPS', u'Region', ], skip_nulls=True)
+# array = arcpy.da.TableToNumPyArray(in_sum_file, [u'STUSPS', u'Region', ], skip_nulls=True) # for states
+array = arcpy.da.TableToNumPyArray(in_sum_file, [u'GEOID', u'Region', ], skip_nulls=True)  # for counties
 
 df = pd.DataFrame(array)
 row_count = len(df)
@@ -42,7 +44,8 @@ while counter < row_count:
             print '\nWorking on county {0}; {1} of {2}'.format(geoid, counter, row_count)
 
             arcpy.env.snapRaster = snap_raster
-            whereclause = "STUSPS = '%s'" % geoid
+            # whereclause = "STUSPS = '%s'" % geoid # for state
+            whereclause = "GEOID = '%s'" % geoid # for county tuns
             arcpy.Delete_management("lyr")
             arcpy.Delete_management("crops")
             arcpy.Delete_management("test")

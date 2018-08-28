@@ -3,7 +3,7 @@ import os
 import datetime
 import numpy as np
 
-# TODO take redudancy loop out
+# TODO take update redudancy loop out so that it pulls in the factor adjustments from the no_adjusted tables
 chemical_name = 'Carbaryl'
 # chemical_name = 'Methomyl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
