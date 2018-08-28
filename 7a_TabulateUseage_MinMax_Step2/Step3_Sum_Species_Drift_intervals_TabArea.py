@@ -3,19 +3,27 @@ import os
 import datetime
 import numpy as np
 
-in_location = r'L:\ESA\Tabulates_Usage\Carbaryl'
-suffixes = ['noadjust', 'adjEle','adjEleHab','adjHab']
+
+# IF WE MOVE TO INCLUDING THE NL$* INTO USAGE WE WILL NEED TO UPDATED CALL OF THE CALCULATION FUNCTION RIGHT NOW HARD
+# CODED TO REGIONAL RANGE
+
+in_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Carbaryl'
+# in_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Malathion'
+# suffixes = ['noadjust', 'adjEle','adjEleHab','adjHab']
+suffixes = ['noadjust']
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20180430.csv'
-in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'
+# use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Uses_lookup_20180820.csv'
+in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+                 r'\Endangered Species Pilot Assessments - QA\Documentation\Generation Parent Use Overlap Tables' \
+                 r'\R_Acres_Pixels_20180428.csv'
 region = 'CONUS'
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
-                      'country','Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
+                      'country', 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
-
 
 interval_step = 30
 max_dis = 1501
@@ -38,7 +46,7 @@ def roll_up_table(df, dis_cols, use_nm):
     out_cols = ['EntityID']
     for col in cols:
         if col in dis_cols:
-            int_col = col.replace(',', '')
+            int_col = col.split("_")[1]
             new_col = "CONUS_" + use_nm + "_" + str(int_col)
             out_cols.append(new_col)
             reindex_col.append(new_col)
@@ -55,12 +63,11 @@ def create_directory(dbf_dir):
         # print "created directory {0}".format(DBF_dir)
 
 
-def apply_distance_interval(in_df, final_col_value, out_df, type, cell_size, acres_for_calc):
+def apply_distance_interval(in_df, final_col_value, type, cell_size, acres_for_calc):
     # apply_distance_interval(max, final_col_v, base_sp_df, type_use, r_cell_size, acres_for_calc)
     [in_df.drop(m, axis=1, inplace=True) for m in in_df.columns.values.tolist() if m.startswith('Unnamed')]
     columns_in_df_numeric = [t for t in in_df.columns.values.tolist() if t.split("_")[0] in regions]
     in_df.ix[:, columns_in_df_numeric] = in_df.ix[:, columns_in_df_numeric].apply(pd.to_numeric)
-
 
     in_table_w_values = in_df.groupby(['EntityID', ], as_index=False).sum()
     transformed = in_table_w_values.T.reset_index()
@@ -70,7 +77,6 @@ def apply_distance_interval(in_df, final_col_value, out_df, type, cell_size, acr
     update_cols = transformed.columns.values
     update_cols[0] = 'Use_Interval'
     transformed.columns = update_cols
-
 
     transformed['Use_Interval'] = transformed['Use_Interval'].map(
         lambda x: str(x).split('_')[len(x.split('_')) - 1] if len(x.split('_')) > 2 else 'NaN').astype(int)
@@ -84,9 +90,7 @@ def apply_distance_interval(in_df, final_col_value, out_df, type, cell_size, acr
     binned_df.drop('Use_Interval', axis=1, inplace=True)
     binned_df = binned_df.reset_index()
 
-
     group_df_by_zone_sum = binned_df.transpose()  # transposes so it is species by interval and not interval by species
-
 
     # Makes the interval values the col header then drops the row with those values
     group_df_by_zone_sum.columns = group_df_by_zone_sum.iloc[0]
@@ -96,7 +100,6 @@ def apply_distance_interval(in_df, final_col_value, out_df, type, cell_size, acr
     update_cols[0] = 'EntityID'
     group_df_by_zone_sum.columns = update_cols
     group_df_by_zone_sum['EntityID'] = group_df_by_zone_sum['EntityID'].map(lambda x: str(x).split(".")[0]).astype(str)
-
 
     # sets up list that will be used to populate the final col header the use name and interval value for
     # non-species cols ie use_nm "_" + interval, then re-assigns col header
@@ -114,8 +117,9 @@ def apply_distance_interval(in_df, final_col_value, out_df, type, cell_size, acr
     # merges current use to running acres table to get to percent overlap
 
     sum_df_acres = pd.merge(group_df_by_zone_sum, acres_for_calc, on='EntityID', how='left')
-    sum_df_acres.fillna(0, inplace =True)
-    percent_overlap = calculation(type, sum_df_acres, cell_size, 'CONUS', 'regional range')
+    sum_df_acres.fillna(0, inplace=True)
+    percent_overlap = calculation(type, sum_df_acres, cell_size, 'CONUS', 'regional range')  ## IF WE move
+
 
     return percent_overlap
 
@@ -165,7 +169,7 @@ def calculation(type_fc, in_sum_df, cell_size, c_region, percent_type):
             overlap.drop('TotalAcresNL48', axis=1, inplace=True)
 
         try:
-            overlap.drop(acres_col, inplace= True)
+            overlap.drop(acres_col, inplace=True)
         except:
             pass
 
@@ -183,67 +187,118 @@ species_df = pd.read_csv(master_list, dtype=object)
 [species_df.drop(m, axis=1, inplace=True) for m in species_df.columns.values.tolist() if m.startswith('Unnamed')]
 base_sp_df = species_df.loc[:, col_include_output]
 base_sp_df['EntityID'] = base_sp_df['EntityID'].map(lambda x: x).astype(str)
-out_max = base_sp_df.copy()
-out_min = base_sp_df.copy()
-out_uniform = base_sp_df.copy()
+
 create_directory(out_folder)
 
 acres_df = pd.read_csv(in_acres_table)
+
+
 acres_for_calc = acres_df.ix[:, ['EntityID', ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']]
-for group in ['min','max','avg']:
-    in_location_group = in_location +os.sep+group
+acres_for_calc .ix[:, [ ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']] = acres_for_calc .ix[:, [ ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']].apply(pd.to_numeric)
+for group in ['min', 'max', 'avg']:
+    in_location_group = in_location + os.sep + group
     list_csv = os.listdir(in_location_group)
     list_csv = [csv for csv in list_csv if csv.endswith('.csv')]
     for value in suffixes:
-        if not os.path.exists(out_folder +os.sep +value):
-            os.mkdir(out_folder +os.sep +value)
-        c_list = [v for v in list_csv if v.endswith(value +"_"+group+ '.csv')]
+        if not os.path.exists(out_folder + os.sep + value):
+            os.mkdir(out_folder + os.sep + value)
+        c_list = [v for v in list_csv if v.endswith(value + "_" + group + '.csv')]
+
+        use_list = []
         for csv in c_list:
-            csv_lookup = csv.replace("_" + value +"_"+group+  '.csv', ".csv")
-            for v in csv_lookup.split("_"):
-                if v not in regions:
-                    csv_lookup = csv_lookup.replace(v + "_", "")
-                else:
-                    break
+            csv_lookup = csv.replace("_" + value + "_" + group + '.csv', ".csv")
+            remove_sp_abb = csv_lookup.split("_")[0] + "_" + csv_lookup.split("_")[1] + "_"
+            csv_lookup = csv_lookup.replace(remove_sp_abb, '')
+            if csv_lookup not in use_list:
+                use_list.append(csv_lookup)
+        use_list = list(set(use_list))
+        out_max = base_sp_df.copy()
+        out_min = base_sp_df.copy()
+        out_uniform = base_sp_df.copy()
+        for use in use_list:
+            print( '\n {0}').format(use)
+            max_use = pd.DataFrame()
+            min_use = pd.DataFrame()
+            uniform_use = pd.DataFrame()
+            max_in = pd.DataFrame()
 
-            use_lookup_df_value = usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'Usage lookup'].iloc[0]
-            final_col_v = usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'FinalColHeader'].iloc[0]
+            for csv in c_list:
+                csv_lookup = csv.replace("_" + value + "_" + group + '.csv', ".csv")
+                remove_sp_abb = csv_lookup.split("_")[0] + "_" + csv_lookup.split("_")[1] + "_"
+                csv_lookup = csv_lookup.replace(remove_sp_abb, '')
+                if csv_lookup == use:
+                    print csv
+                    use_lookup_df_value = \
+                    usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'Usage lookup'].iloc[0]
+                    final_col_v = \
+                    usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'FinalColHeader'].iloc[0]
 
-            type_use = usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'Type'].iloc[0]
-            r_cell_size = usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'Cell Size'].iloc[0]
+                    type_use = usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'Type'].iloc[0]
+                    r_cell_size = usage_lookup_df.loc[(usage_lookup_df['Filename'] == csv_lookup), 'Cell Size'].iloc[0]
 
-            max = pd.read_csv(in_location_group + os.sep + csv)
+                    max = pd.read_csv(in_location_group + os.sep + csv)
+                    max['EntityID'] = max['EntityID'].map(lambda x: x).astype(str)
+                    max_in = pd.concat([max_in, max])  # merges in use into a single table
+                    distance_cols = [c for c in max.columns.values.tolist() if c.startswith("VALUE")]
+                    max.ix[:, 'VALUE_0'] = max.ix[:, 'Max in species range'].map(lambda x: x).astype(float)
+                    max.ix[:, distance_cols] = max.ix[:, distance_cols].apply(pd.to_numeric)
 
-            distance_cols = [c for c in max.columns.values.tolist() if c.startswith("VALUE")]
-            max.ix[:, distance_cols] = max.ix[:, distance_cols].apply(pd.to_numeric)
+                    max = roll_up_table(max, distance_cols, use_lookup_df_value)
+                    per_overlap_interval = apply_distance_interval(max, final_col_v, type_use, r_cell_size,
+                                                                   acres_for_calc)
+                    max_use = pd.concat([max_use, per_overlap_interval], axis=0)
+                    max_use['EntityID'] = max_use['EntityID'].map(lambda x: x).astype(str)
 
-            max.ix[:, 'VALUE_0'] = max.ix[:, 'Max in species range'].map(lambda x: x).astype(float)
-            max = roll_up_table(max, distance_cols, use_lookup_df_value)
-            per_overlap_interval = apply_distance_interval(max, final_col_v, base_sp_df, type_use, r_cell_size,
-                                                           acres_for_calc)
-            out_max = pd.merge(out_max, per_overlap_interval, on='EntityID', how='left')
+                    min = pd.read_csv(in_location_group + os.sep + csv)
+                    min['EntityID'] = min['EntityID'].map(lambda x: x).astype(str)
+                    distance_cols = [c for c in min.columns.values.tolist() if c.startswith("VALUE")]
 
-            min = pd.read_csv(in_location_group + os.sep + csv)
-            min.ix[:, 'VALUE_0'] = min.ix[:, 'Min in Species range'].map(lambda x: x).astype(float)
-            min = roll_up_table(min, distance_cols, use_lookup_df_value)
-            per_overlap_interval_min = apply_distance_interval(min, final_col_v, base_sp_df, type_use, r_cell_size,
-                                                               acres_for_calc)
-            out_min = pd.merge(out_min, per_overlap_interval_min, on='EntityID', how='left')
+                    min.ix[:, 'VALUE_0'] = min.ix[:, 'Min in Species range'].map(lambda x: x).astype(float)
+                    min.ix[:, distance_cols] = min.ix[:, distance_cols].apply(pd.to_numeric)
+                    min = roll_up_table(min, distance_cols, use_lookup_df_value)
+                    per_overlap_interval_min = apply_distance_interval(min, final_col_v, type_use, r_cell_size,
+                                                                       acres_for_calc)
+                    min_use = pd.concat([min_use, per_overlap_interval_min], axis=0)
 
-            uniform = pd.read_csv(in_location_group + os.sep + csv)
-            uniform.ix[:, 'VALUE_0'] = uniform.ix[:, 'Uniform'].map(lambda x: x).astype(float)
-            uniform = roll_up_table(uniform, distance_cols, use_lookup_df_value)
-            per_overlap_interval_uni = apply_distance_interval(uniform, final_col_v, base_sp_df, type_use, r_cell_size,
-                                                               acres_for_calc)
-            out_uniform = pd.merge(out_uniform, per_overlap_interval_uni, on='EntityID', how='left')
+                    uniform = pd.read_csv(in_location_group + os.sep + csv)
+                    uniform['EntityID'] = uniform['EntityID'].map(lambda x: x).astype(str)
+                    distance_cols = [c for c in uniform.columns.values.tolist() if c.startswith("VALUE")]
 
-        out_max_csv = out_folder +os.sep +value+ os.sep + 'Upper' + "_SprayInterval_"+value+ "_"+group+"_" + date + '.csv'
+                    uniform.ix[:, 'VALUE_0'] = uniform.ix[:, 'Uniform'].map(lambda x: x).astype(float)
+                    uniform.ix[:, distance_cols] = uniform.ix[:, distance_cols].apply(pd.to_numeric)
+                    uniform = roll_up_table(uniform, distance_cols, use_lookup_df_value)
+                    per_overlap_interval_uni = apply_distance_interval(uniform, final_col_v, type_use, r_cell_size,
+                                                                       acres_for_calc)
+                    uniform_use = pd.concat([uniform_use, per_overlap_interval_uni], axis=0)
+            out_min = pd.merge(out_min, min_use, how='left', on='EntityID')
+            out_max = pd.merge(out_max, max_use, how='left', on='EntityID')
+            out_uniform = pd.merge(out_uniform, uniform_use, how='left', on='EntityID')
+
+            if not os.path.exists(out_folder + os.sep + 'ParentTables'):
+                os.mkdir(out_folder + os.sep + 'ParentTables')
+            if not os.path.exists(out_folder + os.sep + 'ParentTables' + os.sep + group):
+                os.mkdir(out_folder + os.sep + 'ParentTables' + os.sep + group)
+            if not os.path.exists(out_folder + os.sep + 'ParentTables' + os.sep + group + os.sep + value):
+                os.mkdir(out_folder + os.sep + 'ParentTables' + os.sep + group + os.sep + value)
+
+            nam_merg = use.replace('.csv', "_" + value + '.csv')
+            max_in.to_csv(out_folder + os.sep + 'ParentTables' + os.sep + group + os.sep + value + os.sep + nam_merg)
+            print out_folder + os.sep + 'ParentTables' + os.sep + group + os.sep + value + os.sep + nam_merg
+
+        out_max_csv = out_folder + os.sep + value + os.sep + 'Upper' + "_SprayInterval_" + value + "_" + group + "_" \
+                      + date + '.csv'
+        out_max.fillna(0, inplace = True)
         out_max.to_csv(out_max_csv)
 
-        out_min_csv = out_folder +os.sep +value+ os.sep + 'Lower' + "_SprayInterval_" +value+ "_"  +group+"_"+date + '.csv'
+        out_min_csv = out_folder + os.sep + value + os.sep + 'Lower' + "_SprayInterval_" + value + "_" + group + "_" \
+                      + date + '.csv'
+        out_min.fillna(0, inplace = True)
         out_min.to_csv(out_min_csv)
 
-        out_uniform_csv = out_folder +os.sep +value+ os.sep + 'Uniform' + "_SprayInterval_"+value+ "_"+group+"_"  + date + '.csv'
+
+        out_uniform_csv = out_folder + os.sep + value + os.sep + 'Uniform' + "_SprayInterval_" + value + "_" + group \
+                          + "_" + date + '.csv'
+        out_uniform.fillna(0, inplace = True)
         out_uniform.to_csv(out_uniform_csv)
 
 end = datetime.datetime.now()

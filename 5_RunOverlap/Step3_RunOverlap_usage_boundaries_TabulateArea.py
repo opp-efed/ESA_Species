@@ -156,7 +156,8 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
             print 'Final file can be found at {0}'.format(csv)
-            arcpy.Delete_management(temp_return)
+            arcpy.Delete_management(temp_return)   # deletes temp table
+            del att_df   # deletes df after saving output
 
             print "Completed in {0}".format((datetime.datetime.now() - zone_time))
 

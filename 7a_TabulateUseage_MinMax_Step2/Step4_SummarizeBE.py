@@ -18,8 +18,9 @@ import pandas as pd
 
 # ###############user input variables
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
-in_table = r'L:\ESA\Results\diazinon\Tabulated_usage\Diazinon\example\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\Upper_SprayInterval_20180221.csv'
+in_table = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Carbaryl\SprayInterval_IntStep_30_MaxDistance_1501\noadjust' \
+           r'\Upper_SprayInterval_noadjust_max_20180822.csv'
+p_region = 'L48'
 
 # in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #            r'\_ED_results\Tabulated_Jan2018\L48\CH\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
@@ -34,7 +35,7 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
 # look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
 
-look_up_use = r'L:\ESA\Results\diazinon\RangeUses_lookup.csv'
+look_up_use = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Uses_lookup_20180820.csv'
 
 # #############Static Variables
 today = datetime.datetime.today()
@@ -43,9 +44,9 @@ date = today.strftime('%Y%m%d')
 find_file_type = in_table.split(os.sep)
 if 'L48' in find_file_type:
     p_region = 'L48'  # can be L48 or
-    regions = ['CONUS']
+    # regions = ['CONUS']
 else:
-    p_region = 'NL48'
+    # p_region = 'NL48'
     regions = ['AK', 'GU', 'HI', 'AS', 'PR', 'VI', 'CNMI', 'AS']
 path_intable, in_table_name = os.path.split(in_table)
 file_type = in_table_name.split("_")[0]

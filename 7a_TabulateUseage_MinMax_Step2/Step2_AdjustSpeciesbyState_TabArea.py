@@ -1,23 +1,28 @@
 import pandas as pd
 import os
+import datetime
+import sys
 
+#TODO set it up so only the uses for the chemical are adjusted and not all of them
 chemical_name = 'Carbaryl'
-st_cnty = 'States'  # if running on cnty change to Counties
+# chemical_name = 'Malathion'
+st_cnty = 'State'  # if running on cnty change to Counties
 # use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
 #              r'\SupportingTables' + os.sep + chemical_name + "_RangeUses_lookup.csv"
-suffixes = ['noadjust', 'adjEle','_adjEleHab','_adjHab']
+# suffixes = ['noadjust', 'adjEle','_adjEleHab','_adjHab']  #TODO Change the second if to else when finished
+suffixes = ['noadjust']
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20180430.csv'
+# use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Uses_lookup_20180820.csv'
 
 state_fp_lookup = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                   r'\_ExternalDrive\_CurrentSupportingTables\Usage\ForOverlap\STATEFP_lookup.csv'
-pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-            r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Carbaryl'
-
-out_location = r'L:\ESA\Tabulates_Usage'
+pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Carbaryl'
+# pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Malathion\unsurvey_100'
+out_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
 # species overlap with uses include the state or cnty breaks
-in_location_species = r'L:\ESA\Tabulate_Usage_TabArea\PolBoundaries\States'
+in_location_species = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries\States'
 # totals for states actual overlap for the political boundary
-in_locations_states = 'L:\ESA\Tabulated_PolBoundaries\PoliticalBoundaries\Agg_Layers\States'
+in_locations_states = 'L:\Workspace\StreamLine\ESA\Results_Usage\PolBoundaries\Agg_layers'
 regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
 # state_df = pd.read_csv(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects"
 #                        r"\ESA\_ED_results\Tabulated_Jan2018\PolticalBoundaries\PolticalBoundaries\Agg_Layers\States")
@@ -64,6 +69,13 @@ def adjust_drift (df, pct):
     df.ix[:,cols] = df.ix[:,cols].multiply(df[pct], axis=0)
     return df
 # ##
+start_time = datetime.datetime.now()
+print "Start Time: " + start_time.ctime()
+
+# Get date
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
+
 list_pct_table = [v for v in os.listdir(pct_table_directory) if v.endswith('.csv')]
 for group in ['min','max','avg']:
     pct_table =  [v for v in list_pct_table if v.split("_")[1] == group]
@@ -72,11 +84,10 @@ for group in ['min','max','avg']:
     pct_df = pd.read_csv(pct_table_directory +os.sep + pct_table[0])
 
     use_lookup_df = pd.read_csv(use_lookup)
-    usage_lookup_df = use_lookup_df.ix[:, ['FullName', 'Usage lookup']]
-    usage_lookup_df['Filename'] = usage_lookup_df['FullName'].map(lambda x: str(x) + "_euc.csv").astype(str)
+    usage_lookup_df = use_lookup_df.ix[:, ['FullName', 'Usage lookup','Included AA']]
+    usage_lookup_df['Filename'] = usage_lookup_df['FullName'].map(lambda x: str(x) + "_euc").astype(str)
     # assumes identifier is in this postion
     out_path = out_location +os.sep+chemical_name+os.sep+os.path.basename(pct_table[0]).split("_")[1]
-
 
     if not os.path.exists(os.path.dirname(out_path)):
         os.mkdir(os.path.dirname(out_path))
@@ -108,17 +119,16 @@ for group in ['min','max','avg']:
             # in_results_sp = in_location_species + os.sep +folder+ os.sep + st_cnty
             # Load state overlap result for state # NOTE file names must be the same as species filter to just direct overlap
             # and other important cols
-
-        else:
+        if value == 'noadjust': # removed if and change to elseafter completing update for elevation and habitat
             for csv in c_list:
-                state_csv = csv.replace("_"+value +'.csv', ".csv")
-                for v in  state_csv.split("_"):
-                    if v not in regions:
-                        state_csv = state_csv.replace(v+"_", "")
-                    else:
-                        break
+                print csv
+                state_csv = csv.replace("_"+value +'.csv', "_"+st_cnty+".csv")
+                remove_sp_abb = state_csv.split("_")[0] +"_"+state_csv.split("_")[1]+"_"
+                state_csv = state_csv.replace(remove_sp_abb,'')
 
-                state_df = pd.read_csv(in_locations_states + os.sep + state_csv)
+                state_folder = state_csv.replace( "_"+st_cnty+".csv","")
+                in_locations_states + os.sep + state_folder + os.sep + state_csv
+                state_df = pd.read_csv(in_locations_states + os.sep + state_folder + os.sep + state_csv)
                 state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(str)
                 filtered_state = state_df.ix[:, ['STATEFP',  'Acres', 'VALUE_0']]
                 filtered_state.columns = ['STATEFP', 'Acres', 'State direct msq']
@@ -131,33 +141,45 @@ for group in ['min','max','avg']:
                 # determine the crop in pct table that applies to the current csv then filter the pct table to just that crop and
                 # other columns need to merge
 
-                use_lookup_df_value = usage_lookup_df.loc[(usage_lookup_df['Filename'] == state_csv), 'Usage lookup'].iloc[0]
-                filter_col = ['STATE', 'STATEFP']
-                filter_col.append(use_lookup_df_value)
-                filtered_pct = t_pct.ix[:, filter_col]
+                use_lookup_df_value = usage_lookup_df.loc[(usage_lookup_df['FullName'] == state_folder.replace('_euc','')), 'Usage lookup'].iloc[0]
+                use_lookup_df_inc_chem = usage_lookup_df.loc[(usage_lookup_df['FullName'] == state_folder.replace('_euc','')), 'Included AA'].iloc[0]
+                if use_lookup_df_inc_chem == 'x':
+                    filter_col = ['STATE', 'STATEFP']
+                    filter_col.append(use_lookup_df_value)
+                    filtered_pct = t_pct.ix[:, filter_col]
+                    if len(filtered_pct.columns.values.tolist()) > 3:
+                        print('Check the pct input tables for duplicate crop in the GenClass, there are too many '
+                              'columns from the filtered output for the state and PCT')
+                        sys.exit()
+                    filtered_pct.columns = ['STATE', 'STATEFP', 'PCT_'+use_lookup_df_value]
 
-                filtered_pct.columns = ['STATE', 'STATEFP', 'PCT_'+use_lookup_df_value]
+                    # merge the pct to species_df to pct then merge to filtereed state
+                    merged_species = pd.merge(species_df, filtered_pct, on='STATEFP', how='left')
+                    merged_species_state = pd.merge(merged_species, filtered_state, on='STATEFP', how='left')
+                    merged_species_state['Drift_PCT'] =  merged_species_state['PCT_'+use_lookup_df_value].map(lambda x: 0 if x == 0 else 1)
 
-                # merge the pct to species_df to pct then merge to filtereed state
-                merged_species = pd.merge(species_df, filtered_pct, on='STATEFP', how='left')
-                merged_species_state = pd.merge(merged_species, filtered_state, on='STATEFP', how='left')
-                merged_species_state['Drift_PCT'] =  merged_species_state['PCT_'+use_lookup_df_value].map(lambda x: 0 if x == 0 else 1)
+                    # PCT Adjustments
+                    merged_species_state['State msq adjusted by PCT'] = \
+                        merged_species_state.apply(lambda row: state_pct(row, 'State direct msq', 'PCT_'+use_lookup_df_value), axis=1)
+                    merged_species_state['Total outside species range'] = \
+                        merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
+                    merged_species_state['Total outside species range'] = \
+                        merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
+                    merged_species_state['Total outside species range'] = \
+                        merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
+                    merged_species_state['Min in Species range'] = \
+                        merged_species_state.apply(lambda row: min_range(row, 'Total outside species range', 'State msq adjusted by PCT'), axis=1)
+                    merged_species_state['Max in species range'] = merged_species_state.apply(lambda row: max_range(row, 'VALUE_0', 'State msq adjusted by PCT'), axis=1)
+                    merged_species_state['Uniform'] = merged_species_state.apply(lambda row: uniform_spe (row, 'PCT_'+use_lookup_df_value, 'VALUE_0'), axis=1)
+                    merged_species_state = adjust_drift (merged_species_state, 'Drift_PCT')
+                    csv_out = csv.replace('.csv',"_"+os.path.basename(pct_table[0]).split("_")[1]+'.csv')
+                    print csv_out
+                    merged_species_state.to_csv(out_path+os.sep+csv_out)
+                    print 'Table can be found at {0}\n'.format(out_path+os.sep+csv_out)
+                else:
+                    print ('Use {0} is not part of chemical\n'.format(use_lookup_df_value))
 
-                # PCT Adjustments
-                merged_species_state['State msq adjusted by PCT'] = \
-                    merged_species_state.apply(lambda row: state_pct(row, 'State direct msq', 'PCT_'+use_lookup_df_value), axis=1)
-                merged_species_state['Total outside species range'] = \
-                    merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
-                merged_species_state['Total outside species range'] = \
-                    merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
-                merged_species_state['Total outside species range'] = \
-                    merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
-                merged_species_state['Min in Species range'] = \
-                    merged_species_state.apply(lambda row: min_range(row, 'Total outside species range', 'State msq adjusted by PCT'), axis=1)
-                merged_species_state['Max in species range'] = merged_species_state.apply(lambda row: max_range(row, 'VALUE_0', 'State msq adjusted by PCT'), axis=1)
-                merged_species_state['Uniform'] = merged_species_state.apply(lambda row: uniform_spe (row, 'PCT_'+use_lookup_df_value, 'VALUE_0'), axis=1)
-                merged_species_state = adjust_drift (merged_species_state, 'Drift_PCT')
-                csv_out = csv.replace('.csv',"_"+os.path.basename(pct_table[0]).split("_")[1]+'.csv')
-                print csv_out
-                merged_species_state.to_csv(out_path+os.sep+csv_out)
-                print 'Table can be found at {0}'.format(out_path+os.sep+csv_out)
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)

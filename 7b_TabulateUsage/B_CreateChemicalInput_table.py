@@ -4,6 +4,7 @@ import os
 import datetime
 
 # TODO confirm assumption with BEAD that if a commonity is found in the suum using a specific term, any associated
+# TODO set up format to match current out with Ag in the same table
 # sub commonitys only found in NASS can be ignored
 
 chemical_name = 'Malathion'

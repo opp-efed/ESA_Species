@@ -264,7 +264,8 @@ def zonal_hist(sp_path, in_value_raster, region_c, use_name, temp_table, final_f
         print '   Final file can be found at {0}'.format(out_path_final + os.sep + csv)
         print "   Completed in {0}\n".format((datetime.datetime.now() - zone_time))
         arcpy.Delete_management("zone")
-        arcpy.Delete_management(temp_return)  # delete table in memory after saving - frees up memory
+        arcpy.Delete_management(temp_return)  # delete temp table in memory after saving - frees up memory
+        del att_df  # deletes df after the table is save
 
 
 def create_directory(dbf_dir):
