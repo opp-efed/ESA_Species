@@ -1,0 +1,35 @@
+Most Recent Author: J. Connolly - last updated July 2018
+Original Author: J. Connolly - May 2017, 5/15/2018
+
+After overlap runs are complete raw results are will be transformed from pixel counts by distance to percent overlap by
+distance interval
+
+**BEFORE STARTING A NEW ROUND OF UPDATES BE SURE TO UPDATE THE USER INPUT VARIABLES** There are two groups of user input
+variables, one group that is updated for each run, and a second group that should be updated once when the use layers or
+the species files are updated
+
+overwrite_inter_data = overwrite boolean - set to false tables were already generated for some uses and new ones need
+to be added.  If a use layer was updated delete or archive the tables for the dated version and set this to false.  If
+this variable is set to TRUE than all tables will be recalculated.
+
+Key variable - Acres tables need to be locked to get to percentage; Need buy in chemical team on look-up table
+
+Key Tracking : Root folder for output file locations need to remain consistent for all runs.  File structure
+is automated.   Look-up table should have buy in from chemical team
+
+Step 1 - Generate list in a csv of all uses names using the standard file structure generated in the overlap runs
+   - use to generate the look-up table to standardize columns headers; and to pull chemical specific information
+   such as sub-set of layer, max drift, application method etc
+
+   - Output table will include the list of all available use layer results and the standard structure for the table so
+   it can be read into the other scripts.  **User must populated the additional columns that are blank in the output and
+   confirm chemical information with chemical team**
+
+   ** Note to run just the Step 1 use layer, or a different sub-set of layers generate a new table will just the layers
+   of interest and update the variable**
+
+Step 2-  Transforms table from zones to species, sum results by species and calculates percentage overlap
+Step 3 - Breaks tables into the desired distance interval - default 30m
+Step 4- Generates the summary tables for the BE - ie direct use overlap, overlap for ground and aerial
+Step 5- Collapses table across regions - Step was Archived spring 2018
+

@@ -1,5 +1,5 @@
-Most Recent Author Author: J. Connolly - last updated 5/15/2018
-Original Author: J. Connolly - May 2017
+Most Recent Author: J. Connolly - last updated July 2018
+Original Author: J. Connolly - May 2017, 5/15/2018
 
 After overlap runs are complete raw results are will be transformed from pixel counts by distance to percent overlap by
 distance interval
@@ -17,19 +17,134 @@ Key variable - Acres tables need to be locked to get to percentage; Need buy in 
 Key Tracking : Root folder for output file locations need to remain consistent for all runs.  File structure
 is automated.   Look-up table should have buy in from chemical team
 
-Step 1 - Generate list in a csv of all uses names using the standard file structure generated in the overlap runs
+Step 1 - 1_TabulateUses.py Generate list in a csv of all uses names using the standard file structure generated in the overlap runs
    - use to generate the look-up table to standardize columns headers; and to pull chemical specific information
    such as sub-set of layer, max drift, application method etc
 
-   - Output table will include the list of all available use layer results and the standard structure for the table so
-   it can be read into the other scripts.  **User must populated the additional columns that are blank in the output and
-   confirm chemical information with chemical team**
+    User inputs:
+    agg_layers = L48 directory where the raw overlap results are located
+    nl48 = NL48 directory where the raw overlap results are locate
+    outlocation = location where the output table will be saved
+    lowest_folders =  Identify if range and critical habitat or just one should be looked at
+        % Option ['Range', 'CriticalHabitat']; ['Range']; [ 'CriticalHabitat']
+
+    regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
+   - Output table will include the list of all available use layer results and the standard structure for the table.
+   This is used as input for other scripts.  **User must populated the additional columns that are blank in the output
+   and confirm chemical information with chemical team**
 
    ** Note to run just the Step 1 use layer, or a different sub-set of layers generate a new table will just the layers
    of interest and update the variable**
 
-Step 2-  Transforms table from zones to species, and convert numbers from pixels to percentage
-Step 3 - Breaks tables into the desired distance interval - default 30m
-Step 4- Generates the summary tables for the BE - ie direct use overlap, overlap for ground and aerial
-Step 5- Collapses table across regions
-    #NOTE this may be an archived as we no longer need
+Step 2- 2_CreateOverlapTables.py; Transforms table from zones to species, and convert numbers from pixels to percentage
+    Run Time CONUS ~ 1.5 - 2 hours for 26 uses  NL48~ 1.5 hours for 80 uses
+
+    Input: Raw overlap results, Use Look up file generated from Step 1 and confirmed by team MagTool model developers
+
+    User inputs:
+       2_CreateOverlapTables.py
+
+            overwrite_inter_data = TRUE or FALSE
+                TRUE overwrite all previously created tables; set to true when doing he first run of an update
+                FALSE will only add new tables for new use and updated the merged tables; use if you do not want to
+                updated all tables
+
+
+            # File structure is standard for raw result outputs and tabulated results outputs are automated by scripts
+            # and cannot be altered
+
+            raw_results_csv = Location of raw results
+            # Root location where the transformed tables should be saved; 'Tabulated' results this locations should be the same for
+            # all steps
+            out_root_dir = location of the tabulated output - this should stay the same
+
+            # location of master species list
+            master_list = list with current master species information
+            # Columns from the master species list that should be included in the output tables
+            col_include_output =  columns to include form species master lis
+            if/else state breaks out inputs for range and critical habitat If is the range, else is critical habitat
+            find_file_type = raw_results_csv.split(os.sep)  # identifies inputs as range or critical habit by splitting path
+            if 'Range' in find_file_type or 'range' in find_file_type:
+
+                look_up_fc = location of the look-up tables to be used. These look up tables will have the zone id used
+                when generating the raster file from the vector union composites.  The zone id will be in the 'VALUE'
+                column of the output tables and raster input.  The look-up table will also have the support information
+                such as the EntityID, HUC_AB, GEOID etc.
+
+                join_col =  this is the column head in the look-up table that should be joinged to the VALUE column of
+                the results typical values ZoneID, InterID, HUCID
+
+                look_up_use = Use look-up table generated in 1_TabulateUses
+                file_type = 'R_'  - this is static and used for tracking of tables
+                species_file_type = 'Range' - this is static and used for tracking of tables
+
+                in_acres_table = acres table for species ranges
+            else:
+                look_up_fc = location of the look-up tables to be used. These look up tables will have the zone id used
+                when generating the raster file from the vector union composites.  The zone id will be in the 'VALUE'
+                column of the output tables and raster input.  The look-up table will also have the support information
+                such as the EntityID, HUC_AB, GEOID etc.
+
+                join_col =  this is the column head in the look-up table that should be joinged to the VALUE column of
+                the results typical values ZoneID, InterID, HUCID
+
+                look_up_use = Use look-up table generated in 1_TabulateUses
+                species_file_type = 'CH' this is static and used for tracking of tables
+                file_type = 'CH_'  # CH_ this is static and used for tracking of tables
+                # Location of critical habitat acres tables to be use to calculate percent overlap
+                in_acres_table = acres table for species critical habitat
+
+    Output: output tables of percent overlap by species
+
+
+Step 3 - 3_Break_Into_Distance_Intervals Breaks.py ; tables into the desired distance interval - default 30m
+    Run Time CONUS ~ 5 minutes for 26 uses  NL48~ 1.5 hours for 80 uses
+
+    Input: Output from step 2 tables of percent overlap by species; Use Look up file generated from Step 1 and confirmed
+    by team MagTool model developers
+
+    User input variables
+    species_file_type = identifying the type of file either Range or CH    # can be 'Range' or 'CH'
+    p_region = What broad region is being run it can be 'L48' or 'NL48'  # can be L48 or NL48
+    folder_name_csv = Folder name where the merged use tables should be pulled from, three options 'MO_FullRange',
+        'MO_NL48Range' or 'MO_FullRange NL48'
+    interval_step = interval step of interest; this can be anything between 1-1500 the current default is 30 for pilots
+    max_dis = the max distance to be included in table plus 1; ie if you want the table to be 1500 meter this should be 1501
+
+    out_root_dir = Root location where the transformed tables are saved from 2_CreateOverlapTables.py; SprayInterval
+    folder will be generated automatically and this is where the table will be saved
+
+    master_list = list with current master species information
+    col_include_output = columns to include form species master list
+    # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
+    # tables
+    look_up_use = Use look-up table generated in 1_TabulateUses
+
+    Output: Parent Distance Interval tables
+
+Step 4- 4_SummarizeBE Generates the summary tables for the BE - ie direct use overlap, overlap for ground and aerial
+    Run Time - seconds
+
+    Input: Parent Distance Interval tables; Use Look up file generated from Step 1 and confirmed by team MagTool model
+    developers
+
+    full_impact = True = drift values  include direct (0) False  direct use and drift should be separate
+
+    # This should be one of the SprayInterval table from step 3- full, region, or NL48
+    in_table = SprayInterval table of choice from 3_Break_Into_Distance_Intervals Breaks.py
+
+    master_list = list with current master species information
+    col_include_output = columns to include form species master list
+
+    # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
+    # tables
+    look_up_use = Use look-up table generated in 1_TabulateUses
+
+    # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
+    # Limits for AgDrift for ground and aerial
+
+    bins =  Bins to be be used as summary, typically [0, 305, 765]  it can be more than thee or less
+
+    Output: Parent Summarized tables
+Step 5- Collapses table across regions - Step was Archived spring 2018
+

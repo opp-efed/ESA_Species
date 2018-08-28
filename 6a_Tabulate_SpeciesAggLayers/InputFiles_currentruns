@@ -1,5 +1,5 @@
 NOTE: there is a limitation on how may characters can be in a path when syncing to OneDrive or SharePoint; if you hit
-the limit you will receive a permission denied error
+the limit you will receive a permission denied error; Can over ride error by pausing syncing
 
 All results, tabulated folders, and look up directory are stored on OneDrive under Projects\ESA\_ED_results
 

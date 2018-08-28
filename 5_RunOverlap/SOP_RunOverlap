@@ -19,7 +19,11 @@ Step 1 - General overlap for species range and CH composites; can be used for va
     - Runs by region
     - Run multiple regions at the same time - regions takes less time than CONUS ~ 1.5 hours per use for CONUS
         - To speed up CONUS runs use the sub-set use variable and run the uses in groups rather than the whole gdb
+    - When running input files with habitat, elevation, states and HUC birds, fish, mamamals, amphibians take a long time
+    fish is the longest.  batch by regions and groups of species to minmize run time.
+    TODO look at spliting input files into multiple grids with only 1,000,000 unique zone
     - Output is pixel count distance is row wise zone for species is column wise
+
 Step 2- Overlap for aquatic species based on catchment:
     - Runs by region
     -Output is pixel count catchment ID is row wise and distance is column wise - transformed so there wouldn't be

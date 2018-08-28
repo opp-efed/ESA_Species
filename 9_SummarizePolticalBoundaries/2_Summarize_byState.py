@@ -4,8 +4,9 @@ import datetime
 
 
 in_tabulated = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated'
-out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated_byState'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated_byCounties'
 grouping_col = ['EntityID', 'STUSPS']
+grouping_col = ['EntityID', 'GEOID']
 
 
 start_time = datetime.datetime.now()

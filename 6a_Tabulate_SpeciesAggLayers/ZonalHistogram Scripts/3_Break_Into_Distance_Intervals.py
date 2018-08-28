@@ -4,65 +4,46 @@ import os
 import numpy as np
 import pandas as pd
 
-# Title- Generates parent distance interval tables per user input from master percent overlap tables; Author J Connolly
+# Title- Generate distance interval tables per user input from master percent overlap tables - this script is
+# interchangeable with the on under GAP_PilotSpecies but kept  separate
 #               1) Generates Spray Drift table tables for aggregated layers, AA, Ag and NonAG
 #                   1a) NOTE this will sum steps in between intervals to generate a value for the interval step
-#               2) SprayInterval folder will be generated in the out_root_dir location
-#               3) Folder name will include the interval step and max distance file name will include the FullRange,
-#                   Region or NL48 to identify the acres value used in overlap
-
 # Static variables are updated once per update; user input variables update each  run
 
-# NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
-# will not hist the limit.  If the limit is hit you will receive and error that the file does not exist.  Can over ride
-# error by pausing syncing
-
 # ###############user input variables
-# Species file type to tabulate
 species_file_type = 'Range'   # can be 'Range' or 'CH'
-# Region to include
 p_region = 'L48'  # can be L48 or NL48
-# Merges tables to include MO_FullRange (overlap based on the area of full range) MO_Region (overlap based on the area
-# in single regions) or MO_NL48Range (overlap based on the area of just found in the NL48)
-# typically we use MO_Region for the L48 and MO_NL48 for the Nl48
-folder_name_csv = 'MO_FullRange'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
+folder_name_csv = 'MO_Region'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
 # 'MergeOverlap_Region' L48 or NL48
-interval_step = 30  # default is 30 but can be set by user
-max_dis = 1501  # end distance plus 1; default is 1501 by use can select any value from 0 -1501
+interval_step = 30
+max_dis = 1501
 
-# SprayInterval folder will be generated in this location will all uses in one table
-# folder name will include the interval step and max distance file name will include the FullRange, Region or
-# NL48 to identify the acres value used in overlap
-
-# Root location where the transformed tables are saved; 'Tabulated' results this locations should be the same for
-# all steps
-out_root_dir = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ED_results\Tabulated_TabArea_HUCAB'
-
-# ########### Updated once per update
-# Location of master species list
-master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-              r'\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
-# Columns from the master species list that should be included in the output tables
+# ########### Updated once per run-variables
+master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+              r'\MasterListESA_Feb2017_20180110.csv'
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-# Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
-# tables
+
+out_root = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+           r'\_ED_results\Tabulated' + os.sep + p_region + os.sep + species_file_type
+csv_folder =  out_root + os.sep +'Agg_Layers' + os.sep + folder_name_csv
+
+
 look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                   r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
-
-# ###########Static variables
-today = datetime.datetime.today()
-date = today.strftime('%Y%m%d')
+# look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+#                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
 
 bins = np.arange((0 - interval_step), max_dis, interval_step)
 regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
 
-out_root = out_root_dir + os.sep + p_region + os.sep + species_file_type
-csv_folder = out_root + os.sep + 'Agg_Layers' + os.sep + folder_name_csv
+
+# ###########Static variables
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
 
 find_file_type = csv_folder.split(os.sep)
 if 'Range' in find_file_type or 'range' in find_file_type:
@@ -76,8 +57,10 @@ date = today.strftime('%Y%m%d')
 file_type, dir_folder = os.path.split(csv_folder)
 out_folder = file_type + os.sep + 'SprayInterval_IntStep_{0}_MaxDistance_{1}'.format(str(interval_step), str(max_dis))
 
-out_csv = out_folder + os.sep + file_flag + "_SprayInterval_" + date + "_" + \
+out_csv = out_folder + os.sep + file_flag+ "_SprayInterval_" + date + "_" + \
           dir_folder.split("_")[1] + '.csv'
+
+
 
 species_df = pd.read_csv(master_list, dtype=object)
 [species_df.drop(m, axis=1, inplace=True) for m in species_df.columns.values.tolist() if m.startswith('Unnamed')]
