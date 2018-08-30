@@ -258,13 +258,14 @@ def zonal_hist(sp_path, in_value_raster, region_c, use_name, temp_table, final_f
 
         list_fields = [f.name for f in arcpy.ListFields(temp_return)]
         att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
+        arcpy.Delete_management(temp_return)  # delete temp table in memory after saving - frees up memory
         att_df = pd.DataFrame(data=att_array)
+        del att_array
         att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
         att_df.to_csv(out_path_final + os.sep + csv)
         print '   Final file can be found at {0}'.format(out_path_final + os.sep + csv)
         print "   Completed in {0}\n".format((datetime.datetime.now() - zone_time))
         arcpy.Delete_management("zone")
-        arcpy.Delete_management(temp_return)  # delete temp table in memory after saving - frees up memory
         del att_df  # deletes df after the table is save
 
 
