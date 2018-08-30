@@ -76,6 +76,7 @@ snap_raster_dict = {'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.
                     'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
                     'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
+
 def zone(zone_lyr, raster_lyr, temp_table, snap, zone_headers):
     # Set Snap Raster environment and set extent
     arcpy.env.snapRaster = Raster(snap)
@@ -125,7 +126,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
 
     # parse out information needed for file names
 
-    for zone_title in ["GEOID","STATEFP"]:
+    for zone_title in ["STATEFP","GEOID",]:
         if zone_title.startswith("STATE"):
             run_id = use_nm_folder + "_State"
         else:
@@ -151,8 +152,11 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             cnt += 1
 
             list_fields = [f.name for f in arcpy.ListFields(temp_return)]
+
             att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
+            arcpy.Delete_management(temp_return)  # deletes temp file to free up memory
             att_df = pd.DataFrame(data=att_array)
+            del att_array  #delete temo file from memory
             #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
             print 'Final file can be found at {0}'.format(csv)
