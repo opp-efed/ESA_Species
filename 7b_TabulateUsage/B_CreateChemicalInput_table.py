@@ -4,6 +4,7 @@ import os
 import datetime
 
 # TODO confirm assumption with BEAD that if a commonity is found in the suum using a specific term, any associated
+# TODO set up format to match current out with Ag in the same table
 # sub commonitys only found in NASS can be ignored
 
 chemical_name = 'Malathion'
@@ -34,12 +35,10 @@ crop_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)
 
 # NOTE any crop terms used in SUUM no found on crosswalk are added to the 'SUUM Crop not in xwalk' columns with
 # support information.  Confirm supporting information with bead before going final
-crosswalk_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  '\_ExternalDrive\_CurrentSupportingTables\Usage\crosswalk_melt_2.csv'
+crosswalk_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\crosswalk_melt_2.csv'
 
 col_in_xwalk_chk =['Site', 'Name in CDL', 'Name in NASS', 'CENSUS Crop', 'SUUM Crop not in xwalk']
-out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ExternalDrive\_CurrentSupportingTables\Usage\ChemicalInput_tables'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\ChemicalInput_tables'
 
 
 def add_parent_crop(row, col_suum, df_x, col_xwalk, look_up_list):
@@ -47,17 +46,63 @@ def add_parent_crop(row, col_suum, df_x, col_xwalk, look_up_list):
     upper_v = row['Crop Uppercase']
     xwalk_crop = 'no_match'
     for col in look_up_list:
-
         if v in df_x[col].values.tolist():
-            xwalk_crop = df_x.loc[df_x[col] == v, col_xwalk].iloc[0]
+            list_values = df_x.loc[df_x[col] == v, col_xwalk].values.tolist()
+
+            for value in list_values:
+
+                update_value = str(value).replace(',','/')
+                update_value = update_value .lstrip()
+
+                list_values[list_values.index(value)] = update_value
+
+            xwalk_crop = list_values
             break
         elif upper_v in df_x[col].values.tolist():
-            xwalk_crop = df_x.loc[df_x[col] == upper_v, col_xwalk].iloc[0]
+            list_values = df_x.loc[df_x[col] == v, col_xwalk].values.tolist()
+
+            for value in list_values:
+                update_value = str(value).replace(',','/')
+                update_value = update_value .lstrip()
+                list_values[list_values.index(value)] = update_value
+
+            xwalk_crop = list_values
             break
-    print v, xwalk_crop
+    # print v, xwalk_crop
     return xwalk_crop
 
 
+def melt_df(df_melt, col_name):
+    cols = df_melt.columns.values.tolist()
+    id_vars_melt = []# other columns (non EntityID columns)
+    val_vars = [] # EntityID columns
+    for k in cols:
+        val_vars.append(k) if type(k) is long else id_vars_melt.append(k)
+    df_melt_row = pd.melt(df_melt, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
+                          value_name= col_name)
+    df_melt_row[col_name].fillna('None', inplace=True)
+    df_melt_row = df_melt_row.loc[df_melt_row[col_name] != 'None']
+
+
+    df_melt_row.drop('melt_var', axis=1, inplace=True)
+
+    return df_melt_row
+
+
+    # v = row[col_suum]
+    # upper_v = row['Crop Uppercase']
+    # xwalk_crop = 'no_match'
+    # for col in look_up_list:
+    #     if v in df_x[col].values.tolist():
+    #         if len (df_x.loc[df_x[col] == v, col_xwalk])>1:
+    #
+    #         xwalk_crop = df_x.loc[df_x[col] == v, col_xwalk].iloc[0]
+    #         df_survey['Commodity sub type']
+    #         break
+    #     elif upper_v in df_x[col].values.tolist():
+    #         xwalk_crop = df_x.loc[df_x[col] == upper_v, col_xwalk].iloc[0]
+    #         break
+    # print v, xwalk_crop
 def add_acres(row, col, NASS_col):
     v = row[col]
     if v >= 0:
@@ -84,6 +129,7 @@ date = today.strftime('%Y%m%d')
 df = pd.read_csv(suum_table2)
 # df_survey = pd.read_excel(survey_excel,header=1)
 df_survey = pd.read_csv(suum_table1)
+print df_survey.columns.values.tolist()
 
 df_crop = pd.read_csv(crop_excel)
 
@@ -122,20 +168,65 @@ df_crop['GenClass'] = df_crop.apply(lambda row: add_parent_crop(row, 'Commodity'
 df_crop['CompositeClass'] = df_crop.apply(lambda row: add_parent_crop(row, 'Commodity', df_xwalk, 'CompositeClass', col_in_xwalk_chk), axis=1)
 
 
+df_crop['Name in CDL']= df_crop['Name in CDL'].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ""))
+spl= df_crop['Name in CDL'].str.split(',', expand=True)
+df_crop= pd.concat([df_crop, spl], axis = 1 )
+df_crop.drop('Name in CDL', axis=1, inplace=True)
+df_crop = melt_df(df_crop, 'Name in CDL')
+df_crop['Name in CDL'] = df_crop['Name in CDL'].apply(lambda x: str(x).replace('/', ','))
+df_crop['Name in CDL'] = df_crop['Name in CDL'].apply(lambda x: str(x).lstrip())
+
+df_crop['GenClass']= df_crop['GenClass'].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ""))
+spl= df_crop['GenClass'].str.split(',', expand=True)
+df_crop= pd.concat([df_crop, spl], axis = 1 )
+df_crop.drop('GenClass', axis=1, inplace=True)
+df_crop = melt_df(df_crop, 'GenClass')
+df_crop['GenClass'] = df_crop['GenClass'].apply(lambda x: str(x).replace('/',','))
+df_crop['GenClass'] = df_crop['GenClass'].apply(lambda x: str(x).lstrip())
+
+
+df_crop['CompositeClass']= df_crop['CompositeClass'].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ""))
+spl= df_crop['CompositeClass'].str.split(',', expand=True)
+df_crop= pd.concat([df_crop, spl], axis = 1 )
+df_crop.drop('CompositeClass', axis=1, inplace=True)
+df_crop = melt_df(df_crop, 'CompositeClass')
+df_crop['CompositeClass'] = df_crop['CompositeClass'].apply(lambda x: str(x).replace('/', ','))
+df_crop['CompositeClass'] = df_crop['CompositeClass'].apply(lambda x: str(x).lstrip())
+df_crop.drop_duplicates(inplace=True)
+
+df_survey.drop('Crop Group', axis=1, inplace=True)
 df_survey['Crop Uppercase'] = df_survey['Crop'].map(lambda x: str(x).upper())  # col header in SUUM must be crop
+print df_survey.columns.values.tolist()
 df_survey['Commodity sub type'] = df_survey.apply (lambda row: add_parent_crop(row, 'Crop', df_xwalk, 'CENSUS Crop', col_in_xwalk_chk ), axis=1)
+df_survey['Commodity sub type'] = df_survey['Commodity sub type'].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ""))
+spl= df_survey['Commodity sub type'].str.split(',', expand=True)
+df_survey = pd.concat([df_survey, spl], axis = 1 )
+df_survey .drop('Commodity sub type', axis=1, inplace=True)
+df_survey = melt_df(df_survey, 'Commodity sub type')
+df_survey['Commodity sub type'] = df_survey['Commodity sub type'].apply(lambda x: str(x).replace('/', ','))
+df_survey['Commodity sub type'] = df_survey['Commodity sub type'].apply(lambda x: str(x).lstrip())
+df_survey.drop_duplicates(inplace=True)
+df_survey.to_csv(out_location +os.sep+ 'test.csv')
+df_survey.drop_duplicates(inplace=True)
 df_survey['States with Reported Usage'] = df_survey['States with Reported Usage'].map (lambda x: 'Not Surveyed' if x == '**' else x)
 df_survey['States with Reported Usage'] = df_survey['States with Reported Usage'].map (lambda x: 'No Usage National' if x == '*' else x)
+
 df_survey.to_csv(out_location + os.sep + chemical_name + "_survey_info_joined" + date + '.csv')
 
 # TODO look up one and return all 4 cols that will be split into new columns
 df['Commodity sub type'] = df.apply (lambda row: add_parent_crop(row, 'Crop', df_xwalk, 'CENSUS Crop', col_in_xwalk_chk),axis=1)
-
-
+df['Commodity sub type'] = df.apply (lambda row: add_parent_crop(row, 'Crop', df_xwalk, 'CENSUS Crop', col_in_xwalk_chk ), axis=1)
+df['Commodity sub type'] = df['Commodity sub type'].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ""))
+spl= df['Commodity sub type'].str.split(',', expand=True)
+df = pd.concat([df, spl], axis = 1 )
+df.drop('Commodity sub type', axis=1, inplace=True)
+df = melt_df(df,'Commodity sub type')
+df['Commodity sub type'] = df['Commodity sub type'].apply(lambda x: str(x).replace('/', ','))
+df.drop_duplicates(inplace=True)
 df.to_csv(out_location + os.sep + chemical_name + "_InputTables_w_SUUM_INFO_" + date + '.csv')
 
-out_df = pd.merge(df_crop, df, left_on=['State', 'Commodity sub type'], right_on=['State', 'Commodity sub type'],
-                  how='left')
+out_df = pd.merge(df_crop, df, left_on=['State', 'Commodity sub type'], right_on=['State', 'Commodity sub type'], how ='left')
+out_df =out_df.drop_duplicates()
 out_df['Acres'] = out_df.apply(lambda row: add_acres(row, 'Avg. Annual Crop Acres Grown ', 'Value'), axis=1)
 out_df['Acres Source'] = out_df.apply(lambda row: add_source_acres(row, 'Avg. Annual Crop Acres Grown ', ), axis=1)
 out_df.drop('Avg. Annual Crop Acres Grown ', axis=1, inplace=True)
@@ -153,18 +244,17 @@ temp_df = out_df.reindex(columns=['State', 'Commodity', 'Commodity sub type', 'D
                                   'Avg. Annual Pounds AI Applied a', 'Avg. Annual Total Acres Treated b',
                                   '% Applied by Air', 'Avg. Single AI Rate', 'Max Single Labeled Rate lb/a d',
                                   'Name in CDL', 'GenClass', 'CompositeClass', ])
-
+temp_df = temp_df.drop_duplicates()
 temp_df.to_csv(out_location + os.sep + chemical_name + "_InputTables_w_SUUM_INFO_" + date + '.csv')
 
 out_df_drop = out_df.drop_duplicates(subset=['Commodity', 'Acres', 'Acres Source']).copy()
-print out_df_drop.columns.values.tolist()
 suum_row = out_df_drop.loc[out_df_drop['Acres Source'] == 'SUUM'].copy()
 suum_commodity =suum_row['Commodity'].values.tolist()
 out_df_drop  = out_df_drop.loc[(out_df_drop['Acres Source'] == 'SUUM') |((out_df_drop['Acres Source'] == 'NASS') & (~out_df_drop['Commodity'].isin(suum_commodity)))]
 
 
-out_df_drop ['GenClass'] = out_df_drop.apply(lambda row: add_parent_crop(row, 'Commodity sub type', df_xwalk, 'GenClass', col_in_xwalk_chk),axis=1)
-out_df_drop ['CompositeClass'] = out_df_drop.apply(lambda row: add_parent_crop(row, 'Commodity sub type', df_xwalk, 'CompositeClass', col_in_xwalk_chk), axis=1)
+# out_df_drop ['GenClass'] = out_df_drop.apply(lambda row: add_parent_crop(row, 'Commodity sub type', df_xwalk, 'GenClass', col_in_xwalk_chk),axis=1)
+# out_df_drop ['CompositeClass'] = out_df_drop.apply(lambda row: add_parent_crop(row, 'Commodity sub type', df_xwalk, 'CompositeClass', col_in_xwalk_chk), axis=1)
 #TODO drop the sub type commodity for crops accoutned for in the SUUM
 
 
@@ -172,14 +262,15 @@ out_df = out_df.reindex(columns=['State', 'Commodity', 'Commodity sub type', 'Ac
                                  u'Avg. Annual Total Lbs. AI Applied a', u'Min. Annual PCT', u'Max. Annual PCT',
                                  u'Avg. Annual PCT', 'Name in CDL', 'GenClass', 'CompositeClass', 'Acres Source',
                                  'States with Reported Usage'])
-
+# ## final output table to be used as input
 out_df_drop = out_df_drop.reindex(columns=['State', 'Commodity', 'Commodity sub type', 'Acres',
                                            u'Avg. Annual Total Lbs. AI Applied a', u'Min. Annual PCT',
                                            u'Max. Annual PCT',
                                            u'Avg. Annual PCT', 'Name in CDL', 'GenClass', 'CompositeClass',
                                            'Acres Source', 'States with Reported Usage'])
+out_df = out_df.drop_duplicates()
 out_df.to_csv(out_location + os.sep + chemical_name + "_InputTables_" + date + '.csv')
-out_df_drop.to_csv(out_location + os.sep + chemical_name + "_InputTablesDrop_" + date + '.csv')
+out_df_drop.to_csv(out_location + os.sep + chemical_name + "_Final_" + date + '.csv')
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

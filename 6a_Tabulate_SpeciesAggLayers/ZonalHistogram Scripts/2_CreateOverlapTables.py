@@ -20,10 +20,10 @@ import pandas as pd
 #overwrite boolean - set to false tables were already generated for some uses and new ones need to be added.  If a use
 # layer was updated delete or archive the tables for the dated version and set this to false.  If this variable is set
 # to TRUE than all tables will be recalculated.
-overwrite_inter_data = True
+overwrite_inter_data = False
 # file structure is standard for raw result outputs and tabulated results outputs
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
-raw_results_csv = r''
+raw_results_csv = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\L48\Range\Agg_Layers\SumSpecies'
 
 # ########### Updated once per run-variables
 
@@ -35,7 +35,7 @@ if 'Range' in find_file_type or 'range' in find_file_type:
     file_type = 'R_'
     species_file_type = 'Range'
     # in_acres_table = r'L:\ESA\CompositeFiles_Winter2018\R_Acres_by_region_20180110_GAP.csv'  # vector table
-    in_acres_table = r'L:\ESA\R_Acres_Pixels_20180428.csv'
+    in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
 else:
     look_up_fc = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
     look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
@@ -59,7 +59,7 @@ if 'L48' in find_file_type:
     p_region = 'L48'
 else:
     p_region = 'NL48'
-out_root = r'L:\ESA\Tabulated' + os.sep + p_region + os.sep + species_file_type
+out_root = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba' + os.sep + p_region + os.sep + species_file_type
 out_results = out_root + os.sep + 'Agg_Layers'
 
 
@@ -285,12 +285,6 @@ for folder in list_folders:
         else:
             for csv in list_csv:
                 # load outside function due to double _ added by filename by default w. arcpy- corrected moving forward
-                df_use = pd.read_csv(raw_results_csv + os.sep + folder + os.sep + csv, dtype=object)
-                csv = csv.replace('__', '_')  # error correction for file names with double _ in name- remove in future
-                split_csv = csv.split("_")
-                sp_group = split_csv[1]
-                # use name on csv and not folder to  be constanst across all runs; TODO update raw result file structure for
-                # to be at the folder level
 
                 type_use = use_lookup.loc[use_lookup['FullName'] == use_nm, 'Type'].iloc[0]
                 r_cell_size = use_lookup.loc[use_lookup['FullName'] == use_nm, 'Cell Size'].iloc[0]
@@ -308,11 +302,18 @@ for folder in list_folders:
                     else:
                         zones = use_array['EntityID'].values.tolist()
                 else:
+                    df_use = pd.read_csv(raw_results_csv + os.sep + folder + os.sep + csv, dtype=object)
+                    csv = csv.replace('__', '_')  # error correction for file names with double _ in name- remove in future
+                    split_csv = csv.split("_")
+                    sp_group = split_csv[1]
+                    # use name on csv and not folder to  be constanst across all runs; TODO update raw result file structure for
+                    # to be at the folder level
                     print '   Summing tables by species...species group:{0}'.format(csv.split('_')[1])
                     use_df_transformed, sp_zone_df_fc, zones = use_by_species(df_use, csv.split('_')[1])
                     if len(zones) == 0:  # no zones in the raw output table no overlap; 0 for these species add at end
                         pass
                     else:
+
                         use_array = parse_tables(use_df_transformed, sp_zone_df_fc, final_col_header)
                         use_array.to_csv(out_use_pixel_by_species)  # save and intermediate tables' pixel count for  use and
                         # interval by species

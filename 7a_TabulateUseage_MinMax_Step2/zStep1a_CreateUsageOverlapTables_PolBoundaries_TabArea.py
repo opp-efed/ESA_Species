@@ -4,6 +4,7 @@ import arcpy
 
 import pandas as pd
 
+#TODO DO NOT USE NOT SUMMING CORECTLY SWITCH TO RAW RESULTS
 # **TOOL uses converts political boundary tables that were generated using Tabulate area into the needed input tables*
 # Title- Generate overlap tables from geoid to use layers results; - overlap found within political boundaries
 # this is used as an input variable fo usage
@@ -31,7 +32,7 @@ look_up_fips = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (E
 
 find_file_type = raw_results_csv.split(os.sep)
 
-out_root = r'L:\Workspace\StreamLine\ESA\Tabulated_PolBoundaries' + os.sep + 'PoliticalBoundaries'
+out_root = r'L:\Workspace\StreamLine\ESA\Tabulated_PolBoundaries' + os.sep + 'PoliticalBoundaries_2'
 
 out_results = out_root + os.sep + 'Agg_Layers'
 

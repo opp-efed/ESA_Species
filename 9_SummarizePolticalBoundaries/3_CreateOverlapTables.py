@@ -25,10 +25,9 @@ overwrite_inter_data = True
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
 raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated_byCounties'
 out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties'
-out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge'
-in_acres_table = r'L:\Workspace\StreamLine\ESA\R_Acres_Pixels_20180428.csv'
-look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge_b'
+in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
+look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180829.csv'
 id_value = 'Dicamba'
 master_list = r'C:\Users\JConno02' \
               r'\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \

@@ -33,7 +33,7 @@ import os
 
 chemical = 'Malathion'
 in_long_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                r'\_ExternalDrive\_CurrentSupportingTables\Usage\ChemicalInput_tables\Malathion_InputTablesDrop_20180730_w_edits_100.csv'
+                r'\_ExternalDrive\_CurrentSupportingTables\Usage\ChemicalInput_tables\Malathion_Final_20180828_0.csv'
 outlocation = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
               r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT'
 
@@ -85,11 +85,12 @@ print "Start Time: " + start_time.ctime()
 
 
 in_df = pd.read_csv(in_long_table,
-                    dtype={'State': str, 'Crop': str, 'Acreage': float, 'Min PCT': float, 'Max PCT': float,
-                           'Avg PCT': float, 'GenClass': str, 'AgClass': str}
+                    dtype={'State': str, 'Crop': str, 'Acreage': str, 'Min PCT': float, 'Max PCT': float,
+                           'Avg PCT': float, 'GenClass': str, 'CompositeClass': str}
                     )
 [in_df.drop(m, axis=1, inplace=True) for m in in_df.columns.values.tolist() if m.startswith('Unnamed')]
-
+in_df['Acreage'] = in_df['Acreage'].apply(lambda x: -9 if x == 'D' or x == 'Z' else x)
+in_df['Acreage'] = in_df['Acreage'].apply(lambda x: str(x).replace(',','')).astype(float)
 out_path = outlocation + os.sep + chemical
 if not os.path.exists(out_path):
     os.mkdir(out_path)
