@@ -3,13 +3,21 @@ import pandas as pd
 import datetime
 import os
 
-in_directory_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\L48\Range\Agg_Layers'
-out_path = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
-out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries'
+in_directory_csv = r'L:\Workspace\StreamLine\ESA\Result_Dicamba\L48\Range\Agg_Layers'
+out_path = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\noele\Tabulated Dicamba'
+out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\noele\PolBoundaries'
 
-in_directory_grids = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
-look_up_fc_ab = r'D:\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
-# look_up_fc = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+# in_directory_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\NL48\Range\Agg_Layers'
+# out_path = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
+# out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries'
+
+
+in_directory_grids = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
+                     r'\Grid_byProjections_Combined'
+look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range' \
+                r'\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
+look_up_fc = 'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\LookUp_Grid_byProjections_Combined' \
+             '\CONUS_Albers_Conical_Equal_Area'
 
 grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
                       'AS': 'AS_WGS_1984_UTM_Zone_2S',
@@ -20,7 +28,7 @@ grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
                       'PR': 'PR_Albers_Conical_Equal_Area',
                       'VI': 'VI_WGS_1984_UTM_Zone_20N'}
 
-elevation_adjustments = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\input tables\Elevation_Summary_test.csv'
+elevation_adjustments = r'L:\Workspace\StreamLine\ESA\Result_Dicamba\Elevation_dicamba_20180829.csv'
 habitat_adjustment_path = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\input tables'
 habitat_dict = {'AK': 'AK_Species_habitat_classes_20180624_test.csv',
                 'AS': 'AS_Species_habitat_classes_20180624_test.csv',
@@ -32,7 +40,7 @@ habitat_dict = {'AK': 'AK_Species_habitat_classes_20180624_test.csv',
                 'VI': 'VI_Species_habitat_classes_20180624_test.csv'}
 
 run_habitat = False
-run_elevation = False
+run_elevation = True
 run_elevation_hab = False
 run_aqu = True
 
@@ -255,7 +263,7 @@ types_dict = {'VALUE_1380': int, 'VALUE_1381': int, 'VALUE_1382': int,
               'VALUE_635': int, 'VALUE_636': int, 'VALUE_637': int,
               'VALUE_630': int, 'VALUE_632': int}
 
-list_fc = os.listdir(look_up_fc_ab)
+list_fc = os.listdir(look_up_fc)
 list_fc_ab = os.listdir(look_up_fc_ab)
 list_dir = os.listdir(in_directory_csv)
 
@@ -278,7 +286,7 @@ def no_adjust(out_df, final_df, cnty_all, sta_all):
     cnty_all = pd.concat([cnty_all, df_cnty])
     col_order = [v for v in df_cnty if v != 'GEOID']
 
-    df_state = out_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
+    df_state = w_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
     df_state = df_state.groupby(['EntityID', 'STATEFP', 'STUSPS'], as_index=False).sum()
     df_state = df_state.reindex(columns=col_order)
     sta_all = pd.concat([sta_all, df_state])
@@ -322,12 +330,13 @@ def adjust_elevation(out_df, adjust_path, final_df, cnty_all, sta_all):
     df_cnty = w_df.groupby(['EntityID', 'GEOID', 'STATEFP', 'STUSPS'], as_index=False).sum()
     cnty_all = pd.concat([cnty_all, df_cnty])
     col_order = [v for v in df_cnty if v != 'GEOID']
+    del df_cnty
 
-    df_state = out_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
-    df_state = df_state.groupby(['EntityID', 'STATEFP', 'STUSPS'], as_index=False).sum()
-    df_state = df_state.reindex(columns=col_order)
-    sta_all = pd.concat([sta_all, df_state])
-
+    # df_state  = w_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
+    # df_state = df_state.groupby(['EntityID', 'STATEFP', 'STUSPS'], as_index=False).sum()
+    # df_state = df_state.reindex(columns=col_order)
+    # sta_all = pd.concat([sta_all, df_state])
+    sta_all = pd.concat([sta_all, sta_all])
     return e_h_working, final_df, cnty_all, sta_all
 
 
@@ -369,7 +378,7 @@ def adjust_habitat(adjust_path, out_df, out_final, cnty_all, sta_all):
     cnty_all = pd.concat([cnty_all, df_cnty])
     col_order = [v for v in df_cnty if v != 'GEOID']
 
-    df_state = out_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
+    df_state = df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
     df_state = df_state.groupby(['EntityID', 'STATEFP', 'STUSPS'], as_index=False).sum()
     df_state = df_state.reindex(columns=col_order)
     sta_all = pd.concat([sta_all, df_state])
@@ -407,7 +416,7 @@ def adjust_elv_habitat(e_h_working, out_df, hab_sp_adjust, hab_df, out_final, cn
     cnty_all = pd.concat([cnty_all, df_cnty])
     col_order = [v for v in df_cnty if v != 'GEOID']
 
-    df_state = out_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
+    df_state = e_h_working[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
     df_state = df_state.groupby(['EntityID', 'STATEFP', 'STUSPS'], as_index=False).sum()
     df_state = df_state.reindex(columns=col_order)
     sta_all = pd.concat([sta_all, df_state])
@@ -441,17 +450,18 @@ def split_csv_chucks(in_path, look_up):
     out_all_other = pd.DataFrame(columns=[])
     look_up.ix[:,'HUCID'] = look_up.ix[:,'HUCID'].map(lambda z: str(z).split('.')[0]).astype(str)
 
+
     # for df in pd.read_csv(in_path, chunksize=chunksize, iterator=True, low_memory=True, dtype=types_dict):
     for df in pd.read_csv(in_path, chunksize=chunksize, iterator=True, low_memory=True):
         # df = pd.read_csv(in_path , low_memory=True,dtype = types_dict)
+        # print df.columns.values.tolist()
         if len(df) > 0:
             df = df.rename(columns={c: c.replace(' ', '') for c in df.columns})
             df.index += j
             pp += 1
             c_csv = df.copy()
             c_csv['VALUE'] = c_csv['VALUE'].map(lambda k: str(k).split('.')[0]).astype(str)
-            list_zones = c_csv['VALUE'].values.tolist()  # list of zones in raw output table
-            look_up_huc = look_up[look_up['HUCID'].isin(list_zones)]  # filter lookup to just zones in current output
+
 
         # reads in the desire col headers from the look up raster df (raster col header have a limited number
             # of characters) for the parent attribute table
@@ -492,7 +502,7 @@ def split_csv_chucks(in_path, look_up):
                     col_prefix.append(i)
 
             # add col HUCID mirror from the species parent column in table needed for join
-            merge_combine['HUCID'] = merge_combine[parent_id_col[0]].map(lambda z: str(z).split('.')[0]).astype(str)
+            # merge_combine['HUCID'] = merge_combine[parent_id_col[0]].map(lambda z: str(z).split('.')[0]).astype(str)
 
             # converts att from species input intersect fc, with all ID field, into df, captures the
             # ZoneID, InterID and HUCID to be joined to working table
@@ -504,9 +514,10 @@ def split_csv_chucks(in_path, look_up):
             for x in ['GEOID', 'STUSPS', 'Region', 'HUC2_AB']:
                 col_prefix.append(x)
             # merges working table with HUCID field
-            merge_par = pd.merge(merge_combine, look_up_huc, how='outer', left_on=parent_id_col, right_on='HUCID')
-
-            merge_par.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\test.csv')
+            # col with header that matches the specie input value equals the HUCID
+            list_zones =list(set(merge_combine[parent_id_col[0]].values.tolist()))  # list of hucid zones in raw output table
+            look_up_huc = look_up[look_up['HUCID'].isin(list_zones)]  # filter lookup to just zones in current output
+            merge_par = pd.merge(merge_combine, look_up_huc, how='outer', left_on=parent_id_col[0], right_on='HUCID')
 
             hab_col = [v for v in merge_par.columns.values.tolist() if str(v).startswith('Habit') or str(v).startswith(
                 'gap') or str(v).startswith('2011')]
@@ -515,24 +526,17 @@ def split_csv_chucks(in_path, look_up):
             if 'VALUE' in val_cols:
                 val_cols.remove('VALUE')
 
-            # merge_par['STATEFP'] = merge_par['GEOID'].map(lambda (n): str(n)[:2] if len(str(n)) == 5 else '0' + n[:1]).astype(str)
-            # merged_df_huc = merge_par[['EntityID', 'STUSPS', 'STATEFP', 'HUC2_AB'] + val_cols].copy()
-            merged_df_huc = merge_par[['EntityID', 'STUSPS', 'HUC2_AB'] + val_cols].copy()
-            # out_sp_table_huc = merged_df_huc.groupby(['EntityID', 'STUSPS', 'STATEFP', 'HUC2_AB'])[
-            #     val_cols].sum().reset_index()
+            merge_par['GEOID'] = merge_par['GEOID'].map(lambda (n): str(n)).astype(str)
+            merge_par['STATEFP'] = merge_par['GEOID'].map(lambda (n): str(n)[:2] if len(str(n)) == 5 else '0' + str(n)[:1]).astype(str)
+            merged_df_huc = merge_par[['EntityID', 'STUSPS', 'STATEFP', 'HUC2_AB'] + val_cols].copy()
+            # merged_df_huc = merge_par[['EntityID', 'STUSPS', 'HUC2_AB'] + val_cols].copy()
+            # out_sp_table_huc = merged_df_huc.groupby(['EntityID', 'STUSPS', 'STATEFP', 'HUC2_AB'])[val_cols].sum().reset_index()
 
-            out_sp_table_huc = merged_df_huc.groupby(['EntityID', 'STUSPS', 'HUC2_AB'])[
-                val_cols].sum().reset_index()
+            # out_sp_table_huc = merged_df_huc.groupby(['EntityID', 'STUSPS', 'HUC2_AB'])[val_cols].sum().reset_index()
+            out_sp_table_huc = merged_df_huc.groupby(['EntityID', 'STUSPS','STATEFP', 'HUC2_AB'])[val_cols].sum().reset_index()
 
-            merge_par['GEOID'] = merge_par['GEOID'].map(lambda (n): n).astype(str)
-            merge_par.ix[:, 'STATEFP'] = merge_par.ix[:, 'GEOID'].map(
-                lambda (n): str(n)[:2] if len(n) == 5 else '0' + n[:1]).astype(str)
-
-            merged_df_other = merge_par[
-                ['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col + val_cols].copy()
-            out_sp_table_other = \
-            merged_df_other.groupby(['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col)[
-                val_cols].sum().reset_index()
+            merged_df_other = merge_par[['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col + val_cols].copy()
+            out_sp_table_other = merged_df_other.groupby(['EntityID', 'GEOID', 'STUSPS', 'STATEFP'] + dem_col + hab_col)[val_cols].sum().reset_index()
 
             if len(out_sp_table_huc) > 0:
                 if 'VALUE_0' not in out_sp_table_huc.columns.values.tolist():
@@ -554,9 +558,9 @@ def split_csv_chucks(in_path, look_up):
 
                 print('Finish part {0} of table'.format(pp))
             else:
-                print '    ****Check overlap tables for above run, no row confirm this is correct***'
+                print '    ****Check overlap tables for above run, no row confirm this is correct 1***'
         else:
-            print '    ****Check overlap tables for above run, no row confirm this is correct***'
+            print '    ****Check overlap tables for above run, no row confirm this is correc 2t***'
 
     return out_all_huc, out_all_other
     # except:
@@ -610,14 +614,18 @@ for folder in list_dir:
                 # for species listed in the csv title
                 lookup_csv = [t for t in list_fc_ab if t.startswith(csv.split("_")[0].upper()
                                                                     + "_" + csv.split("_")[1].capitalize())]
+                lookup_fc = [t for t in list_fc if t.startswith(csv.split("_")[0].lower()+ "_" + csv.split("_")[1].lower())]
+
                 lookup_df = pd.read_csv(look_up_fc_ab + os.sep + lookup_csv[0], dtype=object)
+                # lookupfc_df = pd.read_csv(lookup_fc + os.sep + lookup_csv[0], dtype=object)
+                # look_up_col = csv.split("_")[0] + "_" +csv.split("_")
+                # lookup_df = pd.merge(lookup_df,lookupfc_df,how='outer',on_left = look_up_col, right_on='ZoneID',
 
                 # reads in csv to df for species and the parent raster attribute table for species
+
                 if os.path.exists(in_directory_species_grids + os.sep + csv.split("_")[0] + "_" +
                                   csv.split("_")[1] + '_att.csv'):
-                    spe_att = pd.read_csv(
-                        in_directory_species_grids + os.sep + csv.split("_")[0] + "_" +
-                        csv.split("_")[1] + '_att.csv')
+                    spe_att = pd.read_csv(in_directory_species_grids + os.sep + csv.split("_")[0] + "_" + csv.split("_")[1] + '_att.csv')
                     spe_att['VALUE'] = spe_att['VALUE'].map(lambda n: str(n).split('.')[0]).astype(str)
 
                     in_csv_path = in_directory_csv + os.sep + folder + os.sep + csv

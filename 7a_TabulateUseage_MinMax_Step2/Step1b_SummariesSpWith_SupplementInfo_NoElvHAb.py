@@ -22,9 +22,7 @@ grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
 
 
 
-run_habitat = False
-run_elevation = False
-run_elevation_hab = False
+
 run_aqu = True
 
 skip_species = []
@@ -269,7 +267,7 @@ def no_adjust(out_df, final_df, cnty_all, sta_all):
     cnty_all = pd.concat([cnty_all, df_cnty])
     col_order = [v for v in df_cnty if v != 'GEOID']
 
-    df_state = out_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
+    df_state = w_df[['EntityID', 'STATEFP', 'STUSPS'] + val_col].copy()
     df_state = df_state.groupby(['EntityID', 'STATEFP', 'STUSPS'], as_index=False).sum()
     df_state = df_state.reindex(columns=col_order)
     sta_all = pd.concat([sta_all, df_state])
