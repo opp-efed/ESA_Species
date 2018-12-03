@@ -6,9 +6,13 @@ import pandas as pd
 # #################### VARIABLES
 # #### user input variables
 
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\September2017'   # path final tables
-current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
-new_master = outlocation +os.sep+ 'Full_Merged_Listed20170928.csv'
+outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\Update_SpeciesList_Dec2018'   # path final tables
+current_masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                     r'\_ExternalDrive\Update_SpeciesList_Dec2018\MasterListESA_Feb2017_20180110.xlsx'
+
+# either the filtered TESS if just updating FWS or the merged file from the updated NMFS and FWS
+new_master = outlocation +os.sep+ 'FilteredTessPandas_20181203.csv'
 
 # removing inverted name and status
 # columns in tables must be in the same order
@@ -173,6 +177,7 @@ def check_entityID_updates(row, df_parent, df_child, date_update):
     df_parent[df_parent.columns.values.tolist()[index_pos_entid]] = df_parent[df_parent.columns.values.tolist()[index_pos_entid]].map(lambda x: x).astype(str)
     df_child[df_child.columns.values.tolist()[index_pos_entid]] = df_child[df_child.columns.values.tolist()[index_pos_entid]].map(lambda x: x).astype(str)
     child_col = str(df_child.columns.values.tolist()[index_pos_entid])
+    print child_col
 
     sciname = row['sciname']
     pop = row['pop_abbrev']
@@ -182,6 +187,7 @@ def check_entityID_updates(row, df_parent, df_child, date_update):
 
     try:
         child_value = str(df_child.loc[df_child[df_child.columns.values.tolist()[index_pos_entid]] == entid, child_col].iloc[0])
+        print child_value
         if child_value == entid:
             return False
     except IndexError:
@@ -203,7 +209,10 @@ def check_entityID_updates(row, df_parent, df_child, date_update):
             print 'Entity, sciname and popname change for {0} flag as new species- check'.format(entid)
             flag_new_species(df_parent, date_update, entid, added_tess, old_entityid)
             return True
-
+        except TypeError:
+            print 'Entity, sciname and popname change for {0} flag as new species- check'.format(entid)
+            flag_new_species(df_parent, date_update, entid, added_tess, old_entityid)
+            return True
 
 def check_removed(df_child, df_parent):
     removed_species = []
@@ -221,14 +230,16 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
 current_listed_df = pd.read_csv(new_master)
+print current_listed_df.columns.values.tolist()
 [current_listed_df.drop(v, axis=1, inplace=True) for v in current_listed_df.columns.values.tolist() if v.startswith ('Unnamed')]
 current_listed_df = current_listed_df.reindex(columns=out_cols)
-current_listed_df['EntityID'] = current_listed_df['EntityID'].map(lambda x: x).astype(str)
+current_listed_df['EntityID'] = current_listed_df['EntityID'].map(lambda x: str(x).split('.')[0]).astype(str)
 
 
 master_list_df = pd.read_excel(current_masterlist)
+print master_list_df.columns.values.tolist()
 master_list_df = master_list_df.reindex(columns=current_master_col)
-master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: x).astype(str)
+master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: str(x).split('.')[0]).astype(str)
 print master_list_df.columns.values.tolist()
 
 

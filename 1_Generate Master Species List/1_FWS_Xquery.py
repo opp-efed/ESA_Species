@@ -14,14 +14,15 @@ __author__ = 'JConno02'
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\September2017'
+outpath = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+          r'\_ExternalDrive\Update_SpeciesList_Dec2018'
 url = "https://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
 
 
 deafultTags = ['spcode', 'vipcode', 'sciname', 'comname', 'invname', 'pop_abbrev', 'pop_desc', 'family', 'status',
                'status_text', 'lead_agency', 'lead_region', 'country', 'listing_date', 'dps', 'refuge_occurrence',
                'delisting_date']
-delcolumns = ['species_detail', 'results']
+delcolumns = ['species_detail', 'results','tsn']
 
 colOrder = {
     9: 'spcode',
