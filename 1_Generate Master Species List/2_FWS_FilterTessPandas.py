@@ -4,11 +4,13 @@ import pandas as pd
 
 __author__ = 'JConno02'
 
-outpath = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\September2017'
-inpath_FULLTESS = r'FullTess_20170928.csv'
+outpath = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\Update_SpeciesList_Dec2018'
+inpath_FULLTESS = r'FullTess_20181203.csv'
 
-previos_FWS = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
-family_group_cross = 'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Family_Group_crosswalk_20170325.csv'
+previous_FWS = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+               r'\_ExternalDrive\Update_SpeciesList_Dec2018\MasterListESA_Feb2017_20180110.xlsx'
+family_group_cross = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
+                     '\ESA\_ExternalDrive\Update_SpeciesList_Dec2018\Family_Group_crosswalk_20170325.csv'
 
 ## These are the variables use within the xml, if FWS changes their variable this will need to be updated
 
@@ -21,7 +23,7 @@ lead_agency_index = 12
 group_index = 14
 
 current_master_col = [u'EntityID', u'Notes', u'comname', u'sciname', u'invname', u'status', u'status_text',
-                      u'pop_abbrev', u'pop_desc', u'family', u'spcode', u'vipcode', u'lead_agency', u'country',
+                      u'pop_abbrev', u'pop_desc', u'family', u'spcode', u'vipcode', u'Lead Agency', u'country',
                       u'Group']
 
 # Tess has species tagged to the wrong lead agency should be both (3)11191 green sea turtle, 1
@@ -138,8 +140,9 @@ header = list(dfFullTess.columns.values)
 
 fmy_grp_xwalk = pd.read_csv(family_group_cross)
 
-master_list_df = pd.read_excel(previos_FWS)
-master_list_df[current_master_col[entid_index]] = master_list_df[current_master_col[entid_index]].map(lambda x: str(x))
+master_list_df = pd.read_excel(previous_FWS)
+print  master_list_df.columns.values.tolist()
+master_list_df[current_master_col[entid_index]] = master_list_df[current_master_col[entid_index]].map(lambda x: str(x).split('.')[0])
 current_fws_df = master_list_df.loc[master_list_df[current_master_col[lead_agency_index]] == 1]
 
 master_list_df_filter = master_list_df.reindex(columns=current_master_col)
