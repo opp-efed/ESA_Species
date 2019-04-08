@@ -14,7 +14,7 @@ from arcpy.sa import *
 in_sum_file = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
               r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
 region = 'CONUS'
-temp_file = 'table3'
+temp_file = 'table1a'
 run_group = 'UseLayers'
 
 # # location of use site to runt
@@ -24,25 +24,21 @@ use_location = 'L:\Workspace\StreamLine\ByProjection' + os.sep + str(region) + "
 
 
 arcpy.env.workspace = use_location
+# u'Albers_Conical_Equal_Area_CONUS_malathion_171227d_AA_nonAg_euc', u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc'
+use_list = []  # runs specified layers in use location
 
-use_list = [u'Albers_Conical_Equal_Area_CDL_1016_100x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_70x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_71x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_40x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_10x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_80x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_72x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_20x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_90x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_60x2_euc',
-            u'Albers_Conical_Equal_Area_CDL_1016_30x2_euc', u'Albers_Conical_Equal_Area_CDL_1016_110_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc',
-            u'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc',
-            u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc',
-            u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc',
-            u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc',
-            u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc']  # runs specified layers in use location
+# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_190301_dev_euc',
+# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_ag_190301_AA_euc',
+# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_nonAg_190301_AA_euc',
+# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_woDev_190301_AA_euc',
+# u'Albers_Conical_Equal_Area_CONUS_methomyl_AA_190301_dev_euc',
+# u'Albers_Conical_Equal_Area_CONUS_methomyl_AA_Ag_190301_dev_euc'
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
 
 # location of results
-out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage\PolBoundaries\Agg_layers'
+out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage_GAP\PolBoundaries\Agg_layers'
 
 # STATIC Variables
 # Symbology layer so that the unique values can be applied to use layer before running zonal stats
@@ -150,9 +146,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             arcpy.Delete_management("in_memory" + os.sep + table)
             temp_return, zone_time = zone("pol_bnd_lyr", "rd_lyr", table, snap, zone_title)
             cnt += 1
-
             list_fields = [f.name for f in arcpy.ListFields(temp_return)]
-
             att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
             arcpy.Delete_management(temp_return)  # deletes temp file to free up memory
             att_df = pd.DataFrame(data=att_array)
