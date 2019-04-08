@@ -3,23 +3,29 @@ cols 1,2,3... the numbered cols become the cols in the val_vars list
 
 Repeated this step until all semicolon were removed.
 
-# crosswalk_excel ='C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#             '\_ExternalDrive\_CurrentSupportingTables\Usage\ULUT Data Source Summary-crosswalk (draft for review).xlsx'
-# sheet_name_2 ='AG Crops (survey status)(+)'
+crosswalk_excel ='C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+     '\_ExternalDrive\_CurrentSupportingTables\Usage\ULUT Data Source Summary-crosswalk (draft for review2).xlsx'
+sheet_name_2 ='AG Crops (survey status)(+)'
 
 df = pd.read_excel(crosswalk_excel, sheet_name_2, header = 6)
 
-val_vars =['1', '2', '3', '4']
-id_vars_melt = ['Unnamed: 0', 'IR-4 Group #', 'Site', 'Parent/Included Sub-Groups ', 'Notes', 'Name in PLUS',
-'Name in Census', 'National CAG', 'Name in iMap', 'Fungicide', 'Herbicide', 'Insecticide', 'Nematicide',
-'Growth Regulator', 'Group in NASS', 'Name in NASS', 'Fungicide.1', 'Herbicide.1', 'Insecticide.1', 'Other', 'Years Surveyed', 'Name in PUR',
-"CA CAG                           (from 2012 Census of Ag/ or CA Ag Commissioners' report  ?)",
-'Percent in CA (based on 2012 Census of Ag Acres)', 'Study', 'Notes.1', 'Name in CDL', 'UDL', 'COMMENTS','CENSUS Crop']
+# columns with crops names from census split in excel using text to columns split by ; on Name in Census
+val_vars =['CENSUS Crops', 1, 2, 3,4]
+# all original cols/ all cols not in val_vars
+
+
+id_vars_melt =[u'IR-4 Group #', u'Site', u'Parent/Included Sub-Groups ', u'Notes', u'Name in PLUS', u'Name in Census',
+u'National CAG', u'Name in iMap', u'Fungicide', u'Herbicide', u'Insecticide', u'Nematicide', u'Growth Regulator',
+u'Group in NASS', u'Name in NASS', u'Fungicide.1', u'Herbicide.1', u'Insecticide.1', u'Other', u'Years Surveyed',
+ u'Name in PUR', u"CA CAG                           (from 2012 Census of Ag/ or CA Ag Commissioners' report  ?)",
+  u'Percent in CA (based on 2012 Census of Ag Acres)', u'Study', u'Notes.1', u'Name in CDL', u'UDL',
+  u'Larger group CDL?', u'Larger group UDL?', u'guess', u'COMMENTS']
 
 df_melt_row = pd.melt(df, id_vars=id_vars_melt, value_vars=val_vars, var_name='melt_var',
-                          value_name='CENUS_CROP_2')
+                          value_name='CENUS_CROP')
 
-df_melt_row.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\crosswalk_melt_2.csv')
+df_melt_row.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA
+\_ExternalDrive\_CurrentSupportingTables\Usage\crosswalk_melt_2.csv', encoding ='utf-8')
 On output table in excel:
     dropped the row index  that was added and melt_var then removed duplicates
     check for blank row in CENSUS_CROP that has a values in the Name in Census col - filled in using these values and trimmed white space
@@ -51,5 +57,7 @@ SECTOR_DESC values: ['CROPS', 'ENVIRONMENTAL', 'DEMOGRAPHICS', 'ECONOMICS', 'ANI
 
 National filtered to just Sector_DESC == 'CROPS' 1,374,740 - just over limit of excel
 Florida Sector_DESC == 'CROPS' 33,452
+    first_ten = df[:10]
+    rest = df[10:]
 
 fl_df = df[(df['STATE_FIPS_CODE'] == 12) & (df['SECTOR_DESC'] == 'CROPS')]

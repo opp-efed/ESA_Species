@@ -5,7 +5,7 @@ import datetime
 
 # Be sure on off field is accounted for
 
-chemical_name = 'Methomyl'
+chemical_name = 'Malathion_Census'
 # chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
              r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"

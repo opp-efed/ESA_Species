@@ -2,6 +2,8 @@ import pandas as pd
 import datetime
 import os
 
+#TODO Update col header to final use by BEAD
+#TODO INCORPORATE NONAG WHEN READY
 # NOTES:
 # Assumptions:
 # ~ Percentages are base 100 ie 0-100 not 0-1
@@ -29,13 +31,12 @@ import os
 #       ~ All BEAD crops/use must be flagged as either Ag or NonAg to apply aggregated PCT to the all Ag composite
 #
 # Known limitations:
-#       ~ PCTs are inflated; no use states are not separated by State so acreage is unavailable - currently filtered out
+#       ~ PCTs are inflated; undisclosed acres filtered out
 
-chemical = 'Malathion'
-in_long_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                r'\_ExternalDrive\_CurrentSupportingTables\Usage\ChemicalInput_tables\Malathion_Final_20180828_0.csv'
-outlocation = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT'
+chemical = 'Carbaryl'
+in_long_table = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA" \
+                r"\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Carbaryl\Carbaryl_Final_20190311_100.csv"
+outlocation = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT'
 
 state_list = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
               'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
@@ -45,17 +46,29 @@ state_list = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorad
               'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
               'West Virginia', 'Wisconsin', 'Wyoming', 'American Samoa', 'Guam',
               'Commonwealth of the Northern Mariana Islands', 'Puerto Rico', 'United States Virgin Islands', ]
-state_list = ['FLORIDA']
 
-def weight_pct(df, working_df):
+state_list = ['ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE',
+              'FLORIDA', 'GEORGIA', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA',
+              'MAINE', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA',
+              'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA',
+              'NORTH DAKOTA', 'OHIO', 'OKLAHOMA', 'OREGON', 'PENNSYLVANIA', 'RHODE ISLAND', 'SOUTH CAROLINA',
+              'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA',
+              'WISCONSIN', 'WYOMING', 'American Samoa', 'Guam',
+              'Commonwealth of the Northern Mariana Islands', 'Puerto Rico', 'United States Virgin Islands']
+
+
+def weight_pct(df, working_df, working_treated):
     # PCT for GenClass = SUM[PCT BEAD Crop*(Avg. Annual Crop Acres Grown/Total of Avg Annual Acres in State)]
     total_crop_state = df['Acreage'].sum()
+
+    # working_treated = pd.concat([working_treated, df], axis=0)
     df.ix[:, 'Proportion Crop'] = (df.ix[:, 'Acreage'] / (total_crop_state))
 
     df.ix[:, 'Max PCT'] = df.ix[:, 'Max PCT'] / 100
     df.ix[:, 'Weighted Max'] = (df.ix[:, 'Proportion Crop'] * df.ix[:, 'Max PCT'])
     weight = df['Weighted Max'].sum()
     df.loc[:, 'Weighted Max Group'] = weight
+    print df
 
     df.ix[:, 'Avg PCT'] = df.ix[:, 'Avg PCT'] / 100
     df.ix[:, 'Weighted Avg'] = (df.ix[:, 'Proportion Crop'] * df.ix[:, 'Avg PCT'])
@@ -67,7 +80,7 @@ def weight_pct(df, working_df):
     weight = df['Weighted Min'].sum()
     df.loc[:, 'Weighted Min Group'] = weight
     working_df = pd.concat([working_df, df], axis=0)
-    return working_df
+    return working_df, working_treated
 
 
 def no_use(df, working_df):
@@ -77,12 +90,12 @@ def no_use(df, working_df):
     working_df = pd.concat([working_df, df], axis=0)
     return working_df
 
+
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
-
 
 in_df = pd.read_csv(in_long_table,
                     dtype={'State': str, 'Crop': str, 'Acreage': str, 'Min PCT': float, 'Max PCT': float,
@@ -90,7 +103,7 @@ in_df = pd.read_csv(in_long_table,
                     )
 [in_df.drop(m, axis=1, inplace=True) for m in in_df.columns.values.tolist() if m.startswith('Unnamed')]
 in_df['Acreage'] = in_df['Acreage'].apply(lambda x: -9 if x == 'D' or x == 'Z' else x)
-in_df['Acreage'] = in_df['Acreage'].apply(lambda x: str(x).replace(',','')).astype(float)
+in_df['Acreage'] = in_df['Acreage'].apply(lambda x: str(x).replace(',', '')).astype(float)
 out_path = outlocation + os.sep + chemical
 if not os.path.exists(out_path):
     os.mkdir(out_path)
@@ -99,18 +112,21 @@ out_df = pd.DataFrame(columns=[
     ['Crop', 'State', 'Acreage', 'Min PCT', 'Max PCT', 'Avg PCT', 'GenClass', 'Proportion Crop', 'Weighted Max',
      'Weighted Max Group', 'Weighted Avg', 'Weighted Avg Group', 'Weighted Min', 'Weighted Min Group']])
 
-
+out_treated = pd.DataFrame(columns=[
+    ['Crop', 'State', 'Acreage', 'Min PCT', 'Max PCT', 'Avg PCT', 'GenClass', 'Proportion Crop', 'Weighted Max',
+     'Weighted Max Group', 'Weighted Avg', 'Weighted Avg Group', 'Weighted Min', 'Weighted Min Group']])
 states = list(set(in_df['State'].values.tolist()))
-out_df = no_use((in_df.loc[in_df['Acreage'] == -9]).copy(), out_df)
+# Replace -9999 with 0
+# out_df = no_use((in_df.loc[in_df['Acreage'] == -9999]).copy(), out_df)
 
 for state in states:
     print state
     state_df = in_df.loc[in_df['State'] == state].copy()
     genclasses = state_df['GenClass'].values.tolist()
     for genclasses in genclasses:
-        genclass_df = state_df.loc[(in_df['GenClass'] == genclasses) & (state_df['Acreage'] != -9)].copy()
+        genclass_df = state_df.loc[(in_df['GenClass'] == genclasses) & (state_df['Acreage'] != -9999)].copy()
         if len(genclass_df) > 0:
-            out_df = weight_pct(genclass_df, out_df)
+            out_df, out_treated = weight_pct(genclass_df, out_df, out_treated)
 
 out_df.fillna(0, inplace=True)
 
@@ -124,7 +140,7 @@ avg = out_df.pivot_table(values='Weighted Avg Group', index=['GenClass'], column
 avg = avg.reindex(columns=state_list)
 
 max.to_csv(out_path + os.sep + chemical + "_max" + "_" + date + '.csv')
-print out_path + os.sep + chemical + "_max" + "_" + date + '.csv'
+out_path + os.sep + chemical + "_max" + "_" + date + '.csv'
 min.to_csv(out_path + os.sep + chemical + "_min" + "_" + date + '.csv')
 avg.to_csv(out_path + os.sep + chemical + "_avg" + "_" + date + '.csv')
 

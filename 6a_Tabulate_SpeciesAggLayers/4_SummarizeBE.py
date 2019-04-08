@@ -13,6 +13,7 @@ import pandas as pd
 # ASSUMPTIONS
 # col in UsesLook up that represents the Final Use Header - values do not have
 
+
 # NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
 # will not hist the limit.  If the limit is hit you will receive and error that the file does not exist.  Can over ride
 # error by pausing syncing
@@ -23,9 +24,7 @@ import pandas as pd
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
 
 # This should be one of the SprayInterval table from step 3- full, region, or NL48
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ED_results\Tabulated_TabArea_HUCAB\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501' \
-           r'\R_SprayInterval_20180819_Region.csv'
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Tabulated_TabArea_HUCAB\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501\R_SprayInterval_20180819_Region.csv'
 
 # Columns from the master species list that should be included in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
@@ -41,7 +40,8 @@ look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EP
 # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
 # Limits for AgDrift for ground and aerial
 
-bins = [0, 305, 765]  # these can be adjust if we want to look at different bins, there can be more than 3
+bins = [0, 305, 792] # update to 792 from 765 3/19/2019
+# these can be adjust if we want to look at different bins, there can be more than 3
 # #############Static Variables
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')

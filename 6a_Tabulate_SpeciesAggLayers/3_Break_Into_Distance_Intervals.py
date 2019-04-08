@@ -21,11 +21,11 @@ import pandas as pd
 # Species file type to tabulate
 species_file_type = 'Range'   # can be 'Range' or 'CH'
 # Region to include
-p_region = 'L48'  # can be L48 or NL48
+p_region = 'NL48'  # can be L48 or NL48
 # Merges tables to include MO_FullRange (overlap based on the area of full range) MO_Region (overlap based on the area
 # in single regions) or MO_NL48Range (overlap based on the area of just found in the NL48)
 # typically we use MO_Region for the L48 and MO_NL48 for the Nl48
-folder_name_csv = 'MO_Region'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
+folder_name_csv = 'MO_NL48Range'  # can be MO_NL48Range or MO_FullRange NL48 or MO_Region
 # 'MergeOverlap_Region' L48 or NL48
 interval_step = 30  # default is 30 but can be set by user
 max_dis = 1501  # end distance plus 1; default is 1501 by use can select any value from 0 -1501
@@ -36,7 +36,7 @@ max_dis = 1501  # end distance plus 1; default is 1501 by use can select any val
 
 # Root location where the transformed tables are saved; 'Tabulated' results this locations should be the same for
 # all steps
-out_root_dir = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Tabulated_TabArea_HUCAB'
+out_root_dir = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
 
 # ########### Updated once per update
 # Location of master species list
@@ -75,8 +75,7 @@ date = today.strftime('%Y%m%d')
 file_type, dir_folder = os.path.split(csv_folder)
 out_folder = file_type + os.sep + 'SprayInterval_IntStep_{0}_MaxDistance_{1}'.format(str(interval_step), str(max_dis))
 
-out_csv = out_folder + os.sep + file_flag + "_SprayInterval_" + date + "_" + \
-          dir_folder.split("_")[1] + '.csv'
+out_csv = out_folder + os.sep + file_flag + "_SprayInterval_" + date + "_" + dir_folder.split("_")[1] + '.csv'
 
 species_df = pd.read_csv(master_list, dtype=object)
 [species_df.drop(m, axis=1, inplace=True) for m in species_df.columns.values.tolist() if m.startswith('Unnamed')]
@@ -97,6 +96,7 @@ def create_directory(dbf_dir):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+print out_folder
 create_directory(out_folder)
 list_csv = os.listdir(csv_folder)
 list_csv = [csv for csv in list_csv if csv.endswith('.csv')]

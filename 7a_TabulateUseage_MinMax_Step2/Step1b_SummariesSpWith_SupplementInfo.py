@@ -3,9 +3,10 @@ import pandas as pd
 import datetime
 import os
 
+#TODO remove fucntion for hab and elevation and just send the working elevation df throught the habitat function
 in_directory_csv = r'L:\Workspace\StreamLine\ESA\Result_Dicamba\L48\Range\Agg_Layers'
-out_path = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\noele\Tabulated Dicamba'
-out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\noele\PolBoundaries'
+out_path = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\elevation\Tabulated Dicamba'
+out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated Dicamba\elevation\PolBoundaries'
 
 # in_directory_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\NL48\Range\Agg_Layers'
 # out_path = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
@@ -310,13 +311,22 @@ def adjust_elevation(out_df, adjust_path, final_df, cnty_all, sta_all):
 
     for v in sp_to_adjust:
         if v in e_adjust['EntityID'].values.tolist():
+            print v
             min_v = adjust_df.loc[(adjust_df['EntityID'] == v, 'Min Elevation GIS')].iloc[0]
             max_v = adjust_df.loc[(adjust_df['EntityID'] == v, 'Max Elevation GIS')].iloc[0]
+            print min_v,max_v
             w_df = e_adjust.loc[(e_adjust['EntityID'] == v) & (e_adjust[dem_col[0]] <= int(max_v)) & (
                     e_adjust[dem_col[0]] >= int(min_v))].copy()
+
+            if len(w_df) == 0:
+                remaining = [None] * (len(w_df.columns.values.tolist())-1)  # all columns need to 1000 rows - makes additional rows with value none
+                merge_list = [v] + remaining
+                w_df.loc[-1] =merge_list  # adding a row
+                print w_df
             e_working = pd.concat([e_working, w_df])
 
     e_h_working = e_working.copy()
+    e_h_working ['GEOID'] = e_h_working ['GEOID'].map(lambda (n): n if len(str(n)) == 5 else '0'+str(n)).astype(str)
 
     out_col = ['EntityID']
     out_ele_loop = e_working[out_col + val_col]
@@ -325,9 +335,11 @@ def adjust_elevation(out_df, adjust_path, final_df, cnty_all, sta_all):
     out_ele_loop = (out_ele_loop.groupby(group_col).sum()).reset_index()
     final_df = pd.concat([final_df, out_ele_loop])
 
+
     w_df = e_h_working[['EntityID', 'GEOID', 'STATEFP', 'STUSPS'] + val_col].copy()
 
     df_cnty = w_df.groupby(['EntityID', 'GEOID', 'STATEFP', 'STUSPS'], as_index=False).sum()
+
     cnty_all = pd.concat([cnty_all, df_cnty])
     col_order = [v for v in df_cnty if v != 'GEOID']
     del df_cnty

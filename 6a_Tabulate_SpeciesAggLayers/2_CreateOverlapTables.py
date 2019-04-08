@@ -29,12 +29,10 @@ overwrite_inter_data = False
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
 
 # Location of raw results
-raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ED_results\Results_HUCAB\NL48\Range\Agg_Layers'
+raw_results_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\NL48\Range\Agg_Layers'
 # Root location where the transformed tables should be saved; 'Tabulated' results this locations should be the same for
 # all steps
-out_root_dir = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ED_results\Tabulated_TabArea_HUCAB'
+out_root_dir = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
 
 # ########### Variables to be updated once per update
 # NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
@@ -55,36 +53,31 @@ find_file_type = raw_results_csv.split(os.sep)  # identifies inputs as range or 
 if 'Range' in find_file_type or 'range' in find_file_type:
     # Location of look-up table to transform from zone to species EntityID range files; Look directory needs to match
     # the input species files see InputFiles current runs for questions
-    look_up_fc = r'D:\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
+    look_up_fc = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
     # Common col from lookup table to output table, this is the column in the look up table that matches
     # the VALUE column of the species input raster
     join_col = 'HUCID'  # typical vlaues ZoneID, InterID, HUCID
     # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
     # tables
-    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+    look_up_use = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Census_Uses_lookup_20181106_test.csv"
     file_type = 'R_'  # R_ for Range runs
     species_file_type = 'Range'  # Range for  Range runs
     # Location of range acres tables to be use to calculate percent overlap
-    in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-                     r'\Endangered Species Pilot Assessments - QA\Documentation\Generation Parent Use Overlap Tables' \
-                     r'\R_Acres_Pixels_20180428.csv'
+    in_acres_table = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv"
 else:
     # Location of look-up table to transform from zone to species EntityID range files; Look directory needs to match
     # the input species files see InputFiles current runs for questions
-    look_up_fc = r''
+    look_up_fc = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20180612'
     # Common col from lookup table to output table, this is the column in the look up table that matches
     # the VALUE column of the species input raster
     join_col = 'HUCID'
     # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
     # tables
-    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
     species_file_type = 'CH'  # CH for critical habitat runs
     file_type = 'CH_'  # CH_ for critical habit
     # Location of critical habitat acres tables to be use to calculate percent overlap
-    in_acres_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-                     r'\ESA\_ED_results\CH_Acres_Pixels_20180430.csv'
+    in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv'
 
 find_file_type = raw_results_csv.split(os.sep)
 if 'L48' in find_file_type:
@@ -124,18 +117,15 @@ def calculation(type_fc, in_sum_df, c_region, percent_type):
 
     if percent_type == 'full range':
         acres_col = 'TotalAcresOnLand'
-        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
-        in_sum_df.ix[:, [acres_col]] = in_sum_df.ix[:, [acres_col]].apply(pd.to_numeric, errors='coerce')
+        in_sum_df.ix[:, use_cols +[acres_col]] = in_sum_df.ix[:, use_cols +[acres_col]].apply(pd.to_numeric, errors='coerce')
         in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
     elif percent_type == 'NL48 range':
         acres_col = 'TotalAcresNL48'
-        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
-        in_sum_df.ix[:, [acres_col]] = in_sum_df.ix[:, [acres_col]].apply(pd.to_numeric, errors='coerce')
+        in_sum_df.ix[:, use_cols +[acres_col]] = in_sum_df.ix[:, use_cols +[acres_col]].apply(pd.to_numeric, errors='coerce')
         in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
     elif percent_type == 'regional range':
         acres_col = 'Acres_' + str(c_region)
-        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
-        in_sum_df.ix[:, [acres_col]] = in_sum_df.ix[:, [acres_col]].apply(pd.to_numeric, errors='coerce')
+        in_sum_df.ix[:, use_cols +[acres_col]] = in_sum_df.ix[:, use_cols +[acres_col]].apply(pd.to_numeric, errors='coerce')
         in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
 
     if type_fc == "Raster":
@@ -239,7 +229,9 @@ for folder in list_results_directory:
         out_use_pixel_by_species = out_folder_sum_use + os.sep + csv
 
         # pulls in use information from the use table
+        print use_nm
         type_use = use_lookup.loc[use_lookup['FullName'] == use_nm, 'Type'].iloc[0]
+
         final_col_header = use_lookup.loc[use_lookup['FullName'] == use_nm, 'FinalColHeader'].iloc[0]
 
         # Step 1: Sum by species- convert the zoneIDs to the species in the zones, then sums so there is one value
@@ -277,6 +269,8 @@ for folder in list_results_directory:
 
                 sp_df.columns = final_cols
                 zones = sp_df['EntityID'].values.tolist()
+                if len(sp_df['EntityID'].values.tolist()) == 0:
+                    zones = []
                 sp_df.to_csv(out_use_pixel_by_species)
 
         elif not overwrite_inter_data and os.path.exists(out_use_pixel_by_species):

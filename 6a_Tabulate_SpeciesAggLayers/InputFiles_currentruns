@@ -41,7 +41,7 @@ F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_
     # AK, AS, CNMI and HI
     # NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
     # scripts
-     - All files in the rnagefolders
+     - All files in the rangefolders
     - Lookup Directory LookUp_Grid_byProjections_Combined
     - Results Folder : Results_Usage
     - Tabulated Folder: Tabulated_Usage
