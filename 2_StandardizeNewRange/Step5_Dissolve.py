@@ -14,17 +14,18 @@ import arcpy
 maxrow = 5000000
 
 # Input File Locations
-InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017" \
-        r"\UpdatedProcess_December2017\GDB\ReNm_NMFS_20171204_2018-01-10.gdb"
-abb = "NMFS"
+InGDB = r"L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\GDB" \
+        r"\ReNm_FWS_20190130_2019-02-07.gdb"
+
+abb = "FWS"
 
 # Workspace
-ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_December2017"
+name_dir = "UpdatedProcess_Jan2019_CH"
 
 # in yyyymmdd received date
-receivedDate = '20171204'
+receivedDate = '20190130'
 
 # Field Names that will be kept in the dissolve
 Dissolve = "Dissolve"
@@ -147,40 +148,41 @@ for fc in fcs_in_workspace(InGDB):
                         continue
 
         elif count > 1:
-            if count > maxrow:
-                print count
-                topofc = outfileTopogdbpath + os.sep + str(fc)
-                print "Run dissolve B"
-                print "Failed Topo post Dissolve" + str(topofc)
-                if arcpy.Exists(topofc):
-                    continue
-                else:
-                    arcpy.CopyFeatures_management(fc, topofc)
-                    arcpy.Delete_management(outfc)
-                    continue
-            try:
-                if arcpy.Exists(topofc):
-                    continue
-                else:
-                    arcpy.Dissolve_management("fc_lyr", outfc, DissolveList, "", "MULTI_PART", "DISSOLVE_LINES")
-                    print "Dissolved: " + str(fc)
+            if not arcpy.Exists(outfc):
+                if count > maxrow:
+                    print count
+                    topofc = outfileTopogdbpath + os.sep + str(fc)
+                    print "Run dissolve B"
+                    print "Failed Topo post Dissolve" + str(topofc)
+                    if arcpy.Exists(topofc):
+                        continue
+                    else:
+                        arcpy.CopyFeatures_management(fc, topofc)
+                        arcpy.Delete_management(outfc)
+                        continue
+                try:
+                    if arcpy.Exists(topofc):
+                        continue
+                    else:
+                        arcpy.Dissolve_management("fc_lyr", outfc, DissolveList, "", "MULTI_PART", "DISSOLVE_LINES")
+                        print "Dissolved: " + str(fc)
 
-            except Exception as error:
-                print(error.args[0])
-                if arcpy.Exists(outfc):  # If it partial file exists it is deleted
-                    arcpy.Delete_management(outfc)
-                print count
-                topofc = outfileTopogdbpath + os.sep + str(fc)
-                if arcpy.Exists(topofc):
-                    print "Run dissolve B"
-                    print "Failed Topo post Dissolve" + str(topofc)
-                    continue
-                else:
-                    print "Run dissolve B"
-                    print "Failed Topo post Dissolve" + str(topofc)
-                    arcpy.CopyFeatures_management(fc, topofc)
-                    arcpy.Delete_management(outfc)
-                    continue
+                except Exception as error:
+                    print(error.args[0])
+                    if arcpy.Exists(outfc):  # If it partial file exists it is deleted
+                        arcpy.Delete_management(outfc)
+                    print count
+                    topofc = outfileTopogdbpath + os.sep + str(fc)
+                    if arcpy.Exists(topofc):
+                        print "Run dissolve B"
+                        print "Failed Topo post Dissolve" + str(topofc)
+                        continue
+                    else:
+                        print "Run dissolve B"
+                        print "Failed Topo post Dissolve" + str(topofc)
+                        arcpy.CopyFeatures_management(fc, topofc)
+                        arcpy.Delete_management(outfc)
+                        continue
     except Exception as error:
         print(error.args[0])
         continue

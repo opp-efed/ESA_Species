@@ -24,10 +24,11 @@ is split into CH and Range but these could be merged over time.  A second genera
 extraneous vertices, these are the files used for the composite. The generalized files are faster to process because the
 geometry is less complicated.
 
+Steps 2-8 are done for both the generalized and non generalized libraries
 Step 2: Archive files for any species that has  been delisted or will be excluded from the overlap analysis because they
 have been identified as extinct, possibly extinct, qualitative, or occurring exclusively on uninhabited islands. This
 is done by comparing the current master list to an old master list for delisted species; archiving any species no
-longer active.  For species excluded from overlap, a list excluded the species each catergory is generated and used
+longer active.  For species excluded from overlap, a list excluded the species each category is generated and used
 in the current_master variables, and the current  master list is used as the old list.
 
 Step 3 is done in loop until all updated files are archived, duplicates addressed and all species are accounted for. Run
@@ -56,5 +57,5 @@ generating files for overlap.  If a mistake is found in one of the files overlap
 impacted species groups******* These checks do take a while to process!
 
 Step A: this will generate extract HUC12 files used for aquatics if we continue to do this.  these files are than used
-like 'updated files' and run through this routine starting with step1.
-
+like 'updated files' and run through this routine starting with step1.  Species attribute data will be added in step 6
+FILE NAME NEEDS TO BE ADDED FOR DISSOLVE

@@ -11,14 +11,12 @@ import pandas as pd
 # Merged files discussed and agreed upon with the ESA team fall 2015; revisited and stayed the same fall 2017
 
 # User input variable
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
 group_colindex = 16
 
-infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\CriticalHabitat'
-archivefolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\CriticalHabitat\Archived'
-# infolder = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\Range'
-# archivefolder = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Generalized_files\Range\ArchivedRange'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
+archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat\Archived'
+
 
 # final field in fc
 fieldlist = ['FileName', 'EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'Status', 'Pop_Abb']

@@ -7,39 +7,39 @@ import pandas as pd
 # Title - Re-projects union raster into projection by region - if geographic conversion needs to be done (NAD to WGS_
 # NAD_1983_To_WGS_1984_1" is used
 # in and out location
-#
-# inGDB = 'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-# outfolder = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection'
-# regional_acres_table = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv'
+
+# LOCATION OF RASTER UNION COMPOSITES BY SPECIES GROUP
+inGDB = 'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+outfolder = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection'
+regional_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+                       r'\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
+
+#'r'C:\Users\JConno02\Environmental Protection Agency (EPA)
+# \Endangered Species Pilot Assessments - OverlapTableA\R_Acres_Pixels_20180428.csv'
 
 
-inGDB = 'L:\ESA\UnionFiles_Winter2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-outfolder = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2'
-regional_acres_table = r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\R_Acres_Pixels_20180428.csv'
+# 'CONUS', 'AK', 'AS',
+# 'PR','AK', 'HI','AS','CNMI','GU','VI'
+# ToDO see why PR species are causing python to quit if extent is set; to avoid remove extent limit line 84, 85, the
+# when output will be all species but it will be limited to just PR when the next step of raster to the format
+skip_region = [ 'AK', 'AS','CONUS','CNMI','GU','VI', 'HI']
 
-#'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\R_Acres_Pixels_20180428.csv'
-# r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\ESA\CH_Acres_Pixels_20180430.csv'
-
-# 'PR','AK', 'HI'
-skip_region = [ 'CNMI','CONUS']
 # 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
-skip_group = [ 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes',  'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
-#Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers', 'Corals', 'Crustaceans', 'Ferns', 'Flowering', 'Insects',
-# 'Lichens', 'Mammals','Snails'
-#'Ferns', 'Fishes',
+skip_group = []
+
 # projection folder
-prjFolder = r'C:\Users\Admin\Documents\Jen\Workspace\projections\FinalBE'
+prjFolder = r'L:\Workspace\StreamLine\projections\FinalBE'
 
 # Also use as snap rasters when projecting with will set the extent of the output projected raster to just the region
 RegionalProjection_Dict = {
-    'CONUS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'L:\Workspace\UseSites\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
 # TODO can the snap raster be used as the spatial reference for the projection?
@@ -64,7 +64,7 @@ def create_gdb(out_folder, out_name, outpath):
 def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_region):
     start_raster = datetime.datetime.now()
     print "\n"
-    print inraster
+    print inraster,
 
     in_raster = Raster(in_gdb + os.sep + str(inraster))
 
@@ -81,7 +81,7 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
     print str(snap_raster)
     # Set the processing extent to be equal to the use layer; only species within the extent will be
     # included in the output species file
-    #ToDO see why flowering plant in PR is plant when extent is sent
+    # #ToDO see why flowering plant in PR is plant when extent is sent
     myExtent = snap_raster.extent
     arcpy.env.extent = myExtent
 
@@ -96,19 +96,12 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
     print in_raster
     prj_raster_name = str(inraster) + "_" + prj_name  # regional species raster
     prj_raster = out_gdb + os.sep + prj_raster_name  # complete output path for regional species raster
+    print prj_raster
     try:
         if prj_datum == "D_WGS_1984":  #  # indicates the file needs a geographic tranformation from  NAD 83 to WGS 84
-
-
             if not arcpy.Exists(prj_raster):
                 arcpy.Delete_management("inital_r_lyr")
                 arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
-
-                # # Set the processing extent to be equal to the use layer; only species within the extent will be
-                # # included in the output species file
-                # myExtent = snap_raster.extent
-                # arcpy.env.extent = myExtent
-
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
                 # "NAD_1983_To_WGS_1984_1" is a geographic transformation used to go from NAD_1983 to WGS 84 for the US
                 # TODO check to see if different transformation would make more sense WGS_1984_(ITRF00)_To_NAD_1983
@@ -117,27 +110,19 @@ def raster_project(prj_current, inraster, in_gdb, prj_folder, out_folder, c_regi
             else:
                 print str(prj_raster) + " already exists"
 
-
         else:
 
             if not arcpy.Exists(prj_raster):
 
                 arcpy.Delete_management("inital_r_lyr")
                 arcpy.MakeRasterLayer_management(in_raster, "inital_r_lyr")
-                #
-                # # Set the processing extent to be equal to the use layer; only species within the extent will be
-                # # included in the output species file
-                # myExtent = snap_raster.extent
-                # arcpy.env.extent = myExtent
 
                 print 'Projecting {0} into {1}'.format(inraster, prj_name)
+
                 arcpy.ProjectRaster_management("inital_r_lyr", prj_raster, prj_sr, 'NEAREST', "30")
-
-
             else:
                 print str(prj_raster) + " already exists"
         print 'Completed loop of {0} in: {1}\n'.format(prj_name, (datetime.datetime.now() - start_raster))
-
 
     except Exception as error:
         print 'Error in loop'
@@ -184,15 +169,17 @@ for region in list_regions:
         print final_sp_group_region  # list of species groups found in region; only include first work if there is a
         # "_" in the species group name ie Flowering_Plants is loaded as Flowering
         regional_prj = Region_Dict[region]
+
         for raster in raster_list:
             sp_group = (raster.split)("_")[1]
+
             if sp_group in skip_group:
                 continue
-
             elif sp_group not in final_sp_group_region:
                 continue
             else:
                 try:
+
                     raster_project(regional_prj, raster, inGDB, prjFolder, outfolder, region)
                 except Exception as error:
                     print(error.args[0])

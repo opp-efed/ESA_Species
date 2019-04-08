@@ -5,8 +5,6 @@ import pandas as pd
 
 # Tile: Checks for missing range files - currently not set up to check for missing CH files
 
-
-
 # NOTE  Make sure all commas are removed from master table before running this script to a find all and
 # replace
 # TODO Update cross check to pandas df so that the commas are no longer a problem
@@ -14,7 +12,7 @@ import pandas as pd
 # User input variable
 masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
               r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
-# Spatial Library for range files
+# Composite GDB generate in Step A
 infolder = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb'
 group_fc_index = 1 # location of the sp group in the file name
 # also need to set the hard code to the index number for the cols reference in loop species

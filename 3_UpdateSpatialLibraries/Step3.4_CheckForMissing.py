@@ -11,16 +11,15 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 # TODO update to filter qualitative species that are excluded from overlap out of the counts
 
-masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
 # Spatial Library for range files
-infolder = 'D:\ESA\SpatialLibrary\Generalized files\Range'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Range'
 
 # also need to set the hard code to the index number for the cols reference in loop species
 
 group_colindex = 'Group'
 entid_colindex = "EntityID"
-not_considered_colindex = 'not_considered_BE'  # Species on master but not be considered in BE
+not_considered_colindex = 'not_considered_BE_GIS'  # Species on master but not be considered in BE
 dev_colindex = 'Range under development'  # species range is under development
 
 
@@ -122,7 +121,6 @@ for group in alpha_group:
             continue
 
     remove_cnt = len(removed)
-
     totalfc = len(fclist)
     devspe = len(devlist)
     dup = len(dup_val_set)
@@ -131,8 +129,8 @@ for group in alpha_group:
 
     # current total account for species equals the total number of fc + the files under deve - duplicate files
     # - files in the wrong sp group gdb
-    totalfc = totalfc - dup
 
+    totalfc = totalfc - dup
 
     # print feedback about species missing files or having duplicate files
     if totalfc == total_ingroup:

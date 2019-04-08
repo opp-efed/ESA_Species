@@ -3,9 +3,10 @@ import arcpy
 import os
 import datetime
 
+# Generates look-up tables for scripts from the species inputs
 
-look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2Inter_20180612.gdb'
 
 out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
 
@@ -50,6 +51,8 @@ def parse_tables( in_row_sp):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+if not os.path.exists(out_location):
+    os.mkdir(out_location)
 
 for fc in list_fc_ab:
     ab_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + fc, ['HUCID', 'ZoneID'])

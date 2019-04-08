@@ -7,18 +7,18 @@ import arcpy
 #  Title- places species into the different regions and exports a table of species with each region it occurs in
 
 # Input files
-masterlist = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\MasterList_20161130.csv'
+masterlist = "L:\master.csv"
 # update the column index location in the col included dict
 
 # Spatial library to be considered can put both and get on file, or one at a time for a list of just range or crithab
 # locations
-inlocation = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\CriticalHabitat'
+inlocation = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\Range'
 
 # region fc
-regionsfc = r'C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
+regionsfc = r'L:\Workspace\StreamLine\Boundaries.gdb\Regions_dissolve'
 
 # output files
-outfile = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\CH_SpeciesRegions_all_20161208.csv'
+outfile = r'"L:\SpeciesRegions.csv"'
 
 # TODO split this so that it generates one file for the Range and one for the Critical habitat in one run
 # TODO clean up code to be more streamlined see acres table
@@ -26,10 +26,10 @@ outfile = r'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables
 # dictionary, col name and index number- base 0 from master list above
 # Note entid if hard code for tracking!!!!
 colincluded = {'EntityID': 0,
-               'Group': 7,
-               'comname': 4,
-               'sciname': 5,
-               'status_text': 6}
+               'Group': 15,
+               'comname': 5,
+               'sciname': 6,
+               'status_text': 8}
 
 skipgroup = []
 
@@ -71,8 +71,10 @@ def verify_entityid_location(regionsfc, colincluded):
         listheader.append(value)
 
     for value in listheader:
+
         try:
             index = regionsindex[value]
+
             index += 1
         except KeyError:
             regionsindex[value] = index
@@ -90,6 +92,7 @@ def verify_entityid_location(regionsfc, colincluded):
             line = line.split(',')
             if colincluded['EntityID'] == 0:
                 entid = str(line[0])
+
             else:
                 entid = str(line[int(user_input)])
             rowdict[entid] = rowindex
@@ -126,6 +129,7 @@ def assign_region(in_gdb, count_gdb, total_gdb, regions_fc, out_df, row_dict):
         with arcpy.da.SearchCursor(infc, ["EntityID"]) as cursor:
             for row in cursor:
                 entid = str(row[0])
+
                 whereclause = "EntityID = '%s'" % entid
 
                 arcpy.Delete_management("lyr")

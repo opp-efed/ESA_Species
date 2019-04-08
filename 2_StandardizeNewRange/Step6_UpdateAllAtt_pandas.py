@@ -18,7 +18,8 @@ import pandas as pd
 masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
              '\MasterListESA_Feb2017_20190130.csv'
 # folder or GDB
-infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\HUC12\DissolvedCH_Aquatics_HUC12.gdb'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\GDB' \
+           r'\STD_ReNmFWS20190130_2019-02-07.gdb'
 
 
 addition_gdb_filename = ''  # if the gdbs are not just the species group

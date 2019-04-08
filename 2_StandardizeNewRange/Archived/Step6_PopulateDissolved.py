@@ -19,18 +19,18 @@ import arcpy
 ################################################################Varibles to be set by user
 
 # Input File Locations
-InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017" \
-        r"\UpdatedProcess_December2017\GDB\STD_ReNmNMFS20171204_2018-01-10.gdb"
+InGDB = r"L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\GDB\STD_ReNmFWS20190130_2019-02-02.gdb"
 # Table will all information to be added to the att table
-JoinTable = r"L:\Workspace\ESA_Species\FWS_GIStobeUpdated\UpdatedProcess_20170410\CSV\std_att.csv"
+JoinTable = r"L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\CSV\std_att.csv"
 
 # Workspace
-ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_December2017"
+name_dir = "UpdatedProcess_Jan2019_CH"
 
 # in yyyymmdd received date
-receivedDate = '20171204'
+receivedDate = '20190130'
+
 
 # Column headers for join Names
 JoinFieldFC = "FileName"

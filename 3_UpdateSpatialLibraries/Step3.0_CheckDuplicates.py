@@ -6,14 +6,13 @@ import pandas as pd
 # Tile: Checks for species with duplicate files in spatial library; this indicated that files has been updated, or a
 # species has two files that need to be merged
 
-# ## Make sure all commas are removed the get accurate results!
+# ## Make sure all commas are removed to get accurate results!
 # User input variable
 # input table
 
-masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
+masterlist =  r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
 # Spatial Library for range files
-in_folder = 'D:\ESA\SpatialLibrary\CriticalHabitat'
+in_folder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
 group_colindex = 16  # Index position of the group column in the master species list
 # #########Functions
 

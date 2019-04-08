@@ -13,16 +13,15 @@ import pandas as pd
 #CONFIRMED with ESA team that CH for qualtitave species should also be excluded from overlap # Fall 2017
 
 # User input variable
-masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             '\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv'
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
 # Spatial library for critical habitat files
-infolder = 'D:\ESA\SpatialLibrary\Generalized files\CriticalHabitat'
+infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
 # also need to set the hard code to the index number for the cols reference in loop species
 
 
 group_colindex = 'Group'
 entid_colindex = "EntityID"
-not_considered_colindex = 'not_considered_BE'  # Species on master but not be considered in BE
+not_considered_colindex = 'not_considered_BE_GIS'  # Species on master but not be considered in BE
 dev_colindex = 'Range under development'  # species range is under development
 ch_gis_colindex = "CH_GIS"
 # #########Functions

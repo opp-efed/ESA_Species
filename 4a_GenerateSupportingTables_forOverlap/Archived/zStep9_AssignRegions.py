@@ -29,7 +29,7 @@ outfile = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\C
 
 # dictionary, col name and index number- base 0 from master list above
 # Note entid if hard code for tracking!!!!
-colincluded = {'EntityID': 0,
+colincluded = {'EntityID': 1,
                'Group': 7,
                'comname': 4,
                'sciname': 5,

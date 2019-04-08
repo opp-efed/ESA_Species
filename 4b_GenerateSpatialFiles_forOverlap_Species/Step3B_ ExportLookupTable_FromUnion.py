@@ -4,8 +4,8 @@ import os
 import datetime
 
 
-look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\LookUp_R_Clipped_Union_20180110'
+look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\LookUp_CH_Clipped_Union_20180110'
 
 arcpy.env.workspace = look_up_fc
 list_fc = arcpy.ListFeatureClasses()
@@ -46,6 +46,8 @@ def parse_tables( in_row_sp):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+if not os.path.exists(out_location):
+    os.mkdir(out_location)
 
 for fc in list_fc:
     sp_zone_array = arcpy.da.TableToNumPyArray(look_up_fc + os.sep + fc, ['ZoneID', 'ZoneSpecies'])

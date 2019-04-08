@@ -15,25 +15,26 @@ import arcpy
 # False if individual files by species
 compfile = True
 # column in the composite file used to identify a species typically the entityID, use '' if individual files
-entid_col_comp = 'ENTITY_ID'
-NmCSVCopied = 'FWS_Range_Updated2018'  # name for output table
-out_nameGDB = "FWS_Range_Updated2018"  # name for staging gdb
+entid_col_comp = "ENTITY_ID"
+NmCSVCopied = 'FWS_Range_Updated2019'  # name for output table
+out_nameGDB = "FWS_Updated2019"  # name for staging gdb
 
 # location of new species files
 # ***this must be a folder not a .shp or .gdb
-InFileLocations = "C:\Users\JConno02\Downloads\usfws_complete_species_current_range"
+InFileLocations = "L:\Workspace\StreamLine\Species Spatial Library\Download_FWS_Jan2019\FilteredSection7\Range"
 # master species list
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
-             r"\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv"
+masterlist = r"L:\Workspace\StreamLine\Species Spatial Library\MasterListESA_Feb2017_NeedCH_20181203.csv"
 entityid_col_master = 'EntityID'
 # Workspace
 # path to output workspace
-ws = "L:\Workspace\StreamLine\UpdateRange"
-# Name of folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_December2018"
+# Workspace
+ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
+# Folder in workspace where outputs will be saved
+name_dir = "UpdatedProcess_Jan2019"
 
-# in yyyymmdd received date or downloaded
-receivedDate = '20181203'
+# in yyyymmdd received date
+receivedDate = '20190130'
+
 
 # FUNCTIONS
 
@@ -113,12 +114,12 @@ def copy_fc_to_geo(in_location, out_location_path, file_list, failed_list, entid
         for fc in fcs_in_workspace(in_location):
             basename, extension = os.path.splitext(fc)
             out_fc_prefix = arcpy.ValidateTableName(basename)  # replaces any invalid characters to underscores
+
             arcpy.Delete_management ('update_lyr')
             arcpy.MakeFeatureLayer_management(in_location +os.sep+fc,'update_lyr')
             list_fields = [f.name for f in arcpy.ListFields('update_lyr')]
             if 'Shape' in list_fields:  # Shape is 2-dimensions; 2-d data needs to be removed
                 list_fields.remove('Shape')
-
             att_array = arcpy.da.TableToNumPyArray('update_lyr',list_fields)
             att_df = pd.DataFrame(data=att_array)
             del att_array  # deletes temp array
@@ -129,9 +130,11 @@ def copy_fc_to_geo(in_location, out_location_path, file_list, failed_list, entid
                 if entid not in list_species:
                     continue
                 else:
-                    whereclause =""""{0}" = {1}""".format(entid_col, entid)
+                    whereclause =""""{0}" = {1}""".format(entid_col, entid)  # if the Entity_ID field is a number
+                    #whereclause =""""{0}" = {2}{1}{3}""".format(entid_col, entid,"'","'")  # if the Entity_ID field is a str
+
                     try:
-                        out_feature_class = out_location_path + os.sep + str(out_fc_prefix ) +"_" + entid
+                        out_feature_class = out_location_path + os.sep + str(out_fc_prefix) + "_" + entid
                         if not arcpy.Exists(out_feature_class):
                             # Makes a feature layer that will only include current entid using whereclause
                             arcpy.Delete_management("lyr")
@@ -142,6 +145,7 @@ def copy_fc_to_geo(in_location, out_location_path, file_list, failed_list, entid
                     except Exception as error:
                         print(error.args[0])
                         print "Failed  " + str(fc)
+                        print "Check ther data type of EntityID call and adjust where clause as needed"
                         add_failed = str(fc)
                         failed_list.append(add_failed)
                         if arcpy.Exists(out_feature_class):
