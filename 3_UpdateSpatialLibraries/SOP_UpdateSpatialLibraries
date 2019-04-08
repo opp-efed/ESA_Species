@@ -1,5 +1,8 @@
 
-Author J. Connolly updated December 2017
+Author J. Connolly updated April 2018
+
+# NOTE FOR THE SCRIPTS NOTE CONVERTED TO PANDAS MAKE SURE THERE ARE NO COMMAS IN THE MASTER SPECIES LIST IT CAN CHANGE
+THE COLUMN NUMBERS USED AS INDEXES
 
 Purpose: Moves standardized location files from Step 1 to species spatial libraries. Additional updates include points
 and line buffered by 15 meters so they are area based for overlap, species with multiple files are merged into a single
