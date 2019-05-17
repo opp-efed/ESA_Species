@@ -5,19 +5,15 @@ import datetime
 
 # Be sure on off field is accounted for
 
-chemical_name = 'Malathion_Census'
-# chemical_name = 'Carbaryl'
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
+# chemical_name = 'Methomyl'
+chemical_name = 'Carbaryl'
+use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
 
-max_drift = '765'
-l48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-             r'\R_AllUses_BE_L48_20180522.csv'
 
-nl48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-              '\R_AllUses_BE_NL48_20180522.csv'
+max_drift = '792'
+l48_BE_sum = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\R_UnAdjusted_Full Range_AllUses_BE_L48_SprayInterval_noadjust_20190501.csv"
+
+nl48_BE_sum = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\R_UnAdjusted_Full Range_AllUses_BE_NL48_SprayInterval_noadjust_20190501.csv"
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -27,7 +23,7 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-out_location = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables'
+out_location = 'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage'
 
 on_off_species =[]
 
@@ -87,8 +83,8 @@ def on_off_field(row, cols, df):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-create_directory(out_location + os.sep + chemical_name)
-out_path = out_location + os.sep + chemical_name + os.sep +'Step 1'
+create_directory(out_location + os.sep + chemical_name+ os.sep+'Summarized Tables' )
+out_path = out_location + os.sep + chemical_name +os.sep+'Summarized Tables'+ os.sep +'Step 1'
 create_directory(out_path)
 use_lookup_df = pd.read_csv(use_lookup)
 l48_df = pd.read_csv(l48_BE_sum)
@@ -112,13 +108,13 @@ for col in col_prefix_CONUS:
     if len(aa_layers_CONUS.loc[(aa_layers_CONUS['FinalColHeader'] == col) & (aa_layers_CONUS['ground'] == 'x')]) > 0:
         col_selection_aa.append(col + "_305")
     if len(aa_layers_CONUS.loc[(aa_layers_CONUS['FinalColHeader'] == col) & (aa_layers_CONUS['aerial'] == 'x')]) > 0:
-        col_selection_aa.append(col + "_765")
+        col_selection_aa.append(col + "_792")
 
 chemical_step1 = l48_df[col_selection_aa]
 final_use = aa_layers_CONUS.loc[(aa_layers_CONUS['Action Area'] == 'x') & (aa_layers_CONUS['aerial'] == 'x')], [
     'FinalColHeader']
 if len(aa_layers_CONUS.loc[(aa_layers_CONUS['Action Area'] == 'x') & (aa_layers_CONUS['aerial'] == 'x')]) > 0:
-    final_use = str(final_use) + '_765'
+    final_use = str(final_use) + '_792'
 else:
     final_use = str(final_use) + '_305'
 
@@ -135,7 +131,7 @@ for col in col_prefix_NL48:
     if len(aa_layers_NL48.loc[(aa_layers_NL48['FinalColHeader'] == col) & (aa_layers_NL48['ground'] == 'x')]) > 0:
         col_selection_nl48.append(col + "_305")
     if len(aa_layers_NL48.loc[(aa_layers_NL48['FinalColHeader'] == col) & (aa_layers_NL48['aerial'] == 'x')]) > 0:
-        col_selection_nl48.append(col + "_765")
+        col_selection_nl48.append(col + "_792")
 
 cols_w_overlap = [v for v in nl48_df.columns.values.tolist() if v in col_selection_nl48]
 nl48_df = nl48_df[cols_w_overlap]
@@ -186,7 +182,7 @@ nl48_df_step1 = chemical_step1[nl48_cols_f]
 
 conus_df_step1.to_csv(out_path + os.sep + 'CONUS_Step1_' + file_type + chemical_name + '.csv')
 nl48_df_step1.to_csv(out_path + os.sep + 'NL48_Step1_' + file_type + chemical_name + '.csv')
-
+print out_path + os.sep + 'CONUS_Step1_' + file_type + chemical_name + '.csv'
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time
