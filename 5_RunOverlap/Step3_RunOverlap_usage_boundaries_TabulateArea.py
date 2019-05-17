@@ -15,7 +15,8 @@ from arcpy.sa import *
 # sub-directory folder where shapefile
 in_sum_file = r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\Boundaries.gdb\Counties_all_overlap'
 region = 'CONUS'
-temp_file = 'table4'
+
+temp_file = 'table1a'
 run_group = 'UseLayers'
 
 # # location of use site to runt
@@ -24,14 +25,18 @@ run_group = 'UseLayers'
 use_location = 'L:\Workspace\StreamLine\ByProjection' + os.sep + str(region) + "_" + run_group + ".gdb"
 
 arcpy.env.workspace = use_location
+# u'Albers_Conical_Equal_Area_CONUS_malathion_171227d_AA_nonAg_euc', u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc'
+use_list = []  # runs specified layers in use location
+
 
 use_list = []  # runs specified layers in use location
+
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
 
 # location of results
-out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage\PolBoundaries\Agg_layers'
+out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage_GAP\PolBoundaries\Agg_layers'
 
 # STATIC Variables
 # Symbology layer so that the unique values can be applied to use layer before running zonal stats
@@ -139,9 +144,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             arcpy.Delete_management("in_memory" + os.sep + table)
             temp_return, zone_time = zone("pol_bnd_lyr", "rd_lyr", table, snap, zone_title)
             cnt += 1
-
             list_fields = [f.name for f in arcpy.ListFields(temp_return)]
-
             att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
 
             arcpy.Delete_management(temp_return)  # deletes temp file to free up memory

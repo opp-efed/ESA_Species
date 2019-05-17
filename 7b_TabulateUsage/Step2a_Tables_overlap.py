@@ -4,21 +4,21 @@ import datetime
 import numpy as np
 
 # TODO take update redudancy loop out so that it pulls in the factor adjustments from the no_adjusted tables
+# chemical_name = 'Malathion'
+chemical_name = 'Methomyl'
 chemical_name = 'Carbaryl'
-# chemical_name = 'Methomyl'
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             r'\SupportingTables' + os.sep + chemical_name + "_Uses_lookup_20180430.csv"
+# use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+             # r'\SupportingTables' + os.sep + chemical_name + "_Census_Uses_lookup_20181106_test.csv"
+
+use_lookup = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20180430.csv"
+
 
 on_off_excel = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
                r'\_ExternalDrive\_CurrentSupportingTables\Species Collection_cmr_jc.xlsx'
 max_drift = '765'
-l48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-             r'\CH_AllUses_BE_L48_20180522.csv'
+l48_BE_sum = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Malathion_Census\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\Upper_AllUses_BE_L48_20181201.csv'
 
-nl48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-              '\CH_AllUses_BE_NL48_20180522.csv'
+nl48_BE_sum = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables\R_AllUses_BE_NL48_20180522.csv'
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -29,11 +29,10 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
 
-out_location = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-               '\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables'
+out_location = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables'
 
 
-find_file_type = os.path.basename(l48_BE_sum)
+find_file_type = os.path.basename(nl48_BE_sum)
 if find_file_type.startswith('R'):
     file_type = 'R_'
 else:
@@ -62,12 +61,13 @@ def create_directory(dbf_dir):
 
 
 def step_1_ED(row, col_l48):
-    col_nl48 = col_l48.replace('CONUS', 'NL48')
+
     # Federal lands statement needs to be updated to an and statement that will still catch overlap from either L48 or
     # NL48.  These or statements take advantage of species in both the L48 and NL48 have low overlap with federal lands
     # but these may not be true in all cases
 
     col_nl48 = col_l48.replace('CONUS','NL48')
+
 
 
     if row[col_l48] < 0.44 and row[col_nl48] < 0.44:
@@ -80,6 +80,8 @@ def step_1_ED(row, col_l48):
         value = 'NLAA - Federal Land'
     elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
         value =  'May Affect'
+    else:
+        value= 'no catch'
 
     if file_type == 'CH_':
         if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
@@ -189,6 +191,7 @@ date = today.strftime('%Y%m%d')
 create_directory(out_location + os.sep + chemical_name)
 out_path = out_location + os.sep + chemical_name
 use_lookup_df = pd.read_csv(use_lookup)
+
 l48_df = pd.read_csv(l48_BE_sum)
 nl48_df = pd.read_csv(nl48_BE_sum)
 list_final_uses = list(set(use_lookup_df['FinalUseHeader'].values.tolist()))
@@ -196,6 +199,7 @@ list_final_uses = list(set(use_lookup_df['FinalUseHeader'].values.tolist()))
 # Extract columns that will be adjusted for redundancy
 other_layer = use_lookup_df.loc[(use_lookup_df['other layer'] == 'x')]
 other_layer_cols = other_layer['Chem Table FinalColHeader'].values.tolist()
+
 ag_headers = use_lookup_df.loc[(use_lookup_df['Included AA Ag'] == 'x')]
 ag_cols = ag_headers['Chem Table FinalColHeader'].values.tolist()
 
@@ -251,9 +255,9 @@ col_prefix_CONUS = aa_layers_CONUS['FinalColHeader'].values.tolist()
 col_selection_aa = ['EntityID']
 for col in col_prefix_CONUS:
     col_selection_aa.append(col + "_0")
-    if len(aa_layers_CONUS.loc[(aa_layers_CONUS['FinalColHeader'] == col) & (aa_layers_CONUS['ground'] == 'x')]) > 0:
+    if len(aa_layers_CONUS.loc[(aa_layers_CONUS['Chem Table FinalColHeader'] == col) & (aa_layers_CONUS['ground'] == 'x')]) > 0:
         col_selection_aa.append(col + "_305")
-    if len(aa_layers_CONUS.loc[(aa_layers_CONUS['FinalColHeader'] == col) & (aa_layers_CONUS['aerial'] == 'x')]) > 0:
+    if len(aa_layers_CONUS.loc[(aa_layers_CONUS['Chem Table FinalColHeader'] == col) & (aa_layers_CONUS['aerial'] == 'x')]) > 0:
         col_selection_aa.append(col + "_765")
 
 cols_w_overlap_l48 = [v for v in l48_df.columns.values.tolist() if v in col_selection_aa]
@@ -264,6 +268,8 @@ l48_df = l48_df.reindex(columns=col_selection_aa)
 
 chemical_step1 = l48_df[col_selection_aa]
 final_use = aa_layers_CONUS.loc[(aa_layers_CONUS['Action Area'] == 'x') & (aa_layers_CONUS['aerial'] == 'x')], [
+    'FinalColHeader']
+final_use = aa_layers_CONUS.loc[ (aa_layers_CONUS['aerial'] == 'x')], [
     'FinalColHeader']
 if len(aa_layers_CONUS.loc[(aa_layers_CONUS['Action Area'] == 'x') & (aa_layers_CONUS['aerial'] == 'x')]) > 0:
     final_use = str(final_use) + '_765'
@@ -276,6 +282,7 @@ chemical_step1 = pd.merge(base_sp_df, chemical_step1, on='EntityID', how='left')
 # ##Filter NL48 AA
 aa_layers_NL48 = use_lookup_df.loc[((use_lookup_df['Action Area'] == 'x') | (use_lookup_df['other layer'] == 'x')) | (
     use_lookup_df['Included AA'] == 'x') & (use_lookup_df['Region'] != 'CONUS')]
+
 col_prefix_NL48 = aa_layers_NL48['FinalColHeader'].values.tolist()
 col_selection_nl48 = ['EntityID']
 
@@ -287,6 +294,8 @@ for col in col_prefix_NL48:
         col_selection_nl48.append(col + "_765")
 
 cols_w_overlap = [v for v in nl48_df.columns.values.tolist() if v in col_selection_nl48]
+
+
 nl48_df = nl48_df[cols_w_overlap]
 nl48_df = nl48_df.reindex(columns=col_selection_nl48)
 
@@ -298,21 +307,27 @@ for x in cols_w_overlap:
         if x.split("_")[1] not in binned_use:
             binned_use.append(x.split("_")[1])
 
+
+# SUM INDIVIDUAL NL48 REGION TO ONE GROUPED VALUE FOR ALL NL48
 for bin_col in binned_use:
     list_col = [v for v in nl48_df.columns.values.tolist() if bin_col in v.split("_")]
     interval_list = list(set([t.split("_")[2] for t in list_col]))
     for interval in interval_list:
         list_col_interval = [z for z in list_col if z.endswith(interval)]
-        # use_results_df = binned_df.apply(pd.to_numeric, errors='coerce')
+        nl48_df = nl48_df.apply(pd.to_numeric, errors='coerce')
         nl48_df['NL48_' + list_col_interval[0].split("_")[1] + "_" + list_col_interval[0].split("_")[2]] = nl48_df[
             list_col_interval].sum(axis=1)
 
+
 out_col = [v for v in nl48_df.columns.values.tolist() if v.startswith('NL48_')]
+
 
 out_col.insert(0, 'EntityID')
 out_nl48_df = nl48_df[out_col]
+out_nl48_df['EntityID'] = out_nl48_df['EntityID'].map(lambda r: str(r).split('.')[0]).astype(str)
 
 chemical_step1 = pd.merge(chemical_step1, out_nl48_df, on='EntityID', how='left')
+
 
 binned_use = []
 for x in chemical_step1.columns.values.tolist():
@@ -347,26 +362,31 @@ for z in chemical_step1.columns.values.tolist():
 # no adjustment
 out_path_no_adjustment = out_path+ os.sep + 'No Adjustment'
 create_directory(out_path_no_adjustment)
+
+
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: step_1_ED(row, 'CONUS_' + chemical_name + " AA""_" + max_drift),axis=1)
 chemical_step1['Step 2 ED Comment'] = chemical_step1.apply(lambda row: NLAA_overlap(row, col_selection_aa, cols_w_overlap),axis=1)
 chemical_step1.fillna(0, inplace=True)
+
 chemical_step1.to_csv(out_path_no_adjustment + os.sep + 'GIS_Step2_' + file_type + chemical_name + '.csv')
 
 conus_cols = [v for v in chemical_step1.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
 nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
 
 chemical_step1.fillna(0, inplace=True)
+
 conus_df_step1 = chemical_step1[conus_cols]
 nl48_df_step1 = chemical_step1[nl48_cols_f]
 
 conus_df_step1.to_csv(out_path_no_adjustment + os.sep + 'CONUS_Step2_' + file_type + chemical_name + '.csv')
 nl48_df_step1.to_csv(out_path_no_adjustment  + os.sep + 'NL48_Step2_' + file_type + chemical_name + '.csv')
 
-
 # redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are calculated
 # ## set up outpath
 out_path_redundancy = out_path+ os.sep + 'Redundancy_only'
 create_directory(out_path_redundancy)
+
+
 
 # Set up the different list of columns that apply to conus vs nl48, aa, composites, use, ag and non-ag
 # conus/nonl48
@@ -408,10 +428,13 @@ use_direct_only_nl48_ag_aerial = [x for x in use_col_nl48  if x.endswith('_765')
 use_direct_only_nl48_nonag_aerial = [x for x in use_col_nl48  if x.endswith('_765') and (x.split('_')[0]+"_"+x.split('_')[1])  in nonag_cols]
 
 # store an unadjusted version of the 4 dataframes Ag/NonAg for both the CONUS and L48
+
+
 unadjusted_conus_ag = chemical_step1[['EntityID'] + use_direct_only_conus_ag].copy()
 unadjusted_conus_nonag = chemical_step1[['EntityID'] + use_direct_only_conus_nonag].copy()
 unadjusted_nl48_ag = chemical_step1[['EntityID'] + use_direct_only_nl48_ag].copy()
 unadjusted_nl48_nonag = chemical_step1[['EntityID'] + use_direct_only_nl48_nonag].copy()
+
 
 # Confirms all number are set to a numeric data type
 chemical_step1.ix[:, use_direct_only_conus_ag] = chemical_step1.ix[:,use_direct_only_conus_ag].apply(pd.to_numeric, errors='coerce')
@@ -423,6 +446,7 @@ chemical_step1.ix[:, use_direct_only_nl48_ag_aa + use_direct_only_nl48_nonag_aa]
 chemical_step1.ix[:,use_direct_only_conus_aa[0]] = chemical_step1.ix[:,use_direct_only_conus_aa[0]].apply(pd.to_numeric, errors='coerce')
 chemical_step1.ix[:,use_direct_only_nl48_aa[0]] = chemical_step1.ix[:,use_direct_only_nl48_aa[0]].apply(pd.to_numeric, errors='coerce')
 
+
 # Sum uses in the three groups ag, non ag and composites for both CONUS adn NL48
 chemical_step1['CONUS_Sum_Ag'] = chemical_step1[use_direct_only_conus_ag].sum(axis=1)
 chemical_step1['CONUS_Sum_NonAg'] = chemical_step1[use_direct_only_conus_nonag].sum(axis=1)
@@ -432,10 +456,13 @@ chemical_step1['NL48_Sum_NonAg'] = chemical_step1[use_direct_only_nl48_nonag].su
 chemical_step1['CONUS_Sum_Composites'] = chemical_step1[use_direct_only_conus_ag_aa +use_direct_only_conus_nonag_aa].sum(axis=1)
 chemical_step1['NL48_Sum_Composites'] = chemical_step1[use_direct_only_nl48_ag_aa +use_direct_only_nl48_nonag_aa].sum(axis=1)
 
+
+
 # Calculates factors that will be used for adjustment
 # Ag factor : sum of ag uses/ ag composite; Non-Ag factor sum of non ag use/ non ag composite;
 # Composite factor sum of Ag and Non Ag composite / AA
 # Ag factor is applied to all Ag layer, Non-Ag and Composite factor is applied to JUST the Non-Ag uses - ESA team Summer/Fall 2017
+    #UPDATE BASED ON QC THE COMPOSTE FACTOE IS APPLIED TO BOTH Nov 2018
 # Ag factor was added to Step 2 in Spring of 2018
 
 chemical_step1 ['CONUS_Ag_Ag_Factor'] = chemical_step1['CONUS_Sum_Ag'].div((chemical_step1[use_direct_only_conus_ag_aa[0]]).where(chemical_step1[use_direct_only_conus_ag_aa[0]]!= 0, np.nan), axis = 0)
@@ -452,22 +479,48 @@ if not skip_non_ag_adjustment:
 else:
     chemical_step1.ix[:,['CONUS_Ag_Ag_Factor','NL48_Ag_Ag_Factor','CONUS_Composite_Factor','NL48_Composite_Factor']]= chemical_step1.ix[:,['CONUS_Ag_Ag_Factor','NL48_Ag_Ag_Factor','CONUS_Composite_Factor','NL48_Composite_Factor']].fillna(0)
 
+
 # Applies the factor adjustments Ag use layer by Ag factor, Non Ag use layers by both NonAg factor and composite factor
+
+# APPLIES COMPOSITE FACTOR
+
+# TODO CAUSIGN COL BLANK BECAUSE COMPOST FACTORS ARE BLANK WITHOUT AN ACTION AREA
+chemical_step1.ix[:,use_direct_only_conus_ag] = chemical_step1.ix[:,use_direct_only_conus_ag].apply(pd.to_numeric, errors='coerce')
+chemical_step1.ix[:,use_direct_only_nl48_ag] = chemical_step1.ix[:,use_direct_only_nl48_ag].apply(pd.to_numeric, errors='coerce')
+
+# chemical_step1.to_csv(r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables\Carbaryl\No Adjustment\test.csv')
+
+chemical_step1.ix[:,use_direct_only_conus_ag] = chemical_step1.ix[:,use_direct_only_conus_ag].div(chemical_step1['CONUS_Composite_Factor'].where(chemical_step1['CONUS_Composite_Factor']!= 0, np.nan), axis = 0)
+chemical_step1.ix[:,use_direct_only_nl48_ag] = chemical_step1.ix[:,use_direct_only_nl48_ag].div(chemical_step1['NL48_Composite_Factor'].where(chemical_step1['NL48_Composite_Factor']!= 0, np.nan), axis = 0)
+
+
+if not skip_non_ag_adjustment:
+    chemical_step1.ix[:,use_direct_only_conus_nonag] = chemical_step1.ix[:,use_direct_only_conus_nonag].div(chemical_step1['CONUS_Composite_Factor'].where(chemical_step1['CONUS_Composite_Factor']!= 0, np.nan), axis = 0)
+    chemical_step1.ix[:,use_direct_only_nl48_nonag] = chemical_step1.ix[:,use_direct_only_nl48_nonag].div(chemical_step1['NL48_Composite_Factor'].where(chemical_step1['NL48_Composite_Factor']!= 0, np.nan), axis = 0)
+
+# APPLIES AG AND NON AG FACTORS
 chemical_step1.ix[:,use_direct_only_conus_ag] = chemical_step1.ix[:,use_direct_only_conus_ag].div((chemical_step1['CONUS_Ag_Ag_Factor']).where(chemical_step1['CONUS_Ag_Ag_Factor']!= 0, np.nan), axis = 0)
 chemical_step1.ix[:,use_direct_only_nl48_ag] = chemical_step1.ix[:,use_direct_only_nl48_ag].div(chemical_step1['NL48_Ag_Ag_Factor'].where(chemical_step1['NL48_Ag_Ag_Factor']!= 0, np.nan), axis = 0)
-chemical_step1.ix[:,use_direct_only_conus_nonag] = chemical_step1.ix[:,use_direct_only_conus_nonag].div(chemical_step1['CONUS_Composite_Factor'].where(chemical_step1['CONUS_Composite_Factor']!= 0, np.nan), axis = 0)
-chemical_step1.ix[:,use_direct_only_nl48_nonag] = chemical_step1.ix[:,use_direct_only_nl48_nonag].div(chemical_step1['NL48_Composite_Factor'].where(chemical_step1['NL48_Composite_Factor']!= 0, np.nan), axis = 0)
 
 if not skip_non_ag_adjustment:
     chemical_step1.ix[:,use_direct_only_conus_nonag] = chemical_step1.ix[:,use_direct_only_conus_nonag].div(chemical_step1['CONUS_NonAg_NonAg_Factor'].where(chemical_step1['CONUS_NonAg_NonAg_Factor']!= 0, np.nan), axis = 0)
     chemical_step1.ix[:,use_direct_only_nl48_nonag] = chemical_step1.ix[:,use_direct_only_nl48_nonag].div(chemical_step1['NL48_NonAg_NonAg_Factor'].where(chemical_step1['NL48_NonAg_NonAg_Factor']!= 0, np.nan), axis = 0)
 
 
+
 # store an adjusted version of the 4 dataframes Ag/NonAg for both the CONUS and L48
+#TODO CHECK WHY THE COPIED DFS ARE ALL BLANK when doing filter here
+
 adjusted_conus_ag = chemical_step1[['EntityID'] + use_direct_only_conus_ag].copy()
 adjusted_conus_nonag = chemical_step1[['EntityID'] + use_direct_only_conus_nonag].copy()
 adjusted_nl48_ag = chemical_step1[['EntityID'] + use_direct_only_nl48_ag].copy()
 adjusted_nl48_nonag = chemical_step1[['EntityID'] + use_direct_only_nl48_nonag].copy()
+
+adjusted_conus_ag.ix[:, use_direct_only_conus_ag] = adjusted_conus_ag.ix[:, use_direct_only_conus_ag].apply(pd.to_numeric, errors='coerce')
+adjusted_conus_nonag.ix[:, use_direct_only_conus_nonag] = adjusted_conus_nonag.ix[:, use_direct_only_conus_nonag].apply(pd.to_numeric, errors='coerce')
+adjusted_nl48_ag.ix[:, use_direct_only_nl48_ag] = adjusted_nl48_ag.ix[:, use_direct_only_nl48_ag].apply(pd.to_numeric, errors='coerce')
+adjusted_nl48_nonag.ix[:, use_direct_only_nl48_nonag] = adjusted_nl48_nonag .ix[:, use_direct_only_nl48_nonag].apply(pd.to_numeric, errors='coerce')
+
 
 # Calculated the difference seen in the adjusted overlap, this difference is removed fromt he summarize
 # ground and aerial values
@@ -475,6 +528,7 @@ difference_conus_ag = unadjusted_conus_ag.set_index('EntityID').subtract(adjuste
 difference_conus_nonag = unadjusted_conus_nonag.set_index('EntityID').subtract(adjusted_conus_nonag.set_index('EntityID'))
 difference_nl48_ag = unadjusted_nl48_ag.set_index('EntityID').subtract(adjusted_nl48_ag.set_index('EntityID'))
 difference_nl48_nonag = unadjusted_nl48_nonag.set_index('EntityID').subtract(adjusted_nl48_nonag.set_index('EntityID'))
+
 
 # get col header for drift columnm by replacing the 0 with the standard values of 305 for ground and 765 for aerial
 columns_conus_ground_ag = [x.replace("_0", "_305") for x in difference_conus_ag.columns.values.tolist()]
@@ -507,6 +561,7 @@ adjusted_conus_nonag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only
 adjusted_nl48_ag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only_nl48_ag_aerial].set_index('EntityID').subtract(difference_nl48_ag)
 adjusted_nl48_nonag_aerial = chemical_step1.ix[: , ['EntityID']+use_direct_only_nl48_nonag_aerial].set_index('EntityID').subtract(difference_nl48_nonag)
 
+
 # reset index to move entitid back to column for update to the master df
 adjusted_conus_ag_ground = adjusted_conus_ag_ground.reset_index()
 adjusted_conus_nonag_ground = adjusted_conus_nonag_ground.reset_index()
@@ -522,6 +577,9 @@ chemical_step1.ix[:,adjusted_conus_ag_ground.columns.tolist()] =  adjusted_conus
 chemical_step1.ix[:,adjusted_conus_nonag_ground.columns.tolist()] =  adjusted_conus_nonag_ground.ix[:,adjusted_conus_nonag_ground.columns.tolist()]
 chemical_step1.ix[:,adjusted_conus_ag_aerial.columns.tolist()] =  adjusted_conus_ag_aerial.ix[:,adjusted_conus_ag_aerial.columns.tolist()]
 chemical_step1.ix[:,adjusted_conus_nonag_aerial.columns.tolist()] =  adjusted_conus_nonag_aerial.ix[:,adjusted_conus_nonag_aerial.columns.tolist()]
+
+
+chemical_step1.to_csv(r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables\test.csv')
 
 chemical_step1.ix[:,adjusted_nl48_ag_ground.columns.tolist()] =  adjusted_nl48_ag_ground.ix[:,adjusted_nl48_ag_ground.columns.tolist()]
 chemical_step1.ix[:,adjusted_nl48_nonag_ground.columns.tolist()] =  adjusted_nl48_nonag_ground.ix[:,adjusted_nl48_nonag_ground.columns.tolist()]

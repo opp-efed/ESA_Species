@@ -10,8 +10,9 @@ start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 arcpy.CheckOutExtension("Spatial")
 
+# Combines the species rasters with the habitat and elevation rasters used for usage species files generate use 4b - steps 4-6
 in_directory_species_grids = r'L:\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grids_byProjection'
-raster_layer_libraries = r'L:\Workspace\UseSites\ByProjection'
+raster_layer_libraries = r'L:\Workspace\StreamLine\ByProjection'
 out_directory = os.path.dirname(in_directory_species_grids) + os.sep + 'Grid_byProjections_Combined'
 
 # 'AS','GU','CONUS','HI','PR','VI','AK'

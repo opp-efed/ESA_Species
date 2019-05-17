@@ -40,10 +40,18 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal - Zonal scripts ar
         Step 4: generates the 'all uses' table for each filter category
         Step 5 Merged the AQU tables into one with the use layers across the top and species in the cols include % ares
         of huc - see schema in OneNote
-            # TODO $ of species range in huc/state combo
+
+         Step B  generates the input pct tables needed to adjusted the outputs from SUUM
+         Step C  generated the aggregated PCT from the SUUM oct in Step b
+
       Run 7b: B and step 2a and 2b
+      Team decisions: Spring/Summer 2018
+      # Step 1 call <1% overlap from AA
+      # Step 2 call <1% overlap from adjusted PCT (NLAA call) based on sum after factor is applied - replacing the NLAA overlap call
+      we made for diazinon - NOTE REMOVED - COLLEEN STATED NO LONGER PART OF THE USAGE PROCESS GIS MEETING FEB 2019
+
         # run for each parent table generate in step 2 and 3 ie, elevation, elevation usage min, max, averaage, lower,
         upper, uniform etc
         # TODO set up to use the file name to put to the correct out file directory
-        Step B and generates the input pct tables needed to adjusted the outputs
+
 

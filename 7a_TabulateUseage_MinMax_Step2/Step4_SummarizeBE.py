@@ -18,8 +18,8 @@ import pandas as pd
 
 # ###############user input variables
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
-in_table = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Carbaryl\SprayInterval_IntStep_30_MaxDistance_1501\noadjust' \
-           r'\Upper_SprayInterval_noadjust_max_20180822.csv'
+in_table = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Malathion_Census_3" \
+           r"\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\Upper_SprayInterval_noadjust_max_20181204.csv"
 p_region = 'L48'
 
 # in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
@@ -32,10 +32,12 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-# look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+# use_lookup  = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
 #                   r'\_ExternalDrive\_CurrentSupportingTables\RangeUses_lookup.csv'
 
-look_up_use = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Uses_lookup_20180820.csv'
+use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables' \
+             r'\Malathion_CENSUS_Uses_lookup_20181106_test.csv'
 
 # #############Static Variables
 today = datetime.datetime.today()
@@ -58,7 +60,7 @@ out_csv = temp_folder + os.sep + file_type + '_AllUses_BE_' +p_region +"_"+date+
 
 bins = [0, 305, 765]  # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5
 
-use_lookup = pd.read_csv(look_up_use)
+use_lookup = pd.read_csv(use_lookup )
 use_lookup['FinalColHeader'].fillna('none', inplace=True)
 region_lookup = use_lookup.loc[(use_lookup['Included AA'] == 'x')]
 
@@ -153,6 +155,7 @@ for i in list_regional_uses:
 
             use_results_df = binned_df.apply(pd.to_numeric, errors='coerce')
             new_df[(str(use_group) + '_' + str(value))] = use_results_df.sum(axis=1)
+
             collapsed_df = pd.concat([collapsed_df, new_df], axis=1)
 
 

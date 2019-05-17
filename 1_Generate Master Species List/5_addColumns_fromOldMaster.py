@@ -6,9 +6,11 @@ import pandas as pd
 # #################### VARIABLES
 # #### user input variables
 
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'  # path final tables
-current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
-new_master = outlocation + os.sep + 'Full_Merged_Listed_updated_20170410.csv'
+outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\Update_SpeciesList_Dec2018'  # path final tables
+current_masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+                     r'\_ExternalDrive\Update_SpeciesList_Dec2018\MasterListESA_Feb2017_20180110.xlsx'
+new_master = outlocation + os.sep + 'Full_Merged_Listed_updated_20181203.csv'
 
 # removing inverted name and status
 # columns in tables must be in the same order
@@ -21,10 +23,15 @@ col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',u'CH_Type', u'CH_OriginalFileName'
               u'Aqu_Species_20160819', u'Source of Call final BE-Range', u'WoE Summary Group',
               u'Source of Call final BE-Critical Habitat',u'Critical_Habitat_', u'Migratory', u'Migratory_',
               u'AddedAquWoe',	u'AddedTerrWoE']
-
+col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',u'CH_Type', u'CH_OriginalFileName',
+              u'Aqu_Species_20160819', u'Source of Call final BE-Range', u'WoE Summary Group',
+              u'Source of Call final BE-Critical Habitat',u'Critical_Habitat_', u'Migratory', u'Migratory_',
+              u'AddedAquWoe',	u'AddedTerrWoE',u'L48/NL48', u'Multiple NL48 Regions',u'CH_Filename',u'Range_Filename'
+              ]
 entid_update = {'11356': '5623',
                 '11355': 'NMFS180',
-                '11353': 'NMFS181'}
+                '11353': 'NMFS181',
+                '11378': 'NMFS125'}
 entid_updates_list = entid_update.keys()
 
 

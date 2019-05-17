@@ -24,13 +24,55 @@ from arcpy.sa import *
 # Update once then remains static to set file structure
 
 use_location_base = r'L:\Workspace\StreamLine\ByProjection'
-out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage'
+
+
+out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage_GAP'
+# out_results = r'L:\Workspace\StreamLine\ESA\Results_HUCAB'
+# out_results = r'L:\Workspace\StreamLine\ESA\Results'
+
 
 # Update for each run - species base only updated when switching from Range or CriticalHabitat in the path
 
-in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
+# path to folder that has the species composites
 
-# [c]
+
+# Usage
+
+in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined'
+
+# Results
+
+# in_location_species_base =  r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection'
+# in_location_species_base =  r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+
+# HUC
+# in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
+# in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
+
+# species groups to skip to batch runs or because they are complete
+skip_species = [u'r_fishes', u'r_birds']
+# [u'r_amphib',  u'r_clams', u'r_conife', u'r_crusta', u'r_ferns',
+# u'r_flower', u'r_insect', u'r_lichen', u'r_mammal', u'r_reptil', u'r_snails. u'r_fishes', u'r_birds',
+# [u'r_birds', u'r_fishes', u'r_mammal',u'r_flower']
+
+# regional species composite folder to be run
+in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
+# AK_WGS_1984_Albers R
+# AS_WGS_1984_UTM_Zone_2S R
+# CNMI_WGS_1984_UTM_Zone_55N CH,R
+# GU_WGS_1984_UTM_Zone_55N CH,R
+# HI_NAD_1983_UTM_Zone_4N CH,R
+# PR_Albers_Conical_Equal_Area CH,R
+# VI_WGS_1984_UTM_Zone_20N R
+# CONUS_Albers_Conical_Equal_Area
+
+#
+temp_file = "temp_table"  # Should not use the same temp file name when running multiple instances at the same time
+run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
+
+# Manually sub-set layers to be run: complete region run faster by splitting run into several instances
+# use_list =[]
+use_list = [ ]
 # [u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower',  u'r_mammal']
 skip_species = []
 
@@ -44,15 +86,14 @@ in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
 temp_file = "temp_table_93"  # Should not use the same temp file name when running multiple instances at the same time
 run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 
-# Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 
-use_list = []
-# [u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_euc', u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_euc', u'Albers_Conical_Equal_Area_CONUS_carbaryl_180410_AA_nonAg_euc', u'Albers_Conical_Equal_Area_CONUS_Ndev_ROW_180306_euc', u'Albers_Conical_Equal_Area_CONUS_methomyl_171227_AA_ag_euc', u'Albers_Conical_Equal_Area_CONUS_ManagedForests_xmas_180307_euc', u'Albers_Conical_Equal_Area_CONUS_Methomyl_CONUS_bermudagrass2_euc', u'Albers_Conical_Equal_Area_CONUS_carbaryl_171227d_AA_ag_euc', u'Albers_Conical_Equal_Area_CONUS_methomyl_citrus_171227_euc', u'Albers_Conical_Equal_Area_CONUS_Methomyl_alleycropping2_euc', u'Albers_Conical_Equal_Area_CONUS_methomyl_wheat_171227_euc', u'Albers_Conical_Equal_Area_CDL_1016_110_euc']
+
 # ################Static variables
 arcpy.CheckOutExtension("Spatial")
 in_location_species = in_location_species_base + os.sep + in_location_species_folder
 region = os.path.basename(in_location_species).split("_")[0]  # folder with species composite must start with region abb
 use_location = use_location_base + os.sep + str(region) + "_" + run_group + ".gdb"
+
 arcpy.env.workspace = use_location
 if len(use_list) == 0:
     use_list = (arcpy.ListRasters())  # run all layers in use location
@@ -178,11 +219,10 @@ def zonal_hist(sp_path, in_value_raster, region_c, use_name, temp_table, final_f
 
         list_fields = [f.name for f in arcpy.ListFields(temp_return)]
         att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
-
+        del list_fields  # deletes field list
         arcpy.Delete_management(temp_return)  # delete temp table in memory after saving - frees up memory
-
         att_df = pd.DataFrame(data=att_array)
-        del att_array
+        del att_array  # deltese temp array
         att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
         # print att_df.info()  # provided details ont he size of the DF after setting values to str
         att_df.to_csv(out_path_final + os.sep + csv)
@@ -206,10 +246,12 @@ create_directory(os.path.dirname(out_results))
 print out_results
 create_directory(out_results)
 arcpy.env.workspace = in_location_species
-count_sp = len(arcpy.ListRasters())
+
 
 list_raster = (arcpy.ListRasters())
-# list_raster = [v for v in list_raster if v.split('_')[0] =='r']
+#  raster that start with t- temp raster that was saved during a previous run
+list_raster = [v for v in list_raster if v.split('_')[0] != 't']
+count_sp = len(list_raster)
 print list_raster
 
 for use_nm in use_list:
@@ -220,32 +262,36 @@ for use_nm in use_list:
     if region != 'CONUS':
         snap_raster = snap_raster_dict[str(region)]
         if use_location.endswith('UseLayers.gdb'):
-            symbologyLayer = symbology_dict[str(region)][0]
+            # symbologyLayer = symbology_dict[str(region)][0]
             out_folder = out_folder + os.sep + 'Agg_Layers'
             create_directory(out_folder)
         elif use_location.endswith('OnOffField.gdb'):
-            symbologyLayer = symbology_dict[str(region)][1]
+            # symbologyLayer = symbology_dict[str(region)][1]
             out_folder = out_folder + os.sep + 'OnOffField'
             create_directory(out_folder)
     else:
         snap_raster = snap_raster_dict[str(region)]
         if use_location.endswith('UseLayers.gdb'):
-            symbologyLayer = symbology_dict[str(region)][0]
+            # symbologyLayer = symbology_dict[str(region)][0]
             out_folder = out_folder + os.sep + 'Agg_Layers'
             create_directory(out_folder)
         elif use_location.endswith('OnOffField.gdb'):
-            symbologyLayer = symbology_dict[str(region)][1]
+            # symbologyLayer = symbology_dict[str(region)][1]
             out_folder = out_folder + os.sep + 'OnOffField'
             create_directory(out_folder)
         elif use_location.endswith('Yearly.gdb'):
-            symbologyLayer = symbology_dict[str(region)][2]
+            # symbologyLayer = symbology_dict[str(region)][2]
             out_folder = out_folder + os.sep + 'Indiv_Year_raw'
             create_directory(out_folder)
     print '\nStarting use layer {0}, use {1} of {2}'.format(use_path, current_use, count_use)
+    arcpy.Delete_management("rd_lyr")
     arcpy.MakeRasterLayer_management(Raster(use_path), "rd_lyr")
     print "loaded use in  {0}".format((datetime.datetime.now() - start_stat))
-    arcpy.ApplySymbologyFromLayer_management("rd_lyr", symbologyLayer)
-    print "applied symbology use in  {0}".format((datetime.datetime.now() - start_stat))
+    print 'In location will be: {0}'.format(in_location_species)
+    print 'Out location will be: {0}'.format(out_folder)
+    print 'Snap raster used will be: {0}'.format(snap_raster)
+    # arcpy.ApplySymbologyFromLayer_management("rd_lyr", symbologyLayer)
+    # print "applied symbology use in  {0}".format((datetime.datetime.now() - start_stat))
     count = 1
     for raster_in in list_raster:
         if raster_in in skip_species:
@@ -255,12 +301,12 @@ for use_nm in use_list:
             count += 1
             in_sp = in_location_species + os.sep + raster_in
             # print raster_in
-            # try:  # uncomment try/expect loop if runs need to be done quickly: be sure to check if something fail and why
-            zonal_hist(in_sp, "rd_lyr", region, use_nm, temp_file, out_folder, snap_raster)
-            # except Exception as error:
-            #     print(error.args[0])
-            #     print "Failed on {0} with use {1}".format(raster_in, use_nm)
-    arcpy.Delete_management("rd_lyr")
+            try:  # uncomment try/expect loop if runs need to be done quickly: be sure to check if something fail and why
+                zonal_hist(in_sp, "rd_lyr", region, use_nm, temp_file, out_folder, snap_raster)
+            except Exception as error:
+                print(error.args[0])
+                print "Failed on {0} with use {1}".format(raster_in, use_nm)
+
     print "Completed use in {0}\n".format((datetime.datetime.now() - start_use))
     current_use += 1
 

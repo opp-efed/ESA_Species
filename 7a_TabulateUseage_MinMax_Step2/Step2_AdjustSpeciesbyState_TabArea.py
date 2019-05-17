@@ -5,19 +5,18 @@ import sys
 
 #TODO set it up so only the uses for the chemical are adjusted and not all of them
 chemical_name = 'Carbaryl'
-# chemical_name = 'Malathion'
+
 st_cnty = 'State'  # if running on cnty change to Counties
 # use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
 #              r'\SupportingTables' + os.sep + chemical_name + "_RangeUses_lookup.csv"
 # suffixes = ['noadjust', 'adjEle','_adjEleHab','_adjHab']  #TODO Change the second if to else when finished
 suffixes = ['noadjust']
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20180430.csv'
-# use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Uses_lookup_20180820.csv'
+use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20190310.csv'
 
-state_fp_lookup = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Usage\ForOverlap\STATEFP_lookup.csv'
+
+state_fp_lookup = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\ForOverlap\STATEFP_lookup.csv'
 pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Carbaryl'
-# pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Malathion\unsurvey_100'
+
 out_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
 # species overlap with uses include the state or cnty breaks
 in_location_species = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries\States'
@@ -127,7 +126,7 @@ for group in ['min','max','avg']:
                 state_csv = state_csv.replace(remove_sp_abb,'')
 
                 state_folder = state_csv.replace( "_"+st_cnty+".csv","")
-                in_locations_states + os.sep + state_folder + os.sep + state_csv
+
                 state_df = pd.read_csv(in_locations_states + os.sep + state_folder + os.sep + state_csv)
                 state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(str)
                 filtered_state = state_df.ix[:, ['STATEFP',  'Acres', 'VALUE_0']]

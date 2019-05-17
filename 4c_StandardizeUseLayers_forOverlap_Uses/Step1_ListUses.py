@@ -5,10 +5,9 @@ import datetime
 import arcpy
 
 # Title - Check projection of all use to make sure all projections accounted for in steps 7
-InGDB = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48'
-NameCSV = 'NL48_Methomyl_layers_171217'
-outCSVLocation = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                 '\_ExternalDrive\_CurrentSupportingTables\Tables'
+InGDB = r'L:\Workspace\StreamLine\ByProjection\AK_UseLayers.gdb'
+NameCSV = 'AK_Uses'
+outCSVLocation = 'L:\Workspace\StreamLine\ByProjection'
 
 
 # ####################FUNCTIONS

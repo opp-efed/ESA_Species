@@ -5,6 +5,8 @@ All results, tabulated folders, and look up directory are stored on OneDrive und
 
 Run completed on 7/30/2018 for overlap: just species location
 species:
+L48 - ~40-45 minutes per species/use
+NL48 ~ 5-10 minutes per species/use except AK ~20-25
 F:\Union Composites_ESA\Spring 2018\Range\SpCompRaster_byProjection\Grids_byProjection'
     - All files in the range folders
     - Lookup Directory: Lookup_R_Clipped_Union_20180110
@@ -13,11 +15,14 @@ F:\Union Composites_ESA\Spring 2018\Range\SpCompRaster_byProjection\Grids_byProj
 F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection
     - All files in the critical habitat folders
     - Lookup Directory: Lookup_R_Clipped_Union_20180110
+        -KEY:
     - Results Folder : Results_TabArea
     - Tabulated Folder: Tabulated_TabArea
 
 Run completed on 8/7/2018 for usage and aquatic tables: includes states, counties, HUC2 AB splits
 species:
+L48 - ~45-50 minutes per species/use
+NL48 ~ 1-15 minutes per species/use
 F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
     # Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
     # AK, AS, CNMI and HI
@@ -25,29 +30,37 @@ F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_
     # scripts
      - All files in the range folders
     - Lookup Directory Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612
+        -KEY:
     - Results Folder : Results_HUCAB
     - Tabulated Folder: Tabulated_TabArea_HUCAB
 F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
+L48 - ~45-60 minutes per species/use
+NL48 ~  minutes per species/use
         - All files in the critical habitat folders
         - Lookup Directory Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20180612
-        - Results Folder : Results_Usage
+            -KEY:
+        - Results Folder: Results_Usage
         - Tabulated Folder: Tabulated_TabArea_HUCAB
 
 Run completed on 8/19/2018 for usage, aquatic table  elevation and habitat:  includes states, counties,
 HUC2 AB splits, elevation, habitat
 species:
 F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
+L48 - ~60-90 minutes per species/use
+NL48 ~  minutes per species/use
     # Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
     # AK, AS, CNMI and HI
     # NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
     # scripts
-     - All files in the rnagefolders
+     - All files in the range folders
     - Lookup Directory LookUp_Grid_byProjections_Combined
+        -KEY:
     - Results Folder : Results_Usage
     - Tabulated Folder: Tabulated_Usage
 F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
         - All files in the critical habitat folders
         - Lookup Directory LookUp_Grid_byProjections_Combined
+            -KEY:
         - Results Folder : Results_Usage
         - Tabulated Folder: Tabulated_Usage
 

@@ -1,6 +1,6 @@
 import datetime
 import os
-import arcpy
+
 
 import pandas as pd
 
@@ -20,15 +20,22 @@ import pandas as pd
 #overwrite boolean - set to false tables were already generated for some uses and new ones need to be added.  If a use
 # layer was updated delete or archive the tables for the dated version and set this to false.  If this variable is set
 # to TRUE than all tables will be recalculated.
-overwrite_inter_data = True
+overwrite_inter_data = False
 # file structure is standard for raw result outputs and tabulated results outputs
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
-raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Tabulated_byCounties'
-out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties'
-out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge_b'
+raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
+                  r'\Risk Assessments\GMOs\dicamba\Tabulated_byCounties\Range'
+csv_suffix_result = '_euc.csv'  # _adjElev_euc.csv
+out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
+                r'\Risk Assessments\GMOs\dicamba\Overlap_byCounties\Range'
+out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
+                      r'\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge\Range'
+#in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv'
 in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
-look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180829.csv'
+look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
+              r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
 id_value = 'Dicamba'
+id_cols = ['GEOID', 'STUSPS']
 master_list = r'C:\Users\JConno02' \
               r'\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -61,29 +68,36 @@ def create_directory(dbf_dir):
 
 def calculation(type_fc, in_sum_df, c_region, percent_type):
     # ASSUMES ONLY NUMERIC COLS ARE USE COLS AND ACRES COLS
-    use_cols = in_sum_df.select_dtypes(include=['number']).columns.values.tolist()
-    if 'GEOID' in use_cols:
-        use_cols.remove("GEOID")
-        in_sum_df ['GEOID'] = in_sum_df['GEOID'].map(lambda x: x).astype(str)
+
+    use_cols = [f for f in in_sum_df.columns.values.tolist() if len(f.split("_")) == 2]
+
+    for col in id_cols:
+        if col in use_cols:
+            use_cols.remove(col)
+            in_sum_df [col] = in_sum_df[col].map(lambda x: x).astype(str)
+
     if percent_type == 'full range':
         acres_col = 'TotalAcresOnLand'
-        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
-        use_cols.remove(acres_col)
-        in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
+        if acres_col in use_cols:
+            use_cols.remove(acres_col)
+        in_sum_df.ix[:, use_cols +[acres_col]] = in_sum_df.ix[:, use_cols +[acres_col]].apply(pd.to_numeric, errors='coerce')
+        in_sum_df = in_sum_df[in_sum_df[acres_col].notnull()]
     elif percent_type == 'NL48 range':
         acres_col = 'TotalAcresNL48'
-        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
-        use_cols.remove(acres_col)
-        in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
+        if acres_col in use_cols:
+            use_cols.remove(acres_col)
+        in_sum_df.ix[:, use_cols +[acres_col]] = in_sum_df.ix[:, use_cols +[acres_col]].apply(pd.to_numeric, errors='coerce')
+        in_sum_df = in_sum_df[in_sum_df[acres_col].notnull()]
     elif percent_type == 'regional range':
         acres_col = 'Acres_' + str(c_region)
-        in_sum_df.ix[:, use_cols] = in_sum_df.ix[:, use_cols].apply(pd.to_numeric, errors='coerce')
-        use_cols.remove(acres_col)
-        in_sum_df = in_sum_df.loc[in_sum_df[acres_col] >= 0]
-
+        if acres_col in use_cols:
+            use_cols.remove(acres_col)
+        in_sum_df.ix[:, use_cols +[acres_col]] = in_sum_df.ix[:, use_cols +[acres_col]].apply(pd.to_numeric, errors='coerce')
+        in_sum_df = in_sum_df[in_sum_df[acres_col].notnull()]
 
     if type_fc == "Raster":
         overlap = in_sum_df.copy()
+
         # convert msq to acres
         overlap.ix[:, use_cols] *= 0.000247
 
@@ -122,33 +136,43 @@ list_csv = [csv for csv in list_csv if csv.endswith('.csv')]
 final_df = base_sp_df.copy()
 out_csv = out_location_merge + os.sep + 'Merge_' + id_value + "_"+date+'.csv'
 for csv in list_csv:
-    use_nm = csv.replace('_euc.csv','')
-    region = csv.split("_")[0]
+    # use_nm = csv.replace('_euc_adjEle.csv','')
+    # region = csv.split("_")[0]
+    use_nm = csv.replace(csv_suffix_result,'')
+    #use_nm = use_nm.split("_")
+    # use_nm  = csv.split("_")[2] +"_" + csv.split("_")[3] +"_" + csv.split("_")[4] +"_" + csv.split("_")[5]
+    region = use_nm.split("_")[0]
     acres_for_calc = acres_df.ix[:, ['EntityID', ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']]
+    acres_for_calc ['EntityID'] = acres_for_calc ['EntityID'].map(lambda x: str(x).split('.')[0]).astype(str)
+
     # load outside function due to double _ added by filename by default w. arcpy- corrected moving forward
     df_use = pd.read_csv(raw_results_csv + os.sep  + csv, dtype=object)
+    print use_nm
     type_use = use_lookup.loc[use_lookup['FullName'] == use_nm, 'Type'].iloc[0]
     final_col_header = use_lookup.loc[use_lookup['FullName'] == use_nm, 'FinalColHeader'].iloc[0]
     print use_nm, final_col_header
+
     out_use_overlap = out_location + os.sep + csv
     use_array = pd.read_csv(raw_results_csv + os.sep + csv)
-    use_array ['EntityID'] = use_array ['EntityID'].map(lambda x: x).astype(str)
-
+    use_array ['EntityID'] = use_array ['EntityID'].map(lambda x: str(x).split('.')[0]).astype(str)
 
     # STEP 2: Run percent overlap for both the full range and the regional; set up acres table to include only
     # species found on the current use table (use_array)
 
     sum_df_acres = pd.merge(use_array, acres_for_calc, on='EntityID', how='left')
+
     print 'Generating regional range percent overlap...:{0}'.format(csv)
     percent_overlap_df_region = calculation(type_use, sum_df_acres, region, 'regional range')
+
     out_col = []
     for col in percent_overlap_df_region.columns.values.tolist():
         if col.startswith("VALUE"):
-            i = col.replace("VALUE", use_nm)
+            i = col.replace("VALUE", final_col_header)
             out_col.append(i)
         else:
             out_col.append(col)
     percent_overlap_df_region.columns = out_col
+
     # print list(set(percent_overlap_df_region ['EntityID'].values.tolist()))
     [percent_overlap_df_region.drop(m, axis=1, inplace=True) for m in
     percent_overlap_df_region.columns.values.tolist() if m.startswith('Unnamed')]

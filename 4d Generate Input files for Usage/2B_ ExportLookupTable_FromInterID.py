@@ -3,13 +3,15 @@ import arcpy
 import os
 import datetime
 
+# Generates look-up tables for scripts from the species inputs
+look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
 
-look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-#look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_union_IntersectCntys.gdb'
+look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2Inter_20180612.gdb'
 
-out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\Lookup_R_Clipped_Union_CntyInter_20180110'
+out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20180612'
 
+# the the species are just intersected with the political boundaries True if both HUC and political false
+just_county = False
 arcpy.env.workspace = look_up_fc
 list_fc = arcpy.ListFeatureClasses()
 arcpy.env.workspace = look_up_fc_ab
@@ -37,14 +39,16 @@ def parse_tables( in_row_sp):
     in_row_sp['ZoneSpecies'] = in_row_sp['ZoneSpecies'].apply(
         lambda x: x.replace('[', '').replace(']', '').replace('u', '').replace(' ', '').replace("'", ""))
 
-    spl = in_row_sp['ZoneSpecies'].str.split(',', expand=True)
-    # # Used if running against HUC and Political Boundaries
-    # spl['HUCID'] = in_row_sp['HUCID'].map(lambda x: x.replace(',', '')).astype(str)
-    # merged_df = pd.merge(in_row_sp, spl, on='HUCID', how='left')
 
-    # Used if running Political Boundaries
-    spl['InterID'] = in_row_sp['InterID'].map(lambda x: x.replace(',', '')).astype(str)
-    merged_df = pd.merge(in_row_sp, spl, on='InterID', how='left')
+    spl = in_row_sp['ZoneSpecies'].str.split(',', expand=True)
+    if not just_county:
+        # Used if running against HUC and Political Boundaries
+        spl['HUCID'] = in_row_sp['HUCID'].map(lambda x: x.replace(',', '')).astype(str)
+        merged_df = pd.merge(in_row_sp, spl, on='HUCID', how='left')
+    else:
+        # Used if running Political Boundaries
+        spl['InterID'] = in_row_sp['InterID'].map(lambda x: x.replace(',', '')).astype(str)
+        merged_df = pd.merge(in_row_sp, spl, on='InterID', how='left')
 
     merged_df.drop('ZoneSpecies', axis=1, inplace=True)
 
@@ -56,15 +60,17 @@ def parse_tables( in_row_sp):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+if not os.path.exists(out_location):
+    os.mkdir(out_location)
 
 for fc in list_fc_ab:
-    # # Used if running against HUC and Political Boundaries
-    # ab_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + fc, ['HUCID', 'InterID','ZoneID','GEOID','HUC2_AB','STUSPS'])
-    # Used if running  Political Boundaries
-    ab_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + fc, [ 'InterID','ZoneID','GEOID','STUSPS'])
+    if not just_county:
+        ab_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + fc, ['HUCID', 'InterID','ZoneID','GEOID','HUC2_AB','STUSPS'])
+    else:
+        ab_zone_array = arcpy.da.TableToNumPyArray(look_up_fc_ab + os.sep + fc, [ 'InterID','ZoneID','GEOID','STUSPS'])
     ab_zone_df = pd.DataFrame(data=ab_zone_array , dtype=object)
-    # # Used if running against HUC and Political Boundaries
-    # ab_zone_df['HUCID'] = ab_zone_df['HUCID'].map(lambda x: str(x).split('.')[0]).astype(str)
+    if not just_county:
+        ab_zone_df['HUCID'] = ab_zone_df['HUCID'].map(lambda x: str(x).split('.')[0]).astype(str)
     ab_zone_df['ZoneID'] = ab_zone_df['ZoneID'].map(lambda x: str(x).split('.')[0]).astype(str)
     ab_zone_df['InterID'] = ab_zone_df['InterID'].map(lambda x: str(x).split('.')[0]).astype(str)
 

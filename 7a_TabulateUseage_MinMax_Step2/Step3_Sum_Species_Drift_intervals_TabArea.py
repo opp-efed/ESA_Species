@@ -7,15 +7,20 @@ import numpy as np
 # IF WE MOVE TO INCLUDING THE NL$* INTO USAGE WE WILL NEED TO UPDATED CALL OF THE CALCULATION FUNCTION RIGHT NOW HARD
 # CODED TO REGIONAL RANGE
 
-in_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Carbaryl'
-# in_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Malathion'
+in_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\Carbaryl_2'
+
 # suffixes = ['noadjust', 'adjEle','adjEleHab','adjHab']
 suffixes = ['noadjust']
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20180430.csv'
-# use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Uses_lookup_20180820.csv'
-in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-                 r'\Endangered Species Pilot Assessments - QA\Documentation\Generation Parent Use Overlap Tables' \
-                 r'\R_Acres_Pixels_20180428.csv'
+
+use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20190310.csv'
+
+in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
+
+# in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
+#                  r'\Endangered Species Pilot Assessments - QA\Documentation\Generation Parent Use Overlap Tables' \
+#                  r'\R_Acres_Pixels_20180428.csv'
+
 region = 'CONUS'
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
@@ -195,7 +200,7 @@ acres_df = pd.read_csv(in_acres_table)
 
 acres_for_calc = acres_df.ix[:, ['EntityID', ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']]
 acres_for_calc .ix[:, [ ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']] = acres_for_calc .ix[:, [ ('Acres_' + str(region)), 'TotalAcresNL48', 'TotalAcresOnLand']].apply(pd.to_numeric)
-for group in ['min', 'max', 'avg']:
+for group in ['min', 'max', 'avg']:   #['min', 'max', 'avg']
     in_location_group = in_location + os.sep + group
     list_csv = os.listdir(in_location_group)
     list_csv = [csv for csv in list_csv if csv.endswith('.csv')]

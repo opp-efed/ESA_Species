@@ -6,28 +6,27 @@ import arcpy
 
 # Title - Re-projects union raster into projection by region
 # in and out location
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-           r'\_ExternalDrive\_CurrentSupportingTables\UseLayer_Tables\UseLayers_20180103.csv'
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\UseLayer_Tables\UseLayers_20190222.csv'
 
-midGDB = r'L:\Workspace\UseSites\scratch.gdb'
+midGDB = r'L:\Workspace\StreamLine\ByProjection\scratch.gdb'
 
 # projection folder - check all values in Final Projection columns have a corresponding file with the same name
-prjFolder = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\projections\FinalBE'
+prjFolder = r'L:\Workspace\projections\FinalBE'
 
 # snap raster must be in desired projection with the desired cell size
 #run_regions = ['CONUS']
 # run_regions = ['AK', ]
-run_regions = ['HI','AS', 'CNMI', 'GU',  'PR', 'VI']
+run_regions = ['CONUS']
 
-SnapRaster_Dict = {
-    'CONUS': r'L:\Workspace\UseSites\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2016',
-    'HI': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_HI_171227.gdb\HI_Ag',
-    'AK': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_AK_171227.gdb\AK_Ag',
-    'AS': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_AS_171227.gdb\AS_Ag',
-    'CNMI': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_CNMI_171227.gdb\CNMI_Ag',
-    'GU': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\Resample\AA\methomyl_GU_171227.gdb\GU_Ag_30',
-    'PR': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\AA_Ag\methomyl_PR_171227.gdb\PR_Ag',
-    'VI': r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Lennartz, Steven - Chemicals\NL48\Resample\AA\methomyl_VI_171227.gdb\VI_Ag_30'}
+SnapRaster_Dict = {'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb'
+                            r'\Albers_Conical_Equal_Area_cultmask_2016',
+                   'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+                   'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+                   'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+                   'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+                   'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+                   'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+                   'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 def create_gdb(out_folder, out_name, outpath):  # Create a new GDB

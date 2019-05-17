@@ -4,11 +4,13 @@ import os
 
 # TODO add check for when there is not report data for one genclass the result is not 0 or a value lower than the national
 # Max for state
-chemical = 'Malathion'
-in_long_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                r'\_ExternalDrive\_CurrentSupportingTables\Usage\ChemicalInput_tables\Malathion_InputTablesDrop_20180730_w_edits_100.csv'
-outlocation = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-              r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT'
+
+chemical = 'Carbaryl'
+in_long_table = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA" \
+                r"\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Carbaryl\Carbaryl_Final_20190311_100.csv"
+outlocation = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT'
+
+
 
 state_list = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
               'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
@@ -17,9 +19,16 @@ state_list = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorad
               'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
               'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
               'West Virginia', 'Wisconsin', 'Wyoming', 'American Samoa', 'Guam',
-              'Commonwealth of the Northern Mariana Islands', 'Puerto Rico', 'United States Virgin Islands']
-state_list = ['FLORIDA']
+              'Commonwealth of the Northern Mariana Islands', 'Puerto Rico', 'United States Virgin Islands', ]
 
+state_list = ['ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE',
+              'FLORIDA', 'GEORGIA', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA',
+              'MAINE', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA',
+              'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA',
+              'NORTH DAKOTA', 'OHIO', 'OKLAHOMA', 'OREGON', 'PENNSYLVANIA', 'RHODE ISLAND', 'SOUTH CAROLINA',
+              'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA',
+              'WISCONSIN', 'WYOMING', 'American Samoa', 'Guam',
+              'Commonwealth of the Northern Mariana Islands', 'Puerto Rico', 'United States Virgin Islands']
 
 def weight_pct(df, working_df):
     # PCT for AgClass = SUM[PCT BEAD Crop*(Avg. Annual Crop Acres Grown/Total of Avg Annual Acres in State)]
@@ -73,14 +82,15 @@ out_df = pd.DataFrame(columns=[
 
 
 states = list(set(in_df['State'].values.tolist()))
-out_df = no_use((in_df.loc[in_df['Acreage'] == -9]).copy(), out_df)
+# Replace -9999 with 0
+# out_df = no_use((in_df.loc[in_df['Acreage'] == -9999]).copy(), out_df)
 
 for state in states:
     print state
     state_df = in_df.loc[in_df['State'] == state].copy()
     genclasses = state_df['AgClass'].values.tolist()
     for genclasses in genclasses:
-        genclass_df = state_df.loc[(in_df['AgClass'] == genclasses) & (state_df['Acreage'] != -9)].copy()
+        genclass_df = state_df.loc[(in_df['AgClass'] == genclasses) & (state_df['Acreage'] != -9999)].copy()
         if len(genclass_df) > 0:
             out_df = weight_pct(genclass_df, out_df)
 

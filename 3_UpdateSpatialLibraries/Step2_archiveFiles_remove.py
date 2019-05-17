@@ -13,37 +13,40 @@ import sys
 # removal
 
 #TODO Make the archive of the qualitative species dynamic
+# TODO COUNT TRACKING IS WRONG IN PRINT, LIKELY DUE TO LOOP, TRACK DOWN ISSUE
 # User input variable
 # input tables
 
-masterlist_old = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
-masterlist_current = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                 '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109_dropped_QualSpeciesCheck.csv'
+masterlist_old = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv"
+# masterlist_current = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
+masterlist_current = "L:\Workspace\StreamLine\Species Spatial Library\OtherSpreadsheets\MasterListESA_Feb2017_20190130_Qual_Extinct_PossExtinct_oustide.csv"
+# MasterListESA_Feb2017_20190130.csv X
+#  MasterListESA_Feb2017_20190130_Qual.csv
+# MasterListESA_Feb2017_20190130_Qual_Extinct.csv
+# MasterListESA_Feb2017_20190130_Qual_Extinct_PossExtinct.csv
+# MasterListESA_Feb2017_20190130_Qual_Extinct_PossExtinct_oustide.csv
 
 
-
-# Reasons = Qual_, Delisted_, Extinct_,UninhabIsland_, PosExtinct_, CaveDweller_, DraftBEOther_,MostlyOutsideUS_,
+# Reasons = Qual_, Delisted_, Extinct_, UninhabIsland_, PosExtinct_, CaveDweller_, DraftBEOther_,MostlyOutsideUS_,
 # CaptivityOnly_, QualOther_
-reason_removed = 'QualOther_'  # Prefix is appended to the beginning of the file name
+reason_removed = 'MostlyOutsideUS_'  # Prefix is appended to the beginning of the file name
 
 today = datetime.datetime.today()
 archive_date = today.strftime('%Y%m%d')
 
 # in spatial library
 
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
-           '\SpatialLibrary\Generalized files\CriticalHabitat'
+infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
 # archive location
-archivefolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat\Archived'
+archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat\Archived'
 
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
-           '\SpatialLibrary\Generalized files\Range'
+#
+infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\\CriticalHabitat'
 # archive location
-archivefolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\Range\ArchivedRange'
-# out table of all files that were archived
+archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\\CriticalHabitat\Archived'
+
+
+# # out table of all files that were archived
 out_csv = archivefolder + os.sep + 'ArchivedSpecies_'+ reason_removed + archive_date + '.csv'
 skipgroup = []
 
@@ -66,6 +69,7 @@ def extract_info_master(master_list_current, master_list_old):
 
     # extract species found in old list but not new
     df_remove = df_old[df_old['EntityID'].isin(filter_entids) == False]
+    print 'Species to be removed \n'
     print (df_remove)
 
     # prompt user to decide if the script should continue with archive, this will remove spatial file from active
@@ -76,7 +80,7 @@ def extract_info_master(master_list_current, master_list_old):
     while qa_answer:
         user_input = raw_input('Would you like to continue with the archive? Yes or No ')
         if user_input not in poss_answers:
-            print 'This is not a valid answswer'
+            print 'This is not a valid answer'
         else:
             break
     if user_input == 'Yes':
@@ -113,10 +117,7 @@ def find_archive_files(group_list, in_folder, skip_group, archive_list):
             entid = str(ent_id[1])
 
             if entid in archive_list:
-                print entid
-
                 if location_dict.get(entid) is None:
-
                     location_dict[entid] = [(group_gdb + os.sep + fc)]
                 else:
                     locationlist = location_dict[entid]
@@ -158,6 +159,7 @@ remove_species, grouplist, proceed = extract_info_master(masterlist_current, mas
 while proceed:
     archive_location_dict = find_archive_files(grouplist, infolder, skipgroup, remove_species)
     list_archive = archive_location_dict.keys()
+    print 'Species to be archived\n'
     print list_archive
     if len(list_archive) == 0:
         'There are no species that have been removed from list with a file to be archived'

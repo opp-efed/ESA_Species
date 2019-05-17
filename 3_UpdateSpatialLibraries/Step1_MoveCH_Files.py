@@ -14,20 +14,17 @@ import pandas as pd
 
 
 # master species list
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
+             r"\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
 # the location of the spatial library
-outfolder_raw = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                '\_CurrentSpeciesSpatialFiles\SpatialLibrary\CriticalHabitat'
-outfolder_gen = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                r'\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+outfolder_raw = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
+outfolder_gen = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
 
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
-file_dict = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-            '\_ExternalDrive\UpdateSpatialLibraries\MovePhase_CH.csv'
+file_dict = 'L:\Workspace\StreamLine\Species Spatial Library\MovePhase_CH.csv'
 group_colindex = 16
-entid_colindex = 0
-CHGIS_colindex = 22
+entid_colindex = 1
+CHGIS_colindex = 21
 
 
 # ## FUNCTIONS
@@ -124,7 +121,7 @@ print sp_groups
 
 for group in sp_groups:
     current_group = group
-    print "Current group is {0}".format(current_group)
+    print "\nCurrent group is {0}".format(current_group)
     # a list of species found in the current species group
     grouplist = loop_master(current_group, masterlist)
 

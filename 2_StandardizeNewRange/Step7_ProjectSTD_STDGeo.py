@@ -13,25 +13,26 @@ import arcpy
 # TODO see script Step3_ProjectRegionalFiles
 
 # User define variables
-InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017\UpdatedProcess_December2017\GDB\STD_ReNmNMFS20171204_2018-01-10.gdb"
+InGDB = r'L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\GDB' \
+        r'\STD_ReNmFWS20190130_2019-02-07.gdb'
 
 # Location of prj files
-proj_Folder = 'L:\projections\FinalBE'
+proj_Folder = 'L:\Workspace\projections\FinalBE'
 
 # Temp GDB for geo transformations
-middlegdb = r'L:\projections\FinalBE\temp.gdb'
+middlegdb = r'L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan201temp_CH_2.gdb'
 
 # Workspace
-ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_December2017"
+name_dir = "UpdatedProcess_Jan2019_CH"
 
 # in yyyymmdd received date
-receivedDate = '20171204'
+receivedDate = '20190130'
 
 
-ReProjectGDB = "CH_20171204_Reprojected"
-CSVName = "CH_20171204_Reprojected"
+ReProjectGDB = "CH_Reprojected"
+CSVName = "CH_Reprojected"
 
 NADabb = 'NAD83'
 Unknowncsv = 'Unknown'

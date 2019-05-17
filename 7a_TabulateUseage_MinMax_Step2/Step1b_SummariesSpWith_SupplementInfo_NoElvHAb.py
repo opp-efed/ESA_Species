@@ -3,13 +3,13 @@ import pandas as pd
 import datetime
 import os
 
-in_directory_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\NL48\Range\Agg_Layers'
+in_directory_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\L48\Range\Agg_Layers'
 out_path = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
 out_poltical = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries'
 
 
-look_up_fc_ab = r'D:\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
-# look_up_fc = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
+look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
+
 
 grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
                       'AS': 'AS_WGS_1984_UTM_Zone_2S',
@@ -19,7 +19,6 @@ grid_folder_lookup = {'AK': 'AK_WGS_1984_Albers',
                       'HI': 'HI_NAD_1983_UTM_Zone_4N',
                       'PR': 'PR_Albers_Conical_Equal_Area',
                       'VI': 'VI_WGS_1984_UTM_Zone_20N'}
-
 
 
 
@@ -384,6 +383,10 @@ if not os.path.exists(out_path):
     os.mkdir(out_path)
 for folder in list_dir:
     print folder
+    # Use when we do not want to overwrite the file that were previously generatate
+    if os.path.exists(out_path + os.sep + 'Agg_Layers' + os.sep + folder):
+        print 'Already created tables for {0}'.format(folder)
+        continue
     out_folder = out_path + os.sep + 'Agg_Layers'
     if not os.path.exists(out_folder):
         os.mkdir(out_folder)
@@ -411,6 +414,7 @@ for folder in list_dir:
             continue
         else:
             if not os.path.exists(out_pol_folder_st + os.sep + csv):
+
                 print ("   Working on {0}...table {1} of {2}".format(csv, (list_csv.index(csv) + 1), len(list_csv)))
                 # parent fc att table with all input ID field (list_fc_ab) and ZoneID and associated EntityID (list_fc)
                 # for species listed in the csv title

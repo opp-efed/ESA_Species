@@ -9,15 +9,12 @@ import pandas as pd
 
 # #################User input variable
 # in and out workspaces
-infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-           r'\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
-archivefolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat\Archived'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
+archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat\Archived'
 
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20170410_b.csv'
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
 buffer_distance = "15 METERS"  # Buffer distance set by ESA team fall 2016 - 30 meter total
-date = 20171204
+date = 20190204
 group_colindex = 16
 
 
@@ -75,7 +72,7 @@ for group in alpha_group:
 
     # Set workspace for in location and archive location and get a list of fcs in the inlocation
     ingdb = infolder + os.sep + str(group) + '.gdb'
-    archivegdb = archivefolder + str(group) + '.gdb'
+    archivegdb = archivefolder + os.sep + str(group) + '.gdb'
     arcpy.env.workspace = ingdb
     fclist = arcpy.ListFeatureClasses()
 

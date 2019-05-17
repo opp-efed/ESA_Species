@@ -7,7 +7,7 @@ import arcpy
 # Title - Re-projects union raster into projection by region
 # in and out location
 
-
+# Excute this step if the habitat or elevation files have been updated
 in_directory = 'D:\Workspace\Elevation\Habitat Zip\Habitat.gdb'  # ## folder or gdb
 out_directory = 'D:\Workspace\UseSites\ByProjection'  # ## folder with regional gdbs
 midGDB = r'D:\Workspace\UseSites\scratch.gdb'  # ## scratch workspace

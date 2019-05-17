@@ -10,16 +10,17 @@ import arcpy
 # ###Varibles to be set by user
 
 # # location of files/Workspace
-InFileLocations = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\NewNMFS_Winter2017"
-NameCSV = 'NMFS_NewCH_winter2017'
+InFileLocations = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019\GDB\STD_ReNmFWS20190130_2019-02-02.gdb"
+
+NameCSV = 'FWS_ECOS_Update2019_STD'
 
 # Workspace
-ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\CH\UpdatedProcess_20171101\NMFS_NewCH_winter2017"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_December2017"
+name_dir = "UpdatedProcess_Jan2019"
 
 # in yyyymmdd received date
-receivedDate = '20171204'
+receivedDate = '20190130'
 
 
 ##################################################################################################################
