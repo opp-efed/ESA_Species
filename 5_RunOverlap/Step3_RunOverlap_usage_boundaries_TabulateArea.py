@@ -6,14 +6,16 @@ from arcpy.sa import *
 
 # Title- Runs overlap using Tabulate Area for political boundaries need for usage:
 # TODO when run clean up inputs to match the other script in this tool - to make it more streamlined
+# TODO temp files are being sace to the script folder where the script is located- set up a scratch workspace and
+# Holding the lock until the script finishes
 
 # ##User input variables
 
 
 # sub-directory folder where shapefile
-in_sum_file = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
-              r'\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles\Boundaries.gdb\Counties_all_overlap'
+in_sum_file = r'C:\Users\Admin\Documents\Jen\Workspace\StreamLine\Boundaries.gdb\Counties_all_overlap'
 region = 'CONUS'
+
 temp_file = 'table1a'
 run_group = 'UseLayers'
 
@@ -22,17 +24,13 @@ run_group = 'UseLayers'
 
 use_location = 'L:\Workspace\StreamLine\ByProjection' + os.sep + str(region) + "_" + run_group + ".gdb"
 
-
 arcpy.env.workspace = use_location
 # u'Albers_Conical_Equal_Area_CONUS_malathion_171227d_AA_nonAg_euc', u'Albers_Conical_Equal_Area_CONUS_XmasTrees_euc'
 use_list = []  # runs specified layers in use location
 
-# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_190301_dev_euc',
-# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_ag_190301_AA_euc',
-# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_nonAg_190301_AA_euc',
-# u'Albers_Conical_Equal_Area_CONUS_carbaryl_AA_woDev_190301_AA_euc',
-# u'Albers_Conical_Equal_Area_CONUS_methomyl_AA_190301_dev_euc',
-# u'Albers_Conical_Equal_Area_CONUS_methomyl_AA_Ag_190301_dev_euc'
+
+use_list = []  # runs specified layers in use location
+
 
 if len(use_list) ==  0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
@@ -148,14 +146,19 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             cnt += 1
             list_fields = [f.name for f in arcpy.ListFields(temp_return)]
             att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
+
             arcpy.Delete_management(temp_return)  # deletes temp file to free up memory
             att_df = pd.DataFrame(data=att_array)
             del att_array  #delete temo file from memory
+
+            arcpy.Delete_management(temp_return)
+            att_df = pd.DataFrame(data=att_array)
+            del att_array
+
             #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
+            del att_df
             print 'Final file can be found at {0}'.format(csv)
-            arcpy.Delete_management(temp_return)   # deletes temp table
-            del att_df   # deletes df after saving output
 
             print "Completed in {0}".format((datetime.datetime.now() - zone_time))
 

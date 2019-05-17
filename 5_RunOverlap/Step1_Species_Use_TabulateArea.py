@@ -25,15 +25,16 @@ from arcpy.sa import *
 
 use_location_base = r'L:\Workspace\StreamLine\ByProjection'
 
+
 out_results = r'L:\Workspace\StreamLine\ESA\Results_Usage_GAP'
 # out_results = r'L:\Workspace\StreamLine\ESA\Results_HUCAB'
 # out_results = r'L:\Workspace\StreamLine\ESA\Results'
-#
 
 
-# Update for each run - species base only updaed when switching from Range or CriticalHabitat in the path
+# Update for each run - species base only updated when switching from Range or CriticalHabitat in the path
 
 # path to folder that has the species composites
+
 
 # Usage
 
@@ -43,10 +44,11 @@ in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\R
 
 # in_location_species_base =  r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection'
 # in_location_species_base =  r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+
 # HUC
 # in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
 # in_location_species_base = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
-#
+
 # species groups to skip to batch runs or because they are complete
 skip_species = [u'r_fishes', u'r_birds']
 # [u'r_amphib',  u'r_clams', u'r_conife', u'r_crusta', u'r_ferns',
@@ -71,6 +73,19 @@ run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
 # use_list =[]
 use_list = [ ]
+# [u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower',  u'r_mammal']
+skip_species = []
+
+# [u'r_amphib', u'r_birds', u'r_clams', u'r_conife', u'r_crusta', u'r_ferns', u'r_fishes', u'r_flower', u'r_insect', u'r_lichen', u'r_mammal', u'r_reptil', u'r_snails
+# #[ u'r_ferns',  u'r_insect', u'r_lichen',  u'r_reptil', u'r_snails
+# u'r_amphib', u'r_birds',u'r_fishes', u'r_flower',u'r_mammal',
+
+# skip_species = []
+in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
+
+temp_file = "temp_table_93"  # Should not use the same temp file name when running multiple instances at the same time
+run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
+
 
 
 # ################Static variables
@@ -93,7 +108,6 @@ if 'Range' in find_file_type:
         out_results = out_results + os.sep + 'L48' + os.sep + 'Range'
     else:
         out_results = out_results + os.sep + 'NL48' + os.sep + 'Range'
-
 else:
     Range = False
     if os.path.basename(use_location).startswith('CONUS'):
@@ -201,6 +215,7 @@ def zonal_hist(sp_path, in_value_raster, region_c, use_name, temp_table, final_f
         arcpy.MakeRasterLayer_management(Raster(sp_path), "zone")
         print "   loaded species in  {0}".format((datetime.datetime.now() - start_species))
         temp_return, zone_time = zone("zone", in_value_raster, temp_table, snap)
+        arcpy.Delete_management("zone")  # deleted the specie raster layer in memory
 
         list_fields = [f.name for f in arcpy.ListFields(temp_return)]
         att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
@@ -209,11 +224,14 @@ def zonal_hist(sp_path, in_value_raster, region_c, use_name, temp_table, final_f
         att_df = pd.DataFrame(data=att_array)
         del att_array  # deltese temp array
         att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
+        # print att_df.info()  # provided details ont he size of the DF after setting values to str
         att_df.to_csv(out_path_final + os.sep + csv)
         print '   Final file can be found at {0}'.format(out_path_final + os.sep + csv)
         print "   Completed in {0}\n".format((datetime.datetime.now() - zone_time))
+
         arcpy.Delete_management("zone")
         del att_df  # deletes df after the table is save
+
 
 
 def create_directory(dbf_dir):
