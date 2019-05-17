@@ -14,43 +14,29 @@ outfolder = r'F:\Union Composites_ESA\Spring 2018\Range\test'
 regional_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
                        r'\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
 
-# 'r'C:\Users\JConno02\Environmental Protection Agency (EPA)
-# \Endangered Species Pilot Assessments - OverlapTableA\R_Acres_Pixels_20180428.csv'
-
-
 # 'CONUS', 'AK', 'AS',
 # 'PR','AK', 'HI','AS','CNMI','GU','VI'
-# ToDO see why PR species are causing python to quit if extent is set; to avoid remove extent limit line 84, 85, the
-# when output will be all species but it will be limited to just PR when the next step of raster to the format
-skip_region = ['AK', 'AS', 'CONUS']
+
+skip_region = []
 
 # 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 skip_group = []
 
 # projection folder
-# prjFolder = r'L:\Workspace\StreamLine\projections\FinalBE'
-prjFolder = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\projections'
+prjFolder = r'L:\Workspace\StreamLine\projections\FinalBE'
 
 # Also use as snap rasters when projecting with will set the extent of the output projected raster to just the region
-# RegionalProjection_Dict = {
-#     'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-#     'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-#     'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-#     'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-#     'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-#     'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-#     'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-#     'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
-
 RegionalProjection_Dict = {
-    'CONUS': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'F:\UseSite_ESA\Feb 2019\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+
+
 
 # Had to shorted the file name fo the PR prj file in order to me file path charater limits
 # TODO can the snap raster be used as the spatial reference for the projection?
@@ -168,19 +154,7 @@ print "Start Time: " + start_time.ctime()
 list_regions = sorted(RegionalProjection_Dict.keys())
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
-raster_list = [u'R_Insects_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Lichens_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Mammals_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Reptiles_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Amphibians_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Birds_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Clams_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Conifers_and_Cycads_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Crustaceans_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Ferns_and_Allies_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Fishes_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Snails_Union_Final_20180110_ClippedRegions_20180110_20180619',
-               u'R_Flowering_Plants_Union_Final_20180110_ClippedRegions_20180110_20180619']
+raster_list = []
 print raster_list
 for region in list_regions:
     if region in skip_region:

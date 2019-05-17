@@ -8,20 +8,17 @@ import datetime
 
 
 # TODO FILTER NE/NLAAs
-chemical_name = 'Methomyl'
-#chemical_name = 'Carbaryl'
+# chemical_name = 'Methomyl'
+chemical_name = 'Carbaryl'
 use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20180430.csv"
+             r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
 
-max_drift = '765'
-l48_BE_interval = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-                  r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-                  r'\CH_SprayInterval_20180522_Region.csv'
+max_drift = '792'
+l48_BE_interval = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\R_UnAdjusted_SprayInterval_noadjust_Full Range_20190501.csv"
 
-nl48_BE_interval = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-                   '\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\ParentTables' \
-                   '\CH_SprayInterval_20180522_NL48Range.csv'
+nl48_BE_interval = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\R_UnAdjusted_SprayInterval_noadjust_Full Range_20190501.csv"
 
+file_type = os.path.basename(l48_BE_interval).split("_")[0] +"_"
 
 master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
               r'\MasterListESA_Feb2017_20180110.csv'
@@ -31,14 +28,7 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-out_location = 'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-               '\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables'
-
-find_file_type = os.path.basename(l48_BE_interval)
-if find_file_type.startswith('R'):
-    file_type = 'R_'
-else:
-    file_type = 'CH_'
+out_location = 'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage'
 
 on_off_species = []
 
@@ -61,8 +51,8 @@ def on_off_field(row, cols, df):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-create_directory(out_location + os.sep + chemical_name)
-out_path = out_location + os.sep + chemical_name + os.sep +'Step 1'
+create_directory(out_location + os.sep + chemical_name+ os.sep+'Summarized Tables' )
+out_path = out_location + os.sep + chemical_name +os.sep+'Summarized Tables'+ os.sep +'Step 1'
 create_directory(out_path)
 use_lookup_df = pd.read_csv(use_lookup)
 l48_df = pd.read_csv(l48_BE_interval, dtype=object)
@@ -130,7 +120,7 @@ aa_nl48.apply(lambda row: on_off_field(row, direct_overlap_col, aa_nl48), axis=1
 aa_nl48 = pd.merge(base_sp_df, aa_nl48, on='EntityID', how='left')
 
 aa_nl48.to_csv(out_path + os.sep + file_type + 'NL48_Step1_Intervals_' + chemical_name + '.csv')
-
+print out_path + os.sep + file_type + 'NL48_Step1_Intervals_' + chemical_name + '.csv'
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time
