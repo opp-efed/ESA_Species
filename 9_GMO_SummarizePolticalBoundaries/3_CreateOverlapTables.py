@@ -23,18 +23,15 @@ import pandas as pd
 overwrite_inter_data = False
 # file structure is standard for raw result outputs and tabulated results outputs
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
-raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-                  r'\Risk Assessments\GMOs\dicamba\Tabulated_byCounties\Range'
+raw_results_csv = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Tabulated County'
 csv_suffix_result = '_euc.csv'  # _adjElev_euc.csv
-out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-                r'\Risk Assessments\GMOs\dicamba\Overlap_byCounties\Range'
-out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-                      r'\Risk Assessments\GMOs\dicamba\Overlap_byCounties_Merge\Range'
+out_location =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Overlap_byCounty'
+out_location_merge =  r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
+                      r'\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Overlap_byCounties_Merge'
 #in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv'
 in_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
-look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
-id_value = 'Dicamba'
+look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+id_value = 'Enlist'
 id_cols = ['GEOID', 'STUSPS']
 master_list = r'C:\Users\JConno02' \
               r'\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
@@ -58,7 +55,6 @@ acres_df['EntityID'] = acres_df['EntityID'].astype(str)
 use_lookup = pd.read_csv(look_up_use)
 
 # ###Functions
-
 
 def create_directory(dbf_dir):
     if not os.path.exists(dbf_dir):

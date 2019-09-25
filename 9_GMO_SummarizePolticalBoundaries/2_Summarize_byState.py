@@ -3,10 +3,8 @@ import os
 import datetime
 
 
-in_tabulated = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-               r'\Risk Assessments\GMOs\dicamba\Tabulated\Range'
-out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-               r'\Risk Assessments\GMOs\dicamba\Tabulated_byCounties\Range'
+in_tabulated = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Tabulated_Overlap'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Tabulated County'
 # grouping_col = ['EntityID', 'STUSPS']
 grouping_col = ['EntityID', 'GEOID', 'STUSPS']
 
@@ -19,14 +17,12 @@ if not os.path.exists(out_location):
 
 list_results_directory = os.listdir(in_tabulated)
 
-
 for folder in list_results_directory:
     print '\nWorking on {0}'.format(folder)
     csv_list = os.listdir(in_tabulated + os.sep+ folder)
     merged_df = pd.DataFrame()
     for csv in csv_list:
         print csv
-
         results_df = pd.read_csv(in_tabulated + os.sep+ folder + os.sep +csv, low_memory=False)
         val_col = [v for v in results_df.columns.values.tolist() if v.startswith('VALUE')]
 
@@ -39,8 +35,10 @@ for folder in list_results_directory:
         df_state = df_state.reindex(columns = col_order)
         merged_df = pd.concat([merged_df,df_state])
         merged_df  = merged_df .reindex(columns = col_order)
-
-    merged_df.to_csv(out_location + os.sep + folder +'.csv')
+    if len(grouping_col) == 3:
+        merged_df.to_csv(out_location + os.sep + folder +'Cnty.csv')
+    else:
+        merged_df.to_csv(out_location + os.sep + folder +'State.csv')
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

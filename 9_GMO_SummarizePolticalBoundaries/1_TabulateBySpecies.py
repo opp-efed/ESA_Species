@@ -3,16 +3,13 @@ import os
 import datetime
 
 
-in_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects' \
-             r'\Risk Assessments\GMOs\dicamba\L48\Range\Agg_Layers'
+in_results = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Corn_10_Cotton_20_Soybean_40_Overlap'
 # directory for look-up tables - key_col is the header used as the zone in the specie runs and will be joined to the VALUE field
-# in_look_up = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-#              r'\Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20180612'
 
-in_look_up = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
+# Can be the lookup for CH or Range
+in_look_up = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\LookUps"
 key_col = 'HUCID'  # InterID, 'HUCID'
-out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
-               r'\Projects\Risk Assessments\GMOs\dicamba\Tabulated\Range'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Tabulated_Overlap'
 
 
 start_time = datetime.datetime.now()
