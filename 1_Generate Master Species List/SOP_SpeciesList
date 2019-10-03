@@ -46,4 +46,18 @@ StatusConsidered = ['Experimental Population  Non-Essential', 'Threatened', 'End
                                 'Proposed Threatened',
                                 'Proposed Endangered', 'Candidate']
 
+3_Merge_FWS_NMFS
+Merged the updates from NMFS and FWS together
 
+4_CheckForChanged_MergedFWS_NMFS
+Check for changed from the new and current master lists - outputs newly listed species, delisted species etc
+path is the location of table generated above
+
+5_addColumns_fromOldMaster
+Adds tracking columns from the older master
+
+6_FWS_CheckforCH
+Check for critical against the critical habitat table downloadable from ECO
+
+7_AddGIS_FileName
+Loads file names for species location files from spatial libraries into the master species list

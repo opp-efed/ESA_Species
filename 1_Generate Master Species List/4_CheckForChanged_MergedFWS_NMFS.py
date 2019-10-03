@@ -6,28 +6,29 @@ import pandas as pd
 # #################### VARIABLES
 # #### user input variables
 
-outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\Update_SpeciesList_Dec2018'   # path final tables
-current_masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                     r'\_ExternalDrive\Update_SpeciesList_Dec2018\MasterListESA_Feb2017_20180110.xlsx'
+# path final tables
+outlocation = r''
+# Master species list as .csv or .xlsx
+current_masterlist = r'path\MasterListESA_Dec2018_20190130.csv'
 
-# either the filtered TESS if just updating FWS or the merged file from the updated NMFS and FWS
-new_master = outlocation +os.sep+ 'Merged_NMFS_FWS_20181203.csv'
+# file for filtered TESS if just updating FWS or the merged file from the updated NMFS and FWS
+new_master = outlocation +os.sep+ 'filename.csv'
 
 # removing inverted name and status
 # columns in tables must be in the same order
 out_cols = ['EntityID', 'Updated date', 'Update description', 'Notes', 'Delisted', 'Update Agency', 'comname',
             'sciname','status_text', 'pop_abbrev', 'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country',
             'Group']
-
+# Columns for the current master list
 current_master_col = [u'EntityID', u'Updated date', u'Update description', u'Notes', u'Delisted', u'Update Agency',
                       u'comname', u'sciname', u'status_text', u'pop_abbrev', u'pop_desc', u'family', u'spcode',
                       u'vipcode', u'lead_agency', u'country', u'Group']
 
-index_pos_country = 15
-index_pos_entid = 0
-index_pos_pop = 9
-index_pos_sci = 7
+# Index location of key columns base 0
+index_pos_country = 15 # country
+index_pos_entid = 0 # Entity ID - typically base 0
+index_pos_pop = 9 # species population
+index_pos_sci = 7 # species scientific name
 description_dict = {'comname': 'Common Name',
                     'sciname': 'Scientific Name',
                     'status_text': 'Status',
@@ -235,8 +236,10 @@ current_listed_df = pd.read_csv(new_master)
 current_listed_df = current_listed_df.reindex(columns=out_cols)
 current_listed_df['EntityID'] = current_listed_df['EntityID'].map(lambda x: str(x).split('.')[0]).astype(str)
 
-
-master_list_df = pd.read_excel(current_masterlist)
+if current_masterlist.endswith('.csv'):
+    master_list_df = pd.read_csv(current_masterlist)
+else:
+    master_list_df = pd.read_excel(current_masterlist)
 master_list_df = master_list_df.reindex(columns=current_master_col)
 master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: str(x).split('.')[0]).astype(str)
 print master_list_df.columns.values.tolist()

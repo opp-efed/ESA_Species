@@ -4,19 +4,20 @@ import arcpy
 
 import pandas as pd
 
-outlocation = r'L:\Workspace\StreamLine\Species Spatial Library'
-
-colIndex_entId = 1
-outfile_nm = 'MasterListESA_Feb2017_20190130_wR.csv'
-addcol = 'Range_Filename'  # Name of column to add
-
-inlocation = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\Range' # location of GIS files to add table
+#out folder location
+outlocation = r''
+# out files name
+outfile_nm = 'filename.csv'
+# name of column to add
+addcol = 'col name'  # Name of column to add
+# location of GIS species spatial library files to add table either \CriticalHabitat or \Range
+inlocation = r'path\CriticalHabitat'
 
 addinfo_dict = {}
 files_to_be_archived = []
-index_pos_entid = 0
-
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
+index_pos_entid = 0  # entity id index position
+# master species list
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
 outfile = outlocation +os.sep+ outfile_nm
 
 def loop_all_species_gis(in_path):

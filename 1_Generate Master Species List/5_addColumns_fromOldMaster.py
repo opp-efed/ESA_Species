@@ -5,11 +5,11 @@ import pandas as pd
 
 # #################### VARIABLES
 # #### user input variables
-
-outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\Update_SpeciesList_Dec2018'  # path final tables
-current_masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                     r'\_ExternalDrive\Update_SpeciesList_Dec2018\MasterListESA_Feb2017_20180110.xlsx'
+# path final tables
+outlocation = r''
+# Master species list as .csv or .xlsx
+current_masterlist = r'path\MasterListESA_Dec2018_20190130.csv'
+# Output name
 new_master = outlocation + os.sep + 'Full_Merged_Listed_updated_20181203.csv'
 
 # removing inverted name and status
@@ -28,6 +28,7 @@ col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',u'CH_Type', u'CH_OriginalFileName'
               u'Source of Call final BE-Critical Habitat',u'Critical_Habitat_', u'Migratory', u'Migratory_',
               u'AddedAquWoe',	u'AddedTerrWoE',u'L48/NL48', u'Multiple NL48 Regions',u'CH_Filename',u'Range_Filename'
               ]
+# Species where the entity id has been updates
 entid_update = {'11356': '5623',
                 '11355': 'NMFS180',
                 '11353': 'NMFS181',
@@ -54,7 +55,10 @@ current_listed_df = pd.read_csv(new_master)
 current_listed_df = current_listed_df.reindex(columns=out_cols)
 current_listed_df['EntityID'] = current_listed_df['EntityID'].map(lambda x: str(x))
 
-master_list_df = pd.read_excel(current_masterlist)
+if current_masterlist.endswith('.csv'):
+    master_list_df = pd.read_csv(current_masterlist)
+else:
+    master_list_df = pd.read_excel(current_masterlist)
 master_list_df['EntityID'] = master_list_df['EntityID'].map(lambda x: str(x))
 # print master_list_df.columns.values.tolist()
 

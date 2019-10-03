@@ -3,13 +3,14 @@ import os
 
 import pandas as pd
 
-##TODO add in check for new CH, currently check will come up as no crithab or no change even though DES_CH and GIS_CH are TRUE
 
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\April2017'  # path final tables
+# path final tables
+outlocation = r''
 
 # Download csv of critical habitat table from https://ecos.fws.gov/ecp/report/table/critical-habitat.html
-ch_table_ecos = outlocation + os.sep + 'Endangered Species Active Critical Habitat Report_20170410.csv'
-new_master = outlocation + os.sep + 'MasterListESA_Feb2017_NeedCH_20170410.csv'
+ch_table_ecos = outlocation + os.sep + 'Endangered Species Active Critical Habitat Report.csv'
+# file name
+new_master = outlocation + os.sep + 'filename.csv'
 
 
 def check_ch(row, ch_df):

@@ -5,11 +5,11 @@ import pandas as pd
 
 # #################### VARIABLES
 # #### user input variables
-outlocation = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\Creation\September2017'   # path final tables
-current_NMFS_csv = outlocation+ os.sep+'NMFS' +os.sep + 'Full_NMFS_Listed_STD_20170410.csv'
-current_FWS = outlocation+ os.sep+'FWS' +os.sep + 'FilteredTessPandas_20170928.csv'
+outlocation = r''   # path final tables
+# Update files name
+current_NMFS_csv = outlocation+ os.sep+'NMFS' +os.sep + 'filename.csv'
+current_FWS = outlocation+ os.sep+'FWS' +os.sep + 'filename.csv'
 
-current_masterlist = r'C:\Users\JConno02\Documents\Projects\ESA\MasterLists\MasterListESA_June2016_20170216.xlsx'
 
 out_cols = ['EntityID', 'Notes', 'comname', 'sciname', 'invname', 'status', 'status_text', 'pop_abbrev',
             'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country', 'Group']
