@@ -1,0 +1,49 @@
+Author J. Connolly Updated 1/10/2018
+
+Goal: Maintain the list of species subject to sections 7 consultations
+Original Datasets: FWS TESS database; NMFS website
+
+Description: All species are download from the FWS Threatened and Endangered Species System (TESS)
+using python code (FWS_Xquery).  This code will provide user prompts to identify which species should
+be download and which statues should be considered. Only species with a status subject to section 7 or
+Candidate species will  move forwards to the updated master species list. Known errors in TESS that have
+been identified via personal communication with the Service corrected during the update process and are
+flagged as exceptions. For NMFS species, if the NMFS website contradicts the information in TESS the default
+is to use the information found on the NMFS website.  Not all NMFS species are loaded in TESS, for these
+species a dummy EntityID is assigned using ‘NMFS’ as the prefix and a numerical value in ascending order.
+The EntityID becomes the tracking values for all analysis downstream.
+
+Each time the species list is updated the following check are made:
+•	Changes to any EntityID – Rare but observed
+•	Change in listing status – frequent
+•	Changes in species supporting information (Common Name, Scientific Name etc) - frequent
+•	Newly listed Species
+•	Delisted species
+
+Changes are sent to the Services for review.  Any edits that are deem data entry issues in the
+TESS data are added to the FWS_Xquery for future updates. The name of the species location file use
+for the risk assessment is added to the master species. The new version of the master species list, and
+location files are finalized and remains unchanged during the risk assessment process.  This new version of
+the master species list is used to identify species in need of species profile information (dietary items,
+bins etc.).
+
+
+Notes:
+
+1_FWS_Xquery
+Load user variables - specifically the out location, a new folder will  be created in this location to store table
+User prompts will check in on which tags to use or to check for a change in the tags from the databases; changing
+the tag will change information extracted
+
+2_FWS_FilterTESSPandas
+outpath needs to remain the same as step 1
+be sure to check the column index locations, and verify the two table have the same index locations
+
+user prompt will ask what columns to filter on, and check if the defaults should be used.  Defaults ares
+status = 'status_text'
+country = 'country'
+StatusConsidered = ['Experimental Population  Non-Essential', 'Threatened', 'Endangered',
+                                'Proposed Threatened',
+                                'Proposed Endangered', 'Candidate']
+
+

@@ -8,20 +8,21 @@ import pandas as pd
 
 import csv
 
-__author__ = 'JConno02'
 
+# Internal deliberative, do not cite or distribute
+# Author J. Connolly
 
-today = datetime.datetime.today()
-date = today.strftime('%Y%m%d')
-
-outpath = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-          r'\_ExternalDrive\Update_SpeciesList_Dec2018'
+# Location where File will be saved r'path_to_folder'
+outpath = r'E:\Workspace'
+# URL for FWS XQuery
 url = "https://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
 
-
+# These are the variables use within the xml, if FWS changes their variable this will need to be updated
+# Tags use for information to retain
 deafultTags = ['spcode', 'vipcode', 'sciname', 'comname', 'invname', 'pop_abbrev', 'pop_desc', 'family', 'status',
                'status_text', 'lead_agency', 'lead_region', 'country', 'listing_date', 'dps', 'refuge_occurrence',
                'delisting_date']
+# columns to delete
 delcolumns = ['species_detail', 'results','tsn']
 
 colOrder = {
@@ -42,6 +43,9 @@ colOrder = {
     15: 'dps',
     16: 'refuge_occurrence'}
 
+# Date
+today = datetime.datetime.today()
+date = today.strftime('%Y%m%d')
 
 def CheckXML_changes(xml):
     taglist = []
@@ -202,43 +206,45 @@ def createdirectory(DBF_dir):
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
-createdirectory(outpath)
+def main(out_loc, url):
+    createdirectory(out_loc)
 
-r = requests.get(url)
-reload(sys)
-sys.setdefaultencoding('utf8')
-## These are the variables use within the xml, if FWS changes their variable this will need to be updated
-
-createdirectory(outpath+os.sep+'FWS')
-outpath = outpath+os.sep+'FWS'
-
-# Use Beautiful Soup to Parse the HTML
-soup = BeautifulSoup(r.content, 'html.parser')
-tagslist, speciesbreak, identifier = CheckXML_changes(soup)
-
-sp_info_need = list_dicts()
-
-print 'Downloading information from {0}...'.format(url)
-for row in soup.find_all(speciesbreak):
-    # print row
-    entid = row.find(identifier, recursive=False).text
-    # print entid
-    globals()[identifier].append(entid)
-    find_textxml(row, entid, sp_info_need)
+    r = requests.get(url)
+    reload(sys)
+    sys.setdefaultencoding('utf8')
 
 
-Full_list = globals()[identifier]
-FullResults, header = CreateSpecisTable(Full_list, tagslist, colOrder)
+    createdirectory(out_loc+os.sep+'FWS')
+    outpath = out_loc+os.sep+'FWS'
 
-finalheader = ['EntityID']
-for v in header:
-    finalheader.append(v)
+    # Use Beautiful Soup to Parse the HTML
+    soup = BeautifulSoup(r.content, 'html.parser')
+    tagslist, speciesbreak, identifier = CheckXML_changes(soup)
 
-fulltable = outpath + os.sep + 'FullTess_' + str(date) + '.csv'
+    sp_info_need = list_dicts()
 
-outDF_Full = pd.DataFrame(FullResults, columns=finalheader)
-outDF_Full.to_csv(fulltable, encoding='utf-8')
-# create_outtable(FullResults, fulltable, finalheader)
+    print 'Downloading information from {0}...'.format(url)
+    for row in soup.find_all(speciesbreak):
+        # print row
+        entid = row.find(identifier, recursive=False).text
+        # print entid
+        globals()[identifier].append(entid)
+        find_textxml(row, entid, sp_info_need)
+
+    Full_list = globals()[identifier]
+    FullResults, header = CreateSpecisTable(Full_list, tagslist, colOrder)
+
+    finalheader = ['EntityID']
+    for v in header:
+        finalheader.append(v)
+
+    fulltable = outpath + os.sep + 'FullTess_' + str(date) + '.csv'
+
+    outDF_Full = pd.DataFrame(FullResults, columns=finalheader)
+    outDF_Full.to_csv(fulltable, encoding='utf-8')
+
+
+main(outpath, url)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
