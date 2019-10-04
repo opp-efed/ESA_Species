@@ -3,44 +3,63 @@ import os
 import datetime
 import sys
 
-# TODO set it up so only the uses for the chemical are adjusted and not all of them
+# This script generates the species/use table for a chemical ie r_amphib_CONUS_CDL_1317_10x2_euc_census_max.csv
+# generated in Step 2 it adds in the chemical information, PCT, min/max/uniform in range/ch; these tables are them
+# summarize by use (3a).  The percent overlap calculated (3b)
 
-chemical_name = 'Carbaryl_2'
+chemical_name = ''
+
 st_cnty = 'County'  # if running on cnty change to County, State if using state
 
-# suffixes = ['noadjust', 'adjEle','_adjEleHab','_adjHab']  #TODO Change the second if to else when finished
+suffixes = ['noadjust']  # 'noadjust', 'adjEle','adjEleHab','adjHab' result suffixes
 
-suffixes = ['noadjust']
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-             r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Carbaryl_Uses_lookup_20190310.csv'
-state_fp_lookup = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)' \
-                  r'\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables' \
-                  r'\Usage\ForOverlap\STATEFP_lookup.csv'
-pct_table_directory = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-                      r'\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\PCT\Carbaryl'
+state_fp_lookup = r'path\STATEFP_lookup.csv'
+out_location = r'outlocation'
 
-presence_absence_cnty = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive' \
-                        '\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Carbaryl' \
-                        '\carb_cnty_mask_pre_abs.csv'
+range_ch = 'r'  #r for range  ch for critical habitat
 
-out_location = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
+#NOTE PCTS FOR AA AND COMPOSITES MOST BE 1 FOR THE FACTOR ADJUSTMENTS
+# PCT, pre/ab, and use look up table must use same use names - this is the Usage lookup values on the use lookup table
+pct_table_directory = r'path\PCT' + os.sep + chemical_name
+
+use_lookup = r"path"+ os.sep + chemical_name + "Uses_lookup_20190409.csv"
+
+# chemical masks
+if chemical_name == '':
+    presence_absence_cnty = r'path\filename.csv'
+elif chemical_name == '':
+    presence_absence_cnty = r'path\filename.csv'
+else:
+    print('Check the presences absence table for the chemical')
+    sys.exit()
 # species overlap with uses include the state or cnty breaks
 if st_cnty == 'State':
-    in_location_species = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries\States'
+    in_location_species = out_location + os.sep +'PolBoundaries\States'
 
 else:
-    in_location_species = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\PolBoundaries\Counties'
-# totals for states actual overlap for the political boundary
-in_locations_states = 'L:\Workspace\StreamLine\ESA\Results_Usage\PolBoundaries\Agg_layers'
+    in_location_species = out_location + os.sep + 'PolBoundaries\Counties'
+
+# totals for states; overlap for the political boundary
+in_locations_states = 'pathP\PolBoundaries\Agg_layers'
 regions = ['AK', 'AS', 'CNMI', 'CONUS', 'GU', 'HI', 'PR', 'VI']
 
 
-# state_df = pd.read_csv(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects"
-#                        r"\ESA\_ED_results\Tabulated_Jan2018\PolticalBoundaries\PolticalBoundaries\Agg_Layers\States")
-# species_df = pd.read_csv(
-#     r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA
-# \_ED_results\Tabulated_Jan2018\PolticalBoundaries\PolticalBoundaries\Agg_Layers\States\CONUS_CDL_1016_10x2_euc.csv")
+if not os.path.exists(out_location):
+    os.mkdir(out_location)
 
+if range_ch == 'r':
+    file_type = 'Range'
+else:
+    file_type = 'CriticalHabitat'
+
+out_location = out_location + os.sep + chemical_name
+if not os.path.exists(out_location):
+    os.mkdir(out_location)
+''
+out_location = out_location + os.sep + file_type
+
+if not os.path.exists(out_location):
+    os.mkdir(out_location)
 
 def state_pct(row, msq_state_col, pct_col):
     adjust_value = row[msq_state_col] * row[pct_col]
@@ -139,8 +158,9 @@ state_fp['STATE_Upper'] = state_fp['STATE'].map(lambda x: str(x).upper()).astype
 
 list_pct_table = [v for v in os.listdir(pct_table_directory) if v.endswith('.csv')]
 
-for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
+for group in [ 'max','avg','min'] :  #['min', 'max', 'avg']
     # assumes identifier is in this postion
+    print list_pct_table
     pct_table = [v for v in list_pct_table if v.split("_")[1] == group] [0]
     pct_df = pd.read_csv(pct_table_directory + os.sep + pct_table)
     use_lookup_df = pd.read_csv(use_lookup)
@@ -148,16 +168,17 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
     usage_lookup_df['Filename'] = usage_lookup_df['FullName'].map(lambda x: str(x) + "_euc").astype(str)
     # limit look-up to just those uses in the current chemical
     usage_lookup_df = usage_lookup_df.loc[usage_lookup_df['Included AA'] == 'x']
+    print use_lookup_df['Usage lookup'].values.tolist()
     list_use_folder= usage_lookup_df['Filename'].values.tolist()
-    out_path = out_location + os.sep + chemical_name + os.sep + group
+    out_path = out_location + os.sep + group
     print out_path
 
     if not os.path.exists(os.path.dirname(out_path)):
         os.mkdir(os.path.dirname(out_path))
     if not os.path.exists(out_path):
         os.mkdir(out_path)
-    if not os.path.exists(out_location + os.sep + chemical_name + os.sep + 'no adjustment'):
-        os.mkdir(out_location + os.sep + chemical_name + os.sep + 'no adjustment')
+    if not os.path.exists(out_location + os.sep + 'no adjustment'):
+        os.mkdir(out_location + os.sep + 'no adjustment')
 
     if os.path.basename(in_location_species) == 'State':
         pol_id = 'STATEFP'
@@ -175,6 +196,7 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
     t_pct = pd.merge(t_pct, state_fp,  on= 'STATE_Upper', how='left')
 
     list_csv = os.listdir(in_location_species)
+    list_csv = [c for c in list_csv if c.startswith(range_ch)]
 
     for value in suffixes:
         if value == 'noadjust':
@@ -186,14 +208,14 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
                 state_folder = state_csv.replace( "_"+'State'+".csv","")
                 if state_folder.replace('_State.csv','')  not in list_use_folder:
                     continue
-                if not os.path.exists(out_location +os.sep+chemical_name+os.sep+'no adjustment'+os.sep+csv):
+                if not os.path.exists(out_location +os.sep+'no adjustment'+os.sep+csv):
                     csv_out = csv.replace('.csv',"_"+os.path.basename(pct_table).split("_")[1]+'.csv')
                     species_df = pd.read_csv(in_location_species + os.sep +csv)
-                    species_df.to_csv(out_location +os.sep+chemical_name+os.sep+'no adjustment'+os.sep+csv)
+                    species_df.to_csv(out_location +os.sep+'no adjustment'+os.sep+csv)
 
         c_list = [v for v in list_csv if v.endswith(value+'.csv')]  # break csv into suffix groups
 
-        if value == 'noadjust': # TODO removed if and change to elseafter completing update for elevation and habitat
+        if value in suffixes: # TODO removed if and change to elseafter completing update for elevation and habitat
             for csv in c_list:
                 print csv
                 state_csv = csv.replace("_"+value +'.csv', "_"+'State'+".csv")
@@ -204,12 +226,22 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
                     continue
                 else:
                     print out_path+os.sep+csv.replace('.csv',"_"+group+'.csv')
-                    if not os.path.exists( out_path+os.sep+csv.replace('.csv',"_"+group+'.csv')):
+                    if value == 'noadjust':
+                        csv_out = csv.replace('noadjust.csv',"census_"+group+'.csv')
+                    else:
+                        csv_out = csv.replace('.csv',"census_"+value+"_"+group+'.csv')
+
+                    if not os.path.exists( out_path+os.sep+csv_out):
                         print csv
                         usage_col_header = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder].iloc[0]
 
                         state_df = pd.read_csv(in_locations_states + os.sep + state_folder + os.sep + state_csv)
-                        state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(str)
+                        # state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(str)
+
+                        # Spring 2019:  team decided to calc total treated acres from the whole state because that is
+                        # the level of the SUUM, but mask where those treated acres can be found within the species
+                        # range based available information in the census of Ag.
+                        # TODO ADD COUNTY MASK HERE BEFORE STAT DIRECT CALC
                         filtered_state = state_df.ix[:, ['STATEFP',  'Acres', 'VALUE_0']]
                         filtered_state.columns = ['STATEFP', 'Acres', 'State direct msq']
 
@@ -222,8 +254,11 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
 
                         cnty_w_p_a = pd.merge(species_df, presence_absence_df, on= ['GEOID'], how='left')
                         cnty_w_p_a.drop_duplicates(inplace=True)
+                        # print statement to QC outputs
+                        # cnty_w_p_a.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\test_census' + os.sep+ 'merge_' +csv)
 
                         usage_col_header = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Usage lookup'].iloc[0]
+                        print use_lookup
                         cnty_w_p_a_use= cnty_w_p_a[species_df.columns.values.tolist()+[usage_col_header]]
 
                         # TODO Check why some of the PCTS are coming in as NaN is this because we are just running FLA?
@@ -231,21 +266,25 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
                         # If we want to remove values in the drift are for crops not found in census
                         # cnty_w_p_a_use.ix[:,cnty_df.columns.values.tolist()] = cnty_w_p_a_use.ix[:,cnty_df.columns.values.tolist()] .multiply(cnty_w_p_a_use[usage_col_header], axis=0)
 
-                        # this .loc and multople is causing a SettingWithCopyWarning:
+                        # this .loc and multiply due to SettingWithCopyWarning with just multiply:
                         # A value is trying to be set on a copy of a slice from a DataFrame
                         cnty_w_p_a_use.loc[:,['VALUE_0']] = cnty_w_p_a_use.loc[:,['VALUE_0']].multiply(cnty_w_p_a_use[usage_col_header], axis=0)
+                        # print statement to QC outputs
+                        # cnty_w_p_a_use.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\test_census'+os.sep + 'multiple_' +csv)
                         col_to_sum_state = ['EntityID','STATEFP']+[v for v in species_df.columns.values.tolist() if v.startswith('VALUE_')]
                         # Copy causing a SettingWithCopyWarning:
                         # A value is trying to be set on a copy of a slice from a DataFrame
                         sum_df = cnty_w_p_a_use[col_to_sum_state].copy()
 
                         val_cols = [v for v in species_df.columns.values.tolist() if v.startswith('VALUE_')]
-                        print sum_df.columns.tolist()
                         species_state_df  = sum_df.groupby(['EntityID','STATEFP'])[val_cols].sum().reset_index()
+                        # print state to qc outputs
+                        # species_state_df.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\test_census' + os.sep+'sum_' +csv)
                         # determine the crop in pct table that applies to the current csv then filter the pct table to just that crop and
                         # other columns need to merge
 
                         use_lookup_df_value = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Usage lookup'].iloc[0]
+
                         use_lookup_df_inc_chem = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Included AA'].iloc[0]
                         if use_lookup_df_inc_chem == 'x':
                             filter_col = ['STATE', 'STATEFP']
@@ -258,31 +297,40 @@ for group in ['min', 'max', 'avg'] :  #['min', 'max', 'avg']
                                 sys.exit()
                             filtered_pct.columns = ['STATE', 'STATEFP', 'PCT_'+use_lookup_df_value]
 
-                            # merge the pct to species_df to pct then merge to filtereed state
-                            merged_species = pd.merge(species_state_df, filtered_pct, on='STATEFP', how='left')
-                            merged_species.drop_duplicates(inplace=True)   # TODO FIND THE MERGE THAT CAUSE DUP ROWS
-                            merged_species_state = pd.merge(merged_species, filtered_state, on='STATEFP', how='left')
-                            merged_species_state.drop_duplicates(inplace=True)  # TODO FIND THE MERGE THAT CAUSE DUP ROWS
-                            merged_species_state['Drift_PCT'] =  merged_species_state['PCT_'+use_lookup_df_value].map(lambda x: 0 if x == 0 else 1)
+                            # If this no overlap the table will be empty and can't be joined
+                            if 'STATEFP' not in species_state_df.columns.values.tolist() == 0:
+                                pass
+                            else:
+                                # merge the pct to species_df to pct then merge to filtereed state
+                                merged_species = pd.merge(species_state_df, filtered_pct, on='STATEFP', how='left')
+                                merged_species.drop_duplicates(inplace=True)   # TODO FIND THE MERGE THAT CAUSE DUP ROWS
+                                merged_species_state = pd.merge(merged_species, filtered_state, on='STATEFP', how='left')
+                                merged_species_state.drop_duplicates(inplace=True)  # TODO FIND THE MERGE THAT CAUSE DUP ROWS
+                                merged_species_state['Drift_PCT'] =  merged_species_state['PCT_'+use_lookup_df_value].map(lambda x: 0 if x == 0 else 1)
 
-                            # PCT Adjustments
-                            merged_species_state['State msq adjusted by PCT'] = \
-                                merged_species_state.apply(lambda row: state_pct(row, 'State direct msq', 'PCT_'+use_lookup_df_value), axis=1)
-                            merged_species_state['Total outside species range'] = \
-                                merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
-                            merged_species_state['Total outside species range'] = \
-                                merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
-                            merged_species_state['Total outside species range'] = \
-                                merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
-                            merged_species_state['Min in Species range'] = \
-                                merged_species_state.apply(lambda row: min_range(row, 'Total outside species range', 'State msq adjusted by PCT'), axis=1)
-                            merged_species_state['Max in species range'] = merged_species_state.apply(lambda row: max_range(row, 'VALUE_0', 'State msq adjusted by PCT'), axis=1)
-                            merged_species_state['Uniform'] = merged_species_state.apply(lambda row: uniform_spe (row, 'PCT_'+use_lookup_df_value, 'VALUE_0'), axis=1)
-                            merged_species_state = adjust_drift (merged_species_state, 'Drift_PCT')
-                            csv_out = csv.replace('.csv',"_"+group+'.csv')
-                            print csv_out
-                            merged_species_state.to_csv(out_path+os.sep+csv_out)
-                            print 'Table can be found at {0}\n'.format(out_path+os.sep+csv_out)
+                                # PCT Adjustments
+                                merged_species_state['State msq adjusted by PCT'] = \
+                                    merged_species_state.apply(lambda row: state_pct(row, 'State direct msq', 'PCT_'+use_lookup_df_value), axis=1)
+                                merged_species_state['Total outside species range'] = \
+                                    merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
+                                merged_species_state['Total outside species range'] = \
+                                    merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
+                                merged_species_state['Total outside species range'] = \
+                                    merged_species_state.apply(lambda row: outside_range(row, 'State direct msq', 'VALUE_0'), axis=1)
+                                merged_species_state['Min in Species range'] = \
+                                    merged_species_state.apply(lambda row: min_range(row, 'Total outside species range', 'State msq adjusted by PCT'), axis=1)
+                                merged_species_state['Max in species range'] = merged_species_state.apply(lambda row: max_range(row, 'VALUE_0', 'State msq adjusted by PCT'), axis=1)
+                                merged_species_state['Uniform'] = merged_species_state.apply(lambda row: uniform_spe (row, 'PCT_'+use_lookup_df_value, 'VALUE_0'), axis=1)
+                                merged_species_state = adjust_drift (merged_species_state, 'Drift_PCT')
+
+                                if value == 'noadjust':
+                                    csv_out = csv.replace('noadjust.csv',"census_"+group+'.csv')
+                                else:
+                                    csv_out = csv.replace('.csv',"census_"+value+"_"+group+'.csv')
+
+                                print csv_out
+                                merged_species_state.to_csv(out_path+os.sep+csv_out)
+                                print 'Table can be found at {0}\n'.format(out_path+os.sep+csv_out)
                         else:
                             print ('Use {0} is not part of chemical\n'.format(use_lookup_df_value))
 

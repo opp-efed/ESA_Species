@@ -3,15 +3,14 @@ import pandas as pd
 import os
 import datetime
 
+# look up directory
+look_up_fc_ab = r'path look ups'
+# path species grid files
+in_directory_grids = r'path\Grids_byProjection'
+out_path = r'outpath\Range'  #\Critical Habitat
 
-look_up_fc_ab = r'D:\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
-in_directory_grids = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2' \
-                     r'\Grids_byProjection'
-out_path = r'L:\Workspace\StreamLine\ESA\Species_area_tables'
+master_list = r"\MasterListESA_Feb2017_20190130.csv"
 
-master_list = r'C:\Users\JConno02' \
-              r'\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-              r'\MasterListESA_Feb2017_20180110.csv'
 # Columns from the master species list that should be included in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',

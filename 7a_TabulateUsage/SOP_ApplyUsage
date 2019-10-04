@@ -55,3 +55,41 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal - Zonal scripts ar
         # TODO set up to use the file name to put to the correct out file directory
 
 
+Just Usage Tables notes
+    Run Overlap
+        -Run overlap using tabulate area - save to a usage folder script 5_Step1
+        -Run Pol Boundaries overlap using tabulate area - save to Pol Boundaries folder in usage folder script 5_Step3
+    Tabulate Species
+        - Tabulate species, full range and spe pol boundary - 7a_Step1b - Save to general folder and applied
+        to all chems
+        -Apply PCT - saves to chemical folder - there will be a folder for each PCT and on for no adjustment -
+         still by species - only need to run 1 of the step 2 scripts
+            -2 - just applies PCT
+            2b - applies PCT, excluding counties from the PCT application if there are no registered crops in the
+            county; set
+                using the pre_abs table
+            2c - LOOK AT DIFFERENT -making too many assumptions about where usage is occurring
+        - Summarize to drift intervals = generate the drift folder
+            - In spray drift root folder there will be folder for each run type - ie census, no adjustment, and no
+            adjustment
+                - census - with summarized PCT adjustment for upper, lower, and uniform summed species
+                - no adjustment - not PCT applied, not census mask- summed to species
+                - Parent folder
+                    - Folder for each PCT
+                        - with in for each run type - files by use still broken out by state with PCT information
+                    - No adjustment Folder
+                        - file for each use broken out by state
+        - Summarize into ground ind aerial 7a_Step4
+        - Generate GIS, CONUS and NL48 tables
+            - Use the drift and SummarizeBE table and scipts - in scrip 7b_Step2a, Stepb2b
+            - Point to the run type for the table you are you in the spray drift folder as the out location
+
+
+
+Aquatic Tables notes
+- Get range area by HU for species in using the Lookup tables that have the HUC information- 7a_Stepa
+- Merge the range area by HUC with overlap information by HUC
+    - Point to the tabulate Agg Layer folder use for all chemicals -- NO PCT; need all use layers in L48 and NL48 s
+    script to finish
+    -chemical independent - includes all layer in agg folder
+    - comment out NL48 at end if jut need CONUS
