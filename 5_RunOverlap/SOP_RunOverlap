@@ -1,4 +1,7 @@
-When composite file are finalize and use layer have been moved to library in the correct projection
+# Author J.Connolly updated august 2019
+# Internal deliberative, do not cite or distribute
+
+When union file are finalize and use layer have been moved to library in the correct projection
 the overlap runs can be started; output raw overlap for each use site by region, species group
 
 Key variable - Use layers and Species files are in the same projections; cell size for use layer is identified
@@ -44,6 +47,39 @@ Step 2b- Overlap for aquatic species based HUC12: - ON HOLD
 
 Step 3 - Run overlap against political boundaries used for usage :
     - Only need for usage see ApplyUsage SOP
+    -Note - when running the overlap for species and political boundaries at the same time, if the same use layer is
+    accessed, may cause a 99999 error
 
 Step 4 - Place holder for running a vector use:
     # TODO finished this script then update table automation to account for a vector use
+
+# NOTES
+# ## Check path of the temp location for raster layers
+
+# arcpy.Delete_management( "in_memory" + os.sep + "zone_lyr")
+# dir_name = os.path.dirname(zone_lyr)
+# arcpy.MakeRasterLayer_management(zone_lyr, dir_name  + os.sep + "zone_lyr")
+# print [f.name for f in arcpy.ListFields( dir_name  + os.sep + "zone_lyr")]
+# desc= arcpy.Describe( dir_name + os.sep + "zone_lyr")
+# print("Feature Class: " +desc.dataElement.catalogPath)
+
+# Each region is a list pos 0 euc distance, pos 1 on/off, pos 2 Yearly (CONUS only)
+# used with zonal histogram vs tabulate area
+# symbology_dict = {'CONUS': [
+#     r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_1016_110x2_euc.lyr',
+#     r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_OnOff_X7072_171227.lyr',
+#     r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_CDL_2010_rec.lyr'],
+#     'HI': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_HI_Ag_euc.lyr',
+#            r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\NAD_1983_UTM_Zone_4N_CCAP_HI_6.lyr'],
+#     'AK': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_Ag_euc.lyr',
+#            r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_Albers_AK_NLCD_2011_81.lyr'],
+#     'AS': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_AS_Ag_euc.lyr',
+#            r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_2S_CCAP_AS_6.lyr'],
+#     'CNMI': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CNMI_Ag_euc.lyr',
+#              r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_CNMI_6.lyr'],
+#     'GU': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_GU_Ag_euc.lyr',
+#            r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_55N_CCAP_GU_6_30.lyr'],
+#     'PR': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_Ag_euc.lyr',
+#            r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\Albers_Conical_Equal_Area_PR_NLCD_81.lyr'],
+#     'VI': [r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_VI_Ag_euc.lyr',
+#            r'L:\Workspace\StreamLine\ByProjection\Symbol_Layers\WGS_1984_UTM_Zone_20N_CCAP_VI_6_30.lyr']}
