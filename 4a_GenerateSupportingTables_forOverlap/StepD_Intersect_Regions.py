@@ -2,30 +2,36 @@ import arcpy
 import os
 import datetime
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title - Generates regional composites in correct projection to calc area of the species file found in each region
 
 # master list and location by index number base zero of species information
-masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
-date = "_20180110"
-# col index values of species info cols in master list
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
 
+date = "_20190812"  # in yyyymmdd
 
+# col index values of species info cols in master list - CONFIRM BEFORE RUNNING
 ColIndexDict = dict(comname=6, sciname=7, spcode=12, vipcode=13, entid=1, group=16, popabb=9, status=8)
-# Index order of how the information is loaded into the species dict this is alpha order based on col name in fc
 
+# Index order of how the information is loaded into the species dict this is alpha order based on col name in fc
+# group is in pos 2 and is not included
 final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, PopName=3, Status=6)
-# This is from the update all ATT scripte should this be the dict being used?
-# final_fieldsindex = dict(NAME=1, Name_sci=4, SPCode=5, VIPCode=7, EntityID=2, PopName=0,Status=6)#group is in
-# pos 3 and not being added
 
 # input values and workspaces for range files
-Range = True
+Range = False # True the Range files are run, False the CH files are run
+intersect_fc = r'path\Boundaries.gdb\Regions_dissolve'  # regional polygons
+# Confirm names and dictionary below and the name for  GSC WGS 1984 line 296
+prjFolder = "path\projections"  #prjfiles
+base_outpath = r'outpath'
+
 if Range:
     # in folder with species group composite with all species unprojections and location of region feature class
-    infc_gdb = 'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\R_SpGroupComposite.gdb'
-    intersect_fc = r'C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
-    root_outpath = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\RegionalFiles\Range'
+    infc_gdb = base_outpath + os.sep +'R_SpGroupComposite.gdb'
+
+    root_outpath = base_outpath + os.sep + 'RegionalFiles\Range'
     # out locations of the species group composites intersected with region
     out_explode_location = root_outpath + os.sep + 'R_SpGroupComposite_ExplodeComp' + date + '.gdb'
     out_explode_location_final = root_outpath + os.sep + 'R_SpGroupComposite_ExplodeCompFinal' + date + '.gdb'
@@ -43,9 +49,8 @@ if Range:
 # input values and workspaces for critical habitat
 else:
     # in folder with species group composite with all species unprojections and location of region feature class
-    infc_gdb = 'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb'
-    intersect_fc = r'C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
-    root_outpath = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\RegionalFiles\CriticalHabitat'
+    infc_gdb = base_outpath + os.sep + 'CH_SpGroupComposite.gdb'
+    root_outpath = base_outpath + os.sep +'RegionalFiles\CriticalHabitat'
     # out locations of the species group composites intersected with region
     out_explode_location = root_outpath + os.sep + 'CH_SpGroupComposite_ExplodeComp' + date + '.gdb'
     out_explode_location_final = root_outpath + os.sep + 'CH_SpGroupComposite_ExplodeCompFinal' + date + '.gdb'
@@ -67,8 +72,10 @@ dissolve_suffix = '_DissolveRegion' + date
 clipped_suffix = '_ClippedLand_Region' + date
 intersect_suffix = '_IntersectRegion' + date
 # projections for different regions
-prjFolder = "C:\Workspace\projections\FinalBE"
-RegionalProjection_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
+
+#TODO UPDATE REGION ID IN REGION_DISSOLVE FROM L48 to CONUS SO EVERYTHINGS IS CONUS
+#UNTIL ABOVE TODO IS COMPLETE REGION NEED TO L48 and not CONUS'ex
+RegionalProjection_Dict = {'L48': 'Albers_Conical_Equal_Area.prj',
                            'HI': 'NAD_1983_UTM_Zone_4N.prj',
                            'AK': 'WGS_1984_Albers.prj',
                            'AS': 'WGS_1984_UTM_Zone_2S.prj',
@@ -292,7 +299,7 @@ def projected_comps(in_lyr, fc, prj_final, region_name, temp_gdb, final_gdb, prj
     in_fc = in_lyr
 
     # Locations of WGS and desired projections
-    wgs_coord_file = prj_location + os.sep + 'WGS 1984.prj'
+    wgs_coord_file = prj_location + os.sep + 'WGS_1984.prj'
     prj_file = prj_location + os.sep + prj_final
     # Extraction spatial info from these prj file
     dsc_wgs = arcpy.Describe(wgs_coord_file)
@@ -426,6 +433,13 @@ def add_acres(in_lyr, region, fc):
             else:
                 continue
 
+
+# Creates the output locations based on the info in root_outpath and base_outpath
+if not os.path.exists(root_outpath):
+    path, folder = os.path.split(root_outpath)
+    if not os.path.exists(path):
+        os.mkdir(path)
+    os.mkdir(root_outpath)
 
 listKeys, speciesinfo_dict = load_species_info_from_master(ColIndexDict, masterlist)
 try:

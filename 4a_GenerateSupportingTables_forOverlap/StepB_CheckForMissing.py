@@ -3,6 +3,10 @@ import os
 import datetime
 import pandas as pd
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Tile: Checks for missing range files - currently not set up to check for missing CH files
 
 # NOTE  Make sure all commas are removed from master table before running this script to a find all and
@@ -10,18 +14,19 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 
 # User input variable
-masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
-# Composite GDB generate in Step A
-infolder = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb'
-group_fc_index = 1 # location of the sp group in the file name
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+
+# Composite GDB generate in Step A not a folder - must be a GDB
+infolder = r'path\R_SpGroupComposite.gdb'
+group_fc_index = 1 # location of the sp group in the file name for the composite base 0
 # also need to set the hard code to the index number for the cols reference in loop species
 
-group_colindex = 16
-entid_colindex = 1
-not_considered_colindex = 17  # Species on master but not be considered in BE
-dev_colindex = 18  # species range is under development
-
+# Confirm column names before running
+group_colindex = 'Group'
+entid_colindex = "EntityID"
+not_considered_colindex = 'not_considered_BE_GIS'  # On master but not be considered in BE; mostly Qualitative species
+dev_colindex = 'Range under development'  # species range is under development
+ch_gis_colindex = "CH_GIS" # available GIS file; Some species do not have a GIS file;GIS files for Qual species archived
 
 # #########Functions
 
@@ -37,167 +42,102 @@ def fcs_in_workspace(workspace):
 
 # for each specie group will compare the species in that group to the files in found in the species GDB in the spatial
 # library noted by the infolder if a file is not present that it is appended to list and printed at the end
-def loop_species(group):
-    group_entlist = []
-    removed = []
-    devlist = []
-    cntylist = []
-    with open(masterlist, 'rU') as inputFile:
-        header = next(inputFile)
-        for line in inputFile:
-            line = line.split(',')
-            group_current = str(line[group_colindex])
-            entid = str(line[entid_colindex])
-            removedvalue = str(line[not_considered_colindex])  # Species on master but not be considered in BE
-            dev = str(line[dev_colindex])  # species is under development
-            if group == group_current:
-                group_entlist.append(entid)
-                # NOTE HARD CODED TO VALUES IN MASTER LIST
-                if removedvalue == "Yes":
-                    removed.append(entid)
-                elif dev == 'Yes':
-                    devlist.append(entid)
-                elif dev == 'Used County':
-                    cntylist.append(entid)
+def loop_species(group, flag):
+    print "\nWorking on {0}".format(group)
+    masterlist_df = pd.read_csv(masterlist)
+    if flag =='CH': # filters list to just species with CH when working with CH files
+        df_group = masterlist_df.loc[(masterlist_df[group_colindex] == group) & (masterlist_df[ch_gis_colindex] == "Yes")].copy()
+
+    else:
+        # filters out range files w/0 GIS files = these are mostly qualitative species
+        df_group = masterlist_df.loc[(masterlist_df[group_colindex] == group)& (masterlist_df[not_considered_colindex] == "No")]
+    group_entlist = df_group[entid_colindex].values.tolist()
+    return group_entlist
+
+
+def check_composite (fc, master_entlist_group):
+    entlist_fc =[]
+    with arcpy.da.SearchCursor(fc, ['EntityID']) as cursor:
+            for row in cursor:
+                entid = str(row[0])
+                if entid not in master_entlist_group:
+                    print "FILE IN WRONG Composite {0}".format(entid)
+                    continue
                 else:
-                    pass
-    inputFile.close()
-    inputFile.close()
-    del header
-    return group_entlist, removed, devlist, cntylist
+                    # list will include duplicate entitiyID if there are multiple rows for a species this is one of the
+                    # things this script checks
+                    entlist_fc.append(entid)
+    return entlist_fc
 
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+flag_ch_r = os.path.basename(infolder).split("_")[0]
+
 # generate a list of specie groups from master
 masterlist_df = pd.read_csv(masterlist)
-sp_groups_df = masterlist_df['Group']
-sp_groups_df = sp_groups_df.drop_duplicates()
-alpha_group = sorted(sp_groups_df.values.tolist())
+if flag_ch_r =='CH':
+    # when working with CH filter - filters master list to just those with CH
+    masterlist_df = masterlist_df.loc[masterlist_df[ch_gis_colindex] == "Yes"]
+else:
+    # when working with range filters out species without GIS file; most qualitative
+    masterlist_df = masterlist_df.loc[masterlist_df[not_considered_colindex] == "No"]
+
+
+alpha_group = sorted(list(set(masterlist_df['Group'].values.tolist())))
 print alpha_group
+
+arcpy.env.workspace = infolder
+fclist = arcpy.ListFeatureClasses()
+print fclist
 
 for group in alpha_group:
 
-    print "\nWorking on {0}".format(group)
     # list all species in current group, species flagged as not longer considered, species flagged as range under dev,
     # and species that we are using the county range for
-    entlist, removed, devlist, cntylist = loop_species(group)
+    entlist = loop_species(group, flag_ch_r)
+    group_fc = [fc for fc in fclist if fc.startswith(flag_ch_r+"_"+group.split(" ")[0])][0]
+    species_in_comp = check_composite(infolder +os.sep+group_fc,entlist)
 
-    arcpy.env.workspace = infolder
-    fclist = arcpy.ListFeatureClasses()
-    entlist_fc = []
-    counter = 0
-    for fc in fclist:
-        fcparse = fc.split("_")
-        group_fc = str(fcparse[group_fc_index])
-
-        if group_fc == 'Conifers':
-            group_fc = 'Conifers and Cycads'
-        if group_fc == 'Flowering':
-            group_fc = 'Flowering Plants'
-        if group_fc == 'Ferns':
-            group_fc = 'Ferns and Allies'
-        if group_fc == group:
-            with arcpy.da.SearchCursor(fc, ['EntityID']) as cursor:
-                for row in cursor:
-                    entid = str(row[0])
-                    if entid not in entlist:
-                        print "FILE IN WRONG Composite {0}".format(entid)
-                        counter += 1
-                        continue
-                    else:
-                        if entid not in entlist_fc:
-                            entlist_fc.append(entid)
-        else:
-            continue
-
-    dup_files = []
-    tracker = []
     missing_files = []
-    archivedfiles = []
+    extrafiles = []
 
-    # checks for species will multiple spatial files
-    for value in entlist_fc:
-        if value in tracker:
-            dup_files.append(value)
-        else:
-            tracker.append(value)
-    dup_val_set = set(dup_files)
-
-    # check for species without a file
+    # check for species not included in composite
     for value in entlist:
-        if value not in entlist_fc:
+        if value not in species_in_comp:
             missing_files.append(value)
         else:
             continue
-    # removes species from missing list that have been flagged as should not be considered
-    for value in sorted(missing_files):
-        if value in removed:
-            missing_files.remove(value)
-        else:
-            continue
-    # removes species from missing list that have been flagged as under development
-    for value in sorted(missing_files):
-        if value in devlist:
-            missing_files.remove(str(value))
+
+    # checks for species in composite but not on master
+    for value in species_in_comp:
+        if value not in entlist:
+            extrafiles.append(value)
         else:
             continue
 
-    remove_cnt = len(removed)
-    total_ingroup = len(entlist) - remove_cnt
-    devspe = len(devlist)
-    dup = len(dup_val_set)
-
-    # current total account for speices equals the total number of fc + the files under deve - duplicate files
-    # - files in the wrong sp group gdb
-
-
-
-    # print feedback about species missing files or having duplicate files
-    if entlist_fc == entlist and len(missing_files) == 0:
+    # print feedback about species missing files or extra
+    if len (missing_files) == 0 and len(extrafiles) == 0:
         print "Species group {0} is complete".format(group)
-        if len(archivedfiles) > 0:
-            print "But Received files for species that have to be archived {0}".format(sorted(archivedfiles))
-        if len(removed) > 0:
-            print "species {0} where removed before receiving a shape".format(removed)
 
-        if len(cntylist) > 0:
-            print "Used county for species {0} while refined range under development".format(sorted(cntylist))
-        if len(devlist) > 0:
-            print "Refined species range{0} under development no county".format(sorted(devlist))
+    elif len(missing_files) > 0:
+        print "Missing {0} species in composite; they are: {1}".format(len(missing_files), missing_files)
 
-    elif len(dup_val_set) > 0:
-        print "Missing {0}".format(len(missing_files))
-        print "Species group {0} has {1} species in multiple regions".format(group, sorted(dup_val_set))
-        if len(missing_files) > 0:
-            print "And missing species {0}".format(sorted(missing_files))
+        if len(extrafiles) > 0:
+            print "Extra {0} species in composite; they are: {1}".format(len(extrafiles), extrafiles)
 
-        if len(archivedfiles) > 0:
-            print "And received files for species that need to be archived {0}".format(sorted(archivedfiles))
-        if len(cntylist) > 0:
-            print "Used county for species {0} while refined range under development".format(sorted(cntylist))
-        if len(devlist) > 0:
-            print "Refined species range{0} under development no county".format(sorted(devlist))
+    elif len(extrafiles) > 0:
+            print "Extra {0} species in composite; they are: {1}".format(len(extrafiles), extrafiles)
 
+    for species in species_in_comp:  # Checks if a species has multiple rows in composite
+        num_occurences = species_in_comp.count(species)
+        if num_occurences > 1:
+            print "Species {0} has multiple row of data".format(species)
 
-    elif len(devlist) > 0:
-        print "Missing {0}".format(len(missing_files))
-        print "Species {0} under devlopment check for county".format(sorted(devlist))
-        if len(cntylist) > 0:
-            print "Used county for species {0} while refined range under development".format(sorted(cntylist))
-        if len(missing_files) > 0:
-            print "And missing species {0} for {1}".format(sorted(missing_files), group)
-        if len(archivedfiles) > 0:
-            print "And received some files for species that need to be archived {0}".format(sorted(archivedfiles))
-
-
-    else:
-        print "Missing {0}".format(len(missing_files))
-        print "Missing species {0} for {1}".format(sorted(missing_files), group)
 
 end = datetime.datetime.now()
-print "End Time: " + end.ctime()
+print "\nEnd Time: " + end.ctime()
 
 elapsed = end - start_time
 print "Elapsed  Time: " + str(elapsed)

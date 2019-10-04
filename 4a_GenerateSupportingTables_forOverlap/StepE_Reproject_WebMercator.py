@@ -4,31 +4,33 @@ import sys
 import datetime
 import shutil
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title - Projects master composites into world projection to calculates acres of full file
 # TODO Streamline script - add fuctions etc
+#TODO is the regionindex doing anything? region is no longer in filename
 
 L48 = True
 FirstRun = True  # to determine if temp location was already create or should be be created
 # in and out workspace
 # Use the 2 dissolve file from Step D - the one that has been exploded, regions assigned then dissolved - polygons in
 # regions are separate from each other
-ingdb = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\RegionalFiles\Range' \
-        r'\R_SpGroupComposite_DissolveRegion_Final_20180110.gdb'
+ingdb = r'path\R_SpGroupComposite_DissolveRegion_Final_[date].gdb'
 # out location
-outgdb = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\RegionalFiles\Range' \
-         r'\R_SpGroupComposite_WebMercator.gdb'
+outgdb = r'path\file name.gdb'
 acres_field = "TotalAcres"
 # Projection location
-proj_Folder = "C:\Workspace\projections"
-desiredProject = 'C:\Workspace\projections\WGS 1984 Web Mercator (auxiliary sphere).prj'
+proj_Folder = "path\projections"
+desiredProject = 'path\WGS 1984 Web Mercator (auxiliary sphere).prj'
 prjABB = 'WebMercator'
 # temp worksapce
-templocation = r'C:\Workspace\projections\FinalBE\temp5.gdb'
+templocation = r'path\temp_webmerc.gdb'
 
 # Index position of the sp group name within the file name
 groupindex = 1
 regionindex = 0
-
 
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
 def fcs_in_workspace(workspace):
@@ -79,11 +81,11 @@ desired_type = desireddsc.spatialReference.Type
 desired_prj = descoord_sys.name.lower()
 desireddatum = descoord_sys.GCS.datumName
 
-coordFile = proj_Folder + os.sep + 'NAD 1983.prj'
+coordFile = proj_Folder + os.sep + 'NAD_1983.prj'
 dsc = arcpy.Describe(coordFile)
 coord_sys = dsc.spatialReference
 
-WGScoordFile = proj_Folder + os.sep + 'WGS 1984.prj'
+WGScoordFile = proj_Folder + os.sep + 'WGS_1984.prj'
 dscwgs = arcpy.Describe(WGScoordFile)
 wgscoord_sys = dscwgs.spatialReference
 

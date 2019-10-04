@@ -3,30 +3,30 @@ import datetime
 
 import arcpy
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title - Generate master sp comp file by species group
 
 # NOTE NOTE if process interrupted byt user incomplete file will be generated; try except loop deletes incomplete if
 # script fails due to error
 
 # file suffix that will be added to fc name
-file_suffix = '_Composite_20180110'
+file_suffix = '_Composite_[date]'
 
 # Spatial library being used for union IE CritHab or Range; will loop by species group, or use can id a specific species
 # GDB
-inlocation = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-             '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+inlocation ='path\Generalized files\CriticalHabitat'
 
-# CH for critical habitat or R for R
-
-
-if inlocation == 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-             '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat':
-    out_location = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb'
+# Set inlocation for critical habitat
+if inlocation.endswith('CriticalHabitat'): # Confirm the folder for CH is CriticalHabitat
+    out_location = r'outpath\CH_SpGroupComposite.gdb'
     filetype = 'CH_'
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
     skipgroup = []
 else:
-    out_location = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\R_SpGroupComposite.gdb'
+    out_location = r'outpath\R_SpGroupComposite.gdb'
     filetype = 'R_'
     skipgroup = []
 
@@ -77,7 +77,7 @@ def merge_sp_files(in_ws, out_inter, subset_group, merge_list):
             if count < len(merge_list):
                 print "not all files included in composite for file {0}".format(out_inter)
     else:
-        print '\nAlready merged{0}'.format(out_inter)
+        print '\nAlready merged {0}'.format(out_inter)
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()

@@ -1,17 +1,25 @@
 import pandas as pd
 import math
+import datetime
 
-master_list = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
+master_list =  r"\MasterListESA_Feb2017_20190130.csv"
+
+# col to include in output
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
-                      'Group','Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
+                      'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
-                      'CH_Filename', 'Range_Filename']
+                      'CH_Filename', 'Range_Filename', 'L48/NL48']
 
 # set as Range of CH acres tables
-in_csv = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_Acres_by_region_20180110.csv'
-out_csv = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_Region_20180110.csv'
+in_csv = r'path\Acres_table2.csv'
+out_csv = r'outpath\CH_Region_[date].csv'  # path and file name
+
+start_time = datetime.datetime.now()
+print "Start Time: " + start_time.ctime()
+
 in_range = pd.read_csv(in_csv)
 in_range['EntityID'] = in_range['EntityID'].map(lambda x: x).astype(str)
 species_df = pd.read_csv(master_list, dtype=object)
@@ -64,3 +72,8 @@ merged_df = pd.merge(species_df, out_df, on='EntityID', how='left')
 merged_df.to_csv(out_csv)
 
 merged_df.to_csv(out_csv)
+
+end = datetime.datetime.now()
+print "End Time: " + end.ctime()
+elapsed = end - start_time
+print "Elapsed  Time: " + str(elapsed)
