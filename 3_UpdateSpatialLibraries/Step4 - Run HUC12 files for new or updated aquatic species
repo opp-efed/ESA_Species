@@ -1,0 +1,5 @@
+Generate HUC 12 files for new or updated aquatic species Step A- D
+After generated, load this files into spatial libraries using Steps 1-3; non-HUC 12 files are archived
+***Be careful to only update HUC12 file for new or updated species and not for existing HUC12 species files; these will
+be easily identified with the file name _HUC12_HUC12 and not used.  If a HUC12 file additional HUC12s will be included
+in the _HUC12_HUC12 files

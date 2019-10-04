@@ -7,12 +7,14 @@ import functions
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 # Title : Checks projection for all fc in folder to make sure they are in the STD geo projection before moving forward
+# TODO - add in the path of the file a different projection- script is picking up archived files
 
-# infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
-#           '\SpatialLibrary\Generalized files\Range'
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-           '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+# Generalized CH or Range files to be used as generated the composite input files for overlap- generalized or non
+infolder = 'path\Range'
+
 # #####################################################################################################################
 ##############################################################################################################
 start_script = datetime.datetime.now()

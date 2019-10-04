@@ -3,6 +3,9 @@ import os
 import datetime
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Tile: Checks for missing critical habitat spatial files
 
 # NOTE  Make sure all commas are removed from master table before running this script to a find all and replace
@@ -13,14 +16,14 @@ import pandas as pd
 #CONFIRMED with ESA team that CH for qualtitave species should also be excluded from overlap # Fall 2017
 
 # User input variable
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-# Spatial library for critical habitat files
-infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+# Spatial library for critical habitat files generalized or non
+infolder = 'path\Generalized files\CriticalHabitat'
 # also need to set the hard code to the index number for the cols reference in loop species
 
 
-group_colindex = 'Group'
-entid_colindex = "EntityID"
+group_colindex = 'Group'  # col header for group from species list
+entid_colindex = "EntityID"  # col header fro entityid from species list
 not_considered_colindex = 'not_considered_BE_GIS'  # Species on master but not be considered in BE
 dev_colindex = 'Range under development'  # species range is under development
 ch_gis_colindex = "CH_GIS"

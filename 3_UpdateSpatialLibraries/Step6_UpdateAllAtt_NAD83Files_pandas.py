@@ -4,6 +4,9 @@ import datetime
 import arcpy
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title : Updates all fc to std att needed for composite files using the master list.
 
 # This script is meant for the indv spe file not composite; it will dissolve the files with multiple rows
@@ -15,10 +18,9 @@ import pandas as pd
 
 
 # inputs
-masterlist = 'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-             '\MasterListESA_Feb2017_20190130.csv'
-# folder or GDB
-infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\HUC12\DissolvedCH_Aquatics_HUC12.gdb'
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+# folder or GDB with species spatial library
+infolder = 'path\Generalized files\CriticalHabitat'
 
 
 addition_gdb_filename = ''  # if the gdbs are not just the species group

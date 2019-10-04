@@ -3,6 +3,9 @@ import os
 import datetime
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Tile: Checks for missing range files
 
 
@@ -11,14 +14,14 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 # TODO update to filter qualitative species that are excluded from overlap out of the counts
 
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-# Spatial Library for range files
-infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Range'
+masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+# Spatial library for critical habitat files generalized or non
+infolder = r'path\Generalized files\Range'
 
 # also need to set the hard code to the index number for the cols reference in loop species
 
-group_colindex = 'Group'
-entid_colindex = "EntityID"
+group_colindex = 'Group'  # col header for group from species list
+entid_colindex = "EntityID"   # col header fro entityid from species list
 not_considered_colindex = 'not_considered_BE_GIS'  # Species on master but not be considered in BE
 dev_colindex = 'Range under development'  # species range is under development
 

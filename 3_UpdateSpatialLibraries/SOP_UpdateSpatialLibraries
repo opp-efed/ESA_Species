@@ -1,12 +1,19 @@
 
 Author J. Connolly updated April 2018
 
+# Internal deliberative, do not cite or distribute
+
 # NOTE FOR THE SCRIPTS NOTE CONVERTED TO PANDAS MAKE SURE THERE ARE NO COMMAS IN THE MASTER SPECIES LIST IT CAN CHANGE
 THE COLUMN NUMBERS USED AS INDEXES
 
 Purpose: Moves standardized location files from Step 1 to species spatial libraries. Additional updates include points
 and line buffered by 15 meters so they are area based for overlap, species with multiple files are merged into a single
 file, attributes updated to match the current master list, and old files/files for delisted species are archived.
+
+Time Consideration – All species must be accounted for and pass all Quality Control check before moving forward.
+Generally, this step takes a couple of days to a week to complete due to the coordination or follow-up on any tricky
+species.  No one script takes an extreme amount of time, but some of the QC checks can take several hours based on
+extent of the species file.
 
 If the file is removed from the overlap analysis the reason is appended to the beginning of the file name.  Multiple
 files that were merged into a single file are also moved to the archived folder.  All archived files have the date of
@@ -45,7 +52,7 @@ already archived or they will be included in the merge.  Run the Check for Missi
 missing a spatial file.  *These are separate because the filtered on the master list is different for range and critical
 habitat files.*
 
-Do not proceed to Step 4until spatial libraries are locked for the current update.
+Do not proceed to Step 4 until spatial libraries are locked for the current update.
 
 Note- merged files may bomb if a geometry error occurs during the merge.  If this happens manually run the repair
 geometry tool and restart script
@@ -59,6 +66,6 @@ during processing (step 7) and confirms all files are in the NAD83 projection to
 generating files for overlap.  If a mistake is found in one of the files overlap will need to be re-done for the
 impacted species groups******* These checks do take a while to process!
 
-Step A: this will generate extract HUC12 files used for aquatics if we continue to do this.  these files are than used
+Step A and B: this will generate extract HUC12 files used for aquatics if we continue to do this.  these files are than used
 like 'updated files' and run through this routine starting with step1.  Species attribute data will be added in step 6
 FILE NAME NEEDS TO BE ADDED FOR DISSOLVE

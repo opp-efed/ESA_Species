@@ -12,15 +12,16 @@ import pandas as pd
 
 
 # master species list
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-# the location of the spatial library
-outfolder_raw = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Range'
-outfolder_gen = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\Range'
-# Location of new and updated files to be moved this is an excel file with the path the different gdb
-file_dict = 'L:\Workspace\StreamLine\Species Spatial Library\MovePhase_R.csv'
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+# the location of the spatial library - both raw and generalized
+outfolder_raw = 'path\Range'
+outfolder_gen = r'path\Generalized files\Range'
+
+# Location of new and updated files to be moved this is an excel file with the path to the different gdbs
+file_dict = 'path\MovePhase_R.csv'
 # col index from master
-group_colindex = 16
-entid_colindex = 1
+group_colindex = 16  # col index location group
+entid_colindex = 1  # col index location entityid
 
 # ## FUNCTIONS
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class

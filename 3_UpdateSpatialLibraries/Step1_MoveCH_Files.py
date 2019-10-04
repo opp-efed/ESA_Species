@@ -14,17 +14,16 @@ import pandas as pd
 
 
 # master species list
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
-             r"\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-# the location of the spatial library
-outfolder_raw = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
-outfolder_gen = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+# the location of the spatial library \CriticalHabitat
+outfolder_raw = 'path\CriticalHabitat'
+outfolder_gen = r'path\Generalized files\CriticalHabitat'
 
 # Location of new and updated files to be moved this is an excel file with the path the different gdb
-file_dict = 'L:\Workspace\StreamLine\Species Spatial Library\MovePhase_CH.csv'
-group_colindex = 16
-entid_colindex = 1
-CHGIS_colindex = 21
+file_dict = 'path\MovePhase_CH.csv'
+group_colindex = 16  # col index location group
+entid_colindex = 1  # col index location entityid
+CHGIS_colindex = 21 # col  index location ch_GIS ie GIS available for CH
 
 
 # ## FUNCTIONS

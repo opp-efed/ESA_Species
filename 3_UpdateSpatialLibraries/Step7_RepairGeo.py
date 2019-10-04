@@ -1,27 +1,24 @@
 import arcpy
 import os
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 #
 # Tile: Will run the repair geometry tool on files with topology  errors in the spatial libraries
 # Set to True if running on individual species files and false if running on composite file if true in folder must be a
 # single gdb
 
 ind_sp_file = True  # set to false if using the tool on th composite files
-masterlist = masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                          '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
-group_colindex = 15  # index position of the speices 'group' from master list
-# folder or gdb
-# infolder = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSpeciesSpatialFiles' \
-#           '\SpatialLibrary\Generalized files\Range'
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-           '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+group_colindex = 16  # index position of the species 'group' from master list
 
+# folder or gdb for spatial library
+infolder = 'path\Generalized files\Range'
+
+# Skip over species group gdb if you already repaired the geometry
+skiplist = []
 # 'Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads','Corals', 'Crustaceans','Ferns and Allies',
 # 'Flowering Plants','Fishes', 'Insects', 'Lichens', 'Mammals'
-skiplist = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans',
-            'Ferns and Allies',
-            'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails', 'Flowering Plants']
-
 
 # ########### Functions
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class

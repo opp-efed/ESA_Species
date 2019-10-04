@@ -8,17 +8,21 @@ import pandas as pd
 # the species_dulplicate_file list.  After generating the look-up, the older files is archived.  Output will tell you
 # if there are multiple files to archive and no archive will occur.  Archive only occurs if there are two files with
 # different dates.
+# Time - gdb with lots of files can take awhile to run, use skip_species to skip over
 
 # NOTE Files that are being replaced with multiple files must be manually archived before running!!!!!
 # TODO find automated way to address issue of files being updated by multiple files; perhaps they should be merged
 # before moving them to the spatial libraries
 
 # User input variable
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-group_colindex = 16
-infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\\CriticalHabitat'
-archivefolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\\CriticalHabitat\Archived'
+masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+group_colindex = 16  # Index position of the group column in the master species list
+# Spatial Library for location files range or critical habitat (generalized or none) \CriticalHabitat or \Range
+infolder = r'path\\CriticalHabitat'
+# Archive Spatial Library for location files range or critical habitat (generalized) \CriticalHabitat or \Range
+archivefolder = r'path\CriticalHabitat\Archived'
 
+# species group to skip
 skip_group = []
 
 # all groups

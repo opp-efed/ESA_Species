@@ -1,10 +1,11 @@
 import os
-import gc
 import time
 import datetime
-import csv
 
 import arcpy
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # TODO Update to seamless NHDPlus
 # NOTE NOTE if the script is stopped and an species that was started but not completed for a species it
@@ -23,13 +24,17 @@ name_dir = "GDB"
 
 noNHDCSV = extractfiles + "_noNHD_20190204"
 
-# GDB with all Composites to Run
-MasterSpeFC = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat"
-out_location = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\HUC12'
-gdb_name = 'CH_Aquatics_HUC12.gdb'
+# GDB with all files to run
+MasterSpeFC = r"path\Generalized files\CriticalHabitat"
+# path to temp gdb for huc12 files
+out_location = r'path\HUC12'
+# temp gdb  for huc12
+gdb_name = 'file name.gdb'
 
+# Field id for HUC12 number
 HUC2Field = "HUC_12"
-HUC2_lwr48 = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\InfoAddedForESA\FilesAppended_ESA.gdb\HUC12_Merge"
+# path to final location
+HUC2_lwr48 = "path\FilesAppended_ESA.gdb\HUC12_Merge"
 
 FWSaqu_species = ['209', '215', '228', '234', '235', '236', '237', '238', '239', '242', '243', '246', '247', '248',
                   '249', '250', '251', '252', '253', '255', '256', '257', '258', '259', '262', '263', '264', '266',

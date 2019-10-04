@@ -16,34 +16,28 @@ import sys
 # TODO COUNT TRACKING IS WRONG IN PRINT, LIKELY DUE TO LOOP, TRACK DOWN ISSUE
 # User input variable
 # input tables
-
-masterlist_old = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20180110.csv"
-# masterlist_current = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-masterlist_current = "L:\Workspace\StreamLine\Species Spatial Library\OtherSpreadsheets\MasterListESA_Feb2017_20190130_Qual_Extinct_PossExtinct_oustide.csv"
-# MasterListESA_Feb2017_20190130.csv X
-#  MasterListESA_Feb2017_20190130_Qual.csv
-# MasterListESA_Feb2017_20190130_Qual_Extinct.csv
-# MasterListESA_Feb2017_20190130_Qual_Extinct_PossExtinct.csv
-# MasterListESA_Feb2017_20190130_Qual_Extinct_PossExtinct_oustide.csv
+# old master species list, checks for files to be archived
+masterlist_old = r"path\MasterListESA_old.csv"
+masterlist_current = r"\MasterListESA_Feb2017_20190130.csv"
 
 
 # Reasons = Qual_, Delisted_, Extinct_, UninhabIsland_, PosExtinct_, CaveDweller_, DraftBEOther_,MostlyOutsideUS_,
 # CaptivityOnly_, QualOther_
-reason_removed = 'MostlyOutsideUS_'  # Prefix is appended to the beginning of the file name
+reason_removed = 'Extinct_'  # Prefix is appended to the beginning of the file name
 
 today = datetime.datetime.today()
 archive_date = today.strftime('%Y%m%d')
 
-# in spatial library
-
-infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
+# in spatial library can be \CriticalHabitat or \Range
+# generalize files or non
+infolder = 'path\Generalized files\CriticalHabitat'
 # archive location
-archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat\Archived'
+archivefolder = 'path\Generalized files\CriticalHabitat\Archived'
 
-#
-infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\\CriticalHabitat'
+# non-generalized files
+infolder = r'path\\CriticalHabitat'
 # archive location
-archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\\CriticalHabitat\Archived'
+archivefolder = r'path\CriticalHabitat\Archived'
 
 
 # # out table of all files that were archived

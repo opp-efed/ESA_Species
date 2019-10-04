@@ -22,7 +22,7 @@ InGDB = r"path\filename.gdb"
 proj_Folder = r'path\folder'
 
 # Temp GDB for geo transformations
-middlegdb = r'L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan201temp_CH_2.gdb'
+middlegdb = r'path/file name.gdb'
 
 # Workspace for copied and standardize files; stays static for the whole tool
 ws = "path"

@@ -8,14 +8,14 @@ import pandas as pd
 # variable.  This is need so the file is area based for the overlap analysis
 
 # #################User input variable
-# in and out workspaces
-infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
-archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat\Archived'
+# in and out workspaces - spatial libraries generalize or non for \range or \criticalhabitat
+infolder = r'path\CriticalHabitat'
+archivefolder = 'path\CriticalHabitat\Archived'
 
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
+masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
 buffer_distance = "15 METERS"  # Buffer distance set by ESA team fall 2016 - 30 meter total
-date = 20190204
-group_colindex = 16
+date = 20190204  # date in yyyymmdd
+group_colindex = 16  # Index position of the group column in the master species list
 
 
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class

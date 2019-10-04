@@ -2,21 +2,21 @@ import arcpy
 import os
 import datetime
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # Tile: Check for species that still needs to be dissolve, ie a file with multiple rows
 
 # TODO remove hard code to masterlist
 
 # User input variable
-masterlist = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180109.csv'
-group_colindex = 15
-infolder = 'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-           '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+group_colindex = 16  # col index group
+# Spatial library for critical habitat files generalized or non
+infolder = 'path\Generalized files\CriticalHabitat'
 
-# species groups that can be skipped
-skiplist = ['Amphibians', 'Arachnids', 'Birds', 'Clams', 'Conifers and Cycads', 'Corals', 'Crustaceans','Ferns and Allies',
-'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
+# species groups that can be skipped; some gdb can take a long time
+skiplist = []
 
 # #########Functions
 

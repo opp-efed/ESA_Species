@@ -4,6 +4,9 @@ import datetime
 import arcpy
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Tile: Merge files for a species that represent different sections of a range, ie nest and foraging, or buffered line
 # and associated polygon then archives the individual files
 
@@ -11,12 +14,12 @@ import pandas as pd
 # Merged files discussed and agreed upon with the ESA team fall 2015; revisited and stayed the same fall 2017
 
 # User input variable
-masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-group_colindex = 16
+masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+group_colindex = 16 # Index position of the group column in the master species list
 
-infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat'
-archivefolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\CriticalHabitat\Archived'
-
+# in and out workspaces - spatial libraries generalize or non for \range or \criticalhabitat
+infolder = r'path\CriticalHabitat'
+archivefolder = 'path\CriticalHabitat\Archived'
 
 # final field in fc
 fieldlist = ['FileName', 'EntityID', 'NAME', 'Name_sci', 'SPCode', 'VIPCode', 'Status', 'Pop_Abb']

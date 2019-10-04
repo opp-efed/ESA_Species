@@ -10,9 +10,9 @@ import pandas as pd
 # User input variable
 # input table
 
-masterlist =  r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Feb2017_20190130.csv"
-# Spatial Library for range files
-in_folder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
+masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+# Spatial Library for location files range or critical habitat (generalized or non) \CriticalHabitat or \Range
+in_folder = 'path\Generalized files\CriticalHabitat'
 group_colindex = 16  # Index position of the group column in the master species list
 # #########Functions
 
