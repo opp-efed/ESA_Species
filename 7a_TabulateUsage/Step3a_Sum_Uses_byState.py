@@ -5,6 +5,9 @@ import numpy as np
 import sys
 
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # #TODO generate all of the regional tables then go back and merge the NL48 by use
 # This script generates the Parent table for the chemical - summed msq to a species/state combo includes PCT data
 # and the upper, lower ,and uniform direct overlap area for a species /state

@@ -3,6 +3,10 @@ import os
 import datetime
 import sys
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # This script generates the species/use table for a chemical ie r_amphib_CONUS_CDL_1317_10x2_euc_census_max.csv
 # generated in Step 2 it adds in the chemical information, PCT, min/max/uniform in range/ch; these tables are them
 # summarize by use (3a).  The percent overlap calculated (3b)

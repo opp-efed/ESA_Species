@@ -2,6 +2,10 @@ import os
 import pandas as pd
 import datetime
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Location where the all of the Agg Layer tables are - NOTE Both the CONUS and NL48 need to be completed for this
 # Script to complete
 in_location = r'path\Agg_Layers\Range'

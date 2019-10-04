@@ -3,6 +3,10 @@ import pandas as pd
 import os
 import datetime
 
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # look up directory
 look_up_fc_ab = r'path look ups'
 # path species grid files
