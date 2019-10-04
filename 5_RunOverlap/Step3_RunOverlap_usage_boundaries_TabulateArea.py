@@ -24,7 +24,7 @@ use_location = 'path\ByProjection' + os.sep + str(region) + "_" + run_group + ".
 use_list = []  # runs specified layers in use location; blank runs all
 
 arcpy.env.workspace = use_location
-if len(use_list) ==  0:
+if len(use_list) == 0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
 
 # location of results
@@ -85,7 +85,6 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
     use_nm_folder = use_nm_folder.split(".")[0]
     print use_nm_folder
 
-
     out_use_folder = results_folder + os.sep + use_nm_folder
     create_directory(out_use_folder)
 
@@ -94,7 +93,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
 
     # parse out information needed for file names
 
-    for zone_title in ["STATEFP","GEOID",]:
+    for zone_title in ["STATEFP", "GEOID", ]:
         if zone_title.startswith("STATE"):
             run_id = use_nm_folder + "_State"
         else:
@@ -122,12 +121,12 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             att_array = arcpy.da.TableToNumPyArray(temp_return, list_fields)
             arcpy.Delete_management(temp_return)  # deletes temp file to free up memory
             att_df = pd.DataFrame(data=att_array)
-            del att_array  #delete temo file from memory
-            #att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
+            del att_array  # delete temo file from memory
+            # att_df['VALUE'] = att_df['VALUE'].map(lambda x: x).astype(str)
             att_df.to_csv(csv)
             print 'Final file can be found at {0}'.format(csv)
-            arcpy.Delete_management(temp_return)   # deletes temp table
-            del att_df   # deletes df after saving output
+            arcpy.Delete_management(temp_return)  # deletes temp table
+            del att_df  # deletes df after saving output
 
             print "Completed in {0}".format((datetime.datetime.now() - zone_time))
 
@@ -161,12 +160,12 @@ for use_nm in list_raster_use:  # loops through all use raster to be included
 
     snap_raster = snap_raster_dict[region]
 
-    # try:
-    zonal_hist(in_sum_file, use_path,  use_nm, out_folder, temp_file, region, snap_raster, count)
-    count += 1
-    # except Exception as error:
-    # print(error.args[0])
-    # print "Failed on use {0}".format( use_nm)
+    try:
+        zonal_hist(in_sum_file, use_path, use_nm, out_folder, temp_file, region, snap_raster, count)
+        count += 1
+    except Exception as error:
+        print(error.args[0])
+        print "Failed on use {0}".format( use_nm)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
