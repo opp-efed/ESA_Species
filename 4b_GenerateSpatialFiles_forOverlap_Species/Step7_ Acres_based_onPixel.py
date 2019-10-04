@@ -4,6 +4,9 @@ import arcpy
 
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title- Generate acres table for species using the zone found in the species composites rather than the vector file
 # input
 #       1)  Files with high edge effect may result in different acres values using the different format, using this
@@ -17,12 +20,13 @@ import pandas as pd
 # Species group is found in index position 1 of all input result tables when split by '_'
 # All raster are 30 meter cells - note previously VI and CNMI has some use with a different cell size
 
-in_raster_location = r'L:\ESA\UnionFiles_Winter2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+# folder with species files
+in_raster_location = r'path'
+# Unioned FC
 look_up_fc = r'L:\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-outpath= r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Acres_by_Pixels'
+outpath= r'out path\table'
 # ###############user input variables
-master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-              r'\MasterListESA_Feb2017_20180110.csv'
+master_list =  r"\MasterListESA_Feb2017_20190130.csv"
 
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',

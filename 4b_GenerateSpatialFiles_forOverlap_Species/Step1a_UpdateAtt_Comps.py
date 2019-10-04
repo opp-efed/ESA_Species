@@ -3,19 +3,22 @@ import datetime
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # ###############user input variables
 
-masterlist = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\MasterLists\MasterListESA_Feb2017_20180110.csv'
-infolder = r'C:\Users\JConno02\Documents\Projects\ESA\CompositeFiles_Winter2018\CH_SpGroupComposite.gdb' # folder of GDB
+masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+infolder = r'L:\Workspace\StreamLine\ESA\CompositeFiles_Summer2019\R_SpGroupComposite.gdb' # GDB path
 
 # species groups to skip
 skiplist = []
 
+# CONFIRM BEFORE RUNNING
 ColIndexDict = dict(comname=6, sciname=7, spcode=12, vipcode=13, entid=1, group=16, popabb=9,status =8)
 final_fields = ['NAME', 'Name_sci', 'SPCode', 'VIPCode', 'FileName', 'EntityID', 'Pop_Abb', 'Status']
-final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, Pop_Abb=3, Status=6) # group is in pos 2 and not being added
+# group is in pos 2 and is not included
+final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, Pop_Abb=3, Status=6)
 singleGDB = True
 
 ########Static variables

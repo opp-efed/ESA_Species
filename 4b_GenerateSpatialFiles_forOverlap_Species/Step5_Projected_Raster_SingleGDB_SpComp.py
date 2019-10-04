@@ -4,42 +4,44 @@ from arcpy.sa import *
 import arcpy
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title - Re-projects union raster into projection by region - if geographic conversion needs to be done (NAD to WGS_
 # NAD_1983_To_WGS_1984_1" is used
 # in and out location
 
 # LOCATION OF RASTER UNION COMPOSITES BY SPECIES GROUP
-inGDB = 'F:\Union Composites_ESA\Spring 2018\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
-outfolder = r'F:\Union Composites_ESA\Spring 2018\Range\test'
-regional_acres_table = r'C:\Users\JConno02\Environmental Protection Agency (EPA)' \
-                       r'\Endangered Species Pilot Assessments - OverlapTables\R_Acres_Pixels_20180428.csv'
+inGDB = 'path\geodatabase'
 
-# 'CONUS', 'AK', 'AS',
-# 'PR','AK', 'HI','AS','CNMI','GU','VI'
+outfolder = r'out folder'
+regional_acres_table = r'path\acres tables.csv'
 
-skip_region = []
+# 'CONUS', 'AK', 'AS','PR','AK', 'HI','AS','CNMI','GU','VI'
+# regions to skip over; notes AK and CONUS can take a long time
+skip_region = ['AK']
 
+# Species crops that can be skipped
 # 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 skip_group = []
 
 # projection folder
-prjFolder = r'L:\Workspace\StreamLine\projections\FinalBE'
+prjFolder = r'path\projections'
 
 # Also use as snap rasters when projecting with will set the extent of the output projected raster to just the region
+# snap raster dictionary
 RegionalProjection_Dict = {
-    'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'path\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'path\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'path\WGS_1984_Albers_AK_Ag',
+    'AS': r'path\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'path\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'path\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'path\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'path\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
-
-# Had to shorted the file name fo the PR prj file in order to me file path charater limits
-# TODO can the snap raster be used as the spatial reference for the projection?
+# projection look-up dictionary
 Region_Dict = {'CONUS': 'Albers_Conical_Equal_Area.prj',
                'HI': 'NAD_1983_UTM_Zone_4N.prj',
                'AK': 'WGS_1984_Albers.prj',
@@ -151,11 +153,13 @@ arcpy.env.scratchWorkspace = ""
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+if not os.path.exists(outfolder):
+    os.mkdir(outfolder)
 list_regions = sorted(RegionalProjection_Dict.keys())
 arcpy.env.workspace = inGDB
 raster_list = arcpy.ListRasters()
-raster_list = []
 print raster_list
+
 for region in list_regions:
     if region in skip_region:
         continue

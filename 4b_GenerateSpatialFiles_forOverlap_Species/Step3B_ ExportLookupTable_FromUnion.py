@@ -3,9 +3,13 @@ import arcpy
 import os
 import datetime
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
-look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
-out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\LookUp_CH_Clipped_Union_20180110'
+# gdb from step 3
+look_up_fc= r'path\file names.gdb'
+# out location for look-up tables
+out_location= r'out location'
 
 arcpy.env.workspace = look_up_fc
 list_fc = arcpy.ListFeatureClasses()

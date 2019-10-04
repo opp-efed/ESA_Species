@@ -3,9 +3,14 @@ import pandas as pd
 import os
 import datetime
 
-in_location = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_SpGroup_Union_final_20180110.gdb'
-file_suffix_clean = '_Union_Final_20180110'
-out_csv = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_Species_included_inUnion' + \
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
+# RUN THIS ONLY TO GENERATE THE LIST OF SPECIES IN THE UNION FILES AS A CSV
+# THIS IS NEEDED IF THE UNION IS SPLIT INTO MULTIPLE INSTNACES
+in_location = 'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2019\CriticalHabitat\CH_SpGroup_Union_Final_20190812.gdb'
+file_suffix_clean = '_Union_Final_20190812'
+out_csv = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2019\CriticalHabitat\CH_Species_included_inUnion' + \
           file_suffix_clean + '.csv'
 
 start_time = datetime.datetime.now()

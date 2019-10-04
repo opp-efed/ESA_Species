@@ -3,6 +3,9 @@ import datetime
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title- converts all polygons in the inlocation to raster to be used in zonal historgram
 # This is done as recommend by ESRI to have greater control oer the conversion
 
@@ -11,9 +14,10 @@ import arcpy
 # converting them to rasters first with the To Raster conversion tools. This offers you greater control over the
 # vector-to-raster conversion, helping to ensure you consistently get the expected results.
 
-
-inlocation = 'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2Inter_20180612.gdb'
-outlocation = 'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Raster_Clipped_Union_CntyInter_HUC2Inter_20180612.gdb'
+# gdb from step 3
+inlocation = r'path\file.gdb'
+# gdb for raster based files
+outlocation = r'path\file.gdb'
 
 # #ZoneID (species only), InterID (species and political boundaries) or HUCID (species political boundaries and HUC2s)
 id_field = 'HUCID'  #  ZoneID, InterID or HUCID
@@ -21,7 +25,7 @@ id_field = 'HUCID'  #  ZoneID, InterID or HUCID
 
 skip_group =[]
 # snap raster for conversion must be a NAD 83 geographic project with 30 meter cells; default cell is very large
-snapRaster = r"F:\UseSite_ESA\Spring 2017\Cultivated_Layer\2015_Cultivated_Layer\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
+snapRaster = r"path for snap raster"
 #
 
 # ###Functions

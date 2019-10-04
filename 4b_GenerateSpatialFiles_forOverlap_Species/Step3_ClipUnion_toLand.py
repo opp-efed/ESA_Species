@@ -2,16 +2,19 @@ import arcpy
 import os
 import datetime
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title- clip fc found in in_location by the clip_fc
 
-# ingdb and file to be use as clip
-inlocation = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_SpGroup_Union_final_20180110.gdb'
-
-clip_fc = r'C:\WorkSpace\FinalBE_EucDis_CoOccur\Boundaries.gdb\Regions_dissolve'
+# ingdb from Step 2
+inlocation = r'path\file namegdb'
+# file to be use as clip
+clip_fc = r'path\Boundaries.gdb\Regions_dissolve'
 
 # outlocation and suffix to be added to fc filename
-outlocation = 'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_Clipped_Union_20180110.gdb'
-Clipped_suffix = "_ClippedRegions_20180110"
+outlocation = 'out locations\R_Clipped_Union_[date].gdb'
+Clipped_suffix = "_ClippedRegions_[date]"
 
 
 # ###Functions
@@ -24,6 +27,7 @@ def create_gdb(out_folder, out_name, out_path):
 
 # runs clip on files in in location
 def clip_feature(in_location, clip_fc_in, out_location, clipped_suffix):
+    clip_time = datetime.datetime.now()
     arcpy.Delete_management("ClipFeatures")
     arcpy.MakeFeatureLayer_management(clip_fc_in, "ClipFeatures")
     xy_tolerance = ""
@@ -32,18 +36,29 @@ def clip_feature(in_location, clip_fc_in, out_location, clipped_suffix):
     fclist = arcpy.ListFeatureClasses()
     # loop through all files and run intersect
     for fc in fclist:
-        print "\n {0}".format(fc)
         out_feature = out_location + os.sep + fc + clipped_suffix
         in_features = in_location + os.sep + fc
-        arcpy.Delete_management("inFeatures")
-        arcpy.MakeFeatureLayer_management(in_features, "inFeatures")
         try:
             if not arcpy.Exists(out_feature):
+                print "\nAdding ZoneID for {0}".format(fc)
+                arcpy.AddField_management(fc, "ZoneID", "DOUBLE")
+                with arcpy.da.UpdateCursor(fc, ['OBJECTID','ZoneID']) as cursor:
+                    for row in cursor:
+                        row[1] = row[0]
+                        cursor.updateRow(row)
+                print "Clipping {0}".format(fc)
+                arcpy.Delete_management("inFeatures")
+                arcpy.MakeFeatureLayer_management(in_features, "inFeatures")
                 arcpy.Clip_analysis("inFeatures", "ClipFeatures", out_feature, xy_tolerance)
-                print 'Clipped CompFile {0}'.format(fc)
+                print 'Clipped CompFile {0} took {1}'.format(fc, datetime.datetime.now() - clip_time)
+            else:
+                print ('Already clipped {0}'.format(fc))
+                arcpy.AddField_management(fc, "ZoneID", "DOUBLE")
+
         except Exception as error:
             print(error.args[0])
             arcpy.Delete_management(out_feature)
+
 
 
 start_time = datetime.datetime.now()

@@ -3,18 +3,21 @@ import os
 import datetime
 from arcpy.sa import *
 
-# folder or gdb
-in_folder = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\PR_Albers_Conical_Equal_Area.gdb'
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
+# folder or gdb with projected files
+in_folder = r'path\filename.gdb'
+# snap raster dictionary
 RegionalProjection_Dict = {
-    'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'path\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'path\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'path\WGS_1984_Albers_AK_Ag',
+    'AS': r'path\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'path\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'path\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'path\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'path\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 def create_folder(folder):

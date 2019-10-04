@@ -1,8 +1,11 @@
 import os
 import datetime
-import numpy as np
+
 import pandas as pd
 import arcpy
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # Title - Generate master union file by sp groups using the gdb in the spatial library
 
@@ -14,73 +17,57 @@ import arcpy
 
 # Runs union on complete spatial library by species group  use identify species list for use in co-occur
 
-
 # TODO look for a way to that make deleting field easier, can field mapping be used to copy only - check fieldinfo visiable url below
 # http://pro.arcgis.com/en/pro-app/arcpy/classes/fieldinfo.htm
 # TODO can the clean up to union file go faster with pandas?
 # TODO the columns of interest to a new file?
 # This can be done in arcmap by turning off fields then exporting, need to see if it can be done in a script
+# NOTE NOTE if process interrupted incomplete file will be generated
 
+# User entered variables - be sure to check all parameters before running
+Range = True  # True the Range files are run, False the CH files are run
+base_outpath = r'out path'
+start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
 
-# Static variable
+# Species to include or exclude depending on if use is running all sp group or a subset of a group
+# species group to skip because there are no GIS files, ie there is no crithab for any lichens
+# group for flowering plant is Flowering_Plant; this can be run in two instances b/c plant takes a long time
+skipgroup = []
+
+# if True will only union entid listed in ent list if false will union all entid in gdb
+subset_group = False
+# filename sub set comp
+enlistfc_name = '' # suffix for subset
+# list of entid to be include subset comp
+entlist = []
+
 file_suffix = '_Union_inter'
-file_suffix_clean = '_Union_Final_20180110'
-
-Range = True
-out_df = pd.DataFrame(index=(list(range(0, 1000))))
+file_suffix_clean = '_Union_Final_[date]'  # unio suffix with date
 
 if Range:
     # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
-    inlocation = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                 '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\Range'
+    inlocation = r'path\Generalized files\Range'
     filetype = 'R_'
-    outcsv = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range' \
-             r'\R_Species_included_inUnion' + file_suffix_clean + '.csv'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\inter.gdb'
-    finalfc = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\Range\R_SpGroup_Union_final_20180110.gdb'
-    # NOTE NOTE if process interrupted incomplete file will be generated
-
-    start_union = False  # True runs full union and clean up of union, false runs just the clean up of att table
-
-    # Species to include or exclude depending on if use is running all sp group or a subset of a group
-    # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = []
-
-    # if True will only union entid listed in ent list if false will union all entid in gdb
-    subset_group = False
-    # filename sub set comp
-    enlistfc_name = ''
-    # list of entid to be include subset comp
-    entlist = []
+    out_inter_location = base_outpath +os.sep + 'UnionFiles_[year]\Range\inter.gdb'
+    finalgdb = base_outpath +os.sep + 'UnionFiles_[year]\Range\R_SpGroup' + file_suffix_clean + '.gdb'
+    # tracking csv will all species included in union - retain for record and perform secondary review to confirm all
+    # species are accounted for
+    outcsv = base_outpath +os.sep +'UnionFiles_[year]\Range\R_Species_included_inUnion' + file_suffix_clean + '.csv'
 
 else:
-    inlocation = r'C:\Users\JConno02\One_Drive_fail\Documents_C_drive\Projects\ESA\_ExternalDrive' \
-                 '\_CurrentSpeciesSpatialFiles\SpatialLibrary\Generalized files\CriticalHabitat'
+    inlocation = r'path\Generalized files\CriticalHabitat'
     filetype = 'CH_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
+    out_inter_location = base_outpath + os.sep + 'UnionFiles_[year]\CriticalHabitat\inter.gdb'
+    finalgdb = base_outpath + os.sep + 'UnionFiles_[year]\CriticalHabitat\CH_SpGroup' + file_suffix_clean + '.gdb'
+    # tracking csv will all species included in union - retain for record and perform secondary review to confirm all
+    # species are accounted for
+    outcsv = base_outpath + os.sep + 'UnionFiles_[year]\CriticalHabitat\Species_included_inUnion' + file_suffix_clean + '.csv'
 
-    out_inter_location = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat\inter.gdb'
-    finalfc = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-              r'\CH_SpGroup_Union_final_20180110.gdb'
-    outcsv = r'C:\Users\JConno02\Documents\Projects\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-             r'\Species_included_inUnion' + file_suffix_clean + '.csv'
-    # NOTE NOTE if process interupted incomplete file will be generated
-
-    start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
-
-    # Species to include or exclude depending on if use is running all sp group or a subset of a group
-    # species group to skip because there are no GIS files, ie there is no crithab for any lichens
-    skipgroup = []
-
-    # if True will only union entid listed in ent list if false will union all entid in gdb
-    subset_group = False
-    # filename sub set comp
-    enlistfc_name = 'SubInsects_'
-    # list of entid to be include subset comp
-    entlist = []
+# ### FUNCTIONS
 
 
 # Create a new GDB
@@ -96,6 +83,7 @@ def union_sp_files(in_ws, out_inter, subset_group_bool, ent_list):
     if subset_group:
         out_inter = out_inter_location + os.sep + enlistfc_name + '_inter'
         print out_inter
+    print out_inter
     if not arcpy.Exists(out_inter):
         start_union_time = datetime.datetime.now()
         print "\nStarting {0} at {1}".format(out_inter, start_union_time)
@@ -117,7 +105,7 @@ def union_sp_files(in_ws, out_inter, subset_group_bool, ent_list):
             except Exception as error:
                 print(error.args[0])
                 arcpy.Delete_management(out_inter)
-            print "\nCreated output {0} in {1}".format(out_inter, (datetime.datetime.now() - start_union_time))
+            print "Created output {0} in {1}".format(out_inter, (datetime.datetime.now() - start_union_time))
         else:
             pass
     else:
@@ -138,13 +126,13 @@ def clean_unionfiles(outfc, final, group, df):
     for field in listfields:
         if field.startswith('EntityID'):
             ent_fields.append(field)
-    ent_fields.append('OBJECTID')
+    # ent_fields.append('OBJECTID')
     ent_fields.append("ZoneID")
     # print ent_fields
 
     arcpy.AddField_management("out", 'ZoneSpecies', "TEXT", "", "", "1000", "", "NULLABLE", "NON_REQUIRED", "")
-
     arcpy.AddField_management(fc, "ZoneID", "DOUBLE")
+
     with arcpy.da.UpdateCursor(fc, ['OBJECTID', 'ZoneID']) as cursor:
         for row in cursor:
             row[1] = row[0]
@@ -213,17 +201,22 @@ def clean_unionfiles(outfc, final, group, df):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
+print inlocation
+out_df = pd.DataFrame(index=(list(range(0, 1000))))
 
-# Make sure out location have been created
+# Make sure out location have been created based on input values
 if not arcpy.Exists(out_inter_location):
     path, gdb_file = os.path.split(out_inter_location)
+    directory_path = os.path.dirname(path)
+    if not os.path.exists(directory_path):
+        os.mkdir(directory_path)
     if not os.path.exists(path):
         os.mkdir(path)
     create_gdb(path, gdb_file, out_inter_location)
 
-if not arcpy.Exists(finalfc):
-    path, gdb_file = os.path.split(finalfc)
-    create_gdb(path, gdb_file, finalfc)
+if not arcpy.Exists(finalgdb):
+    path, gdb_file = os.path.split(finalgdb)
+    create_gdb(path, gdb_file, finalgdb)
 
 # loop through gdb from in location get a list of all species of if subset_group is true the species id in entlist then
 # will generate union by species group or the list the user inputs
@@ -233,10 +226,12 @@ if start_union:
     if inlocation[-3:] == 'gdb':
         sp_group = inlocation[:-4]
         sp_group = sp_group.replace(" ", "_")
-        ingdb = inlocation
-        outfc_inter = out_inter_location + os.sep + filetype + sp_group + file_suffix
-        if not arcpy.Exists(outfc_inter):
-            union_sp_files(ingdb, outfc_inter, subset_group, entlist)
+        print ("\n {0}".format(sp_group))
+        if sp_group not in skipgroup:
+            ingdb = inlocation
+            outfc_inter = out_inter_location + os.sep + filetype + sp_group + file_suffix
+            if not arcpy.Exists(outfc_inter):
+                union_sp_files(ingdb, outfc_inter, subset_group, entlist)
     else:
         list_ws = os.listdir(inlocation)
         print list_ws
@@ -244,8 +239,10 @@ if start_union:
             if v[-3:] == 'gdb':
                 sp_group = v[:-4]
                 sp_group = sp_group.replace(" ", "_")
+                print ("\n {0}".format(sp_group))
                 if sp_group not in skipgroup:
                     ingdb = inlocation + os.sep + v
+                    print ingdb
                     outfc_inter = out_inter_location + os.sep + filetype + sp_group + file_suffix
                     # print outfc_inter
                     if not arcpy.Exists(outfc_inter):
@@ -263,7 +260,7 @@ if start_union:
             continue
         inter_fc = out_inter_location + os.sep + fc
         out_fc = fc.replace(file_suffix, file_suffix_clean)
-        out_fc_final = finalfc + os.sep + out_fc
+        out_fc_final = finalgdb + os.sep + out_fc
         if not arcpy.Exists(out_fc_final):
             clean_unionfiles(inter_fc, out_fc_final, sp_group, out_df)
         else:
@@ -281,7 +278,7 @@ else:
         inter_fc = out_inter_location + os.sep + fc
 
         out_fc = fc.replace(file_suffix, file_suffix_clean)
-        out_fc_final = finalfc + os.sep + out_fc
+        out_fc_final = finalgdb + os.sep + out_fc
         if not arcpy.Exists(out_fc_final):
             clean_unionfiles(inter_fc, out_fc_final, sp_group, out_df)
         else:
