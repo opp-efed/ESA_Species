@@ -3,6 +3,9 @@ import datetime
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # #Tile: Dissolves files into a single  multipart polygons by species
 
 # NOTE - script adjusted to check error with aquatics- aquatic files sometimes had topology issues especially files
@@ -13,19 +16,18 @@ import arcpy
 
 maxrow = 5000000
 
-# Input File Locations
-InGDB = r"L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\GDB" \
-        r"\ReNm_FWS_20190130_2019-02-07.gdb"
+# Input File Locations from step 4
+InGDB = r"path\filename.gdb"
 
 abb = "FWS"
 
-# Workspace
-ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "path"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_Jan2019_CH"
+name_dir = "folder name"
 
 # in yyyymmdd received date
-receivedDate = '20190130'
+receivedDate = 'date'
 
 # Field Names that will be kept in the dissolve
 Dissolve = "Dissolve"

@@ -5,6 +5,9 @@ import datetime
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # #Tile: Project all files into STD geo projection of NAD83.  Output table will track ordinal project and the step
 # take to get to the final projection.  Any fc that fail are moved to a failed GDB and fc with an unknown projection
 # are not re-projected but added the the unknown list that is exported at the end
@@ -12,27 +15,25 @@ import arcpy
 # TODO set up user input to dynamically generate the middle gdb and delete it at the end
 # TODO see script Step3_ProjectRegionalFiles
 
-# User define variables
-InGDB = r'L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019_CH\GDB' \
-        r'\STD_ReNmFWS20190130_2019-02-07.gdb'
+# in gdb from step 5 and 6
+InGDB = r"path\filename.gdb"
 
 # Location of prj files
-proj_Folder = 'L:\Workspace\projections\FinalBE'
+proj_Folder = r'path\folder'
 
 # Temp GDB for geo transformations
 middlegdb = r'L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan201temp_CH_2.gdb'
 
-# Workspace
-ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "path"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_Jan2019_CH"
-
+name_dir = "folder name"
 # in yyyymmdd received date
-receivedDate = '20190130'
+receivedDate = 'date'
 
-
-ReProjectGDB = "CH_Reprojected"
-CSVName = "CH_Reprojected"
+# filenames for outputs
+ReProjectGDB = "gdb filesname"
+CSVName = "csv file name"
 
 NADabb = 'NAD83'
 Unknowncsv = 'Unknown'

@@ -20,12 +20,13 @@ import arcpy
 InGDB = r"C:\Users\Admin\Documents\Jen\SpeceisToRun\Missing_20151228\GDB\Topo_STD_ReNmFWS20151228_2015-12-28.gdb"
 abb = "FWS"
 
-# workspace and folder dirctory where output will be saved
-ws = "C:\Users\Admin\Documents\Jen\SpeceisToRun"
-name_dir = "Missing_20151228"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "path"
+# Folder in workspace where outputs will be saved
+name_dir = "folder name"
 
 # in yyyymmdd received date
-receivedDate = '20151228'
+receivedDate = 'date'
 
 # number of time the script has run to appended to the end of the file names so nothing is overwritten
 runcount = 1

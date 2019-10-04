@@ -4,20 +4,23 @@ import datetime
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 arcpy.env.overwriteOutput = True
 arcpy.env.scratchWorkspace = ""
+# path to gdb from step 2a, copied files
+InGDB = r"path\gdb"
+# csv to be saved for records
+QAcsv = "file name"
 
-InGDB = r"C:\WorkSpace\Processed_20160906\FWS_Ranges_20160906\GDB\FWS_poly_20160906_2016-09-06.gdb"
-
-QAcsv = "QA_FWS_poly_20160906"
-
-# Workspace
-ws = "C:\WorkSpace\Processed_20160906"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "path"
 # Folder in workspace where outputs will be saved
-name_dir = "FWS_Ranges_20160906"
+name_dir = "folder name"
 
 # in yyyymmdd received date
-receivedDate = '20160906'
+receivedDate = 'date'
 
 
 # General functions

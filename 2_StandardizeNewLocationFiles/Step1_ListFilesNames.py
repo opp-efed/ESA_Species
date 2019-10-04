@@ -4,23 +4,26 @@ import datetime
 
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Tile: This script will generate a list of file received and their native projections.  This script with go through
 # all subfolders/workspaces within the location assigned as the workspace with the env.workspace variable- JCONNOLLY
 
 # ###Varibles to be set by user
 
-# # location of files/Workspace
-InFileLocations = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles\UpdatedProcess_Jan2019\GDB\STD_ReNmFWS20190130_2019-02-02.gdb"
+# # location of files/gdb/folder/workspace where new/updated files occur
+InFileLocations = r"path/workspace"
+# desired name of output
+NameCSV = 'filename'
 
-NameCSV = 'FWS_ECOS_Update2019_STD'
-
-# Workspace
-ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "path"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_Jan2019"
+name_dir = "folder name"
 
 # in yyyymmdd received date
-receivedDate = '20190130'
+receivedDate = 'date'
 
 
 ##################################################################################################################

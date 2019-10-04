@@ -4,25 +4,30 @@ import csv
 import datetime
 
 import arcpy
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # #Tile: Checks to make sure that the entityid in the file name matches the att table and that all fcs have at least one
 # row.  Species that did not copy correctly have not data and therefore no rows
 
+# in gdb from step 5 and 6
+InGDB = r"path\filename.gdb"
+# name for csv
+QAcsv = "file name"
 
-InGDB = r"L:\Workspace\ESA_Species\NMFS_UpdatedCH\Range\UpdatedProcess_20171101\GDB\STD_ReNmNMFS20170420_2017-11-02.gdb"
+SearchField = "EntityID" # field for species ID
+fileType = "R"  # R or CH
+fileSuffix = "file suffix from STD"  # e.g. poly_20170420_STD
 
-QAcsv = "QA_attributes_20171102"
-
-SearchField = "EntityID"
-fileType = "R"
-fileSuffix = "poly_20170420_STD"
-
-# Workspace
-ws = "L:\Workspace\ESA_Species\NMFS_UpdatedCH\Range"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "path"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_20171101"
-
+name_dir = "folder name"
 # in yyyymmdd received date
-receivedDate = '20170420'
+receivedDate = 'date'
+
+
 
 
 # ######################## FUNCTIONS

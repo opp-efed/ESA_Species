@@ -3,9 +3,16 @@ import csv
 import datetime
 import pandas as pd
 import arcpy
-# This script will copy feature classes to the designated gdb, the orginal names will be maintained
+
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
+# This script will copy feature classes to the designated gdb, the original names will be maintained
 # All subfolders/workspaces within the location assigned as the workspace with the env.workspace variable
+
 # TODO: Can this be streamlined to match the updated format of the FWS files (composites) without impacting NMFS files
+
 # Tile: Copy shapefiles to a geodatabase and generate list of files.
 
 
@@ -15,25 +22,25 @@ import arcpy
 # False if individual files by species
 compfile = True
 # column in the composite file used to identify a species typically the entityID, use '' if individual files
-entid_col_comp = "ENTITY_ID"
-NmCSVCopied = 'FWS_Range_Updated2019'  # name for output table
-out_nameGDB = "FWS_Updated2019"  # name for staging gdb
+entid_col_comp = "col name"  # typically entityid
+NmCSVCopied = 'csv file name'  # name for output table
+out_nameGDB = "gdb file nanme"  # name for staging gdb
 
 # location of new species files
 # ***this must be a folder not a .shp or .gdb
-InFileLocations = "L:\Workspace\StreamLine\Species Spatial Library\Download_FWS_Jan2019\FilteredSection7\Range"
+InFileLocations = "path"
 # master species list
-masterlist = r"L:\Workspace\StreamLine\Species Spatial Library\MasterListESA_Feb2017_NeedCH_20181203.csv"
-entityid_col_master = 'EntityID'
-# Workspace
-# path to output workspace
-# Workspace
-ws = "L:\Workspace\StreamLine\Species Spatial Library\UpdateFiles"
+masterlist = r"r'path\MasterListESA_Dec2018_20190130.csv'"
+entityid_col_master = 'EntityID'  # col identifier
+
+# Workspace for copied and standardize files; stays static for the whole tool# Workspace
+
+ws = "path"
 # Folder in workspace where outputs will be saved
-name_dir = "UpdatedProcess_Jan2019"
+name_dir = "folder"
 
 # in yyyymmdd received date
-receivedDate = '20190130'
+receivedDate = 'date'
 
 
 # FUNCTIONS

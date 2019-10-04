@@ -1,9 +1,24 @@
 Author J. Connolly Updated 1/10/2018
 
+Internal deliberative, do not cite or distribute
+
 Purpose: When new range or critical habitat files are received from the Services these scripts will make a copy of the
 original file, standardize the file, standardize the information in the attribute tab;e using the current master species
-list, and then standardizes the projection to a NAD83 geographic projection. Final species file will be a single muli-
+list, and then standardizes the projection to a NAD83 geographic projection. Final species file will be a single multi-
 part polygon.
+
+Time Consideration – All species must be accounted for and pass all Quality Control checks before moving forward.
+Generally, this step takes a couple of days to a week to complete due to the coordination or follow-up on any
+tricky species.  No one script takes an extreme amount of time, but some of the QC checks can take several hours
+based on the extent of the species file.
+
+Goal: One spatial file per species with standardize file name with update date, attributes and projection.  Species
+files are represented as one multi-part polygon.
+
+Description: When new location files are received from the Services these scripts will make a copy of the original file,
+standardize the file name including a date stamp, standardize the information in the attribute table using the current
+master species list, and then standardizes the projection to a NAD83 geographic projection. Final species files are
+single multi-part polygons.
 
 # TODO combine Step 1, 2, 3 into on script - dynamically set up file name dictionary to master species list (step 3)
 Step1_ListFilesNames - Makes a list of the new files and saves it to a csv - will recursively search in the folder
@@ -34,7 +49,7 @@ Step4_popfilename - Adds the new files to the attribute table
 Step5_Dissolve - Dissolves file into a single multi-part polygon - this structure is needed for the composite files;
 when there composites are create a species need to represented by a single row of data. NOTE - original aquatic files
 received from Services had geometry and topology errors, therefore created the 5b script to try to rectify these errors
-and move the files to a separte location if errors could not be rectified.  This script can probably be archived
+and move the files to a separate location if errors could not be rectified.  This script can probably be archived
 
 # TODO update the manually made join table to a join in pandas back to the master species list
 Step6_PopulateDissolved - Loads standard species information based on the master species into the attribute table
