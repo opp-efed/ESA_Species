@@ -4,15 +4,18 @@ import datetime
 import numpy as np
 import sys
 
-# chemical_name = 'Methomyl'  # PATH TO TABLES MUST BE UPDATED FOR CHEMICAL
-chemical_name = 'Carbaryl'
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+chemical_name = 'Carbaryl' # 'Carbaryl'  'Methomyl'
+file_type ='Range' # CriticalHabitat, Range
+
+# chemical use look up
+use_lookup = r'path' \
              r'\SupportingTables' + os.sep + chemical_name + "Uses_lookup_20190409.csv"
-
-on_off_excel = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-               r'\_ExternalDrive\_CurrentSupportingTables\Species Collection_cmr_jc.xlsx'
-acres_col = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\CH_Acres_Pixels_20180430.csv"
+# table with on/off field call- format specific for table and extension
+on_off_excel = r'path\species.xlsx'
+acres_col = r"CONFIRM BELOW SET DYNAMICALLY BY FILE TYPE"
 max_drift = '792'
 
 # On/Off Adjustments
@@ -22,37 +25,43 @@ pastures = True
 residential = False
 
 # root path directory
-root_path = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage'
+root_path  = r'path/tabulated'
 # Tables directory  one level done from chemical
+
 # No adjustment
-folder_path = r'CriticalHabitat\SprayInterval_IntStep_30_MaxDistance_1501\noadjust'
+folder_path = r'SprayInterval_IntStep_30_MaxDistance_1501\noadjust'
+
 # census
-folder_path_census = r'CriticalHabitat\SprayInterval_IntStep_30_MaxDistance_1501\census'
+# folder_path_census = r'SprayInterval_IntStep_30_MaxDistance_1501\census'
+folder_path_census = r'SprayInterval_IntStep_30_MaxDistance_1501\adjHab'
 
 # TABLE NAMES these are example names for the file name structure- script will loop through all pct groups and all
 # usage bounding
 # Unadjusted Tables
-l48_BE_sum_table = "CH_UnAdjusted_Full CH_AllUses_BE_L48_SprayInterval_noadjust_20190501.csv"
-nl48_BE_sum_table = r"CH_UnAdjusted_Full CH_AllUses_BE_NL48_SprayInterval_noadjust_20190501.csv"
+l48_BE_sum_table = "R_UnAdjusted_Full Range_AllUses_BE_L48_SprayInterval_noadjust_20190626.csv"
+nl48_BE_sum_table = r"R_UnAdjusted_Full Range_AllUses_BE_NL48_SprayInterval_noadjust_20190626.csv"
 
-# Census and PCT adjusted Tables
+# Census and PCT adjusted Tables - example tables loops over all tables
 
-l48_BE_sum_PCT_table = "CH_Uniform_census_AllUses_BE_L48_SprayInterval_Full CH_max_20190501.csv"
-nl48_BE_sum_PCT_table = "CH_Uniform_census_AllUses_BE_NL48_SprayInterval_Full CH_max_20190501.csv"
 
-# Census, PCT, On/Off Field adjusted Tables
+l48_BE_sum_PCT_table = "R_Lower_adjHab_AllUses_BE_L48_SprayInterval_Full Range_min_20190627.csv"
+nl48_BE_sum_PCT_table = "R_Lower_adjHab_AllUses_BE_NL48_SprayInterval_Full Range_min_20190627.csv"
 
-l48_BE_sum_onoff_table = "CH_Uniform_census_AllUses_BE_L48_SprayInterval_Full CH_max_20190501.csv"
-nl48_BE_sum_onoff_table = "CH_Uniform_census_AllUses_BE_NL48_SprayInterval_Full CH_max_20190501.csv"
+# Census, PCT, On/Off Field adjusted Tables - example tables loops over all tables
+
+
+
+l48_BE_sum_onoff_table = "R_Lower_adjHab_AllUses_BE_L48_SprayInterval_Full Range_min_20190627.csv"
+nl48_BE_sum_onoff_table = "R_Lower_adjHab_AllUses_BE_NL48_SprayInterval_Full Range_min_20190627.csv"
+
 # Census,PCT, Habitat adjusted Tables
 
 # Census,PCT, Elevation adjusted Tables
 
 # Census,PCT, Habitat, Elevation adjusted Tables
 
-master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-              r'\MasterListESA_Feb2017_20180110.csv'
-
+master_list =  r"\MasterListESA_Feb2017_20190130.csv"
+# cols to include in output from master
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'country', 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
@@ -63,20 +72,26 @@ out_location = root_path
 #  Static variables - set up path - this is done so the path to the chemical does point to a previous run - it is link
 # to the chemical name at the top
 # Unadjusted Tables
-l48_BE_sum = root_path + os.sep + chemical_name + os.sep + folder_path + os.sep + l48_BE_sum_table
-nl48_BE_sum = root_path + os.sep + chemical_name + os.sep + folder_path + os.sep + nl48_BE_sum_table
+l48_BE_sum = root_path + os.sep + chemical_name + os.sep + file_type +os.sep+ folder_path + os.sep + l48_BE_sum_table
+nl48_BE_sum = root_path + os.sep + chemical_name + os.sep + file_type + os.sep+folder_path + os.sep + nl48_BE_sum_table
 
 # Census and PCT adjusted Tables
-BE_sum_PCT_path = root_path + os.sep + chemical_name + os.sep + folder_path_census
+BE_sum_PCT_path = root_path + os.sep + chemical_name + os.sep + file_type + os.sep+ folder_path_census
 
 # Census, PCT, On/Off Field adjusted Tables
-BE_sum_onoff_path = root_path + os.sep + chemical_name + os.sep + folder_path_census
+BE_sum_onoff_path = root_path + os.sep + chemical_name + os.sep + file_type + os.sep+folder_path_census
 
 #file type - Critical habitat or R- because R and critical habitat files are split is separate folders even if
 # script is started without updating the critical habirt and range path the script will **not** run because the files
 # nape will not start with the correct file_type identifier
-file_type = l48_BE_sum_PCT_table.split("_")[0] + "_"
+file_type_marker = l48_BE_sum_PCT_table.split("_")[0] + "_"
 
+
+if file_type_marker == 'CH_':
+    acres_col =r"path\CH_Acres_csv"
+else:
+    acres_col = r'path\R_Acres.csv'
+print acres_col
 def create_directory(dbf_dir):
     if not os.path.exists(dbf_dir):
         os.mkdir(dbf_dir)
@@ -117,7 +132,7 @@ def step_1_ED(row, col_aa):
     else:
         value = 'no catch'
 
-    if file_type == 'CH_':
+    if file_type_marker == 'CH_':
         if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
                 row['Source of Call final BE-Critical Habitat'] != 'Aqua WoE' and \
                 row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
@@ -125,7 +140,7 @@ def step_1_ED(row, col_aa):
         if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
             value = 'Qualitative'
 
-    if file_type == 'R_':
+    if file_type_marker == 'R_':
 
         if str(row['Source of Call final BE-Range']).startswith('Qu'):
             value = 'Qualitative'
@@ -183,7 +198,7 @@ def NLAA_overlap(row, cols_l48, cols_nl48):
         value = 'NLAA Overlap - 1percent'
     else:
         value = row['Step 2 ED Comment']
-    if file_type == 'CH_':
+    if file_type_marker == 'CH_':
         if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
                 row['Source of Call final BE-Critical Habitat'] != 'Aqua WoE' and \
                 row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
@@ -191,7 +206,7 @@ def NLAA_overlap(row, cols_l48, cols_nl48):
         if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
             value = 'Qualitative'
 
-    if file_type == 'R_':
+    if file_type_marker == 'R_':
         if str(row['Source of Call final BE-Range']).startswith('Qu'):
             value = 'Qualitative'
     return value
@@ -320,33 +335,37 @@ def appply_factor(factor_df, pct_df):
 
     # # Applies the factor adjustments to the pct adjusted overlap
 
-    # # APPLIES COMPOSITE FACTOR
-
     # To Ag uses layer
-    pct_df.ix[:, use_direct_only_conus_ag] = pct_df.ix[:, use_direct_only_conus_ag].div(
-        pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
-    pct_df.ix[:, use_direct_only_nl48_ag] = pct_df.ix[:, use_direct_only_nl48_ag].div(
-        pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
-
+    # pct_df.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test.csv')
+    pct_df.ix[:, use_direct_only_conus_ag] = pct_df.ix[:, use_direct_only_conus_ag].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+    pct_df.ix[:, use_direct_only_nl48_ag] = pct_df.ix[:, use_direct_only_nl48_ag].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+    # To composites
+    pct_df.ix[:, use_direct_only_conus_ag_aa] = pct_df.ix[:, use_direct_only_conus_ag_aa].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+    pct_df.ix[:, use_direct_only_nl48_ag_aa] = pct_df.ix[:, use_direct_only_nl48_ag_aa].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+    # print use_direct_only_conus_ag, use_direct_only_nl48_ag_aa #- columns adjusted
     # To Non Ag use layers if we have non-ag uses
     if not skip_non_ag_adjustment:
-        pct_df.ix[:, use_direct_only_conus_nonag] = pct_df.ix[:, use_direct_only_conus_nonag].div(
-            pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
-        pct_df.ix[:, use_direct_only_nl48_nonag] = pct_df.ix[:, use_direct_only_nl48_nonag].div(
-            pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+        pct_df.ix[:, use_direct_only_conus_nonag] = pct_df.ix[:, use_direct_only_conus_nonag].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+        pct_df.ix[:, use_direct_only_nl48_nonag] = pct_df.ix[:, use_direct_only_nl48_nonag].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+    # To composites
+        pct_df.ix[:, use_direct_only_conus_nonag_aa] = pct_df.ix[:, use_direct_only_conus_nonag_aa].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+        pct_df.ix[:, use_direct_only_nl48_nonag_aa] = pct_df.ix[:, use_direct_only_nl48_nonag_aa].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
 
     # # APPLIES AG Factor to Ag use layers
     pct_df.ix[:, use_direct_only_conus_ag] = pct_df.ix[:, use_direct_only_conus_ag].div(
         (pct_df['CONUS_Ag_Ag_Factor']).where(pct_df['CONUS_Ag_Ag_Factor'] != 0, np.nan), axis=0)
+
     pct_df.ix[:, use_direct_only_nl48_ag] = pct_df.ix[:, use_direct_only_nl48_ag].div(
         pct_df['NL48_Ag_Ag_Factor'].where(pct_df['NL48_Ag_Ag_Factor'] != 0, np.nan), axis=0)
     # # Applies Non-Ag factor to non-ag use layer if there are non-ag use layers
+    # print use_direct_only_conus_ag, use_direct_only_nl48_ag  #- columns adjusted
     if not skip_non_ag_adjustment:
         pct_df.ix[:, use_direct_only_conus_nonag] = pct_df.ix[:, use_direct_only_conus_nonag].div(
             pct_df['CONUS_NonAg_NonAg_Factor'].where(pct_df['CONUS_NonAg_NonAg_Factor'] != 0, np.nan), axis=0)
         pct_df.ix[:, use_direct_only_nl48_nonag] = pct_df.ix[:, use_direct_only_nl48_nonag].div(
             pct_df['NL48_NonAg_NonAg_Factor'].where(pct_df['NL48_NonAg_NonAg_Factor'] != 0, np.nan), axis=0)
-
+    # print use_direct_only_conus_nonag,use_direct_only_nl48_nonag #- columns adjusted
+    # pct_df.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test1.csv')
     # stores factor and pct adjusted values ag and non ag uses for conus and L48 - uses to calculate the differnence between
     # the pct adjusted and the factor and redundancy adjusted values -impact of the redundancy adjustment and adjust the
     # drift values
@@ -434,6 +453,7 @@ def appply_factor(factor_df, pct_df):
                                                              adjusted_nl48_ag_aerial.columns.tolist()]
     pct_df.ix[:, adjusted_nl48_nonag_aerial.columns.tolist()] = adjusted_nl48_nonag_aerial.ix[:,
                                                                 adjusted_nl48_nonag_aerial.columns.tolist()]
+    # pct_df.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test2.csv')
     return pct_df
 
 
@@ -549,7 +569,7 @@ chemical_noadjustment.fillna(0, inplace=True)
 
 # exports tables that are not adjusted
 chemical_noadjustment.to_csv(
-    out_path_no_adjustment + os.sep + file_type + 'No Adjustment_GIS_Step2_' + chemical_name + '.csv')
+    out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_GIS_Step2_' + chemical_name + '.csv')
 conus_cols_f = [v for v in chemical_noadjustment.columns.values.tolist() if
                 v.startswith('CONUS') or v in col_include_output]
 nl48_cols_f = [v for v in chemical_noadjustment.columns.values.tolist() if
@@ -558,9 +578,9 @@ conus_df_step1 = chemical_noadjustment[conus_cols_f]
 nl48_df_step1 = chemical_noadjustment[nl48_cols_f]
 
 conus_df_step1.to_csv(
-    out_path_no_adjustment + os.sep + file_type + 'No Adjustment_CONUS_Step2_' + chemical_name + '.csv')
-nl48_df_step1.to_csv(out_path_no_adjustment + os.sep + file_type + 'No Adjustment_NL48_Step2_' + chemical_name + '.csv')
-
+    out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_CONUS_Step2_' + chemical_name + '.csv')
+nl48_df_step1.to_csv(out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_NL48_Step2_' + chemical_name + '.csv')
+# chemical_noadjustment.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\red.csv')
 # TABLE 2- PCT
 # Summarize output with just the PCT adjustments
 for group in ['min', 'max', 'avg']:  #
@@ -584,13 +604,15 @@ for group in ['min', 'max', 'avg']:  #
                        nl48_BE_sum_PCT_table.split("_")[7] + "_" + group + "_" + nl48_BE_sum_PCT_table.split("_")[9]
         nl48_BE_sum_PCT = BE_sum_PCT_path + os.sep + pct_table_nl
 
-        print l48_BE_sum_PCT
-        print nl48_BE_sum_PCT
+        # print l48_BE_sum_PCT
+        # print nl48_BE_sum_PCT
 
         # PCT and Census Adjusted tables
         l48_df_pct = pd.read_csv(l48_BE_sum_PCT)
+        print l48_BE_sum_PCT
         nl48_df_pct = pd.read_csv(nl48_BE_sum_PCT)
 
+        l48_df_pct.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\pct.csv')
         chemical_pct, col_selection_conus = extract_chemical_overlap(col_prefix_CONUS, aa_layers_CONUS, 'CONUS',
                                                                      l48_df_pct, 'pct -conus')
         chemical_pct = pd.merge(base_sp_df, chemical_pct, on='EntityID', how='left')
@@ -600,7 +622,7 @@ for group in ['min', 'max', 'avg']:  #
 
         # merges the CONUS and NL48 tables
         chemical_pct = pd.merge(chemical_pct, out_nl48_df_pct, on='EntityID', how='left')
-
+        chemical_pct.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\pct_chem.csv')
         chemical_pct['Step 2 ED Comment'] = chemical_pct.apply(
             lambda row: step_1_ED(row, chemical_name + " AA""_" + max_drift), axis=1)
         chemical_pct['Step 2 ED Comment'] = chemical_pct.apply(
@@ -608,14 +630,14 @@ for group in ['min', 'max', 'avg']:  #
         chemical_pct.fillna(0, inplace=True)
 
         # Export tables that are only PCT and census adjusted
-        chemical_pct.to_csv(out_path_pct + os.sep + file_type + 'PCT_GIS_Step2_' + chemical_name + '.csv')
+        chemical_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_GIS_Step2_' + chemical_name + '.csv')
         # COMMENTS THESE SHOULD NOT CHANGE FROM THE FIRST LOOP
         # conus_cols_f = [v for v in chemical_pct.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
         # nl48_cols_f = [v for v in chemical_pct.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
         conus_df_step1_pct = chemical_pct[conus_cols_f]
         nl48_df_step1_pct = chemical_pct[nl48_cols_f]
-        conus_df_step1_pct.to_csv(out_path_pct + os.sep + file_type + 'PCT_CONUS_Step2_' + chemical_name + '.csv')
-        nl48_df_step1_pct.to_csv(out_path_pct + os.sep + file_type + 'PCT_NL48_Step2_' + chemical_name + '.csv')
+        conus_df_step1_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_CONUS_Step2_' + chemical_name + '.csv')
+        nl48_df_step1_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_NL48_Step2_' + chemical_name + '.csv')
 
         # TABLE 3- PCT and Redundancy tables
         # redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are calculated
@@ -667,6 +689,7 @@ for group in ['min', 'max', 'avg']:  #
         use_direct_only_conus_aa = [x for x in aa_col_conus if
                                     x.endswith('_0') and 'Ag' not in x.split("_")[1].split(" ") and 'NonAg' not in
                                     x.split("_")[1].split(" ")]
+        print use_direct_only_conus_aa
 
         use_direct_only_nl48_ag_aa = [x for x in aa_col_nl48 if x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
         use_direct_only_nl48_nonag_aa = [x for x in aa_col_nl48 if
@@ -741,20 +764,26 @@ for group in ['min', 'max', 'avg']:  #
         # Ag factor and composite factor calculated from the AA and AG Composites then applied to all individual Ag
         # layers, Non-Ag factor and composite factor calculated from the AA And Non-Ag Composites is applied to all of
         # the Non-Ag uses - Updated Winter 2018 based on QC before QC - the composite factor was not applied
-        # to the AG use layers.  Both QCers indicated the composite factor need to be applied the the individual ag
-        # layers (ESA team Fall 2017- BE Streamlining meeting lead CMR) QC of this process was conducted my CMR and CP
-        # early summer 2018 (may/june see files Copy of Carbaryl_QC_FactorAdjustments_CP.xlsx and
+        # to the AG use layers.  Both QCers indicated the composite factor needs to be applied to the individual ag
+        # layer too (ESA team Fall 2017- BE Streamlining meeting lead CMR) QC of this process was conducted my CMR and
+        # CP early summer 2018 (may/june see files Copy of Carbaryl_QC_FactorAdjustments_CP.xlsx and
         # Carbaryl_QC_FactorAdjustments.xlsx)
+
+        # 5/16/19 Per discussion with CMR added the adjustment to the composite layers - this applies the composite
+        # factor to both the Ag and non-ag composites
 
         # Ag factor = sum of ag uses/ ag composite - CONUS_Sum_Ag/ direct overlap of the ag composite
         # Non-Ag factor sum of non ag use/ non ag composite; - CONUS_Sum_NonAg /direct overlap of the non ag composite
         # Composite factor sum of Ag and Non Ag composite / AA - CONUS_Sum_Composites/ direct overlap of the AA
 
+
+        chemical_noadjustment.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test1b.csv')
         # ### Calculated factors
         # calculates the Ag Factor for CONUS and NL48 = where clause removed the rows where the  Ag composite is equal to 0
         chemical_noadjustment['CONUS_Ag_Ag_Factor'] = chemical_noadjustment['CONUS_Sum_Ag'].div(
             (chemical_noadjustment[use_direct_only_conus_ag_aa[0]]).where(
                 chemical_noadjustment[use_direct_only_conus_ag_aa[0]] != 0, np.nan), axis=0)
+
         chemical_noadjustment['NL48_Ag_Ag_Factor'] = chemical_noadjustment['NL48_Sum_Ag'].div(
             (chemical_noadjustment[use_direct_only_nl48_ag_aa[0]]).where(
                 chemical_noadjustment[use_direct_only_nl48_ag_aa[0]] != 0, np.nan), axis=0)
@@ -767,14 +796,15 @@ for group in ['min', 'max', 'avg']:  #
                 (chemical_noadjustment[use_direct_only_nl48_nonag_aa[0]]).where(
                     chemical_noadjustment[use_direct_only_nl48_nonag_aa[0]] != 0, np.nan), axis=0)
         # calculated the Composite factors for CONUS and NL48 = where clause removed the rows where the  Ag composite is equal to 0
+        # To change this to use the un altered action area change to index position 1; to use usage action area index position 0
         chemical_noadjustment['CONUS_Composite_Factor'] = chemical_noadjustment['CONUS_Sum_Composites'].div(
-            (chemical_noadjustment[use_direct_only_conus_aa[0]]).where(
+            (chemical_noadjustment[use_direct_only_conus_aa[1]]).where(
                 chemical_noadjustment[use_direct_only_conus_aa[0]] != 0, np.nan), axis=0)
         chemical_noadjustment['NL48_Composite_Factor'] = chemical_noadjustment['NL48_Sum_Composites'].div(
             (chemical_noadjustment[use_direct_only_nl48_aa[0]]).where(
                 chemical_noadjustment[use_direct_only_nl48_aa[0]] != 0, np.nan), axis=0)
         # print for QC
-        # chemical_noadjustment.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\Summarized Tables\Full Range\3_Redundancy\test.csv')
+        # chemical_noadjustment.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test1a.csv')
 
         # Column headers will be the same for all tables therefore they don't need to updated; TODO  they should be loaded into
         # the function
@@ -787,14 +817,14 @@ for group in ['min', 'max', 'avg']:  #
         chemical_pct_redundancy['Step 2 ED Comment'] = chemical_pct_redundancy.apply(
             lambda row: NLAA_overlap(row, col_selection_conus, col_selection_nl48), axis=1)
         chemical_pct_redundancy.to_csv(
-            out_path_redundancy + os.sep + file_type + 'Redundancy_GIS_Step2_' + chemical_name + '.csv')
+            out_path_redundancy + os.sep + file_type_marker + 'Redundancy_GIS_Step2_' + chemical_name + '.csv')
         # Export tables for the CONUS and NL48
         conus_df_step1 = chemical_pct_redundancy[conus_cols_f]
         nl48_df_step1 = chemical_pct_redundancy[nl48_cols_f]
         conus_df_step1.to_csv(
-            out_path_redundancy + os.sep + file_type + 'Redundancy_CONUS_Step2_' + chemical_name + '.csv')
+            out_path_redundancy + os.sep + file_type_marker + 'Redundancy_CONUS_Step2_' + chemical_name + '.csv')
         nl48_df_step1.to_csv(
-            out_path_redundancy + os.sep + file_type + 'Redundancy_NL48_Step2_' + chemical_name + '.csv')
+            out_path_redundancy + os.sep + file_type_marker + 'Redundancy_NL48_Step2_' + chemical_name + '.csv')
 
         # TABLE 4- PCT, Redundancy, and On/Off field adjusted  tables
         # redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are calculated
@@ -975,15 +1005,15 @@ for group in ['min', 'max', 'avg']:  #
             lambda row: NLAA_overlap(row, col_selection_conus, col_selection_nl48), axis=1)
         chemical_pct_redundancy_on_off.fillna(0, inplace=True)
         chemical_pct_redundancy_on_off.to_csv(
-            out_path_on_off + os.sep + file_type + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv')
-        print out_path_on_off + os.sep + file_type + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv'
+            out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv')
+        print out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv'
 
         conus_df_step1 = chemical_pct_redundancy_on_off[conus_cols_f]
         nl48_df_step1 = chemical_pct_redundancy_on_off[nl48_cols_f]
 
         conus_df_step1.to_csv(
-            out_path_on_off + os.sep + file_type + 'On_Off_Field_CONUS_Step2_' + chemical_name + '.csv')
-        nl48_df_step1.to_csv(out_path_on_off + os.sep + file_type + 'On_Off_Field_NL48_Step2_' + chemical_name + '.csv')
+            out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_CONUS_Step2_' + chemical_name + '.csv')
+        nl48_df_step1.to_csv(out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_NL48_Step2_' + chemical_name + '.csv')
 
         # Census,PCT, Habitat adjusted Tables
 

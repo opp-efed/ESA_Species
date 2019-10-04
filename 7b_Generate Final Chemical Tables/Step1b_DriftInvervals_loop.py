@@ -1,36 +1,38 @@
 import pandas as pd
 import os
 import datetime
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
-import pandas as pd
-import os
-import datetime
+chemical_name = 'C' # chemical_name = 'Carbaryl', Methomyl
+file_type = 'Range'  # 'Range or CriticalHabitat
 
-
-# TODO FILTER NE/NLAAs
-# chemical_name = 'Methomyl'
-chemical_name = 'Carbaryl'
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
+# chemical use look up
+use_lookup = r'path' \
              r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
 
 max_drift = '792'
-l48_BE_interval_path = "L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range" \
-                  "\SprayInterval_IntStep_30_MaxDistance_1501\census"
-l48_BE_interval_table = "R_Upper_SprayInterval_On OffField_census_max_20190501.csv"
 
+# root path directory
+root_path = r'path/tabulated'
 
+# Tables directory  one level done from chemical
 
-file_type = l48_BE_interval_table.split("_")[0] +"_"
+folder_path = r'SprayInterval_IntStep_30_MaxDistance_1501\census'
 
-master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-              r'\MasterListESA_Feb2017_20180110.csv'
+BE_interval_table = "R_Lower_SprayInterval_Full Range_census_avg_20190626.csv"  # example table will loop through all tables
 
+master_list =  r"\MasterListESA_Feb2017_20190130.csv"
+# columns from master to include
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'country','Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-out_location = 'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage'
+out_location = root_path
+
+BE_interval_path = root_path + os.sep + chemical_name + os.sep + file_type +os.sep +folder_path
+file_type_maker = BE_interval_table.split("_")[0] + "_"
 
 on_off_species = []
 
@@ -38,6 +40,7 @@ on_off_species = []
 def create_directory(dbf_dir):
     if not os.path.exists(dbf_dir):
         os.mkdir(dbf_dir)
+
 
 
 def on_off_field(row, cols, df):
@@ -48,7 +51,6 @@ def on_off_field(row, cols, df):
             df.loc[df['EntityID'] == ent_id, [col]] = 0
     else:
         pass
-
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
@@ -61,9 +63,9 @@ use_lookup_df = pd.read_csv(use_lookup)
 
 for group in ['min','max','avg']:
     for bound in ['Lower', 'Upper', 'Uniform']:
-        table = l48_BE_interval_table.split("_")[0] +"_"+bound+"_"+l48_BE_interval_table.split("_")[2]+"_"+\
-                l48_BE_interval_table.split("_")[3]+"_"+l48_BE_interval_table.split("_")[4]+"_"+group+"_"+l48_BE_interval_table.split("_")[6]
-        table_path = l48_BE_interval_path +os.sep+table
+        table = BE_interval_table.split("_")[0] +"_"+bound+"_"+BE_interval_table.split("_")[2]+"_"+\
+                BE_interval_table.split("_")[3]+"_"+BE_interval_table.split("_")[4]+"_"+group+"_"+BE_interval_table.split("_")[6]
+        table_path = BE_interval_path +os.sep+table
 
         out_path = out_path_original +os.sep+group
         create_directory(out_path)
@@ -96,7 +98,7 @@ for group in ['min','max','avg']:
         # aa_l48.apply(lambda row: on_off_field(row, direct_overlap_col, aa_l48), axis=1)
 
         aa_l48 = pd.merge(base_sp_df, aa_l48, on='EntityID', how='left')
-        aa_l48.to_csv(out_path + os.sep + file_type+ 'CONUS_Step1_Intervals_' + chemical_name + '.csv')
+        aa_l48.to_csv(out_path + os.sep + file_type_maker + 'CONUS_Step1_Intervals_' + chemical_name + '.csv')
 
         # ##Filter NL48 AA
         aa_layers_NL48 = use_lookup_df.loc[(use_lookup_df['Action Area'] == 'x') & (use_lookup_df['Region'] != 'CONUS')]
@@ -134,7 +136,7 @@ for group in ['min','max','avg']:
         aa_nl48.apply(lambda row: on_off_field(row, direct_overlap_col, aa_nl48), axis=1)
         aa_nl48 = pd.merge(base_sp_df, aa_nl48, on='EntityID', how='left')
 
-        aa_nl48.to_csv(out_path + os.sep + file_type + 'NL48_Step1_Intervals_' + chemical_name + '.csv')
+        aa_nl48.to_csv(out_path + os.sep + file_type_maker + 'NL48_Step1_Intervals_' + chemical_name + '.csv')
         print out_path
 
 end = datetime.datetime.now()

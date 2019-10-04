@@ -2,36 +2,46 @@ import pandas as pd
 import os
 import datetime
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # Be sure on off field is accounted for
 
-# chemical_name = 'Methomyl'
-chemical_name = 'Carbaryl'
-use_lookup = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
+chemical_name = '' # chemical_name = 'Carbaryl', Methomyl
+file_type = 'Range'  # 'Range or CriticalHabitat
 
+use_lookup = r'path' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
 
 max_drift = '792'
-l48_BE_sum = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\R_UnAdjusted_Full Range_AllUses_BE_L48_SprayInterval_noadjust_20190501.csv"
 
-nl48_BE_sum = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\Range\SprayInterval_IntStep_30_MaxDistance_1501\noadjust\R_UnAdjusted_Full Range_AllUses_BE_NL48_SprayInterval_noadjust_20190501.csv"
+# root path directory
 
-master_list = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables' \
-              r'\MasterListESA_Feb2017_20180110.csv'
+root_path  = r'path/tabulated'
+# Tables directory  one level done from chemical
+# No adjustment
+folder_path = r'SprayInterval_IntStep_30_MaxDistance_1501\noadjust'
 
+# table names from previous stees
+l48_BE_sum_table = "R_UnAdjusted_Full Range_AllUses_BE_L48_SprayInterval_noadjust_20190626.csv"
+nl48_BE_sum_table = "R_UnAdjusted_Full Range_AllUses_BE_NL48_SprayInterval_noadjust_20190626.csv"
+
+master_list = r"\MasterListESA_Feb2017_20190130.csv"
+# columns from master to include
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'country', 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-out_location = 'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage'
-
+out_location = root_path
+l48_BE_sum = root_path +os.sep + chemical_name + os.sep +file_type+os.sep+folder_path+os.sep +l48_BE_sum_table
+nl48_BE_sum = root_path +os.sep + chemical_name + os.sep +file_type+os.sep+folder_path+os.sep +nl48_BE_sum_table
 on_off_species =[]
 
 find_file_type = os.path.basename(l48_BE_sum)
 if find_file_type.startswith('R'):
-    file_type = 'R_'
+    file_type_marker = 'R_'
 else:
-    file_type = 'CH_'
+    file_type_marker = 'CH_'
 
 def create_directory(dbf_dir):
     if not os.path.exists(dbf_dir):
@@ -50,7 +60,7 @@ def step_1_ED(row, col_l48):
     elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
         value =  'May Affect'
 
-    if file_type == 'CH_':
+    if file_type_marker == 'CH_':
         if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
                 row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
                 row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
@@ -58,7 +68,7 @@ def step_1_ED(row, col_l48):
         if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
             value = 'Qualitative'
 
-    if file_type == 'R_':
+    if file_type_marker == 'R_':
 
         if str(row['Source of Call final BE-Range']).startswith('Qu'):
             value = 'Qualitative'
@@ -173,16 +183,16 @@ chemical_step1 = pd.merge(chemical_step1, out_nl48_df, on='EntityID', how='left'
 chemical_step1 ['Step 1 ED Comment'] = chemical_step1 .apply(lambda row: step_1_ED(row, 'CONUS_'+ chemical_name +" AA"
                                                                                    "_"+max_drift), axis=1)
 
-chemical_step1.to_csv(out_path + os.sep + 'GIS_Step1_' + file_type + chemical_name + '.csv')
+chemical_step1.to_csv(out_path + os.sep + 'GIS_Step1_' + file_type_marker + chemical_name + '.csv')
 conus_cols = [v for v in chemical_step1.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
 nl48_cols_f = [v for v in chemical_step1.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
 
 conus_df_step1 = chemical_step1[conus_cols]
 nl48_df_step1 = chemical_step1[nl48_cols_f]
 
-conus_df_step1.to_csv(out_path + os.sep + 'CONUS_Step1_' + file_type + chemical_name + '.csv')
-nl48_df_step1.to_csv(out_path + os.sep + 'NL48_Step1_' + file_type + chemical_name + '.csv')
-print out_path + os.sep + 'CONUS_Step1_' + file_type + chemical_name + '.csv'
+conus_df_step1.to_csv(out_path + os.sep + 'CONUS_Step1_' + file_type_marker + chemical_name + '.csv')
+nl48_df_step1.to_csv(out_path + os.sep + 'NL48_Step1_' + file_type_marker + chemical_name + '.csv')
+print out_path + os.sep + 'CONUS_Step1_' + file_type_marker + chemical_name + '.csv'
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()
 elapsed = end - start_time
