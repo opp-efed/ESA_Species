@@ -7,7 +7,7 @@ import arcpy
 # Author J.Connolly
 # Internal deliberative, do not cite or distribute
 
-# Title - Check projection of all use to make sure all projections
+# Title - Check projection of all use to make sure all projections are correct and generate list of use layers
 # gdb with use layers to check
 InGDB = r'L:\Workspace\StreamLine\ByProjection\AK_UseLayers.gdb'
 NameCSV = 'AK_Uses' # file name for output files
