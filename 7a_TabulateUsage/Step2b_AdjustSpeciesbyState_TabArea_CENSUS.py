@@ -162,21 +162,21 @@ state_fp['STATE_Upper'] = state_fp['STATE'].map(lambda x: str(x).upper()).astype
 
 list_pct_table = [v for v in os.listdir(pct_table_directory) if v.endswith('.csv')]
 
-for group in [ 'max','avg','min'] :  #['min', 'max', 'avg']
-    # assumes identifier is in this postion
+for group in [ 'max','avg','min'] :  # pcts to include
+    # assumes identifier is in this position
     print list_pct_table
     pct_table = [v for v in list_pct_table if v.split("_")[1] == group] [0]
-    pct_df = pd.read_csv(pct_table_directory + os.sep + pct_table)
-    use_lookup_df = pd.read_csv(use_lookup)
-    usage_lookup_df = use_lookup_df.ix[:, ['FullName', 'Usage lookup', 'Included AA']]
-    usage_lookup_df['Filename'] = usage_lookup_df['FullName'].map(lambda x: str(x) + "_euc").astype(str)
+    pct_df = pd.read_csv(pct_table_directory + os.sep + pct_table) # read pct table
+    use_lookup_df = pd.read_csv(use_lookup) # reads use lookup tables
+    usage_lookup_df = use_lookup_df.ix[:, ['FullName', 'Usage lookup', 'Included AA']] # filters tables
+    usage_lookup_df['Filename'] = usage_lookup_df['FullName'].map(lambda x: str(x) + "_euc").astype(str) # set filename
     # limit look-up to just those uses in the current chemical
-    usage_lookup_df = usage_lookup_df.loc[usage_lookup_df['Included AA'] == 'x']
+    usage_lookup_df = usage_lookup_df.loc[usage_lookup_df['Included AA'] == 'x'] # filter to just uses for chemial per lookups
     print use_lookup_df['Usage lookup'].values.tolist()
-    list_use_folder= usage_lookup_df['Filename'].values.tolist()
+    list_use_folder= usage_lookup_df['Filename'].values.tolist()  # get a list of folders for chemical
     out_path = out_location + os.sep + group
     print out_path
-
+    # adds directories if needed
     if not os.path.exists(os.path.dirname(out_path)):
         os.mkdir(os.path.dirname(out_path))
     if not os.path.exists(out_path):
@@ -191,16 +191,16 @@ for group in [ 'max','avg','min'] :  #['min', 'max', 'avg']
         pol_id = 'GEOID'
         pct_header = 'GEOID'
 
-    t_pct = pct_df.T
-    t_pct = t_pct.reset_index()
-    update_cols = t_pct.iloc[0].values.tolist()
-    update_cols[0] = 'STATE_Upper'
-    t_pct.columns = update_cols
-    t_pct = t_pct.reindex(t_pct.index.drop(0))
-    t_pct = pd.merge(t_pct, state_fp,  on= 'STATE_Upper', how='left')
+    t_pct = pct_df.T  # transforms PCT table so uses are the headers
+    t_pct = t_pct.reset_index()  # reset index
+    update_cols = t_pct.iloc[0].values.tolist()  # col headers are in row 0
+    update_cols[0] = 'STATE_Upper'  # sets col for index position 0
+    t_pct.columns = update_cols # updates col heading
+    t_pct = t_pct.reindex(t_pct.index.drop(0))  # drops row with col headers
+    t_pct = pd.merge(t_pct, state_fp,  on= 'STATE_Upper', how='left')  # merges to pol bound lookup
 
-    list_csv = os.listdir(in_location_species)
-    list_csv = [c for c in list_csv if c.startswith(range_ch)]
+    list_csv = os.listdir(in_location_species)  # get a lists of files
+    list_csv = [c for c in list_csv if c.startswith(range_ch)]  # filters list
 
     for value in suffixes:
         if value == 'noadjust':
@@ -222,11 +222,12 @@ for group in [ 'max','avg','min'] :  #['min', 'max', 'avg']
         if value in suffixes: # TODO removed if and change to elseafter completing update for elevation and habitat
             for csv in c_list:
                 print csv
-                state_csv = csv.replace("_"+value +'.csv', "_"+'State'+".csv")
+                # loading county file so we can apply the pre/ab mask for non registered crops; then  sum to state
+                state_csv = csv.replace("_"+value +'.csv', "_"+'County'+".csv")
                 remove_sp_abb = state_csv.split("_")[0] +"_"+state_csv.split("_")[1]+"_"
                 state_csv = state_csv.replace(remove_sp_abb,'')
-                state_folder = state_csv.replace( "_"+'State'+".csv","")
-                if state_folder.replace('_State.csv','')  not in list_use_folder:
+                state_folder = state_csv.replace( "_"+'County'+".csv","")
+                if state_folder.replace('_County.csv','')  not in list_use_folder:
                     continue
                 else:
                     print out_path+os.sep+csv.replace('.csv',"_"+group+'.csv')
@@ -240,55 +241,56 @@ for group in [ 'max','avg','min'] :  #['min', 'max', 'avg']
                         usage_col_header = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder].iloc[0]
 
                         state_df = pd.read_csv(in_locations_states + os.sep + state_folder + os.sep + state_csv)
-                        # state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(str)
+                        state_df['STATEFP'] = state_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(
+                            str)
+                        state_df['GEOID'] = state_df['GEOID'].map(lambda x: str(x) if len(str(x)) == 5 else '0' + str(x)).astype(str)
+                        usage_col_header = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Usage lookup'].iloc[0]
+                        print use_lookup
 
-                        # Spring 2019:  team decided to calc total treated acres from the whole state because that is
-                        # the level of the SUUM, but mask where those treated acres can be found within the species
-                        # range based available information in the census of Ag.
-                        # TODO ADD COUNTY MASK HERE BEFORE STAT DIRECT CALC
-                        filtered_state = state_df.ix[:, ['STATEFP',  'Acres', 'VALUE_0']]
+                        filtered_state = state_df.ix[:, ['STATEFP','GEOID', 'Acres', 'VALUE_0']]
+                        # Summed 2019: Team discussion - apply pres/ab to both the state and species before calc
+                        # treated acres
+                        # joins with pre/ab table
+                        filtered_state = pd.merge(filtered_state, presence_absence_df, on= ['GEOID'], how='left')
+                        # multiples the presences/ab by the state overlap making counties with no registered crops 0
+                        filtered_state.loc[:,['VALUE_0']] = filtered_state.loc[:,['VALUE_0']].multiply(filtered_state[usage_col_header], axis=0)
+                        filtered_state = filtered_state.ix[:, ['STATEFP', 'Acres', 'VALUE_0']]
                         filtered_state.columns = ['STATEFP', 'Acres', 'State direct msq']
-
+                        # sums counties to state
+                        filtered_state = filtered_state.groupby(['STATEFP'])[['Acres', 'State direct msq']].sum().reset_index()
                         # Load species overlap result for state
                         species_df = pd.read_csv(in_location_species + os.sep +csv, low_memory=False)
                         species_df['STATEFP'] = species_df['STATEFP'].map(lambda x: str(x) if len(str(x)) == 2 else '0' + str(x)).astype(
                             str)
                         species_df ['GEOID'] = species_df ['GEOID'] .map(lambda x: str(x) if len(str(x)) == 5 else '0' + str(x)).astype(
                             str)
-
+                        # joins with pre/ab table
                         cnty_w_p_a = pd.merge(species_df, presence_absence_df, on= ['GEOID'], how='left')
                         cnty_w_p_a.drop_duplicates(inplace=True)
                         # print statement to QC outputs
                         # cnty_w_p_a.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\test_census' + os.sep+ 'merge_' +csv)
 
-                        usage_col_header = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Usage lookup'].iloc[0]
-                        print use_lookup
                         cnty_w_p_a_use= cnty_w_p_a[species_df.columns.values.tolist()+[usage_col_header]]
-
-                        # TODO Check why some of the PCTS are coming in as NaN is this because we are just running FLA?
                         cnty_w_p_a_use[usage_col_header].fillna(1, inplace=True)
                         # If we want to remove values in the drift are for crops not found in census
                         # cnty_w_p_a_use.ix[:,cnty_df.columns.values.tolist()] = cnty_w_p_a_use.ix[:,cnty_df.columns.values.tolist()] .multiply(cnty_w_p_a_use[usage_col_header], axis=0)
 
-                        # this .loc and multiply due to SettingWithCopyWarning with just multiply:
-                        # A value is trying to be set on a copy of a slice from a DataFrame
+                        # multiples the presences/ab by the species overlap making counties with no registered crops 0
                         cnty_w_p_a_use.loc[:,['VALUE_0']] = cnty_w_p_a_use.loc[:,['VALUE_0']].multiply(cnty_w_p_a_use[usage_col_header], axis=0)
                         # print statement to QC outputs
                         # cnty_w_p_a_use.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\test_census'+os.sep + 'multiple_' +csv)
+
                         col_to_sum_state = ['EntityID','STATEFP']+[v for v in species_df.columns.values.tolist() if v.startswith('VALUE_')]
-                        # Copy causing a SettingWithCopyWarning:
-                        # A value is trying to be set on a copy of a slice from a DataFrame
                         sum_df = cnty_w_p_a_use[col_to_sum_state].copy()
 
                         val_cols = [v for v in species_df.columns.values.tolist() if v.startswith('VALUE_')]
                         species_state_df  = sum_df.groupby(['EntityID','STATEFP'])[val_cols].sum().reset_index()
                         # print state to qc outputs
                         # species_state_df.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Methomyl\test_census' + os.sep+'sum_' +csv)
+
                         # determine the crop in pct table that applies to the current csv then filter the pct table to just that crop and
                         # other columns need to merge
-
                         use_lookup_df_value = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Usage lookup'].iloc[0]
-
                         use_lookup_df_inc_chem = usage_lookup_df.loc[usage_lookup_df['Filename'] == state_folder, 'Included AA'].iloc[0]
                         if use_lookup_df_inc_chem == 'x':
                             filter_col = ['STATE', 'STATEFP']
