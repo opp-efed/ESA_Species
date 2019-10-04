@@ -4,10 +4,14 @@ import datetime
 
 import arcpy
 
-# Title - Check projection of all use to make sure all projections accounted for in steps 7
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
+# Title - Check projection of all use to make sure all projections
+# gdb with use layers to check
 InGDB = r'L:\Workspace\StreamLine\ByProjection\AK_UseLayers.gdb'
-NameCSV = 'AK_Uses'
-outCSVLocation = 'L:\Workspace\StreamLine\ByProjection'
+NameCSV = 'AK_Uses' # file name for output files
+outCSVLocation = 'out path'  # out paths
 
 
 # ####################FUNCTIONS

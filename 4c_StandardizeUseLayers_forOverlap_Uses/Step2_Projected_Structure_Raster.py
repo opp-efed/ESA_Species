@@ -4,20 +4,21 @@ import datetime
 from arcpy.sa import *
 import arcpy
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Title - Re-projects union raster into projection by region
-# in and out location
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\UseLayer_Tables\UseLayers_20190222.csv'
+# in and out location in a lookup table as a csv
+in_table = r'path\UseLayers_20190222.csv'
 
 midGDB = r'L:\Workspace\StreamLine\ByProjection\scratch.gdb'
 
 # projection folder - check all values in Final Projection columns have a corresponding file with the same name
-prjFolder = r'L:\Workspace\projections\FinalBE'
-
-# snap raster must be in desired projection with the desired cell size
-#run_regions = ['CONUS']
-# run_regions = ['AK', ]
+prjFolder = r'path\projections'
+# regions to run
 run_regions = ['CONUS']
 
+# snap raster must be in desired projection with the desired cell size
 SnapRaster_Dict = {'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb'
                             r'\Albers_Conical_Equal_Area_cultmask_2016',
                    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
