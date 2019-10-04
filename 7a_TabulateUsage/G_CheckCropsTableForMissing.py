@@ -1,5 +1,8 @@
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # out table from step e
 df = pd.read_csv(r"path\tableS.csv")
 df_drop = df.dropna(subset=['GenClass'])
