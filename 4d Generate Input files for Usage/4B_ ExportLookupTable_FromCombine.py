@@ -1,12 +1,16 @@
 import pandas as pd
-import arcpy
 import os
 import datetime
 
-look_up_fcs = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612'
-in_combine_grids = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined'
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
-out_location = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\Range\LookUp_Grid_byProjections_Combined'
+# look ups from county and HUC
+look_up_fcs = r'path\Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_[date]'
+# files combine with additonal data from step 4
+in_combine_grids = r'path\Grid_byProjections_Combined'
+# outlocation for lookup
+out_location = r'outpath\LookUp_Grid_byProjections_Combined'
 
 list_dir = os.listdir(in_combine_grids)
 list_huc_csv = os.listdir(look_up_fcs)

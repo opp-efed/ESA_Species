@@ -3,12 +3,13 @@ import arcpy
 import os
 import datetime
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 # Generates look-up tables for scripts from the species inputs
-look_up_fc= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
-
-look_up_fc_ab = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2Inter_20180612.gdb'
-
-out_location= r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20180612'
+look_up_fc= r'outpath\CH_Clipped_Union_20190812.gdb'
+look_up_fc_ab = r'outpath\CH_Clipped_Union_CntyInter_HUC2ABInter_20190812.gdb'
+out_location= r'out locations\Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20190812'
 
 # the the species are just intersected with the political boundaries True if both HUC and political false
 just_county = False

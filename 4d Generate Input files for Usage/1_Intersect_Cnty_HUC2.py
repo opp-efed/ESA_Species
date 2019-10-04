@@ -14,22 +14,15 @@ import datetime
 # #TODO make this a dynamaic process so the number of vector files can be dynamic
 
 # Input files to be intersect with species must cover the extent of the regions, IE include AS, GU etc
-in_huc_vector = r'L:\Workspace\StreamLine\InfoAddedForESA\FilesAppended_ESA.gdb\HUC12_Merge'
-in_sum_file = r'L:\Workspace\StreamLine\Boundaries.gdb\Counties_all_overlap'
+# HUC file includes EFEDs A/B split on the HUC2
+in_huc_vector = r'path\FilesAppended_ESA.gdb\HUC12_Merge'
+in_sum_file = r'path\Counties_all_overlap'
 
-# Union species files in vector format
-invector_location = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat\CH_Clipped_Union_20180110.gdb'
+# Union species files in vector format from strep 4b.3
+invector_location = r'path\R_Clipped_Union_[date].gdb'
 # Output location for union species files intersected with counties and HUC12 (both vector) used for usage
 # adjustments
-out_vector_projected = r'L:\Workspace\StreamLine\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-                       r'\CH_Clipped_Union_CntyInter_HUC2_20180612.gdb'
-
-# # Union ch files in vector format
-# invector_location = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-#                     r'\CH_Clipped_Union_20180110.gdb'
-# # Output location for union ch files intersected with counties and HUC12 (both vector) used for usage adjustments
-# out_vector_projected = r'L:\ESA\UnionFiles_Winter2018\CriticalHabitat' \
-#                        r'\CH_lipped_Union_CntyInter_HUC2ABInter_20180612.gdb'
+out_vector_projected = r'outpath\R_Clipped_Union_CntyInter_HUC2ABInter_[date].gdb'
 
 
 # FUNCTIONS

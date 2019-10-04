@@ -4,8 +4,7 @@ import datetime
 from arcpy.sa import *
 import arcpy
 
-# Title - Re-projects union raster into projection by region
-# in and out location
+# Title - Re-projects habita and elevation files in the regional projection and updates libraries
 
 # Excute this step if the habitat or elevation files have been updated
 in_directory = 'D:\Workspace\Elevation\Habitat Zip\Habitat.gdb'  # ## folder or gdb
