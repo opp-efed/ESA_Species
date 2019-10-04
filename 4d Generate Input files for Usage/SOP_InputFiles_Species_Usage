@@ -1,5 +1,8 @@
 Author: J. Connolly Updated 6/12/2018
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 
 Description: When incorporating usage to the overlap output summaries are supplemented using several additional data
 sources: Original downloads, and master files used for analysis backed up to F drive; final spatial libraries on F and
@@ -64,6 +67,31 @@ joining output tables using the various data source IDs (ZoneID, InterID, HUCID 
         - ran conifers- crust; ran amphib - bird, clams, insect - reptiles, snails, ferns, fishes, flower,
           'insect', -'reptil','snails ; took between 45 minutes and 15.5 hours most ~3.5
     --Split it out by regions - HI took second longest
+# TODO try to append cols not that the build raster attribute table is set to overwrite see tool help
+# Update cursor for headers that would read in table with values in the combine columns as zero, using both update
+# cursor and pandas. export a text file that can be use as a look up for the raster name instead due to time constraints
+
+# Note Note: if using update cursor in att table col header is limited to 16 characters
+
+#                            if len(col_header) >= 16:
+#                              col_header = col_header[:16]
+
+#             fields = [field[raster_list_combine.index(raster)], col_header]
+#             arcpy.AddField_management(out_folder + os.sep + spe_raster, col_header, "DOUBLE")
+#             exp = "'!"+str(field[raster_list_combine.index(raster)]) +"!'"
+#             print exp
+#             # arcpy.CalculateField_management(out_folder + os.sep + spe_raster, col_header, exp)
+#             print ('Added column {0}'.format(col_header))
+#             print field[raster_list_combine.index(raster)], col_header
+#             with arcpy.da.UpdateCursor(out_folder + os.sep + spe_raster, fields) as cursor:
+#                 for row in cursor:
+#                     print fields[0], fields[1]
+#                     val = row[0]
+#                     print val
+#                     row[1] =val
+#                     row[0]= val
+#                     cursor.updateRow(row)
+
 
 5_Extract_Habitat_MinMax- Extracts the observed elevation and habitat values from within the species files.  This is
 used as inputs to adjusted the overlap results
