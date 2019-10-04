@@ -2,8 +2,9 @@ import pandas as pd
 import re
 import os
 import datetime
-import sys
-import numpy as np
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # BEFORE START BE SURE TO REMOVE - symbols
 # if ascii syb are causing a problem run in consol and print values for df col to list and search for the xa of an ascii
@@ -16,34 +17,17 @@ import numpy as np
 # TABLE 1 and TABLE MUST USE THE SAME NAME - Tomatoe  tomatoes and melons, cantaloupe v cantaloupee
 # sub commonitys only found in NASS can be ignored
 
-chemical_name = 'Carbaryl'
-not_surveyed_symbol = 'Not Surveyed'
-surveyed_no_usage = 'NR*'
-# suum_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#              '\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Malathion SUUM spreadsheet.final.041118.final.xlsx'
-# sheet_name = 'Malathion Table 2 data'
-#
-#
-# survey_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#              '\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Malathion SUUM spreadsheet.final.041118.final.xlsx'
-# sheet_name = 'Malathion Table 1 data'
+chemical_name = 'Carbaryl' # chemimcal name
+not_surveyed_symbol = 'Not Surveyed' # how not surveyed tracked
+surveyed_no_usage = 'NR*'  # how not registered is tracked
+
 
 # Split the percentage for CA into the own column so State name can be used as lookup
-suum_table2 = "C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA" \
-              "\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Carbaryl\Carbaryl_table2.csv"
-suum_table1 = "C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA" \
-              "\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Carbaryl\Carbaryl_table1.csv"
+suum_table2 = "path\Chemical_table2.csv"
+suum_table1 = "path\chemical_table1.csv"
 
-# crop_excel ='C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#             '\_ExternalDrive\_CurrentSupportingTables\Usage\Malathion_florida acres and survey.xlsx'
-# sheet_name_1 ='Malathion Florida'
+crop_excel = 'path\ParentTable_national_20181217.csv'
 
-crop_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-             '\_ExternalDrive\_CurrentSupportingTables\Usage\ParentTable_national_20181217.csv'
-
-# crosswalk_excel ='C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-#             '\_ExternalDrive\_CurrentSupportingTables\Usage\ULUT Data Source Summary-crosswalk (draft for review).xlsx'
-# sheet_name_2 ='AG Crops (survey status)(+)'
 
 # NOTE any crop terms used in SUUM no found on crosswalk are added to the 'SUUM Crop not in xwalk' columns with
 # support information.  Confirm supporting information with bead before going final
@@ -53,7 +37,7 @@ crosswalk_excel = 'C:\Users\JConno02\OneDrive - Environmental Protection Agency 
 col_in_xwalk_chk = ['SUUM Crop not in xwalk','CDL Class Name', 'Name in NASS', 'Site']
 col_in_xwalk_chk = ['CDL Class Name', 'CENSUS Name','Site_Clean','SUUM Crop not in xwalk']
 
-out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\Carbaryl'
+out_location = r'out location'
 
 
 def add_acres(row, col, NASS_col):

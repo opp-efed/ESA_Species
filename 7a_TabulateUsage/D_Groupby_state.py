@@ -1,5 +1,8 @@
 import pandas as pd
 
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
+
 def add_cnty(row, col, ):
     value = row[col]
     while len(str(value)) <3:
@@ -8,7 +11,7 @@ def add_cnty(row, col, ):
     return value
 
 df_1_0 = pd.read_csv(
-    r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\State_0_1.csv")
+    r"path\State_0_1.csv")  # pre/ab table from census of ag
 
 udl = df_1_0.groupby(['UDL'])[
     ['ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE', 'FLORIDA',
@@ -36,9 +39,8 @@ melt = pd.melt(udl, id_vars=['UDL', 'Location', ],
                            'PENNSYLVANIA', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS',
                            'UTAH', 'VERMONT', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'])
 
-cnty_1_0 = pd.read_csv(
-    r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive"
-    r"\_CurrentSupportingTables\Usage\SUUMs\methomyl\meth_0_1_all.csv",
+# chemical county mask
+cnty_1_0 = pd.read_csv("path\meth_0_1_all.csv",
     header=2)
 
 groupby_col =['State reported usage', 'UDL', 'Location']
@@ -50,17 +52,14 @@ for v in cnty_1_0.columns.values.tolist():
 udl_w_crops_cnty = cnty_1_0.groupby(groupby_col)[group_cols_cnty].sum().reset_index()
 udl_w_crops_cnty_udl = cnty_1_0.groupby(['UDL'])[group_cols_cnty].sum().reset_index()
 
-udl_w_crops_cnty_udl.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive'
-                            r'\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\methomyl\udl_cnty_mask.csv')
+udl_w_crops_cnty_udl.to_csv(r'out paths\udl_cnty_mask.csv')
 
-lookup = pd.read_csv(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects"
-                     r"\ESA\_ExternalDrive\_CurrentSupportingTables\Usage\Cnty_St_ANSI_Lookup.csv")
+lookup = pd.read_csv(r"path\Cnty_St_ANSI_Lookup.csv")
 lookup['State ANSI'] = lookup['State ANSI'].map(lambda x: str(x) if len(str(x)) == 2 else "0" +str(x)).astype(str)
 lookup['County ANSI']  = lookup.apply(lambda row: add_cnty(row, 'County ANSI'), axis=1)
 
 lookup["GEOID"] = lookup['State ANSI'].map(str) + lookup['County ANSI'].map(str)
-lookup.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA'
-              r'\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\methomyl\cnty_fips.csv')
+lookup.to_csv(r'out path\cnty_fips.csv')
 
 udl_w_crops_cnty_udl_t = udl_w_crops_cnty_udl.T.reset_index()
 cols = udl_w_crops_cnty_udl_t.iloc[0].values.tolist()
@@ -69,6 +68,5 @@ cols.remove('UDL')
 udl_w_crops_cnty_udl_t= udl_w_crops_cnty_udl_t.reindex(udl_w_crops_cnty_udl_t.index.drop(0))
 add_fips = pd.merge(udl_w_crops_cnty_udl_t,lookup, how = 'left', left_on='UDL',right_on= 'Location')
 add_fips[cols] = add_fips[cols].apply(lambda x: [y if y == 0 else 100 for y in x])
-add_fips.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA'
-                r'\_ExternalDrive\_CurrentSupportingTables\Usage\SUUMs\methomyl\meth_cnty_mask.csv')
+add_fips.to_csv(r'out path\meth_cnty_mask.csv')
 
