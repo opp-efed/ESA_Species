@@ -15,33 +15,33 @@ import pandas as pd
 
 # User inputs
 # folder with input species rasters in GRID Format
-in_dir_species_grids = r'path\Grids_byProjection'
+in_dir_species_grids = r'E:\Workspace\StreamLine\ESA\UnionFiles_Summer2019\Range\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
 
 # folder with use layer - this script will combine species with habitat,elevation, and on/off field
-raster_layer_libraries = r'path\ByProjection'
+raster_layer_libraries = r'E:\Workspace\StreamLine\ByProjection'
 
 # True - include on/off field False only include habitat and elevation
 include_on_off = False
 
 # out location
-out_dir = os.path.dirname(in_dir_species_grids) + os.sep + 'Grid_byProjections_Combined'
+out_dir = os.path.dirname(in_dir_species_grids) + os.sep + 'Grid_byProjections_Combined_QC'
 
 # regions to skip - use to run multiple instances ['AK','AS','CNMI','CONUS', HI','GU', 'PR','VI']
-skip_region = ['AK', 'AS', 'CNMI', 'HI', 'GU', 'PR', 'VI']
+skip_region = ['AK', 'AS', 'CONUS', 'HI','VI', 'GU', 'CNMI']
 
 # Species to skip spe abb from input species raster without the r or ch - use to run multiple instances
 # include the species file name flag (r or ch) in list if running multiple instances so the temp files are skipped
-skip_species = ['r', 'ch', 'clams', 'fishes', 'reptil' ]
+skip_species = ['r', 'ch']
 
 # snap rasters by region
-snap_dict = {'CONUS': r'path\Albers_Conical_Equal_Area_cultmask_2016',
-             'HI': r'path\NAD_1983_UTM_Zone_4N_HI_Ag',
-             'AK': r'path\WGS_1984_Albers_AK_Ag',
-             'AS': r'path\WGS_1984_UTM_Zone_2S_AS_Ag',
-             'CNMI': r'path\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-             'GU': r'path\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-             'PR': r'path\Albers_Conical_Equal_Area_PR_Ag',
-             'VI': r'path\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+snap_dict = {'CONUS': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+             'HI': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+             'AK': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+             'AS': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+             'CNMI': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+             'GU': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+             'PR': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+             'VI': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 def set_extent(region, snap_rasters):  # set processing extent
@@ -65,12 +65,16 @@ def get_hab_ele_rast_path(region, raster_layers):
     # get list of the habitat and elevation files for region
     raster_list_elev_habitat = arcpy.ListRasters()
     raster_list_combine = [elevation_habitat+ os.sep + v for v in raster_list_elev_habitat]
-    # UNCOMMENT FOR CONUS
+
+    # UNCOMMENT FOR CONUS to remove impervious from list
+    if region == 'CONUS':
+        raster_list_combine.remove(u'E:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb\\Albers_Conical_Equal_Area_CONUS_nlcd_2011_impervious_2011_edition_2014_10_10')
     # raster_list_combine = [
-    #     u'L:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb'
+    #     u'E:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb'
     #     u'\\Albers_Conical_Equal_Area_CONUS_dem_sm10',
-    #     u'L:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb'
+    #     u'E:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb'
     #     u'\\Albers_Conical_Equal_Area_CONUS_gap_landfire_nationalterrestrialecosystems2011']
+
     return raster_list_combine  # return list of raster to include in combine
 
 
@@ -100,11 +104,12 @@ def run_combine(in_directory_species_grids, raster_list_combine, folder, out_fol
         else:
             print ('Start Generating species overlap files')  # print for tracking
             start_raster = datetime.datetime.now()  # elapse clock for species combine
+            # path species file
+            in_spe = in_directory_species_grids + os.sep + folder + os.sep + spe_raster
+            c_raster_list.insert(0, in_spe)
             try:  # try except loop so an error won't cause the script to stop
                 if not arcpy.Exists(out_folder + os.sep + spe_raster):  # skips files that already exist
-                    in_spe = in_directory_species_grids + os.sep + folder + os.sep + spe_raster  # path species file
                     # inset the path to the species file to list of raster to combine in index position 0
-                    c_raster_list.insert(0, in_spe)
                     print ('Start Combine for {0} with {1}'.format(spe_raster, c_raster_list))  # print for tracking
                     print("Out location will be {0}".format(os.path.join(out_folder, spe_raster[:8])))
                     out_combine = Combine(c_raster_list)  # runs combine tools from spatial analyst
@@ -117,6 +122,7 @@ def run_combine(in_directory_species_grids, raster_list_combine, folder, out_fol
                     print 'Build pyramids'
                     arcpy.BuildPyramids_management(out_folder + os.sep + spe_raster[:8])
                 #  generates output text files used as lookups to identify habitat, elevation and species
+
                 output_lookup_tables(spe_raster, c_raster_list, out_folder, region)
                 print 'Completed {0} in {1}'.format(out_folder + os.sep + spe_raster[:8], datetime.datetime.now()
                                                     - start_raster)
@@ -124,10 +130,12 @@ def run_combine(in_directory_species_grids, raster_list_combine, folder, out_fol
                 print('Error was {0} elapse time was {1}'.format(error.args[0], datetime.datetime.now() - start_raster))
                 if arcpy.Exists(out_folder + os.sep + spe_raster[:8]):
                     arcpy.Delete_management(out_folder + os.sep + spe_raster[:8])
+        c_raster_list.remove(in_spe)
 
 
 def output_lookup_tables(spe_raster, raster_list_combine, out_folder, region):
     # confirms file was not previously created
+    print out_folder + os.sep + spe_raster[:8] + '_lookup_rasters.csv'
     if not os.path.exists(out_folder + os.sep + spe_raster[:8] + '_lookup_rasters.csv'):
         print ('Start output tables for {0}'.format(spe_raster))  # print for tracking
         # adds meaningful col headers for raster as the default will all start with the projection
@@ -135,10 +143,12 @@ def output_lookup_tables(spe_raster, raster_list_combine, out_folder, region):
 
         for f in [u'Rowid', u'VALUE', u'COUNT']:  # remove columns that won't be update from field list
             field.remove(f)
+
         # Empty list to be use as placeholders to update columns names
         current_header = []
         desired_header = []
         path_to_raster = []
+
         if len(field) == len(raster_list_combine):  # confirms filed number and number of rasters is equal
             out_df = pd.DataFrame(index=(list(range(0, 10))))  # empty df to store look values  10 rows
             for raster in raster_list_combine:  # loops on the rasters in combine
