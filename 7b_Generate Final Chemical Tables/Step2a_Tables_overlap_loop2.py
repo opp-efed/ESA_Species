@@ -7,92 +7,138 @@ import sys
 # Author J.Connolly
 # Internal deliberative, do not cite or distribute
 
-chemical_name = 'Carbaryl' # 'Carbaryl'  'Methomyl'
-file_type ='Range' # CriticalHabitat, Range
+chemical_name = 'Carbaryl'  # chemical_name = 'Carbaryl', Methomyl
+file_type = 'Range'  # 'Range or CriticalHabitat
 
 # chemical use look up
-use_lookup = r'path' \
-             r'\SupportingTables' + os.sep + chemical_name + "Uses_lookup_20190409.csv"
-# table with on/off field call- format specific for table and extension
-on_off_excel = r'path\species.xlsx'
-acres_col = r"CONFIRM BELOW SET DYNAMICALLY BY FILE TYPE"
+use_lookup = r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
+             r"\Endangered Species Pilot Assessments - OverlapTables\SupportingTables" + os.sep + chemical_name \
+             + "_Uses_lookup_20191104.csv"
+# table with on/off use site call- format specific for table and extension
+on_off_excel = r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA" \
+               r"\_ED_results\_CurrentSupportingTables\OnOff\OnOff_WoE_ForOverlap.xlsx"
+# acres_col = must load path to acres tables - path set on line 105/108
 max_drift = '792'
+nl48 = True
 
-# On/Off Adjustments
+# On/Off Adjustments; True- adjusted the overlap for on/off use site group, False do not adjust the on/off use site
+# groups
 cult_crop = True
-orchards_crops = False
+orchards_crops = True
 pastures = True
-residential = False
+residential = True
+forest = True
+row = True
 
 # root path directory
-root_path  = r'path/tabulated'
-# Tables directory  one level done from chemical
+# tabulated root path - ie Tabulated_[suffix] folder
+root_path = r'E:\Workspace\StreamLine\ESA\Tabulated_UsageHUCABHabitat'
 
-# No adjustment
+# Tables directory  where the working/intermediate tables are found; this will start:
+# SprayInterval_IntStep_30_MaxDistance_1501
+# When combined the root_path + chemical + file_type + folder_path will reach the folder with the working tables
+# folder with result table that have no chemical specific adjustments
 folder_path = r'SprayInterval_IntStep_30_MaxDistance_1501\noadjust'
 
-# census
-# folder_path_census = r'SprayInterval_IntStep_30_MaxDistance_1501\census'
-folder_path_census = r'SprayInterval_IntStep_30_MaxDistance_1501\adjHab'
+# Tables directory  where the working/intermediate tables are found; this will start:
+# SprayInterval_IntStep_30_MaxDistance_1501
+# When combined the root_path + chemical + file_type + folder_path_census  will reach the folder with the working tables
+# that includes the masking from the census of AG and aggregated PCT
+# When combined the root_path + chemical + file_type + folder_path_sup  will reach the folder with the working tables
+# that includes the masking from the census of AG, aggregated PCT, and limits the overlap to the the extent of the
+# supplemental GIS data, e.g Habitat suitability
+
+# census, habitat adjusted, or elevation adjusted or both
+folder_path_census = r'SprayInterval_IntStep_30_MaxDistance_1501\census'
+folder_path_sup = r'SprayInterval_IntStep_30_MaxDistance_1501\adjHab'  # Set parameter to '' to skip
+sup_key = 'HAB'  # term used to identify what the supplemental information
 
 # TABLE NAMES these are example names for the file name structure- script will loop through all pct groups and all
-# usage bounding
-# Unadjusted Tables
-l48_BE_sum_table = "R_UnAdjusted_Full Range_AllUses_BE_L48_SprayInterval_noadjust_20190626.csv"
-nl48_BE_sum_table = r"R_UnAdjusted_Full Range_AllUses_BE_NL48_SprayInterval_noadjust_20190626.csv"
+# treated acres usage bounding
+# Unadjusted Tables - if you concatenate the file path into the chemical folder these will be the table names
 
-# Census and PCT adjusted Tables - example tables loops over all tables
+l48_BE_sum_table = "R_UnAdjusted_Full Range_AllUses_BE_L48_SprayInterval_noadjust_20191127.csv"
+nl48_BE_sum_table = r"R_UnAdjusted_Full Range_AllUses_BE_NL48_SprayInterval_noadjust_20191127.csv"
 
+# l48_BE_sum_table = "CH_UnAdjusted_Full CH_AllUses_BE_L48_SprayInterval_noadjust_20191127.csv"
+# nl48_BE_sum_table = r"CH_UnAdjusted_Full CH_AllUses_BE_NL48_SprayInterval_noadjust_20191127.csv"
 
-l48_BE_sum_PCT_table = "R_Lower_adjHab_AllUses_BE_L48_SprayInterval_Full Range_min_20190627.csv"
-nl48_BE_sum_PCT_table = "R_Lower_adjHab_AllUses_BE_NL48_SprayInterval_Full Range_min_20190627.csv"
+# PCT adjusted Tables for census habitat elevation or both- example tables loops over all tables
 
-# Census, PCT, On/Off Field adjusted Tables - example tables loops over all tables
+l48_BE_sum_PCT_table = "R_Lower_census_AllUses_BE_L48_SprayInterval_Full Range_avg_20191127.csv"
+nl48_BE_sum_PCT_table = "R_Lower_census_AllUses_BE_NL48_SprayInterval_Full Range_avg_20191127.csv"
 
+# l48_BE_sum_PCT_table = "CH_Lower_census_AllUses_BE_L48_SprayInterval_Full CH_avg_20191127.csv"
+# nl48_BE_sum_PCT_table = "CH_Lower_census_AllUses_BE_NL48_SprayInterval_Full CH_avg_20191127.csv"
 
+# PCT, On/Off Field adjusted Tables for census - example tables loops over all tables
+# If use doesn't want to include on/off use the same tables as the PCT adjusted
 
-l48_BE_sum_onoff_table = "R_Lower_adjHab_AllUses_BE_L48_SprayInterval_Full Range_min_20190627.csv"
-nl48_BE_sum_onoff_table = "R_Lower_adjHab_AllUses_BE_NL48_SprayInterval_Full Range_min_20190627.csv"
+l48_BE_sum_onoff_table = "R_Lower_census_AllUses_BE_L48_SprayInterval_On OffField_avg_20191127.csv"
+nl48_BE_sum_onoff_table = "R_Lower_census_AllUses_BE_NL48_SprayInterval_On OffField_avg_20191127.csv"
+#
+# l48_BE_sum_onoff_table = "CH_Lower_census_AllUses_BE_L48_SprayInterval_On OffField_avg_20191127.csv"
+# nl48_BE_sum_onoff_table = "CH_Lower_census_AllUses_BE_NL48_SprayInterval_On OffField_avg_20191127.csv"
 
-# Census,PCT, Habitat adjusted Tables
+# PCT, On/Off Field adjusted Tables for census habitat elevation or both- example tables loops over all tables
+# If use doesn't want to include on/off use the same tables as the PCT adjusted; supplemental information
 
-# Census,PCT, Elevation adjusted Tables
+l48_BE_sum_sup_table = "R_Lower_adjHab_AllUses_BE_L48_SprayInterval_Full Range_max_20191127.csv"
+nl48_BE_sum_sup_table = "R_Lower_adjHab_AllUses_BE_NL48_SprayInterval_Full Range_max_20191127.csv"
 
-# Census,PCT, Habitat, Elevation adjusted Tables
+l48_BE_sum_onoff_sup_table = "R_Lower_adjHab_AllUses_BE_L48_SprayInterval_On OffField_max_20191127.csv"
+nl48_BE_sum_onoff_sup_table = "R_Lower_adjHab_AllUses_BE_NL48_SprayInterval_On OffField_max_20191127.csv"
 
-master_list =  r"\MasterListESA_Feb2017_20190130.csv"
-# cols to include in output from master
+# l48_BE_sum_onoff_sup_table = ""
+# nl48_BE_sum_onoff_sup_table = ""
+
+# master species list
+master_list = r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
+              r"\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
+# columns from master species list to include in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'country', 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
                       'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
-                      'CH_Filename', 'CHange_Filename', 'L48/NL48']
+                      'CH_Filename', 'Range_Filename', 'L48/NL48']
 
-out_location = root_path
-
-#  Static variables - set up path - this is done so the path to the chemical does point to a previous run - it is link
-# to the chemical name at the top
-# Unadjusted Tables
-l48_BE_sum = root_path + os.sep + chemical_name + os.sep + file_type +os.sep+ folder_path + os.sep + l48_BE_sum_table
-nl48_BE_sum = root_path + os.sep + chemical_name + os.sep + file_type + os.sep+folder_path + os.sep + nl48_BE_sum_table
-
-# Census and PCT adjusted Tables
-BE_sum_PCT_path = root_path + os.sep + chemical_name + os.sep + file_type + os.sep+ folder_path_census
-
-# Census, PCT, On/Off Field adjusted Tables
-BE_sum_onoff_path = root_path + os.sep + chemical_name + os.sep + file_type + os.sep+folder_path_census
-
-#file type - Critical habitat or R- because R and critical habitat files are split is separate folders even if
-# script is started without updating the critical habirt and range path the script will **not** run because the files
+# file type - Critical habitat or R- because R and critical habitat files are split is separate folders even if
+# script is started without updating the critical hab and range path the script will **not** run because the files
 # nape will not start with the correct file_type identifier
 file_type_marker = l48_BE_sum_PCT_table.split("_")[0] + "_"
 
-
-if file_type_marker == 'CH_':
-    acres_col =r"path\CH_Acres_csv"
+# acres tables
+if file_type_marker == 'CH_':  # unadjusted acres tables
+    acres_col = r"E:\Workspace\StreamLine\ESA\UnionFiles_Summer2019\CriticalHabitat\Acres_Pixels" \
+                r"\CH_Acres_Pixels_20191114.csv"
 else:
-    acres_col = r'path\R_Acres.csv'
+    acres_col = r"E:\Workspace\StreamLine\ESA\UnionFiles_Summer2019\Range\Acres_Pixels\R_Acres_Pixels_20191114.csv"
 print acres_col
+out_location = root_path
+
+#  Static variables - set up path - this is done so the path to the chemical does point to a previous run - it is linked
+# to the chemical name at the top
+# path to  Unadjusted Tables
+l48_BE_sum = root_path + os.sep + chemical_name + os.sep + file_type + os.sep + folder_path + os.sep + l48_BE_sum_table
+if nl48:
+    nl48_BE_sum = root_path + os.sep + chemical_name + os.sep + file_type + os.sep + folder_path + os.sep + \
+              nl48_BE_sum_table
+
+# path to Census, PCT, on.off  adjusted Tables
+BE_sum_PCT_path = root_path + os.sep + chemical_name + os.sep + file_type + os.sep + folder_path_census
+
+# Census, PCT, On/Off Field, supplemental info adjusted Tables
+BE_sum_hab_path = root_path + os.sep + chemical_name + os.sep + file_type + os.sep + folder_path_sup
+
+# tables to loop on, may include the unadjusted/census/PCT table or unadjusted/census/PCT/supplemental info tables
+if l48_BE_sum_onoff_sup_table != '':
+    table_loop = [l48_BE_sum_onoff_table, l48_BE_sum_onoff_sup_table]
+else:
+    table_loop = [l48_BE_sum_onoff_table]
+
+
+# Functions
 def create_directory(dbf_dir):
+    # Create output directories
     if not os.path.exists(dbf_dir):
         os.mkdir(dbf_dir)
 
@@ -113,83 +159,88 @@ def create_directory(dbf_dir):
 #   4) These concerns can be further compounded when applying usage -  added Feb 2018
 
 
-def step_1_ED(row, col_aa):
+def save_parameter(df, chemicalname, filetype, uselookup, masterlist, no_l48, no_nl48, l48_be_sum_pct,
+                   nl48_be_sum_pct, l48_be_sum_pct_onoff, nl48_be_sum_pct_onoff, outbase, index_num, acres):
+    # Function to save/track input parameters used
+    df.loc[index_num, 'Chemical Name'] = chemicalname
+    df.loc[index_num, 'File Type'] = filetype
+    df.loc[index_num, 'Use Lookup'] = uselookup
+    df.loc[index_num, 'Species List'] = masterlist
+    df.loc[index_num, 'Acres'] = acres
+    df.loc[index_num, 'In Location L48'] = no_l48
+    df.loc[index_num, 'In Location NL48'] = no_nl48
+    df.loc[index_num, 'In Location PCT L48'] = l48_be_sum_pct
+    df.loc[index_num, 'In Location PCT NL48'] = nl48_be_sum_pct
+    df.loc[index_num, 'In Location PCT/OnOff L48'] = l48_be_sum_pct_onoff
+    df.loc[index_num, 'In Location PCT/OnOff NL48'] = nl48_be_sum_pct_onoff
+    df.loc[index_num, 'Out file'] = 'Step 2 Summarized'
+    df.loc[index_num, 'Out Base Location'] = outbase
+    return df
+
+
+def step_1_ed(row1, col_aa):
     # Federal lands statement needs to be updated to an and statement that will still catch overlap from either L48 or
     # NL48.  These or statements take advantage of species in both the L48 and NL48 have low overlap with federal lands
     # but these may not be true in all cases
+    # FUNCTION ARCHIVED BUT MAY BE ADDED BACK IN
     col_l48 = "CONUS_" + col_aa
     col_nl48 = col_l48.replace('CONUS', 'NL48')
-    if row[col_l48] < 0.44 and row[col_nl48] < 0.44:
-        value = 'No Effect - Overlap'
-    elif row[col_l48] <= 4.45 and row[col_nl48] < 4.45:
-        value = 'NLAA - Overlap - 5percent'
-    elif row['CONUS_Federal Lands_0'] >= 98.5 or row['NL48_Federal Lands_0'] >= 99:
-        value = 'No Effect - Federal Land'
-    elif row['CONUS_Federal Lands_0'] >= 94.5 or row['NL48_Federal Lands_0'] >= 94.5:
-        value = 'NLAA - Federal Land'
-    elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
-        value = 'May Affect'
-    else:
-        value = 'no catch'
+    try:
+        if row1[col_l48] < 0.44 and row1[col_nl48] < 0.44:
+            value = 'No Effect - Overlap'
+        elif row1[col_l48] <= 4.45 and row1[col_nl48] < 4.45:
+            value = 'NLAA - Overlap - 5percent'
+        elif row1['CONUS_Federal Lands_0'] >= 98.5 or row1['NL48_Federal Lands_0'] >= 99:
+            value = 'No Effect - Federal Land'
+        elif row1['CONUS_Federal Lands_0'] >= 94.5 or row1['NL48_Federal Lands_0'] >= 94.5:
+            value = 'NLAA - Federal Land'
+        elif row1[col_l48] >= 0.45 or row1[col_nl48] >= 0.45:
+            value = 'May Affect'
+        else:
+            value = 'no catch'
 
-    if file_type_marker == 'CH_':
-        if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
-                row['Source of Call final BE-Critical Habitat'] != 'Aqua WoE' and \
-                row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
-            value = 'No CritHab'
-        if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
-            value = 'Qualitative'
+        if file_type_marker == 'CH_':
+            if row1['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
+                    row1['Source of Call final BE-Critical Habitat'] != 'Aqua WoE' and \
+                    row1['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
+                value = 'No CritHab'
+            if str(row1['Source of Call final BE-Critical Habitat']).startswith('Qual'):
+                value = 'Qualitative'
 
-    if file_type_marker == 'R_':
+        if file_type_marker == 'R_':
 
-        if str(row['Source of Call final BE-Range']).startswith('Qu'):
-            value = 'Qualitative'
-
+            if str(row1['Source of Call final BE-Range']).startswith('Qu'):
+                value = 'Qualitative'
+    except:
+        value = 'Tracking col missing'
     return value
 
 
-def NLAA_overlap(row, cols_l48, cols_nl48):
+def nlaa_overlap(row, cols_l48, cols_nl48):
     max_col = []
     # TODO do this dynamically
-    # for col in cols:
-    #     if col =='EntityID':
-    #         pass
-    #     elif col.split("_")[1].endswith('AA') or col.split("_")[2].endswith('_0') :
-    #         pass
-    #     elif col in max_col:
-    #         pass
-    #     else:
-    #         use = col.split("_")[1]
-    #         if col.split("_")[0] +"_" +use+"_765" in cols:
-    #             if col.split("_")[0] +"_" +use+"_765" not in max_col:
-    #                 max_col.append(col.split("_")[0] +"_" +use+"_792")
-    #             elif col.split("_")[0] +"_" +use+"_305" in cols:
-    #                 if col.split("_")[0] +"_" +use+"_792" not in cols:
-    #                     if col.split("_")[0] +"_" +use+"_305" not in max_col:
-    #                         max_col.append(col.split("_")[0] +"_" +use+"_305")
-    #             else:
-    #                 pass
-    for col in cols_l48:
+    # FUNCTION ARCHIVED BUT MAY BE ADDED BACK IN
+    for cols in cols_l48:
 
-        if len(col.split("_")) == 3:
-            if col.split("_")[2] == '792':
-                max_col.append(col)
+        if len(cols.split("_")) == 3:
+            if cols.split("_")[2] == '792':
+                max_col.append(cols)
             else:
                 pass
-    for col in cols_nl48:
-        if len(col.split("_")) == 3:
+    for cols in cols_nl48:
+        if len(cols.split("_")) == 3:
 
-            if col.split("_")[2] == '792':
-                max_col.append(col)
+            if cols.split("_")[2] == '792':
+                max_col.append(cols)
             else:
                 pass
     final_col = []
-    for col in max_col:
-        if col.split("_")[0] != 'CONUS':
-            val = 'NL48_' + col.split("_")[1] + "_" + col.split("_")[2]
+    for cols in max_col:
+        if cols.split("_")[0] != 'CONUS':
+            val = 'NL48_' + cols.split("_")[1] + "_" + cols.split("_")[2]
             final_col.append(val)
         else:
-            final_col.append(col)
+            final_col.append(cols)
     list_values = row[final_col]
 
     if len(list_values) == 0:
@@ -212,52 +263,60 @@ def NLAA_overlap(row, cols_l48, cols_nl48):
     return value
 
 
-def on_off_field(cols, df, on_off_species,df_not_on_off,acres):
-
-    l48_cols = [v for v in cols if v.startswith('CONUS')]
-    nl48_cols = [v for v in cols if not v.startswith('CONUS')]
+def on_off_field(cols, df, on_off_species, df_not_on_off, acres):
+    # Adjust the summarized drift values for the on/off use cols
+    l48_cols = [p for p in cols if p.startswith('CONUS')]
+    nl48_cols = [p for p in cols if not p.startswith('CONUS')]
 
     species_acres = acres.loc[acres['EntityID'].isin(on_off_species)]
-    conus_acres = species_acres[["EntityID","Acres_CONUS"]]
-    nl48_acres = species_acres[["EntityID","TotalAcresNL48"]]
-    species_unadjusted =  df_not_on_off.loc[df_not_on_off['EntityID'].isin(on_off_species)]
+
+    conus_acres = species_acres[["EntityID", "Acres_CONUS"]]
+    nl48_acres = species_acres[["EntityID", "TotalAcresNL48"]]
+    species_unadjusted = df_not_on_off.loc[df_not_on_off['EntityID'].isin(on_off_species)]
     # back out acres for use
-    species_unadjusted.ix[:,cols] = species_unadjusted.ix[:,cols].div(100)
+    species_unadjusted.ix[:, cols] = species_unadjusted.ix[:, cols].div(100)
     # conus
 
-    species_unadjusted =pd.merge(species_unadjusted, conus_acres,on = 'EntityID', how = 'left')
-    species_unadjusted.ix[:,l48_cols]= species_unadjusted.ix[:,l48_cols].multiply(species_unadjusted["Acres_CONUS"].where(species_unadjusted["Acres_CONUS"]!= 0, np.nan),axis=0)
-    col_direct_conus = [ v for v in l48_cols if v.endswith('_0')]
+    species_unadjusted = pd.merge(species_unadjusted, conus_acres, on='EntityID', how='left')
+    species_unadjusted.ix[:, l48_cols] = species_unadjusted.ix[:, l48_cols].multiply(
+        species_unadjusted["Acres_CONUS"].where(species_unadjusted["Acres_CONUS"] != 0, np.nan), axis=0)
+    col_direct_conus = [v for v in l48_cols if v.endswith('_0')]
 
     for col in col_direct_conus:
-        species_unadjusted["CONUS_Adjusted"] = species_unadjusted["Acres_CONUS"].sub(species_unadjusted[col].where(species_unadjusted["Acres_CONUS"]!= 0, np.nan), fill_value=0)
-        drift_cols = [v for v in l48_cols if v.startswith(col.split("_")[0] +"_"+col.split("_")[1])]
-        drift_cols = [ v for v in drift_cols if not v.endswith('_0')]
+        species_unadjusted["CONUS_Adjusted"] = species_unadjusted["Acres_CONUS"].sub(
+            species_unadjusted[col].where(species_unadjusted["Acres_CONUS"] != 0, np.nan), fill_value=0)
+        drift_cols = [v for v in l48_cols if v.startswith(col.split("_")[0] + "_" + col.split("_")[1])]
+        drift_cols = [v for v in drift_cols if not v.endswith('_0')]
         for u in drift_cols:  # removed the direct overlap that was rolled into the drift overlap
-            species_unadjusted[u] = species_unadjusted[u].sub(species_unadjusted[col].where(species_unadjusted["Acres_CONUS"]!= 0, np.nan), fill_value=0)
+            species_unadjusted[u] = species_unadjusted[u].sub(
+                species_unadjusted[col].where(species_unadjusted["Acres_CONUS"] != 0, np.nan), fill_value=0)
 
-        species_unadjusted.ix[:,drift_cols] = species_unadjusted.ix[:,drift_cols].div(species_unadjusted["CONUS_Adjusted"].where(species_unadjusted["Acres_CONUS"]!= 0, np.nan), axis=0)
-        species_unadjusted.ix[:,drift_cols] *= 100
+        species_unadjusted.ix[:, drift_cols] = species_unadjusted.ix[:, drift_cols].div(
+            species_unadjusted["CONUS_Adjusted"].where(species_unadjusted["Acres_CONUS"] != 0, np.nan), axis=0)
+        species_unadjusted.ix[:, drift_cols] *= 100
 
-
-    #nl48
+    # nl48
     species_unadjusted.drop("Acres_CONUS", axis=1, inplace=True)
-    species_unadjusted =pd.merge(species_unadjusted, nl48_acres,on = 'EntityID', how = 'left')
-    species_unadjusted.ix[:,nl48_cols]= species_unadjusted.ix[:,nl48_cols].multiply(species_unadjusted["TotalAcresNL48"].where(species_unadjusted["TotalAcresNL48"]!= 0, np.nan),axis=0)
-    col_direct_nl48 = [ v for v in nl48_cols if v.endswith('_0')]
+    species_unadjusted = pd.merge(species_unadjusted, nl48_acres, on='EntityID', how='left')
+    species_unadjusted.ix[:, nl48_cols] = species_unadjusted.ix[:, nl48_cols].multiply(
+        species_unadjusted["TotalAcresNL48"].where(species_unadjusted["TotalAcresNL48"] != 0, np.nan), axis=0)
+    col_direct_nl48 = [v for v in nl48_cols if v.endswith('_0')]
     for col in col_direct_nl48:
-        species_unadjusted["NL48_Adjusted"]= species_unadjusted["TotalAcresNL48"].sub(species_unadjusted[col].where(species_unadjusted["TotalAcresNL48"]!= 0, np.nan), fill_value=0)
-        drift_cols = [v for v in nl48_cols if v.startswith(col.split("_")[0] +"_"+col.split("_")[1])]
-        drift_cols = [ v for v in drift_cols if not v.endswith('_0')]
+        species_unadjusted["NL48_Adjusted"] = species_unadjusted["TotalAcresNL48"].sub(
+            species_unadjusted[col].where(species_unadjusted["TotalAcresNL48"] != 0, np.nan), fill_value=0)
+        drift_cols = [v for v in nl48_cols if v.startswith(col.split("_")[0] + "_" + col.split("_")[1])]
+        drift_cols = [v for v in drift_cols if not v.endswith('_0')]
         for u in drift_cols:  # removed the direct overlap that was rolled into the drift overlap
-            species_unadjusted[u] = species_unadjusted[u].sub(species_unadjusted[col].where(species_unadjusted["TotalAcresNL48"]!= 0, np.nan), fill_value=0)
+            species_unadjusted[u] = species_unadjusted[u].sub(
+                species_unadjusted[col].where(species_unadjusted["TotalAcresNL48"] != 0, np.nan), fill_value=0)
 
-        species_unadjusted.ix[:,drift_cols] = species_unadjusted.ix[:,drift_cols].div(species_unadjusted["NL48_Adjusted"].where(species_unadjusted["TotalAcresNL48"]!= 0, np.nan), axis=0)
-        species_unadjusted.ix[:,drift_cols] *= 100
+        species_unadjusted.ix[:, drift_cols] = species_unadjusted.ix[:, drift_cols].div(
+            species_unadjusted["NL48_Adjusted"].where(species_unadjusted["TotalAcresNL48"] != 0, np.nan), axis=0)
+        species_unadjusted.ix[:, drift_cols] *= 100
 
-    df_all_drift = [v for v in cols if not v.endswith("_0")]
-    drift_df = species_unadjusted[["EntityID"]+df_all_drift]
-    drift_df.ix[:, 'EntityID'] = drift_df.ix[:, 'EntityID'].map(lambda x: x).astype(str)
+    df_all_drift = [p for p in cols if not p.endswith("_0")]
+    drift_df = species_unadjusted[["EntityID"] + df_all_drift]
+    drift_df.ix[:, 'EntityID'] = drift_df.ix[:, 'EntityID'].map(lambda t: t.split('.')[0]).astype(str)
     left_update = df.set_index('EntityID')
 
     right_update = drift_df.set_index('EntityID')
@@ -266,7 +325,6 @@ def on_off_field(cols, df, on_off_species,df_not_on_off,acres):
     df = res.reset_index()
 
     return df
-
 
 
 def extract_chemical_overlap(col_prefix, aa_layers, region, df, section):
@@ -319,8 +377,9 @@ def extract_chemical_overlap(col_prefix, aa_layers, region, df, section):
     return out_df, col_selection
 
 
-def appply_factor(factor_df, pct_df):
-    # Load factors (calculated from the un-adjusted overlap) into the PCT overlap table
+def apply_factor(factor_df, pct_df):
+    # Loads redundancy scaling factors (calculated from the un-adjusted overlap) into the PCT overlap table and applies
+    # them
     if not skip_non_ag_adjustment:
         factors_df = factor_df.ix[:, ['EntityID', 'CONUS_Ag_Ag_Factor', 'CONUS_NonAg_NonAg_Factor', 'NL48_Ag_Ag_Factor',
                                       'NL48_NonAg_NonAg_Factor', 'CONUS_Composite_Factor',
@@ -329,27 +388,34 @@ def appply_factor(factor_df, pct_df):
     else:
         factors_df = factor_df.ix[:, ['EntityID', 'CONUS_Ag_Ag_Factor', 'NL48_Ag_Ag_Factor', 'CONUS_Composite_Factor',
                                       'NL48_Composite_Factor']].fillna(0)
-    pct_df.ix[:, 'EntityID'] = pct_df.ix[:, 'EntityID'].map(lambda x: x).astype(str)
-    factors_df['EntityID'] = factors_df['EntityID'].map(lambda x: x).astype(str)
+    pct_df.ix[:, 'EntityID'] = pct_df.ix[:, 'EntityID'].map(lambda t: t.split('.')[0]).astype(str)
+    factors_df['EntityID'] = factors_df['EntityID'].map(lambda t: t.split('.')[0]).astype(str)
     pct_df = pd.merge(pct_df, factors_df, on='EntityID', how='left')
 
     # # Applies the factor adjustments to the pct adjusted overlap
-
     # To Ag uses layer
-    # pct_df.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test.csv')
-    pct_df.ix[:, use_direct_only_conus_ag] = pct_df.ix[:, use_direct_only_conus_ag].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
-    pct_df.ix[:, use_direct_only_nl48_ag] = pct_df.ix[:, use_direct_only_nl48_ag].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+
+    pct_df.ix[:, use_direct_only_conus_ag] = pct_df.ix[:, use_direct_only_conus_ag].div(
+        pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+    pct_df.ix[:, use_direct_only_nl48_ag] = pct_df.ix[:, use_direct_only_nl48_ag].div(
+        pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
     # To composites
-    pct_df.ix[:, use_direct_only_conus_ag_aa] = pct_df.ix[:, use_direct_only_conus_ag_aa].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
-    pct_df.ix[:, use_direct_only_nl48_ag_aa] = pct_df.ix[:, use_direct_only_nl48_ag_aa].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+    pct_df.ix[:, use_direct_only_conus_ag_aa] = pct_df.ix[:, use_direct_only_conus_ag_aa].div(
+        pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+    pct_df.ix[:, use_direct_only_nl48_ag_aa] = pct_df.ix[:, use_direct_only_nl48_ag_aa].div(
+        pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
     # print use_direct_only_conus_ag, use_direct_only_nl48_ag_aa #- columns adjusted
     # To Non Ag use layers if we have non-ag uses
     if not skip_non_ag_adjustment:
-        pct_df.ix[:, use_direct_only_conus_nonag] = pct_df.ix[:, use_direct_only_conus_nonag].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
-        pct_df.ix[:, use_direct_only_nl48_nonag] = pct_df.ix[:, use_direct_only_nl48_nonag].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
-    # To composites
-        pct_df.ix[:, use_direct_only_conus_nonag_aa] = pct_df.ix[:, use_direct_only_conus_nonag_aa].div(pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
-        pct_df.ix[:, use_direct_only_nl48_nonag_aa] = pct_df.ix[:, use_direct_only_nl48_nonag_aa].div(pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+        pct_df.ix[:, use_direct_only_conus_nonag] = pct_df.ix[:, use_direct_only_conus_nonag].div(
+            pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+        pct_df.ix[:, use_direct_only_nl48_nonag] = pct_df.ix[:, use_direct_only_nl48_nonag].div(
+            pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
+        # To composites
+        pct_df.ix[:, use_direct_only_conus_nonag_aa] = pct_df.ix[:, use_direct_only_conus_nonag_aa].div(
+            pct_df['CONUS_Composite_Factor'].where(pct_df['CONUS_Composite_Factor'] != 0, np.nan), axis=0)
+        pct_df.ix[:, use_direct_only_nl48_nonag_aa] = pct_df.ix[:, use_direct_only_nl48_nonag_aa].div(
+            pct_df['NL48_Composite_Factor'].where(pct_df['NL48_Composite_Factor'] != 0, np.nan), axis=0)
 
     # # APPLIES AG Factor to Ag use layers
     pct_df.ix[:, use_direct_only_conus_ag] = pct_df.ix[:, use_direct_only_conus_ag].div(
@@ -366,7 +432,8 @@ def appply_factor(factor_df, pct_df):
             pct_df['NL48_NonAg_NonAg_Factor'].where(pct_df['NL48_NonAg_NonAg_Factor'] != 0, np.nan), axis=0)
     # print use_direct_only_conus_nonag,use_direct_only_nl48_nonag #- columns adjusted
     # pct_df.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test1.csv')
-    # stores factor and pct adjusted values ag and non ag uses for conus and L48 - uses to calculate the differnence between
+    # stores factor and pct adjusted values ag and non ag uses for conus and L48 - uses to calculate the differnence
+    # between
     # the pct adjusted and the factor and redundancy adjusted values -impact of the redundancy adjustment and adjust the
     # drift values
     # Confirms values are in numeric format
@@ -386,29 +453,29 @@ def appply_factor(factor_df, pct_df):
     difference_nl48_nonag = pct_adjusted_nl48_nonag.set_index('EntityID').subtract(
         adjusted_nl48_nonag.set_index('EntityID'))
 
-    # get col header for drift columnm by replacing the 0 with the standard values of 305 for ground and 792 for aerial
-    columns_conus_ground_ag = [x.replace("_0", "_305") for x in difference_conus_ag.columns.values.tolist()]
-    columns_conus_ground_nonag = [x.replace("_0", "_305") for x in difference_conus_nonag.columns.values.tolist()]
-    columns_conus_aerial_ag = [x.replace("_0", "_792") for x in difference_conus_ag.columns.values.tolist()]
-    columns_conus_aerial_nonag = [x.replace("_0", "_792") for x in difference_conus_nonag.columns.values.tolist()]
+    # get col header for drift column by replacing the 0 with the standard values of 305 for ground and 792 for aerial
+    columns_conus_ground_ag = [g.replace("_0", "_305") for g in difference_conus_ag.columns.values.tolist()]
+    columns_conus_ground_nonag = [g.replace("_0", "_305") for g in difference_conus_nonag.columns.values.tolist()]
+    columns_conus_aerial_ag = [g.replace("_0", "_792") for g in difference_conus_ag.columns.values.tolist()]
+    columns_conus_aerial_nonag = [g.replace("_0", "_792") for g in difference_conus_nonag.columns.values.tolist()]
 
-    columns_nl48_ground_ag = [x.replace("_0", "_305") for x in difference_nl48_ag.columns.values.tolist()]
-    columns_nl48_ground_nonag = [x.replace("_0", "_305") for x in difference_nl48_nonag.columns.values.tolist()]
-    columns_nl48_aerial_ag = [x.replace("_0", "_792") for x in difference_nl48_ag.columns.values.tolist()]
-    columns_nl48_aerial_nonag = [x.replace("_0", "_792") for x in difference_nl48_nonag.columns.values.tolist()]
+    columns_nl48_ground_ag = [g.replace("_0", "_305") for g in difference_nl48_ag.columns.values.tolist()]
+    columns_nl48_ground_nonag = [g.replace("_0", "_305") for g in difference_nl48_nonag.columns.values.tolist()]
+    columns_nl48_aerial_ag = [g.replace("_0", "_792") for g in difference_nl48_ag.columns.values.tolist()]
+    columns_nl48_aerial_nonag = [g.replace("_0", "_792") for g in difference_nl48_nonag.columns.values.tolist()]
 
     # Adjusted ground by subtracting difference
     difference_conus_ag.columns = columns_conus_ground_ag
     difference_conus_nonag.columns = columns_conus_ground_nonag
     difference_nl48_ag.columns = columns_nl48_ground_ag
     difference_nl48_nonag.columns = columns_nl48_ground_nonag
-    adjusted_conus_ag_ground = pct_df.ix[:, ['EntityID'] + use_direct_only_conus_ag_ground].set_index(
+    adjusted_conus_ag_ground = pct_df.ix[:, ['EntityID'] + use_conus_ag_ground].set_index(
         'EntityID').subtract(difference_conus_ag)
-    adjusted_conus_nonag_ground = pct_df.ix[:, ['EntityID'] + use_direct_only_conus_nonag_ground].set_index(
+    adjusted_conus_nonag_ground = pct_df.ix[:, ['EntityID'] + use_conus_nonag_ground].set_index(
         'EntityID').subtract(difference_conus_nonag)
-    adjusted_nl48_ag_ground = pct_df.ix[:, ['EntityID'] + use_direct_only_nl48_ag_ground].set_index(
+    adjusted_nl48_ag_ground = pct_df.ix[:, ['EntityID'] + use_nl48_ag_ground].set_index(
         'EntityID').subtract(difference_nl48_ag)
-    adjusted_nl48_nonag_ground = pct_df.ix[:, ['EntityID'] + use_direct_only_nl48_nonag_ground].set_index(
+    adjusted_nl48_nonag_ground = pct_df.ix[:, ['EntityID'] + use_nl48_nonag_ground].set_index(
         'EntityID').subtract(difference_nl48_nonag)
 
     # Adjust aerial by subtracting difference
@@ -416,13 +483,13 @@ def appply_factor(factor_df, pct_df):
     difference_conus_nonag.columns = columns_conus_aerial_nonag
     difference_nl48_ag.columns = columns_nl48_aerial_ag
     difference_nl48_nonag.columns = columns_nl48_aerial_nonag
-    adjusted_conus_ag_aerial = pct_df.ix[:, ['EntityID'] + use_direct_only_conus_ag_aerial].set_index(
+    adjusted_conus_ag_aerial = pct_df.ix[:, ['EntityID'] + use_conus_ag_aerial].set_index(
         'EntityID').subtract(difference_conus_ag)
-    adjusted_conus_nonag_aerial = pct_df.ix[:, ['EntityID'] + use_direct_only_conus_nonag_aerial].set_index(
+    adjusted_conus_nonag_aerial = pct_df.ix[:, ['EntityID'] + use_conus_nonag_aerial].set_index(
         'EntityID').subtract(difference_conus_nonag)
-    adjusted_nl48_ag_aerial = pct_df.ix[:, ['EntityID'] + use_direct_only_nl48_ag_aerial].set_index(
+    adjusted_nl48_ag_aerial = pct_df.ix[:, ['EntityID'] + use_nl48_ag_aerial].set_index(
         'EntityID').subtract(difference_nl48_ag)
-    adjusted_nl48_nonag_aerial = pct_df.ix[:, ['EntityID'] + use_direct_only_nl48_nonag_aerial].set_index(
+    adjusted_nl48_nonag_aerial = pct_df.ix[:, ['EntityID'] + use_nl48_nonag_aerial].set_index(
         'EntityID').subtract(difference_nl48_nonag)
 
     # reset index  for the drift adjusted dfs
@@ -444,7 +511,6 @@ def appply_factor(factor_df, pct_df):
                                                               adjusted_conus_ag_aerial.columns.tolist()]
     pct_df.ix[:, adjusted_conus_nonag_aerial.columns.tolist()] = adjusted_conus_nonag_aerial.ix[:,
                                                                  adjusted_conus_nonag_aerial.columns.tolist()]
-
     pct_df.ix[:, adjusted_nl48_ag_ground.columns.tolist()] = adjusted_nl48_ag_ground.ix[:,
                                                              adjusted_nl48_ag_ground.columns.tolist()]
     pct_df.ix[:, adjusted_nl48_nonag_ground.columns.tolist()] = adjusted_nl48_nonag_ground.ix[:,
@@ -453,13 +519,52 @@ def appply_factor(factor_df, pct_df):
                                                              adjusted_nl48_ag_aerial.columns.tolist()]
     pct_df.ix[:, adjusted_nl48_nonag_aerial.columns.tolist()] = adjusted_nl48_nonag_aerial.ix[:,
                                                                 adjusted_nl48_nonag_aerial.columns.tolist()]
-    # pct_df.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test2.csv')
+
     return pct_df
+
+
+def apply_on_off(use_look_df, col_header_on_off, working_df, spe_on_off, adjust_df, acres_df, pre_df, use_cols):
+    # applies the on/field site adjustment to the direct overlap based on use input
+    cult_use_cols = []
+    on_off_cult = use_look_df.loc[(use_look_df[col_header_on_off] == 'x')]
+    on_off_cult_cols = list(set(on_off_cult['Chem Table FinalColHeader'].values.tolist()))
+    on_off_cult_df = spe_on_off.loc[(on_off_df[col_header_on_off] == 'OFF')]
+    on_off_cult_species = on_off_cult_df['EntityID'].values.tolist()
+    for z in working_df.columns.values.tolist():
+        for p in on_off_cult_cols:
+            if z.startswith(p):
+                cult_use_cols.append(z)
+    # if species is off field make direct overlap 0
+    direct_cult = [v for v in cult_use_cols if v.endswith("_0")]
+    species_cult_df = working_df.loc[(working_df['EntityID'].isin(on_off_cult_species))]
+    for col in direct_cult:
+        species_cult_df[col].values[:] = 0
+    # moves 0 values to working df using update
+    left_update = working_df.set_index('EntityID')
+    right_update = species_cult_df.set_index('EntityID')
+    res = left_update.reindex(columns=left_update.columns.union(right_update.columns))
+    res.update(right_update)
+    working_df = res.reset_index()
+    # adjust the summarized drift cols
+    working_df = on_off_field(cult_use_cols, working_df, on_off_cult_species, adjust_df, acres_df)
+    # any species not par of the on/off field confirmed they were not altered
+    working_df.update(pre_df.loc[~(pre_df['EntityID'].isin(on_off_cult_species)), cult_use_cols])
+    use_cols = use_cols + cult_use_cols
+    return working_df, use_cols
 
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
 
+adjustment_type = os.path.basename(folder_path_census)
+# df to track parameters used to generate these tables
+parameters_used = pd.DataFrame(index=(list(range(0, 1000))),
+                               columns=['Chemical Name', 'File Type', 'Use Lookup', 'Species List', 'Acres' 'In Location L48',
+                                        'In Location NL48', 'In Location PCT L48', 'In Location PCT NL48',
+                                        'In Location PCT/OnOff L48', 'In Location PCT/OnOff NL48', 'Out file',
+                                        'Out Base Location'])
+
+#date
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
@@ -470,16 +575,16 @@ out_path_original = out_location + os.sep + chemical_name + os.sep + "Summarized
 
 # Loads input values from lookup tables
 use_lookup_df = pd.read_csv(use_lookup)
-# col headers for final tables
-list_final_uses = list(set(use_lookup_df['FinalUseHeader'].values.tolist()))
-# Extract columns that will be adjusted for redundancy
+# Extract columns that will not be adjusted for redundancy -other layer in use look-up
 other_layer = use_lookup_df.loc[(use_lookup_df['other layer'] == 'x')]
 other_layer_cols = other_layer['Chem Table FinalColHeader'].values.tolist()
-
+# get ag cols
 ag_headers = use_lookup_df.loc[(use_lookup_df['Included AA Ag'] == 'x')]
 ag_cols = ag_headers['Chem Table FinalColHeader'].values.tolist()
+# load acres tables- use to adjust drift cols when applying on/off
 acres_df = pd.read_csv(acres_col)
-
+# set entityid as string for merges
+acres_df['EntityID'] = acres_df['EntityID'].map(lambda t: t.split('.')[0]).astype(str)
 
 # Try except loop to set a boolean variable to skip non ag adjustment if there are no non ag uses
 try:
@@ -494,532 +599,555 @@ except TypeError:
     nonag_cols = []
     skip_non_ag_adjustment = True
 
-# ##Extracts columns from lookup tables that should be included for chemical in the AA and the col header to use in the
+# Extracts columns from lookup tables that should be included for chemical in the AA and the col header to use in the
 # final tables for CONUS
 aa_layers_CONUS = use_lookup_df.loc[((use_lookup_df['Included AA'] == 'x') | (use_lookup_df['other layer'] == 'x')) & (
         use_lookup_df['Region'] == 'CONUS')]
 col_prefix_CONUS = aa_layers_CONUS['FinalColHeader'].values.tolist()
 
-##Extracts columns from lookup tables that should be included for chemical in the AA and the col header to use in the
-# final tables for NL48 CONUS
+# Extracts columns from lookup tables that should be included for chemical in the AA and the col header to use in the
+# final tables for NL48
 aa_layers_NL48 = use_lookup_df.loc[((use_lookup_df['Action Area'] == 'x') | (use_lookup_df['other layer'] == 'x') | (
         use_lookup_df['Included AA'] == 'x')) & (use_lookup_df['Region'] != 'CONUS')]
 col_prefix_NL48 = aa_layers_NL48['FinalColHeader'].values.tolist()
 
-# ##Load species that should be adjusted for on/off calls from master list
+# Load species that should be adjusted for on/off calls from master list
 on_off_df = pd.read_excel(on_off_excel)
-on_off_df['EntityID'] = on_off_df['EntityID'].map(lambda x: x).astype(str)
+# set entityid as string for merges
+on_off_df['EntityID'] = on_off_df['EntityID'].map(lambda t: str(t).split('.')[0]).astype(str)
 
-# ## Extract use and columns from lookup table that will be adjusted for the on/off field, cultivated crops, pastures,
-# orchards - can add others
-# Also load the species to be adjust for each group
-if cult_crop:
-    on_off_cult = use_lookup_df.loc[(use_lookup_df['On/Off_AG'] == 'x')]
-    on_off_cult_cols = on_off_cult['FinalColHeader'].values.tolist()
-    on_off_cult_df = on_off_df.loc[(on_off_df['On/Off_AG'] == 'OFF')]
-    on_off_cult_species = on_off_cult_df['EntityID'].values.tolist()
-if pastures:
-    on_off_pasture = use_lookup_df.loc[(use_lookup_df['On/Off_Pasture'] == 'x')]
-    on_off_pasture_cols = on_off_pasture['FinalColHeader'].values.tolist()
-    on_off_pasture_df = on_off_df.loc[(on_off_df['On/Off_Pasture'] == 'OFF')]
-    on_off_pasture_species = on_off_pasture_df['EntityID'].values.tolist()
-if orchards_crops:
-    on_off_orchard = use_lookup_df.loc[(use_lookup_df['On/Off_Orchard_Plantation'] == 'x')]
-    on_off_orchard_cols = on_off_orchard['FinalColHeader'].values.tolist()
-    on_off_orchards_df = on_off_df.loc[(on_off_df['On/Off_Orchard_Plantation'] == 'OFF')]
-    on_off_orchards_species = on_off_orchards_df['EntityID'].values.tolist()
-if residential:
-    on_off_residential = use_lookup_df.loc[(use_lookup_df['On/Off_residential'] == 'x')]
-    on_off_residential_cols = on_off_residential['FinalColHeader'].values.tolist()
-    on_off_res_df = on_off_df.loc[(on_off_df['On/Off_Res'] == 'OFF')]
-    on_off_res_species = on_off_res_df['EntityID'].values.tolist()
-
-# ## Species info from master list
+# Species info from master list
 species_df = pd.read_csv(master_list, dtype=object)
 [species_df.drop(m, axis=1, inplace=True) for m in species_df.columns.values.tolist() if m.startswith('Unnamed')]
 base_sp_df = species_df.loc[:, col_include_output]
-base_sp_df['EntityID'] = base_sp_df['EntityID'].map(lambda x: x).astype(str)
+# set entityid as string for merges
+base_sp_df['EntityID'] = base_sp_df['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
 
-# TABLE 1- no adjustment
+# Overlap Scenario 1- no adjustment
+
+print("Working on No Adjustment Tables")
+# out location for summarized tables
 out_path_no_adjustment = out_path + os.sep + '1_No Adjustment'
 create_directory(out_path_no_adjustment)
-# no adjustment tables
+# loads no adjustment tables
+print l48_BE_sum
 l48_df = pd.read_csv(l48_BE_sum)
+nl48_df = pd.read_csv(nl48_BE_sum)
+# confirm entity id loaded as str for merges
+l48_df['EntityID'] = l48_df['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
+nl48_df['EntityID'] = nl48_df['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
+# drops old index cols
 drop_col = [m for m in l48_df.columns.values.tolist() if m.startswith('Unnamed')]
 l48_df.drop(drop_col, axis=1, inplace=True)
-nl48_df = pd.read_csv(nl48_BE_sum)
 drop_col = [m for m in nl48_df.columns.values.tolist() if m.startswith('Unnamed')]
 nl48_df.drop(drop_col, axis=1, inplace=True)
 
+# Loads chemical information needed from no adjustment tables and merges to species list then merges L48 and NL48 into 1
+# dataframe
 chemical_noadjustment, col_selection_conus = extract_chemical_overlap(col_prefix_CONUS, aa_layers_CONUS, 'CONUS',
                                                                       l48_df, 'no adjustment - CONUS')
-chemical_noadjustment['EntityID'] = chemical_noadjustment['EntityID'].map(lambda x: x).astype(str)
-chemical_noadjustment = pd.merge(base_sp_df, chemical_noadjustment, on='EntityID', how='left')
 out_nl48_df, col_selection_nl48 = extract_chemical_overlap(col_prefix_NL48, aa_layers_NL48, 'NL48', nl48_df,
                                                            'no adjustment - NL48')
-out_nl48_df['EntityID'] = out_nl48_df['EntityID'].map(lambda x: x).astype(str)
-# merges the CONUS and NL48 tables
+
+chemical_noadjustment = pd.merge(base_sp_df, chemical_noadjustment, on='EntityID', how='left')
 chemical_noadjustment = pd.merge(chemical_noadjustment, out_nl48_df, on='EntityID', how='left')
 
+# Applies ED call
+# FUNCTION ARCHIVED BUT MAY BE ADD BACK
 chemical_noadjustment['Step 2 ED Comment'] = chemical_noadjustment.apply(
-    lambda row: step_1_ED(row, chemical_name + " AA""_" + max_drift), axis=1)
+    lambda row_1: step_1_ed(row_1, chemical_name + " AA""_" + max_drift), axis=1)
 chemical_noadjustment['Step 2 ED Comment'] = chemical_noadjustment.apply(
-    lambda row: NLAA_overlap(row, col_selection_conus, col_selection_nl48), axis=1)
-chemical_noadjustment.fillna(0, inplace=True)
+    lambda row_2: nlaa_overlap(row_2, col_selection_conus, col_selection_nl48), axis=1)
+chemical_noadjustment.fillna(0, inplace=True)  # fills blanks with 0s
 
-# exports tables that are not adjusted
+# exports tables with CONUS and NL48 in one table, then individual files
 chemical_noadjustment.to_csv(
     out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_GIS_Step2_' + chemical_name + '.csv')
 conus_cols_f = [v for v in chemical_noadjustment.columns.values.tolist() if
                 v.startswith('CONUS') or v in col_include_output]
 nl48_cols_f = [v for v in chemical_noadjustment.columns.values.tolist() if
                v.startswith('NL48') or v in col_include_output]
-conus_df_step1 = chemical_noadjustment[conus_cols_f]
-nl48_df_step1 = chemical_noadjustment[nl48_cols_f]
+conus_df_step1 = chemical_noadjustment[conus_cols_f]  # L48
+nl48_df_step1 = chemical_noadjustment[nl48_cols_f]  # NL48
 
 conus_df_step1.to_csv(
     out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_CONUS_Step2_' + chemical_name + '.csv')
-nl48_df_step1.to_csv(out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_NL48_Step2_' + chemical_name + '.csv')
-# chemical_noadjustment.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\red.csv')
-# TABLE 2- PCT
-# Summarize output with just the PCT adjustments
-for group in ['min', 'max', 'avg']:  #
-    for bound in [ 'Uniform','Lower','Upper']:  #
-        out_path_pct = out_path_original + os.sep + '2_PCT'  # set out path
-        create_directory(out_path_pct)
-        out_path_pct = out_path_pct + os.sep + group  # set out path
-        create_directory(out_path_pct)
-        out_path_pct = out_path_pct + os.sep + bound  # set out path
-        create_directory(out_path_pct)
-        print out_path_pct
-        pct_table = l48_BE_sum_PCT_table.split("_")[0] + "_" + bound + "_" + l48_BE_sum_PCT_table.split("_")[2] + "_" + \
-                    l48_BE_sum_PCT_table.split("_")[3] + "_" + l48_BE_sum_PCT_table.split("_")[4] + "_" + \
-                    l48_BE_sum_PCT_table.split("_")[5] + "_" + l48_BE_sum_PCT_table.split("_")[6] + "_" + \
-                    l48_BE_sum_PCT_table.split("_")[7] + "_" + group + "_" + l48_BE_sum_PCT_table.split("_")[9]
+nl48_df_step1.to_csv(
+    out_path_no_adjustment + os.sep + file_type_marker + 'No Adjustment_NL48_Step2_' + chemical_name + '.csv')
+print ("Exported No Adjustment tables, found at: {0}".format(out_path_no_adjustment))
+# updates parameter file
+parameters_used = save_parameter(parameters_used, chemical_name, file_type, use_lookup, master_list, l48_BE_sum,
+                                 nl48_BE_sum, '', '', '', '', out_path_no_adjustment, '0', acres_col)
 
-        l48_BE_sum_PCT = BE_sum_PCT_path + os.sep + pct_table
-        pct_table_nl = nl48_BE_sum_PCT_table.split("_")[0] + "_" + bound + "_" + nl48_BE_sum_PCT_table.split("_")[
-            2] + "_" + nl48_BE_sum_PCT_table.split("_")[3] + "_" + nl48_BE_sum_PCT_table.split("_")[4] + "_" + \
-                       nl48_BE_sum_PCT_table.split("_")[5] + "_" + nl48_BE_sum_PCT_table.split("_")[6] + "_" + \
-                       nl48_BE_sum_PCT_table.split("_")[7] + "_" + group + "_" + nl48_BE_sum_PCT_table.split("_")[9]
-        nl48_BE_sum_PCT = BE_sum_PCT_path + os.sep + pct_table_nl
+# Overlap Scenario 2- PCT; Summarize output with just the PCT adjustments
+# Loop over tables to generate PCT, Redundancy, and On/Off site tables; if running supplement data that will be included
+# determines tables to loop on, list len will be 2 if running no adjustment and PCT but 3 when including supplemental
+# data
 
-        # print l48_BE_sum_PCT
-        # print nl48_BE_sum_PCT
+count = 1  # counter for updating the parameter list
+# loops over on/off and on/off with supplemental data
+count_on_off = 0  # counter to direct root path and table to use for on/off - can include supplemental info
+# loops over all PCT types and bounding scenarios
+for in_table in table_loop:
+    for group in ['min', 'max', 'avg']:  # Aggregated PCTs to loop on
+        for bound in ['Uniform', 'Lower', 'Upper']: # Treated acres distributions to loop on
+            if count_on_off == 1:  # if table includes supplemental data
+                # update variables to the supplemental data tables and paths
+                l48_table = l48_BE_sum_sup_table
+                nl48_table = nl48_BE_sum_sup_table
+                in_path_table = BE_sum_hab_path
+            else:  # standard species data including census masking
+                in_path_table = BE_sum_PCT_path
+                l48_table = l48_BE_sum_PCT_table
+                nl48_table = nl48_BE_sum_PCT_table
 
-        # PCT and Census Adjusted tables
-        l48_df_pct = pd.read_csv(l48_BE_sum_PCT)
-        print l48_BE_sum_PCT
-        nl48_df_pct = pd.read_csv(nl48_BE_sum_PCT)
+            print("\nWorking on PCT group {0} and bounding scenario {1}".format(group, bound))
+            out_path_pct = out_path_original + os.sep + '2_PCT'  # set out path
+            create_directory(out_path_pct)
+            out_path_pct = out_path_pct + os.sep + group  # set out path
+            create_directory(out_path_pct)
+            out_path_pct = out_path_pct + os.sep + bound  # set out path
+            create_directory(out_path_pct)
+            # print out_path_pct
+            # generate table name for pct/ treated acre distribution scenario
+            pct_table = l48_table.split("_")[0] + "_" + bound + "_" + l48_table.split("_")[2] + "_" + \
+                        l48_table.split("_")[3] + "_" + l48_table.split("_")[4] + "_" + \
+                        l48_table.split("_")[5] + "_" + l48_table.split("_")[6] + "_" + \
+                        l48_table.split("_")[7] + "_" + group + "_" + l48_table.split("_")[9]
 
-        l48_df_pct.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\pct.csv')
-        chemical_pct, col_selection_conus = extract_chemical_overlap(col_prefix_CONUS, aa_layers_CONUS, 'CONUS',
-                                                                     l48_df_pct, 'pct -conus')
-        chemical_pct = pd.merge(base_sp_df, chemical_pct, on='EntityID', how='left')
-        out_nl48_df_pct, col_selection_nl48 = extract_chemical_overlap(col_prefix_NL48, aa_layers_NL48, 'NL48',
-                                                                       nl48_df_pct, 'pct-nl48')
-        out_nl48_df_pct['EntityID'] = out_nl48_df_pct['EntityID'].map(lambda x: x).astype(str)
+            pct_table_nl = nl48_table.split("_")[0] + "_" + bound + "_" + nl48_table.split("_")[2] + "_" + \
+                           nl48_table.split("_")[3] + "_" + nl48_table.split("_")[4] + "_" + nl48_table.split("_")[5] \
+                           + "_" + nl48_table.split("_")[6] + "_" + nl48_table.split("_")[7] + "_" + group + "_" + \
+                           nl48_table.split("_")[9]
+            l48_BE_sum_PCT = in_path_table + os.sep + pct_table
+            nl48_BE_sum_PCT = in_path_table + os.sep + pct_table_nl
+            #
+            # print l48_BE_sum_PCT
+            # print nl48_BE_sum_PCT
 
-        # merges the CONUS and NL48 tables
-        chemical_pct = pd.merge(chemical_pct, out_nl48_df_pct, on='EntityID', how='left')
-        chemical_pct.to_csv (r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\pct_chem.csv')
-        chemical_pct['Step 2 ED Comment'] = chemical_pct.apply(
-            lambda row: step_1_ED(row, chemical_name + " AA""_" + max_drift), axis=1)
-        chemical_pct['Step 2 ED Comment'] = chemical_pct.apply(
-            lambda row: NLAA_overlap(row, col_selection_conus, col_selection_nl48), axis=1)
-        chemical_pct.fillna(0, inplace=True)
+            # loads PCT and Census Adjusted tables and confirms entity id is a str for joins/merges
+            l48_df_pct = pd.read_csv(l48_BE_sum_PCT)
+            nl48_df_pct = pd.read_csv(nl48_BE_sum_PCT)
+            l48_df_pct['EntityID'] = l48_df_pct['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
+            nl48_df_pct['EntityID'] = nl48_df_pct['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
 
-        # Export tables that are only PCT and census adjusted
-        chemical_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_GIS_Step2_' + chemical_name + '.csv')
-        # COMMENTS THESE SHOULD NOT CHANGE FROM THE FIRST LOOP
-        # conus_cols_f = [v for v in chemical_pct.columns.values.tolist() if v.startswith('CONUS') or v in col_include_output]
-        # nl48_cols_f = [v for v in chemical_pct.columns.values.tolist() if v.startswith('NL48') or v in col_include_output]
-        conus_df_step1_pct = chemical_pct[conus_cols_f]
-        nl48_df_step1_pct = chemical_pct[nl48_cols_f]
-        conus_df_step1_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_CONUS_Step2_' + chemical_name + '.csv')
-        nl48_df_step1_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_NL48_Step2_' + chemical_name + '.csv')
+            # Loads chemical information needed from PCT tables and merges to species list then merges CONUS and NL48
+            # into 1 dataframe
+            chemical_pct, col_selection_conus = extract_chemical_overlap(col_prefix_CONUS, aa_layers_CONUS, 'CONUS',
+                                                                         l48_df_pct, 'pct -conus')
+            out_nl48_df_pct, col_selection_nl48 = extract_chemical_overlap(col_prefix_NL48, aa_layers_NL48, 'NL48',
+                                                                           nl48_df_pct, 'pct-nl48')
+            chemical_pct = pd.merge(base_sp_df, chemical_pct, on='EntityID', how='left')
+            # merges the CONUS and NL48 tables
+            chemical_pct = pd.merge(chemical_pct, out_nl48_df_pct, on='EntityID', how='left')
+            # Applies ED call
+            # FUNCTION ARCHIVED BUT MAY BE ADD BACK
+            chemical_pct['Step 2 ED Comment'] = chemical_pct.apply(
+                lambda row_1: step_1_ed(row_1, chemical_name + " AA""_" + max_drift), axis=1)
+            chemical_pct['Step 2 ED Comment'] = chemical_pct.apply(
+                lambda row_1: nlaa_overlap(row_1, col_selection_conus, col_selection_nl48), axis=1)
+            chemical_pct.fillna(0, inplace=True)
 
-        # TABLE 3- PCT and Redundancy tables
-        # redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are calculated
+            # Export tables that are only PCT and census adjusted
+            # with CONUS and NL48 in one table, then individual files
+            conus_df_step1_pct = chemical_pct[conus_cols_f]  # L48 df
+            nl48_df_step1_pct = chemical_pct[nl48_cols_f]  # NL48 df
+            if count_on_off == 0:
+                chemical_pct.to_csv(out_path_pct + os.sep + file_type_marker + 'PCT_GIS_Step2_' + chemical_name + '.csv')
+                conus_df_step1_pct.to_csv(
+                    out_path_pct + os.sep + file_type_marker + 'PCT_CONUS_Step2_' + chemical_name + '.csv')
+                nl48_df_step1_pct.to_csv(
+                    out_path_pct + os.sep + file_type_marker + 'PCT_NL48_Step2_' + chemical_name + '.csv')
+                print ("  Exported PCT adjusted table for PCT {0} and bounding scenario {1}: found at: {2}".format(group, bound,
+                                                                                                                   out_path_pct))
+            else:
+                pass  # Don't save the habitat adjusted on/off just need the DF to confirm that cols not part of on/off are
+                # impacted by the on/off
+            # update parameter table and count
+            parameters_used = save_parameter(parameters_used, chemical_name, file_type, use_lookup, master_list, l48_BE_sum,
+                                             nl48_BE_sum, nl48_BE_sum_PCT, nl48_BE_sum_PCT, '', '', out_path_pct, count, acres_col)
+            count += 1
 
-        out_path_redundancy = out_path_original + os.sep + '3_Redundancy'  # set out path
+            # Overlap Scenario 3- PCT and Redundancy tables
+            # redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are
+            # calculated
 
-        create_directory(out_path_redundancy)
-        out_path_redundancy = out_path_redundancy + os.sep + group  # set out path
-        create_directory(out_path_redundancy)
-        out_path_redundancy = out_path_redundancy + os.sep + bound  # set out path
-        create_directory(out_path_redundancy)
+            out_path_redundancy = out_path_original + os.sep + '3_Redundancy'  # set out path
+            create_directory(out_path_redundancy)  # create folder if needed
+            out_path_redundancy = out_path_redundancy + os.sep + group  # set out path
+            create_directory(out_path_redundancy)  # create folder if needed
+            out_path_redundancy = out_path_redundancy + os.sep + bound  # set out path
+            create_directory(out_path_redundancy)  # create folder if needed
 
-        # creates a copy of the PCT table to be adjusted further for redundancy
-        chemical_pct_redundancy = chemical_pct.copy()
+            # creates a copy of the PCT table to be adjusted further for redundancy
+            chemical_pct_redundancy = chemical_pct.copy()
 
-        # COL FILTERS USED TO APPLY ADJUSTMENTS
-        # list of columns that are just use sites that apply to conus vs nl48, aa, composites, use, ag and non-ag
-        # conus/nonl48
-        overlap_cols_conus = [x for x in conus_cols_f if x not in col_include_output]
-        overlap_cols_nl48 = [x for x in nl48_cols_f if x not in col_include_output]
-        # layer flag as other that should not be adjusted ie Federal Lands
-        other_layer_header = [x for x in other_layer_cols]
+            # COL FILTERS USED TO APPLY REDUNDANCY SCALING ADJUSTMENTS
+            # list of columns that are just use sites that apply to conus vs nl48, aa, composites, use, ag and non-ag
+            # conus/nl48
+            overlap_cols_conus = [x for x in conus_cols_f if x not in col_include_output]
+            overlap_cols_nl48 = [x for x in nl48_cols_f if x not in col_include_output]
+            # layer flag as other that should not be adjusted ie Federal Lands
+            other_layer_header = [x for x in other_layer_cols]
 
-        # AA and composite columns - HARD CODE composite and actions areas must have AA in the use name
-        aa_col_conus = [x for x in overlap_cols_conus if 'AA' in x.split('_')[1].split(' ')]
-        aa_col_nl48 = [x for x in overlap_cols_nl48 if 'AA' in x.split('_')[1].split(' ')]
+            # AA and composite columns - HARD CODE composite and actions areas must have AA in the use name
+            aa_col_conus = [x for x in overlap_cols_conus if 'AA' in x.split('_')[1].split(' ')]
+            aa_col_nl48 = [x for x in overlap_cols_nl48 if 'AA' in x.split('_')[1].split(' ')]
 
-        # Use columns removes the Federal Lands AA, Ag and NonAg Composites from list
-        use_col_conus = [x for x in overlap_cols_conus if not 'AA' in x.split('_')[1].split(' ') and (
-                x.split('_')[0] + "_" + x.split('_')[1]) not in other_layer_cols]
-        use_col_nl48 = [x for x in overlap_cols_nl48 if not 'AA' in x.split('_')[1].split(' ') and (
-                x.split('_')[0] + "_" + x.split('_')[1]) not in other_layer_cols]
+            # Use columns removes the Federal Lands AA, Ag and NonAg Composites from list
+            use_col_conus = [x for x in overlap_cols_conus if 'AA' not in x.split('_')[1].split(' ') and (
+                    x.split('_')[0] + "_" + x.split('_')[1]) not in other_layer_cols]
+            use_col_nl48 = [x for x in overlap_cols_nl48 if 'AA' not in x.split('_')[1].split(' ') and (
+                    x.split('_')[0] + "_" + x.split('_')[1]) not in other_layer_cols]
 
-        # col filters list for direct overlap for ag and non ag uses represented by an _0 at the end of the column header
-        use_direct_only_conus_ag = [x for x in use_col_conus if
-                                    x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
-        use_direct_only_conus_nonag = [x for x in use_col_conus if
-                                       x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
-        use_direct_only_nl48_ag = [x for x in use_col_nl48 if
-                                   x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
-        use_direct_only_nl48_nonag = [x for x in use_col_nl48 if
-                                      x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            # col filters list for direct overlap for ag/non ag uses represented by 0 at the end of the column header -
+            # these will be adjusted by redundancy scaling factor
+            use_direct_only_conus_ag = [x for x in use_col_conus if
+                                        x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
+            use_direct_only_conus_nonag = [x for x in use_col_conus if
+                                           x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            use_direct_only_nl48_ag = [x for x in use_col_nl48 if
+                                       x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
+            use_direct_only_nl48_nonag = [x for x in use_col_nl48 if
+                                          x.endswith('_0') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
 
-        # col filter direct overlap for aa, ag and non ag composites
-        use_direct_only_conus_ag_aa = [x for x in aa_col_conus if
-                                       x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
-        use_direct_only_conus_nonag_aa = [x for x in aa_col_conus if
-                                          x.endswith('_0') and 'NonAg' in x.split("_")[1].split(" ")]
-        use_direct_only_conus_aa = [x for x in aa_col_conus if
-                                    x.endswith('_0') and 'Ag' not in x.split("_")[1].split(" ") and 'NonAg' not in
-                                    x.split("_")[1].split(" ")]
-        print use_direct_only_conus_aa
+            # col filter direct overlap for aa, aa ag and aa non ag composites- these ares used to calculate
+            # redundancy scaling factor
+            use_direct_only_conus_ag_aa = [x for x in aa_col_conus if
+                                           x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
+            use_direct_only_conus_nonag_aa = [x for x in aa_col_conus if
+                                              x.endswith('_0') and 'NonAg' in x.split("_")[1].split(" ")]
+            use_direct_only_conus_aa = [x for x in aa_col_conus if
+                                        x.endswith('_0') and 'Ag' not in x.split("_")[1].split(" ") and 'NonAg' not in
+                                        x.split("_")[1].split(" ")]
+            print ("  Column representing direct overlap for AA is: {0}".format(use_direct_only_conus_aa))
+            # direct overlap for aa ag and aa non ag cols
+            use_direct_only_nl48_ag_aa = [x for x in aa_col_nl48 if x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
+            use_direct_only_nl48_nonag_aa = [x for x in aa_col_nl48 if
+                                             x.endswith('_0') and 'NonAg' in x.split("_")[1].split(" ")]
+            use_direct_only_nl48_aa = [x for x in aa_col_nl48 if
+                                       x.endswith('_0') and 'Ag' not in x.split("_")[1].split(" ") and 'NonAg' not in
+                                       x.split("_")[1].split(" ")]
 
-        use_direct_only_nl48_ag_aa = [x for x in aa_col_nl48 if x.endswith('_0') and 'Ag' in x.split("_")[1].split(" ")]
-        use_direct_only_nl48_nonag_aa = [x for x in aa_col_nl48 if
-                                         x.endswith('_0') and 'NonAg' in x.split("_")[1].split(" ")]
-        use_direct_only_nl48_aa = [x for x in aa_col_nl48 if
-                                   x.endswith('_0') and 'Ag' not in x.split("_")[1].split(" ") and 'NonAg' not in
-                                   x.split("_")[1].split(" ")]
+            # col filters list ground and aerial overlap represented by an _305 and _792 at the end of the column
+            # header ag and non ag uses
+            # ground
+            use_conus_ag_ground = [x for x in use_col_conus if
+                                   x.endswith('_305') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
+            use_conus_nonag_ground = [x for x in use_col_conus if
+                                      x.endswith('_305') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            use_nl48_ag_ground = [x for x in use_col_nl48 if
+                                  x.endswith('_305') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
+            use_nl48_nonag_ground = [x for x in use_col_nl48 if
+                                     x.endswith('_305') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            # aerial
+            use_conus_ag_aerial = [x for x in use_col_conus if
+                                   x.endswith('_792') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
+            use_conus_nonag_aerial = [x for x in use_col_conus if
+                                      x.endswith('_792') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            use_nl48_ag_aerial = [x for x in use_col_nl48 if
+                                  x.endswith('_792') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
+            use_nl48_nonag_aerial = [x for x in use_col_nl48 if
+                                     x.endswith('_792') and (x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
 
-        # col filters list ground and aerial overlap represented by an _305 and _792 at the end of the column header ag and
-        # non ag uses
-        use_direct_only_conus_ag_ground = [x for x in use_col_conus if
-                                           x.endswith('_305') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
-        use_direct_only_conus_nonag_ground = [x for x in use_col_conus if x.endswith('_305') and (
-                x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
-        use_direct_only_nl48_ag_ground = [x for x in use_col_nl48 if
-                                          x.endswith('_305') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
-        use_direct_only_nl48_nonag_ground = [x for x in use_col_nl48 if x.endswith('_305') and (
-                x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            # Stores unadjusted values ag and non ag uses for conus and NL48 - used for scaling factor adjustment
+            # Confirms all number are set to a numeric data type to start calculations for scaling factor adjustments
+            chemical_noadjustment.ix[:, overlap_cols_conus] = chemical_noadjustment.ix[:, overlap_cols_conus].apply(
+                pd.to_numeric, errors='coerce')
+            chemical_noadjustment.ix[:, overlap_cols_nl48] = chemical_noadjustment.ix[:, overlap_cols_nl48].apply(
+                pd.to_numeric, errors='coerce')
+            unadjusted_conus_ag = chemical_noadjustment[['EntityID'] + use_direct_only_conus_ag].copy()
+            unadjusted_conus_nonag = chemical_noadjustment[['EntityID'] + use_direct_only_conus_nonag].copy()
+            unadjusted_nl48_ag = chemical_noadjustment[['EntityID'] + use_direct_only_nl48_ag].copy()
+            unadjusted_nl48_nonag = chemical_noadjustment[['EntityID'] + use_direct_only_nl48_nonag].copy()
 
-        use_direct_only_conus_ag_aerial = [x for x in use_col_conus if
-                                           x.endswith('_792') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
-        use_direct_only_conus_nonag_aerial = [x for x in use_col_conus if x.endswith('_792') and (
-                x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
-        use_direct_only_nl48_ag_aerial = [x for x in use_col_nl48 if
-                                          x.endswith('_792') and (x.split('_')[0] + "_" + x.split('_')[1]) in ag_cols]
-        use_direct_only_nl48_nonag_aerial = [x for x in use_col_nl48 if x.endswith('_792') and (
-                x.split('_')[0] + "_" + x.split('_')[1]) in nonag_cols]
+            # Confirms all number are set to a numeric data type to start calculations for scaling factor adjustments
+            chemical_pct.ix[:, overlap_cols_conus] = chemical_pct.ix[:, overlap_cols_conus].apply(pd.to_numeric,
+                                                                                                  errors='coerce')
+            chemical_pct.ix[:, overlap_cols_nl48] = chemical_pct.ix[:, overlap_cols_nl48].apply(pd.to_numeric,
+                                                                                                errors='coerce')
+            # makes a copy of the cols that will be adjusted
+            pct_adjusted_conus_ag = chemical_pct[['EntityID'] + use_direct_only_conus_ag].copy()
+            pct_adjusted_conus_nonag = chemical_pct[['EntityID'] + use_direct_only_conus_nonag].copy()
+            pct_adjusted_nl48_ag = chemical_pct[['EntityID'] + use_direct_only_nl48_ag].copy()
+            pct_adjusted_nl48_nonag = chemical_pct[['EntityID'] + use_direct_only_nl48_nonag].copy()
 
-        # Stores unadjusted values ag and non ag uses for conus and L48 - used for factor adjustment
-        chemical_noadjustment.ix[:, overlap_cols_conus] = chemical_noadjustment.ix[:, overlap_cols_conus].apply(
-            pd.to_numeric, errors='coerce')
-        chemical_noadjustment.ix[:, overlap_cols_nl48] = chemical_noadjustment.ix[:, overlap_cols_nl48].apply(
-            pd.to_numeric, errors='coerce')
-        unadjusted_conus_ag = chemical_noadjustment[['EntityID'] + use_direct_only_conus_ag].copy()
-        unadjusted_conus_nonag = chemical_noadjustment[['EntityID'] + use_direct_only_conus_nonag].copy()
-        unadjusted_nl48_ag = chemical_noadjustment[['EntityID'] + use_direct_only_nl48_ag].copy()
-        unadjusted_nl48_nonag = chemical_noadjustment[['EntityID'] + use_direct_only_nl48_nonag].copy()
+            # Sum uses for scaling factor adjustment groups ag uses, non ag uses and composites for both CONUS and NL48
+            #  - used for factor adjustment
+            chemical_noadjustment['CONUS_Sum_Ag'] = chemical_noadjustment[use_direct_only_conus_ag].sum(axis=1)
+            chemical_noadjustment['CONUS_Sum_NonAg'] = chemical_noadjustment[use_direct_only_conus_nonag].sum(axis=1)
+            chemical_noadjustment['NL48_Sum_Ag'] = chemical_noadjustment[use_direct_only_nl48_ag].sum(axis=1)
+            chemical_noadjustment['NL48_Sum_NonAg'] = chemical_noadjustment[use_direct_only_nl48_nonag].sum(axis=1)
+            # sums the composites used for factor adjustment based on user input on which composites to use
+            if not skip_non_ag_adjustment:
+                chemical_noadjustment['CONUS_Sum_Composites'] = chemical_noadjustment[
+                    use_direct_only_conus_ag_aa + use_direct_only_conus_nonag_aa].sum(axis=1)
+                chemical_noadjustment['NL48_Sum_Composites'] = chemical_noadjustment[
+                    use_direct_only_nl48_ag_aa + use_direct_only_nl48_nonag_aa].sum(axis=1)
+            else:
+                chemical_noadjustment['CONUS_Sum_Composites'] = chemical_noadjustment[use_direct_only_conus_ag_aa].sum(
+                    axis=1)
+                chemical_noadjustment['NL48_Sum_Composites'] = chemical_noadjustment[use_direct_only_nl48_ag_aa].sum(axis=1)
 
-        # stores values that are adjusts by PCT only and but adjusted for redundancy - used to calc the impact of the
-        # redundancy adjustment
-        # Confirms all number are set to a numeric data type to start calculations for factor adjustments
-        chemical_pct.ix[:, overlap_cols_conus] = chemical_pct.ix[:, overlap_cols_conus].apply(pd.to_numeric,
-                                                                                              errors='coerce')
-        chemical_pct.ix[:, overlap_cols_nl48] = chemical_pct.ix[:, overlap_cols_nl48].apply(pd.to_numeric,
-                                                                                            errors='coerce')
-        pct_adjusted_conus_ag = chemical_pct[['EntityID'] + use_direct_only_conus_ag].copy()
-        pct_adjusted_conus_nonag = chemical_pct[['EntityID'] + use_direct_only_conus_nonag].copy()
-        pct_adjusted_nl48_ag = chemical_pct[['EntityID'] + use_direct_only_nl48_ag].copy()
-        pct_adjusted_nl48_nonag = chemical_pct[['EntityID'] + use_direct_only_nl48_nonag].copy()
+            # Calculates factors that will be used for adjustment based on the above values
+            # Ag scaling factor and composite factor calculated from the AA and AG Composites then applied to all
+            # individual Ag layers, Non-Ag factor and composite scaling factor calculated from the AA And Non-Ag
+            # Composites is applied to all of the Non-Ag uses - Updated Winter 2018 based on QC before QC - the
+            # composite scaling factor was not applied to the AG use layers.  Both QCers indicated the composite scaling
+            # factor needs to be applied to the individual a layer too (ESA team Fall 2017- BE Streamlining meeting
+            # lead CMR) QC of this process was conducted by CMR and CP early summer 2018 (may/june see files Copy of
+            # Carbaryl_QC_FactorAdjustments_CP.xlsx and Carbaryl_QC_FactorAdjustments.xlsx)
 
-        # # Sum uses for factor adjustment groups ag uses, non ag uses and composites for both CONUS and NL48 - used for
-        # factor adjustment
-        chemical_noadjustment['CONUS_Sum_Ag'] = chemical_noadjustment[use_direct_only_conus_ag].sum(axis=1)
-        chemical_noadjustment['CONUS_Sum_NonAg'] = chemical_noadjustment[use_direct_only_conus_nonag].sum(axis=1)
-        chemical_noadjustment['NL48_Sum_Ag'] = chemical_noadjustment[use_direct_only_nl48_ag].sum(axis=1)
+            # 5/16/19 Per discussion with CMR added the adjustment to the composite layers - this applies the composite
+            # factor to both the Ag and non-ag composites
 
-        chemical_noadjustment['NL48_Sum_NonAg'] = chemical_noadjustment[use_direct_only_nl48_nonag].sum(axis=1)
-        if not skip_non_ag_adjustment:
-            chemical_noadjustment['CONUS_Sum_Composites'] = chemical_noadjustment[use_direct_only_conus_ag_aa + use_direct_only_conus_nonag_aa].sum(
-                axis=1)
-            chemical_noadjustment['NL48_Sum_Composites'] = chemical_noadjustment[
-                use_direct_only_nl48_ag_aa + use_direct_only_nl48_nonag_aa].sum(axis=1)
-        else:
-            chemical_noadjustment['CONUS_Sum_Composites'] = chemical_noadjustment[
-                use_direct_only_conus_ag_aa].sum(axis=1)
-            chemical_noadjustment['NL48_Sum_Composites'] = chemical_noadjustment[use_direct_only_nl48_ag_aa].sum(axis=1)
+            # Ag scaling factor = sum of ag uses/ ag composite - CONUS_Sum_Ag/ direct overlap of the ag composite
+            # Non-Ag scaling factor sum of non ag use/ non ag composite; - CONUS_Sum_NonAg /direct overlap of the non
+            # ag composite Composite factor sum of Ag and Non Ag composite / AA - CONUS_Sum_Composites/ direct overlap
+            # of the AA
 
-        # chemical_noadjustment.to_csv(out_path_redundancy  + os.sep + 'test4.csv')
+            # ### Calculated scaling factors
+            # calculates the Ag scaling Factor for CONUS and NL48 = where clause removed the rows where the  Ag
+            # composite is equal to 0
+            chemical_noadjustment['CONUS_Ag_Ag_Factor'] = chemical_noadjustment['CONUS_Sum_Ag'].div(
+                (chemical_noadjustment[use_direct_only_conus_ag_aa[0]]).where(
+                    chemical_noadjustment[use_direct_only_conus_ag_aa[0]] != 0, np.nan), axis=0)
+            chemical_noadjustment['NL48_Ag_Ag_Factor'] = chemical_noadjustment['NL48_Sum_Ag'].div(
+                (chemical_noadjustment[use_direct_only_nl48_ag_aa[0]]).where(
+                    chemical_noadjustment[use_direct_only_nl48_ag_aa[0]] != 0, np.nan), axis=0)
+            # calculated the Non Ag scaling factors for CONUS and NL48 = where clause removed the rows where the  Ag
+            # composite is equal to 0
+            if not skip_non_ag_adjustment:
+                chemical_noadjustment['CONUS_NonAg_NonAg_Factor'] = chemical_noadjustment['CONUS_Sum_NonAg'].div(
+                    (chemical_noadjustment[use_direct_only_conus_nonag_aa[0]]).where(
+                        chemical_noadjustment[use_direct_only_conus_nonag_aa[0]] != 0, np.nan), axis=0)
+                chemical_noadjustment['NL48_NonAg_NonAg_Factor'] = chemical_noadjustment['NL48_Sum_NonAg'].div(
+                    (chemical_noadjustment[use_direct_only_nl48_nonag_aa[0]]).where(
+                        chemical_noadjustment[use_direct_only_nl48_nonag_aa[0]] != 0, np.nan), axis=0)
+            # calculated the Composite scaling factors for CONUS and NL48 = where clause removed the rows where the Ag
+            # composite is equal to 0
+            # If multiple AA were generated: unaltered action area = 1; usage action area index position 0
+            chemical_noadjustment['CONUS_Composite_Factor'] = chemical_noadjustment['CONUS_Sum_Composites'].div(
+                (chemical_noadjustment[use_direct_only_conus_aa[0]]).where(
+                    chemical_noadjustment[use_direct_only_conus_aa[0]] != 0, np.nan), axis=0)
+            chemical_noadjustment['NL48_Composite_Factor'] = chemical_noadjustment['NL48_Sum_Composites'].div(
+                (chemical_noadjustment[use_direct_only_nl48_aa[0]]).where(
+                    chemical_noadjustment[use_direct_only_nl48_aa[0]] != 0, np.nan), axis=0)
 
-        # Calculates factors that will be used for adjustment based on the above values
+            # applies scaling factor
+            chemical_pct_redundancy = apply_factor(chemical_noadjustment, chemical_pct_redundancy)
 
-        # Ag factor and composite factor calculated from the AA and AG Composites then applied to all individual Ag
-        # layers, Non-Ag factor and composite factor calculated from the AA And Non-Ag Composites is applied to all of
-        # the Non-Ag uses - Updated Winter 2018 based on QC before QC - the composite factor was not applied
-        # to the AG use layers.  Both QCers indicated the composite factor needs to be applied to the individual ag
-        # layer too (ESA team Fall 2017- BE Streamlining meeting lead CMR) QC of this process was conducted my CMR and
-        # CP early summer 2018 (may/june see files Copy of Carbaryl_QC_FactorAdjustments_CP.xlsx and
-        # Carbaryl_QC_FactorAdjustments.xlsx)
+            # # Applies the effects determinations based on pct and redundancy redundancy adjustments and saves tables
+            # Functions on hold but may be added back in
+            chemical_pct_redundancy.fillna(0, inplace=True)
+            chemical_pct_redundancy['Step 2 ED Comment'] = chemical_pct_redundancy.apply(
+                lambda row_2: step_1_ed(row_2, chemical_name + " AA""_" + max_drift), axis=1)
+            chemical_pct_redundancy['Step 2 ED Comment'] = chemical_pct_redundancy.apply(
+                lambda row_2: nlaa_overlap(row_2, col_selection_conus, col_selection_nl48), axis=1)
 
-        # 5/16/19 Per discussion with CMR added the adjustment to the composite layers - this applies the composite
-        # factor to both the Ag and non-ag composites
+            # Export tables that are only PCT and census adjusted
+            # with CONUS and NL48 in one table, then individual files
+            conus_df_step1 = chemical_pct_redundancy[conus_cols_f]  # L48
+            nl48_df_step1 = chemical_pct_redundancy[nl48_cols_f]  # NL48
+            if count_on_off ==0:
+                chemical_pct_redundancy.to_csv(
+                    out_path_redundancy + os.sep + file_type_marker + 'Redundancy_GIS_Step2_' + chemical_name + '.csv')
+                conus_df_step1.to_csv(
+                    out_path_redundancy + os.sep + file_type_marker + 'Redundancy_CONUS_Step2_' + chemical_name + '.csv')
+                nl48_df_step1.to_csv(
+                    out_path_redundancy + os.sep + file_type_marker + 'Redundancy_NL48_Step2_' + chemical_name + '.csv')
+                print ("  Exported PCT/ Redundancy adjusted table for PCT {0} and bounding scenario {1}: found at: {2}".format(
+                    group, bound, out_path_redundancy))
+            else:
+                pass  # Don't save the habitat adjusted on/off just need the DF to confirm that cols not part of on/off are
+                # impacted by the on/off
+            # updates the df tracking parameters used and counter
+            parameters_used = save_parameter(parameters_used, chemical_name, file_type, use_lookup, master_list, l48_BE_sum,
+                                             nl48_BE_sum, nl48_BE_sum_PCT, nl48_BE_sum_PCT, '', '', out_path_redundancy,
+                                             count, acres_col)
+            count += 1
 
-        # Ag factor = sum of ag uses/ ag composite - CONUS_Sum_Ag/ direct overlap of the ag composite
-        # Non-Ag factor sum of non ag use/ non ag composite; - CONUS_Sum_NonAg /direct overlap of the non ag composite
-        # Composite factor sum of Ag and Non Ag composite / AA - CONUS_Sum_Composites/ direct overlap of the AA
+            # Overlap Scenario 4 and 5- PCT, Redundancy, and On/Off field adjusted tables; includes supplemented
+            # information export if parameters set by users
+            # redundancy scaling adjustments - adjusts the direct overlap based on the ag, nonag and composite
+            # scaling factors that are calculated; On/Off field removed direct overlap for species not found on those
+            # use sites; supplemental information will update the overlap based on the additional data such as habitat,
+            # elevation etc
+
+            # on off site adjustments- direct overlap is set to zero if for species identified as not be present on
+            # the on/off site group  - on/off site tables use an update species acres values in the percent
+            # overlap calculation, the update value removes the area where the species won't go, ie off site applied
+            # after the redundancy scaling factors to the overlap, if it is applied before the redundancy scaling is
+            # applied more tha 100% of the species location could be removed; the update area value are used for the
+            # direct overlap for use site not impacted by the on/off site calls
+
+            if count_on_off == 1:  # if table includes supplemental data
+                out_path_on_off = out_path_original + os.sep + '5_On_Off_Field_' + sup_key  # set out path
+                # update variables to the supplemental data tables and paths
+                l48_onoff_table = l48_BE_sum_onoff_sup_table
+                nl48_onoff_table = nl48_BE_sum_onoff_sup_table
+                in_path_table = BE_sum_hab_path
+            else:  # standard species data including census masking
+                in_path_table = BE_sum_PCT_path
+                l48_onoff_table = l48_BE_sum_onoff_table
+                nl48_onoff_table = nl48_BE_sum_onoff_table
+                out_path_on_off = out_path_original + os.sep + '4_On_Off_Field'  # set out path
+            create_directory(out_path_on_off)  # create out folder
+            out_path_on_off = out_path_on_off + os.sep + group  # set out path
+            create_directory(out_path_on_off)  # create out folder
+            out_path_on_off = out_path_on_off + os.sep + bound  # set out path
+            create_directory(out_path_on_off)
+
+            # # load on/off site tables adjusted acres to remove areas found exclusively  in the off locations may also
+            # included supplemental data
+            # generate table name for pct/treated acres bounding scenario
+            pct_table_onoff = l48_onoff_table.split("_")[0] + "_" + bound + "_" + l48_onoff_table.split("_")[2] + "_" + \
+                              l48_onoff_table.split("_")[3] + "_" + l48_onoff_table.split("_")[4] + "_" + \
+                              l48_onoff_table.split("_")[5] + "_" + l48_onoff_table.split("_")[6] + "_" + \
+                              l48_onoff_table.split("_")[7] + "_" + group + "_" + l48_onoff_table.split("_")[9]
+
+            pct_table_nl_onoff = nl48_onoff_table.split("_")[0] + "_" + bound + "_" + nl48_onoff_table.split("_")[
+                2] + "_" + nl48_onoff_table.split("_")[3] + "_" + nl48_onoff_table.split("_")[4] + "_" + \
+                                 nl48_onoff_table.split("_")[5] + "_" + nl48_onoff_table.split("_")[6] + "_" + \
+                                 nl48_onoff_table.split("_")[7] + "_" + group + "_" + nl48_onoff_table.split("_")[9]
+
+            # path to tables
+            l48_BE_sum_PCT_onoff = in_path_table + os.sep + pct_table_onoff
+            nl48_BE_sum_PCT_onoff = in_path_table + os.sep + pct_table_nl_onoff
+
+            # print l48_BE_sum_PCT_onoff
+            # print nl48_BE_sum_PCT_onoff
+            # loads PCT, Census, on off  Adjusted tables with supplemental information (optional) and confirms entity id
+            #  is a str for joins/merges
+            l48_df_pct_onoff = pd.read_csv(l48_BE_sum_PCT_onoff)
+            nl48_df_pct_onoff = pd.read_csv(nl48_BE_sum_PCT_onoff)
+
+            l48_df_pct_onoff['EntityID'] = l48_df_pct_onoff['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
+            nl48_df_pct_onoff['EntityID'] = nl48_df_pct_onoff['EntityID'].map(lambda t: t.split(".")[0]).astype(str)
+
+            # Loads chemical information needed from PCT tables and merges to species list then merges CONUS and NL48
+            # into 1
+            chemical_pct_onoff, col_selection_conus = extract_chemical_overlap(col_prefix_CONUS, aa_layers_CONUS,
+                                                                               'CONUS',
+                                                                               l48_df_pct_onoff, 'pct -conus')
+
+            out_nl48_df_pct_onoff, col_selection_nl48 = extract_chemical_overlap(col_prefix_NL48, aa_layers_NL48,
+                                                                                 'NL48',
+                                                                                 nl48_df_pct_onoff, 'pct-nl48')
+            # merges the CONUS and NL48 tables
+            chemical_pct_onoff = pd.merge(base_sp_df, chemical_pct_onoff, on='EntityID', how='left')
+            chemical_onoff = pd.merge(chemical_pct_onoff, out_nl48_df_pct_onoff, on='EntityID', how='left')
+            # Apply factor
+            chemical_on_off = apply_factor(chemical_noadjustment, chemical_onoff)
+
+            # Copy of redundancy table from previous step
+            chemical_pct_redundancy_on_off = chemical_pct_redundancy.copy()
+            adjust_df = chemical_pct_redundancy.copy()
+
+            # ## Extract use and columns from lookup table that will be adjusted for the on/off site cultivated crops,
+            # pastures, orchards,residential, forest, row
+            # Also load the species to be adjust for each group
+
+            use_cols = []  # empty list to track columns adjusted for on/off
+            # applies the on/off adjustment for direct overlap (ie updated to 0) and updates the summarized drift cols
+            if cult_crop:
+                chemical_pct_redundancy_on_off, use_cols = apply_on_off(use_lookup_df, 'On/Off_AG',
+                                                                        chemical_pct_redundancy_on_off,
+                                                                        on_off_df, adjust_df, acres_df,
+                                                                        chemical_pct_redundancy, use_cols)
+
+            if pastures:
+                chemical_pct_redundancy_on_off, use_cols = apply_on_off(use_lookup_df, 'On/Off_Pasture',
+                                                                        chemical_pct_redundancy_on_off, on_off_df,
+                                                                        adjust_df, acres_df,
+                                                                        chemical_pct_redundancy, use_cols)
+
+            if orchards_crops:
+                chemical_pct_redundancy_on_off, use_cols = apply_on_off(use_lookup_df, 'On/Off_Orchard_Plantation',
+                                                                        chemical_pct_redundancy_on_off, on_off_df,
+                                                                        adjust_df, acres_df,
+                                                                        chemical_pct_redundancy, use_cols)
+
+            if residential:
+                chemical_pct_redundancy_on_off, use_cols = apply_on_off(use_lookup_df, 'On/Off_Residential',
+                                                                        chemical_pct_redundancy_on_off, on_off_df,
+                                                                        adjust_df,
+                                                                        acres_df, chemical_pct_redundancy, use_cols)
+
+            if forest:
+                chemical_pct_redundancy_on_off, use_cols = apply_on_off(use_lookup_df, 'On/Off_Forest',
+                                                                        chemical_pct_redundancy_on_off,
+                                                                        on_off_df, adjust_df, acres_df,
+                                                                        chemical_pct_redundancy, use_cols)
+
+            if row:
+                chemical_pct_redundancy_on_off, use_cols = apply_on_off(use_lookup_df, 'On/Off_ROW',
+                                                                        chemical_pct_redundancy_on_off,
+                                                                        on_off_df, adjust_df, acres_df,
+                                                                        chemical_pct_redundancy, use_cols)
+
+            # cols that the are not part of the on/off adjusted and should not be adjusted
+            cols_not_on_off = []
+            for col in chemical_pct_redundancy_on_off:
+                if col not in use_cols and col.endswith("_0") and 'AA' not in col.split(" ") \
+                        and "AA_0" not in col.split(" ") and 'Federal Lands' not in col.split("_"):
+                    cols_not_on_off.append(col)
+            # cols that weren't part of the off off shouldn't have been impacted to confirm they are updated from the df
+            # in the previous step; based on full range
+            chemical_pct_redundancy_on_off.ix[:, cols_not_on_off] = chemical_pct_redundancy.ix[:, cols_not_on_off]
+            # confirms AA cols matches the values before the on/off
+            chemical_pct_redundancy_on_off.ix[:, aa_col_conus + aa_col_nl48] = chemical_pct_redundancy.ix[:, aa_col_conus + aa_col_nl48]
+
+            # direct cols with no on/off cols should have a species area denominator that is adjusted to remove areas
+            # only found in the 'off' locations; loaded from the direct overlap in the on/off table which was use the
+            # adjusted species area for the denominator
+            cols_not_on_off_direct = [v for v in cols_not_on_off if v.endswith("_0")]
+            for col in cols_not_on_off_direct:
+                chemical_pct_redundancy_on_off.ix[:, col] = chemical_on_off.ix[:, col]
+
+            # sets the col order that is altered during the pd.df.updates
+            chemical_pct_redundancy_on_off = chemical_pct_redundancy_on_off.reindex(
+                columns=chemical_noadjustment.columns.values.tolist())
+            chemical_pct_redundancy_on_off.fillna(0, inplace=True)  # fills empty cells with 0
+
+            # # Applies the effects determinations based on pct and redundancy redundancy adjustments and saves tables
+            # Functions on hold but may be added back in
+            chemical_pct_redundancy_on_off['Step 2 ED Comment'] = chemical_pct_redundancy_on_off.apply(
+                lambda row_1: step_1_ed(row_1, chemical_name + " AA""_" + max_drift), axis=1)
+            chemical_pct_redundancy_on_off['Step 2 ED Comment'] = chemical_pct_redundancy_on_off.apply(
+                lambda row_1: nlaa_overlap(row_1, col_selection_conus, col_selection_nl48), axis=1)
 
 
-        chemical_noadjustment.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test1b.csv')
-        # ### Calculated factors
-        # calculates the Ag Factor for CONUS and NL48 = where clause removed the rows where the  Ag composite is equal to 0
-        chemical_noadjustment['CONUS_Ag_Ag_Factor'] = chemical_noadjustment['CONUS_Sum_Ag'].div(
-            (chemical_noadjustment[use_direct_only_conus_ag_aa[0]]).where(
-                chemical_noadjustment[use_direct_only_conus_ag_aa[0]] != 0, np.nan), axis=0)
+            conus_df_step1 = chemical_pct_redundancy_on_off[conus_cols_f]
+            nl48_df_step1 = chemical_pct_redundancy_on_off[nl48_cols_f]
 
-        chemical_noadjustment['NL48_Ag_Ag_Factor'] = chemical_noadjustment['NL48_Sum_Ag'].div(
-            (chemical_noadjustment[use_direct_only_nl48_ag_aa[0]]).where(
-                chemical_noadjustment[use_direct_only_nl48_ag_aa[0]] != 0, np.nan), axis=0)
-        # calculated the Non Ag factors for CONUS and NL48 = where clause removed the rows where the  Ag composite is equal to 0
-        if not skip_non_ag_adjustment:
-            chemical_noadjustment['CONUS_NonAg_NonAg_Factor'] = chemical_noadjustment['CONUS_Sum_NonAg'].div(
-                (chemical_noadjustment[use_direct_only_conus_nonag_aa[0]]).where(
-                    chemical_noadjustment[use_direct_only_conus_nonag_aa[0]] != 0, np.nan), axis=0)
-            chemical_noadjustment['NL48_NonAg_NonAg_Factor'] = chemical_noadjustment['NL48_Sum_NonAg'].div(
-                (chemical_noadjustment[use_direct_only_nl48_nonag_aa[0]]).where(
-                    chemical_noadjustment[use_direct_only_nl48_nonag_aa[0]] != 0, np.nan), axis=0)
-        # calculated the Composite factors for CONUS and NL48 = where clause removed the rows where the  Ag composite is equal to 0
-        # To change this to use the un altered action area change to index position 1; to use usage action area index position 0
-        chemical_noadjustment['CONUS_Composite_Factor'] = chemical_noadjustment['CONUS_Sum_Composites'].div(
-            (chemical_noadjustment[use_direct_only_conus_aa[1]]).where(
-                chemical_noadjustment[use_direct_only_conus_aa[0]] != 0, np.nan), axis=0)
-        chemical_noadjustment['NL48_Composite_Factor'] = chemical_noadjustment['NL48_Sum_Composites'].div(
-            (chemical_noadjustment[use_direct_only_nl48_aa[0]]).where(
-                chemical_noadjustment[use_direct_only_nl48_aa[0]] != 0, np.nan), axis=0)
-        # print for QC
-        # chemical_noadjustment.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbaryl\test1a.csv')
+            # Export tables for the CONUS and NL48; selects the cols for CONUS and NL48 for individual tables; export
+            # location is based on the which table is being loaded; on/off or on/off w supplemental data
+            chemical_pct_redundancy_on_off.to_csv(
+                out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv')
+            conus_df_step1.to_csv(
+                out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_CONUS_Step2_' + chemical_name + '.csv')
+            nl48_df_step1.to_csv(
+                out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_NL48_Step2_' + chemical_name + '.csv')
 
-        # Column headers will be the same for all tables therefore they don't need to updated; TODO  they should be loaded into
-        # the function
-        chemical_pct_redundancy = appply_factor(chemical_noadjustment, chemical_pct_redundancy)
+            print (
+                "  Exported PCT/ Redundancy/ On Off adjusted table for PCT {0} and bounding scenario {1}: found at:"
+                " {2}".format(group, bound, out_path_on_off))
 
-        # # Applies the effects determinations based on pct and redundancy redundancy adjustments and saves tables
-        chemical_pct_redundancy.fillna(0, inplace=True)
-        chemical_pct_redundancy['Step 2 ED Comment'] = chemical_pct_redundancy.apply(
-            lambda row: step_1_ED(row, chemical_name + " AA""_" + max_drift), axis=1)
-        chemical_pct_redundancy['Step 2 ED Comment'] = chemical_pct_redundancy.apply(
-            lambda row: NLAA_overlap(row, col_selection_conus, col_selection_nl48), axis=1)
-        chemical_pct_redundancy.to_csv(
-            out_path_redundancy + os.sep + file_type_marker + 'Redundancy_GIS_Step2_' + chemical_name + '.csv')
-        # Export tables for the CONUS and NL48
-        conus_df_step1 = chemical_pct_redundancy[conus_cols_f]
-        nl48_df_step1 = chemical_pct_redundancy[nl48_cols_f]
-        conus_df_step1.to_csv(
-            out_path_redundancy + os.sep + file_type_marker + 'Redundancy_CONUS_Step2_' + chemical_name + '.csv')
-        nl48_df_step1.to_csv(
-            out_path_redundancy + os.sep + file_type_marker + 'Redundancy_NL48_Step2_' + chemical_name + '.csv')
-
-        # TABLE 4- PCT, Redundancy, and On/Off field adjusted  tables
-        # redundancy adjustments - adjusts the direct overlap based on the ag, nonag and composite factors that are calculated
-        # On/Off field removed direct overlap for species not found on those use sites
-
-        # on off field adjustments- direct overlap is set to zero if for species identified as not be present on the on/off
-        # habitat group types  - decided to set to zero rather than re-calucating the overlap dut to the impact of drift in
-        # for the whole range; if pixels are remove a new acre value for the species would need to be calculated and drift
-        # overlap would be greater than 100 unless the drift pixel are also removed - it is possible to do this but not in the
-        # time frame provided so it was decided to set the direct overlap to zero Fall 2017
-
-        out_path_on_off = out_path_original + os.sep + '4_On_Off_Field'  # set out path
-        copy_red = chemical_noadjustment.copy()
-        create_directory(out_path_on_off)
-        out_path_on_off = out_path_on_off + os.sep + group  # set out path
-        create_directory(out_path_on_off)
-        out_path_on_off = out_path_on_off + os.sep + bound  # set out path
-        create_directory(out_path_on_off)
-        #
-        # # load on/off field tables adjusted
-        # pct_tabl_onoff = l48_BE_sum_onoff_table.split("_")[0] + "_" + bound + "_" + l48_BE_sum_onoff_table.split("_")[
-        #     2] + "_" + l48_BE_sum_onoff_table.split("_")[3] + "_" + l48_BE_sum_onoff_table.split("_")[4] + "_" + \
-        #                  l48_BE_sum_onoff_table.split("_")[5] + "_" + l48_BE_sum_onoff_table.split("_")[6] + "_" + \
-        #                  l48_BE_sum_onoff_table.split("_")[7] + "_" + group + "_" + l48_BE_sum_onoff_table.split("_")[9]
-        # l48_BE_sum_PCT_onoff = BE_sum_onoff_path + os.sep + pct_tabl_onoff
-        #
-        # pct_table_nl_onoff = nl48_BE_sum_onoff_table.split("_")[0] + "_" + bound + "_" + \
-        #                      nl48_BE_sum_onoff_table.split("_")[2] + "_" + nl48_BE_sum_onoff_table.split("_")[3] + "_" + \
-        #                      nl48_BE_sum_onoff_table.split("_")[4] + "_" + nl48_BE_sum_onoff_table.split("_")[5] + "_" + \
-        #                      nl48_BE_sum_onoff_table.split("_")[6] + "_" + nl48_BE_sum_onoff_table.split("_")[
-        #                          7] + "_" + group + "_" + nl48_BE_sum_onoff_table.split("_")[9]
-        # nl48_BE_sum_PCT_onoff = BE_sum_onoff_path + os.sep + pct_table_nl_onoff
-        #
-        # print l48_BE_sum_PCT_onoff
-        # print nl48_BE_sum_PCT_onoff
-        #
-        # l48_df_pct_onoff = pd.read_csv(l48_BE_sum_PCT_onoff)
-        # nl48_df_pct_onoff = pd.read_csv(nl48_BE_sum_PCT_onoff)
-        #
-        # chemical_pct_onoff, col_selection_conus = extract_chemical_overlap(col_prefix_CONUS, aa_layers_CONUS, 'CONUS',
-        #                                                                    l48_df_pct_onoff, 'pct -conus')
-        # chemical_pct_onoff['EntityID'] = chemical_pct_onoff['EntityID'].map(lambda x: x).astype(str)
-        # chemical_pct_onoff = pd.merge(base_sp_df, chemical_pct_onoff, on='EntityID', how='left')
-        # out_nl48_df_pct_onoff, col_selection_nl48 = extract_chemical_overlap(col_prefix_NL48, aa_layers_NL48, 'NL48',
-        #                                                                      nl48_df_pct_onoff, 'pct-nl48')
-        # # merges the CONUS and NL48 tables
-        # out_nl48_df_pct_onoff['EntityID'] = out_nl48_df_pct_onoff['EntityID'].map(lambda x: x).astype(str)
-        # chemical_pct_onoff = pd.merge(chemical_pct_onoff, out_nl48_df_pct_onoff, on='EntityID', how='left')
-        #
-        # chemical_pct_redundancy_on_off = appply_factor(chemical_noadjustment, chemical_pct_onoff)
-        # chemical_pct_redundancy_on_off.to_csv(r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB_Usage\Carbary_pres.csv')
-        chemical_pct_redundancy_on_off = chemical_pct_redundancy.copy()
-        adjust_df = chemical_pct_redundancy.copy()
-
-
-        # extract columns from overlap table that will be adjusted for on/off field and makes adjustments- species found
-        #  off site we keep the pct adjust nut not on off so it is based on full range
-        # ## Extract use and columns from lookup table that will be adjusted for the on/off field, cultivated crops, pastures,
-        # orchards - can add others
-        # Also load the species to be adjust for each group
-
-        cult_use_cols = []
-        pasture_use_cols = []
-        orchard_use_cols = []
-        residential_use_cols = []
-
-        if cult_crop:
-            on_off_cult = use_lookup_df.loc[(use_lookup_df['On/Off_AG'] == 'x')]
-            on_off_cult_cols = on_off_cult['FinalColHeader'].values.tolist()
-            on_off_cult_df = on_off_df.loc[(on_off_df['On/Off_AG'] == 'OFF')]
-            on_off_cult_species = on_off_cult_df['EntityID'].values.tolist()
-            for z in chemical_pct_redundancy_on_off.columns.values.tolist():
-                for p in on_off_cult_cols:
-                    if z.startswith(p):
-                        cult_use_cols.append(z)
-            # if speiceis is off field make direct overlap 0
-            direct_cult = [v for v in cult_use_cols if v.endswith("_0")]
-            species_cult_df = chemical_pct_redundancy_on_off.loc[(chemical_pct_redundancy_on_off['EntityID'].isin(on_off_cult_species))]
-            for col in direct_cult:
-                species_cult_df[col].values[:] = 0
-            # moves 0 values to working df using update
-            left_update = chemical_pct_redundancy_on_off.set_index('EntityID')
-            right_update = species_cult_df.set_index('EntityID')
-            res = left_update.reindex(columns=left_update.columns.union(right_update.columns))
-            res.update(right_update)
-            chemical_pct_redundancy_on_off = res.reset_index()
-            # adjusted the drift intervals - removing the direct overlap from the species range area
-            chemical_pct_redundancy_on_off = on_off_field(cult_use_cols, chemical_pct_redundancy_on_off,on_off_cult_species, adjust_df, acres_df)
-            # any species not par of the on/off field confimed they were not altered
-            chemical_pct_redundancy_on_off.update(chemical_pct_redundancy.loc[~(chemical_pct_redundancy['EntityID'].isin(on_off_cult_species)), cult_use_cols])
-
-        if pastures:
-            on_off_pasture = use_lookup_df.loc[(use_lookup_df['On/Off_Pasture'] == 'x')]
-            on_off_pasture_cols = on_off_pasture['FinalColHeader'].values.tolist()
-            on_off_pasture_df = on_off_df.loc[(on_off_df['On/Off_Pasture'] == 'OFF')]
-            on_off_pasture_species = on_off_pasture_df['EntityID'].values.tolist()
-            for z in chemical_pct_redundancy_on_off.columns.values.tolist():
-                for p in on_off_pasture_cols:
-                    if z.startswith(p):
-                        pasture_use_cols.append(z)
-            # if speice is is off field make direct overlap 0
-            direct_pasture= [v for v in pasture_use_cols if v.endswith("_0")]
-            species_pasture_df = chemical_pct_redundancy.loc[(chemical_pct_redundancy['EntityID'].isin(on_off_pasture_species))]
-            for col in direct_pasture:
-                species_pasture_df[col].values[:] = 0
-            # moves 0 values to working df using update
-            left_update = chemical_pct_redundancy_on_off.set_index('EntityID')
-            right_update = species_pasture_df.set_index('EntityID')
-            res = left_update.reindex(columns=left_update.columns.union(right_update.columns))
-            res.update(right_update)
-            chemical_pct_redundancy_on_off = res.reset_index()
-            # adjusted the drift intervals - removing the direct overlap from the species range area
-            chemical_pct_redundancy_on_off = on_off_field(pasture_use_cols, chemical_pct_redundancy_on_off,on_off_pasture_species, adjust_df, acres_df)
-            # any species not par of the on/off field confimed they were not altered
-            chemical_pct_redundancy_on_off.update(chemical_pct_redundancy.loc[~(chemical_pct_redundancy['EntityID'].isin(on_off_pasture_species)), pasture_use_cols])
-
-
-        if orchards_crops:
-            on_off_orchard = use_lookup_df.loc[(use_lookup_df['On/Off_Orchard_Plantation'] == 'x')]
-            on_off_orchard_cols = on_off_orchard['FinalColHeader'].values.tolist()
-            on_off_orchards_df = on_off_df.loc[(on_off_df['On/Off_Orchard_Plantation'] == 'OFF')]
-            on_off_orchards_species  = on_off_orchards_df['EntityID'].values.tolist()
-            for z in chemical_pct_redundancy_on_off.columns.values.tolist():
-                for p in on_off_orchard_cols:
-                    if z.startswith(p):
-                        orchard_use_cols.append(z)
-            # if speiceis is off field make direct overlap 0
-            direct_orchards = [v for v in orchard_use_cols if v.endswith("_0")]
-            species_orchards_df = chemical_pct_redundancy.loc[(chemical_pct_redundancy['EntityID'].isin(on_off_orchards_species))]
-            for col in direct_orchards:
-                species_orchards_df[col].values[:] = 0
-            left_update = chemical_pct_redundancy_on_off.set_index('EntityID')
-            right_update = species_pasture_df.set_index('EntityID')
-            res = left_update.reindex(columns=left_update.columns.union(right_update.columns))
-            res.update(right_update)
-            chemical_pct_redundancy_on_off = res.reset_index()
-            # adjusted the drift intervals - removing the direct overlap from the species range area
-            chemical_pct_redundancy_on_off = on_off_field(orchard_use_cols, chemical_pct_redundancy_on_off,on_off_orchards_species, adjust_df, acres_df)
-            # any species not par of the on/off field confimed they were not altered
-            chemical_pct_redundancy_on_off.update(chemical_pct_redundancy.loc[~(chemical_pct_redundancy['EntityID'].isin(on_off_orchards_species)), orchard_use_cols])
-        if residential:
-            on_off_residential = use_lookup_df.loc[(use_lookup_df['On/Off_residential'] == 'x')]
-            on_off_residential_cols = on_off_residential['FinalColHeader'].values.tolist()
-            on_off_res_df = on_off_df.loc[(on_off_df['On/Off_Res'] == 'OFF')]
-            on_off_res_species = on_off_res_df['EntityID'].values.tolist()
-            for z in chemical_pct_redundancy_on_off.columns.values.tolist():
-                for p in on_off_residential_cols:
-                    if z.startswith(p):
-                        residential_use_cols.append(z)
-            direct_res = [v for v in residential_use_cols if v.endswith("_0")]
-            species_res_df = chemical_pct_redundancy.loc[(chemical_pct_redundancy['EntityID'].isin(on_off_res_species))]
-            # moves 0 values to working df using update
-            left_update = chemical_pct_redundancy_on_off.set_index('EntityID')
-            right_update = species_res_df.set_index('EntityID')
-            res = left_update.reindex(columns=left_update.columns.union(right_update.columns))
-            res.update(right_update)
-            chemical_pct_redundancy_on_off = res.reset_index()
-            # adjusted the drift intervals - removing the direct overlap from the species range area
-            chemical_pct_redundancy_on_off = on_off_field(residential_use_cols, chemical_pct_redundancy_on_off,on_off_res_species, adjust_df, acres_df)
-            # any species not par of the on/off field confimed they were not altere
-            chemical_pct_redundancy_on_off.update(chemical_pct_redundancy.loc[~(chemical_pct_redundancy['EntityID'].isin(on_off_res_species)), residential_use_cols])
-
-        cols_not_on_off = []
-        for col in chemical_pct_redundancy_on_off:
-            if col not in residential_use_cols and col not in pasture_use_cols and col not in orchard_use_cols and col not in cult_use_cols:
-                cols_not_on_off.append(col)
-
-        # cols that the are not part of the on/off adjusted and should use the full range; these are loaded in from the
-        # PCT/redundancy adjusted table- also adjust species just found some of the on/off classes
-        chemical_pct_redundancy_on_off.ix[:, cols_not_on_off ] = chemical_pct_redundancy.ix[:,cols_not_on_off]
-        # sets the col order that is altered during the pd.df.updates
-        chemical_pct_redundancy_on_off= chemical_pct_redundancy_on_off.reindex(columns=chemical_noadjustment.columns.values.tolist())
-        chemical_pct_redundancy_on_off.fillna(0, inplace=True)
-
-        chemical_pct_redundancy_on_off['Step 2 ED Comment'] = chemical_pct_redundancy_on_off.apply(
-            lambda row: step_1_ED(row, chemical_name + " AA""_" + max_drift), axis=1)
-        chemical_pct_redundancy_on_off['Step 2 ED Comment'] = chemical_pct_redundancy_on_off.apply(
-            lambda row: NLAA_overlap(row, col_selection_conus, col_selection_nl48), axis=1)
-        chemical_pct_redundancy_on_off.fillna(0, inplace=True)
-        chemical_pct_redundancy_on_off.to_csv(
-            out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv')
-        print out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_GIS_Step2_' + chemical_name + '.csv'
-
-        conus_df_step1 = chemical_pct_redundancy_on_off[conus_cols_f]
-        nl48_df_step1 = chemical_pct_redundancy_on_off[nl48_cols_f]
-
-        conus_df_step1.to_csv(
-            out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_CONUS_Step2_' + chemical_name + '.csv')
-        nl48_df_step1.to_csv(out_path_on_off + os.sep + file_type_marker + 'On_Off_Field_NL48_Step2_' + chemical_name + '.csv')
-
-        # Census,PCT, Habitat adjusted Tables
-
-        # Census,PCT, Elevation adjusted Tables
-
-        # Census,PCT, Habitat, Elevation adjusted Tables
+            # updates df tracking parameters used and the counter
+            parameters_used = save_parameter(parameters_used, chemical_name, file_type, use_lookup, master_list,
+                                             l48_BE_sum,
+                                             nl48_BE_sum, nl48_BE_sum_PCT, nl48_BE_sum_PCT, l48_BE_sum_PCT_onoff,
+                                             nl48_BE_sum_PCT_onoff, out_path_on_off, count, acres_col)
+            count += 1
+    count_on_off += 1
+# Save parameter tracker
+parameters_used.to_csv(
+    out_location + os.sep + chemical_name + os.sep + 'Summarized Tables' + os.sep + 'Parameters_used_'
+    + file_type + "_Step 2 Summarized_" + adjustment_type + "_" + date + '.csv')
+print("Parameter file can be found at {0}".format(
+    out_location + os.sep + chemical_name + os.sep + 'Summarized Tables' + os.sep + 'Parameters_used_' + file_type +
+    "Step 2 Summarized_" + date + '.csv'))
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

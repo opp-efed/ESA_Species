@@ -4,25 +4,31 @@ import datetime
 # Author J.Connolly
 # Internal deliberative, do not cite or distribute
 
-chemical_name = 'C' # chemical_name = 'Carbaryl', Methomyl
+
+#ARCHIVED = WE aren'including usage in AA
+chemical_name = 'Carbaryl' # chemical_name = 'Carbaryl', Methomyl
 file_type = 'Range'  # 'Range or CriticalHabitat
 
 # chemical use look up
-use_lookup = r'path' \
-             r'\SupportingTables' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
+use_lookup =  r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
+              r"\Endangered Species Pilot Assessments - OverlapTables\SupportingTables" + os.sep + chemical_name + "_Uses_lookup_20191104.csv"
 
 max_drift = '792'
 
 # root path directory
-root_path = r'path/tabulated'
+# out tabulated root path - ie Tabulated_[suffix] folder
+root_path  = r'E:\Workspace\StreamLine\ESA\Tabulated_UsageHUCAB'
 
-# Tables directory  one level done from chemical
+# Tables directory  one level done from chemical -- census folder ir if concatenate the root path, chemical name and
+# this folder table you will reach the tables in the variable BE_interval_table
 
 folder_path = r'SprayInterval_IntStep_30_MaxDistance_1501\census'
+# table names from previous steps found in folder above if you concatenate the path summarized into L48/NL48
+# single example table will loop through all tables; will loop over the all the PCT types (min, max, avg) and the
+# distributions types for use (Upper, Lower, and Uniform based on the example table you provide
+BE_interval_table = "R_Lower_SprayInterval_Full Range_census_min_20191118.csv"
 
-BE_interval_table = "R_Lower_SprayInterval_Full Range_census_avg_20190626.csv"  # example table will loop through all tables
-
-master_list =  r"\MasterListESA_Feb2017_20190130.csv"
+master_list = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
 # columns from master to include
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'country','Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',

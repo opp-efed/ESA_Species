@@ -7,26 +7,32 @@ import datetime
 
 # Be sure on off field is accounted for
 
-chemical_name = '' # chemical_name = 'Carbaryl', Methomyl
+#ARCHIVED = WE aren'including usage in AA
+chemical_name = 'Carbaryl' # chemical_name = 'Carbaryl', Methomyl
 file_type = 'Range'  # 'Range or CriticalHabitat
 
-use_lookup = r'path' + os.sep + chemical_name + "_Step1_Uses_lookup_20190409.csv"
+use_lookup =  r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
+              r"\Endangered Species Pilot Assessments - OverlapTables\SupportingTables" + os.sep + chemical_name + "_Uses_lookup_20191104.csv"
 max_drift = '792'
 
 # root path directory
-root_path = r'path/tabulated'
+# out tabulated root path - ie Tabulated_[suffix] folder
+
+root_path  = r'E:\Workspace\StreamLine\ESA\Tabulated_UsageHUCAB'
 
 # Tables directory  one level done from chemical
 
+hab = False# if running habitat files too
 # For census tables
-hab = False
 folder_path = r'SprayInterval_IntStep_30_MaxDistance_1501\census'
-l48_BE_sum_table = "R_Uniform_census_AllUses_BE_L48_SprayInterval_Full Range_avg_20190626.csv"  # example table will loop through all tables
-nl48_BE_sum_table = "R_Uniform_census_AllUses_BE_NL48_SprayInterval_Full Range_avg_20190626.csv"  # example table will loop through all tables
+# table names from previous steps found in folder above if you concatenate the path summarized into L48/NL48
 
+# single example table will loop through all tables; will loop over the all the PCT types (min, max, avg) and the
+# distributions types for use (Upper, Lower, and Uniform based on the example table you provide
+l48_BE_sum_table = "R_Lower_census_AllUses_BE_L48_SprayInterval_Full Range_avg_20191118.csv"  # example table will loop through all tables
+nl48_BE_sum_table = "R_Lower_census_AllUses_BE_NL48_SprayInterval_Full Range_avg_20191118.csv"  # example table will loop through all tables
 
-
-master_list = r"\MasterListESA_Feb2017_20190130.csv"
+master_list = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
 # columns from master to include
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'country', 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
@@ -59,34 +65,40 @@ for group in ['min','max','avg']:
         def create_directory(dbf_dir):
             if not os.path.exists(dbf_dir):
                 os.mkdir(dbf_dir)
-
         def step_1_ED(row, col_l48):
+            value =''
             col_nl48 = col_l48.replace('CONUS','NL48')
-            if row[col_l48] < 0.44 and row[col_nl48] < 0.44:
-                value = 'No Effect - Overlap'
-            elif row[col_l48] <= 4.45 and row[col_nl48] < 4.45:
-                value = 'NLAA - Overlap - 5percent'
-            elif row['CONUS_Federal Lands_0'] >= 98.5 or row['NL48_Federal Lands_0'] >= 99:
-                value = 'No Effect - Federal Land'
-            elif row['CONUS_Federal Lands_0'] >= 94.5 or row['NL48_Federal Lands_0'] >= 94.5:
-                value = 'NLAA - Federal Land'
-            elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
-                value =  'May Affect'
+            try:
+                if row[col_l48] < 0.44 and row[col_nl48] < 0.44:
+                    value = 'No Effect - Overlap'
+                elif row[col_l48] <= 4.45 and row[col_nl48] < 4.45:
+                    value = 'NLAA - Overlap - 5percent'
 
-            if file_type_marker == 'CH_':
-                if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
-                        row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
-                        row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
-                    value = 'No CritHab'
-                if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
-                    value = 'Qualitative'
+                elif row['CONUS_Federal Lands_0'] >= 98.5 or row['NL48_Federal Lands_0'] >= 99:
+                    value = 'No Effect - Federal Land'
+                elif row['CONUS_Federal Lands_0'] >= 94.5 or row['NL48_Federal Lands_0'] >= 94.5:
+                    value = 'NLAA - Federal Land'
 
-            if file_type_marker == 'R_':
+                elif row[col_l48] >= 0.45 or row[col_nl48] >= 0.45:
+                    value =  'May Affect'
 
-                if str(row['Source of Call final BE-Range']).startswith('Qu'):
-                    value = 'Qualitative'
+                if file_type_marker == 'CH_':
+                    if row['Source of Call final BE-Critical Habitat'] != 'Terr WoE' and \
+                            row['Source of Call final BE-Critical Habitat'] !='Aqua WoE' and \
+                            row['Source of Call final BE-Critical Habitat'] != 'Terr and Aqua WoE':
+                        value = 'No CritHab'
+                    if str(row['Source of Call final BE-Critical Habitat']).startswith('Qual'):
+                        value = 'Qualitative'
+
+                if file_type_marker == 'R_':
+
+                    if str(row['Source of Call final BE-Range']).startswith('Qu'):
+                        value = 'Qualitative'
+            except KeyError:  # if one of the trakcing cols in this function is missing comment can't be added
+                value='Tracking Col not completed'
 
             return value
+
 
         def on_off_field(row, cols, df):
             ent_id = row['EntityID']
@@ -112,6 +124,8 @@ for group in ['min','max','avg']:
         use_lookup_df = pd.read_csv(use_lookup)
         l48_df = pd.read_csv(l48_BE_sum)
         nl48_df = pd.read_csv(nl48_BE_sum)
+        l48_df['EntityID'] = l48_df['EntityID'].map(lambda x: x).astype(str)
+        nl48_df['EntityID'] = nl48_df['EntityID'].map(lambda x: x).astype(str)
         list_final_uses = list(set(use_lookup_df['FinalUseHeader'].values.tolist()))
         collapsed_dict = {}
 
