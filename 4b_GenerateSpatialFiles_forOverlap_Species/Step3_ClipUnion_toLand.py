@@ -8,13 +8,13 @@ import datetime
 # Title- clip fc found in in_location by the clip_fc
 
 # ingdb from Step 2
-inlocation = r'path\file namegdb'
+inlocation = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\CriticalHabitat\CH_SpGroup_Union_Final_20192018.gdb'
 # file to be use as clip
-clip_fc = r'path\Boundaries.gdb\Regions_dissolve'
+clip_fc = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - PythonScript_SpatialTools\InputTables\Boundaries.gdb\Regions_dissolve'
 
 # outlocation and suffix to be added to fc filename
-outlocation = 'out locations\R_Clipped_Union_[date].gdb'
-Clipped_suffix = "_ClippedRegions_[date]"
+outlocation = 'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\CriticalHabitat\CH_Clipped_Union_20191028.gdb'
+Clipped_suffix = "_ClippedRegions_20191028"
 
 
 # ###Functions

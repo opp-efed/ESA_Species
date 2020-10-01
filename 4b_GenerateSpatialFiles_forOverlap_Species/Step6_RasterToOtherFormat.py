@@ -5,21 +5,23 @@ from arcpy.sa import *
 
 # Author J.Connolly
 # Internal deliberative, do not cite or distribute
+# NOTE - be aware of underscores at the end of the output GRID files - remove these before running the overlap; the
+# underscores are used to 'split' the use name and lookup the column headers
 
-# folder or gdb with projected files
-in_folder = r'path\filename.gdb'
+# folder or gdb with projected files for range and critical habitat
+in_folder = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\Range\SpComp_UsageHUCAB_byProjection\CONUS_Albers_Conical_Equal_Area.gdb'
 # snap raster dictionary
 RegionalProjection_Dict = {
-    'CONUS': r'path\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'path\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'path\WGS_1984_Albers_AK_Ag',
-    'AS': r'path\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'path\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'path\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'path\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'path\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
-
+skip_region = ['AK', 'CONUS']
 def create_folder(folder):
     if not os.path.exists(folder):
         os.mkdir(folder)
@@ -56,8 +58,9 @@ if in_folder.endswith('gdb'):
     out_location = out_folder + os.sep + gdb.replace('.gdb', '')
     create_folder(out_location)
     c_region = gdb.split("_")[0]
-    out_location = out_folder + os.sep + gdb.replace('.gdb', '')
-    raster_other_format(in_gdb, RegionalProjection_Dict, c_region, gdb, out_location)
+    if c_region not in skip_region:
+        out_location = out_folder + os.sep + gdb.replace('.gdb', '')
+        raster_other_format(in_gdb, RegionalProjection_Dict, c_region, gdb, out_location)
 
 else:
     list_gdb = os.listdir(in_folder)
@@ -69,11 +72,12 @@ else:
     for gdb in list_gdb:
         in_gdb = in_folder + os.sep + gdb
         c_region = gdb.split("_")[0]
-        out_location = out_folder + os.sep + gdb.replace('.gdb', '')
-        if os.path.exists(out_location):
-            continue
-        create_folder(out_location)
-        raster_other_format(in_gdb, RegionalProjection_Dict, c_region, gdb, out_location)
+        if c_region not in skip_region:
+            out_location = out_folder + os.sep + gdb.replace('.gdb', '')
+            if os.path.exists(out_location):
+                continue
+            create_folder(out_location)
+            raster_other_format(in_gdb, RegionalProjection_Dict, c_region, gdb, out_location)
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

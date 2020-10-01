@@ -7,9 +7,9 @@ import datetime
 # Internal deliberative, do not cite or distribute
 
 # gdb from step 3
-look_up_fc= r'path\file names.gdb'
+look_up_fc= r'E:\FWS Data\Range_Conifers_and_Ferns\UnionFile\R_SpGroupUnion_Final_20200520JC.gdb'
 # out location for look-up tables
-out_location= r'out location'
+out_location= r'E:\FWS Data\Range_Conifers_and_Ferns\UnionFile'
 
 arcpy.env.workspace = look_up_fc
 list_fc = arcpy.ListFeatureClasses()

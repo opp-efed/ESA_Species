@@ -11,34 +11,34 @@ import pandas as pd
 # NAD_1983_To_WGS_1984_1" is used
 # in and out location
 
-# LOCATION OF RASTER UNION COMPOSITES BY SPECIES GROUP
-inGDB = 'path\geodatabase'
+# LOCATION OF RASTER UNION COMPOSITES BY SPECIES GROUP from step 4
+inGDB = 'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20191028.gdb'
 
-outfolder = r'out folder'
-regional_acres_table = r'path\acres tables.csv'
+outfolder = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\Range\SpComp_UsageHUCAB_byProjection'
+regional_acres_table = r'L:\Workspace\StreamLine\Demo\Answer Key\R_Acres_by_region_Demo_20191028.csv'
 
 # 'CONUS', 'AK', 'AS','PR','AK', 'HI','AS','CNMI','GU','VI'
 # regions to skip over; notes AK and CONUS can take a long time
-skip_region = ['AK']
+skip_region = ['AK', 'CONUS']
 
 # Species crops that can be skipped
 # 'Amphibians', 'Birds', 'Clams', 'Conifers', 'Crustaceans', 'Ferns', 'Fishes', 'Insects', 'Lichens', 'Mammals', 'Reptiles', 'Snails']
 skip_group = []
 
 # projection folder
-prjFolder = r'path\projections'
+prjFolder = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - PythonScript_SpatialTools\InputTables\projections'
 
 # Also use as snap rasters when projecting with will set the extent of the output projected raster to just the region
 # snap raster dictionary
 RegionalProjection_Dict = {
-    'CONUS': r'path\Albers_Conical_Equal_Area_cultmask_2016',
-    'HI': r'path\NAD_1983_UTM_Zone_4N_HI_Ag',
-    'AK': r'path\WGS_1984_Albers_AK_Ag',
-    'AS': r'path\WGS_1984_UTM_Zone_2S_AS_Ag',
-    'CNMI': r'path\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-    'GU': r'path\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-    'PR': r'path\Albers_Conical_Equal_Area_PR_Ag',
-    'VI': r'path\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+    'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 # projection look-up dictionary

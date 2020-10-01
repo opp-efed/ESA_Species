@@ -14,10 +14,10 @@ import arcpy
 # converting them to rasters first with the To Raster conversion tools. This offers you greater control over the
 # vector-to-raster conversion, helping to ensure you consistently get the expected results.
 
-# gdb from step 3
-inlocation = r'path\file.gdb'
+# gdb from step 3 - polygons clipped to land
+inlocation = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\Range\R_Clipped_Union_CntyInter_HUC2ABInter_20191028.gdb'
 # gdb for raster based files
-outlocation = r'path\file.gdb'
+outlocation = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\Range\R_Raster_Clipped_Union_CntyInter_HUC2ABInter_20191028.gdb'
 
 # #ZoneID (species only), InterID (species and political boundaries) or HUCID (species political boundaries and HUC2s)
 id_field = 'HUCID'  #  ZoneID, InterID or HUCID
@@ -25,7 +25,7 @@ id_field = 'HUCID'  #  ZoneID, InterID or HUCID
 
 skip_group =[]
 # snap raster for conversion must be a NAD 83 geographic project with 30 meter cells; default cell is very large
-snapRaster = r"path for snap raster"
+snapRaster = r"L:\Workspace\StreamLine\ByProjection\NAD83_Snap\2015_Cultivated_Layer.gdb\cultmask_2015_NAD83"
 #
 
 # ###Functions

@@ -12,7 +12,7 @@ import arcpy
 # NOTE NOTE if process interrupted by user incomplete file will be generated; try except loop deletes incomplete if
 # script fails due to error
 #
-# Note: Union of Fish CH stuggles probably because of the buffer. Ran simplify but need a permanent solution- aqu
+# Note: Union of Fish CH struggles probably because of the buffer. Ran simplify but need a permanent solution- aqu
 # decision with services may answer this; Flowering plants has over 1000000 zone takes awhile to run
 
 # Runs union on complete spatial library by species group  use identify species list for use in co-occur
@@ -25,9 +25,9 @@ import arcpy
 # NOTE NOTE if process interrupted incomplete file will be generated
 
 # User entered variables - be sure to check all parameters before running
-Range = True  # True the Range files are run, False the CH files are run
-base_outpath = r'out path'
-start_union = True  # True runs full union and clean up of union, false runs just the clean up of att table
+Range = False  # True the Range files are run, False the CH files are run; be sure to update parameter below line 47-48
+base_outpath = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Union_NoCall'
+start_union = True # True runs full union and clean up of union, false runs just the clean up of att table
 
 # Species to include or exclude depending on if use is running all sp group or a subset of a group
 # species group to skip because there are no GIS files, ie there is no crithab for any lichens
@@ -42,30 +42,30 @@ enlistfc_name = '' # suffix for subset
 entlist = []
 
 file_suffix = '_Union_inter'
-file_suffix_clean = '_Union_Final_[date]'  # unio suffix with date
+file_suffix_clean = '_Union_Final_20200427'  # union suffix with date
 
 if Range:
     # Spatial library being used for union IE CritHab or Range; will loop by species group, or use entid fpr uniqu list
-    inlocation = r'path\Generalized files\Range'
+    inlocation = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\Range'
     filetype = 'R_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = base_outpath +os.sep + 'UnionFiles_[year]\Range\inter.gdb'
-    finalgdb = base_outpath +os.sep + 'UnionFiles_[year]\Range\R_SpGroup' + file_suffix_clean + '.gdb'
+    out_inter_location = base_outpath +os.sep + 'Range\inter.gdb'
+    finalgdb = base_outpath +os.sep + 'Range\R_SpGroup' + file_suffix_clean + '.gdb'
     # tracking csv will all species included in union - retain for record and perform secondary review to confirm all
     # species are accounted for
-    outcsv = base_outpath +os.sep +'UnionFiles_[year]\Range\R_Species_included_inUnion' + file_suffix_clean + '.csv'
+    outcsv = base_outpath +os.sep +'Range\R_Species_included_inUnion' + file_suffix_clean + '.csv'
 
 else:
-    inlocation = r'path\Generalized files\CriticalHabitat'
+    inlocation = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\CriticalHabitat'
     filetype = 'CH_'
 
     # location for intermediate (raw) union file and the final cleaned union file with std att table
-    out_inter_location = base_outpath + os.sep + 'UnionFiles_[year]\CriticalHabitat\inter.gdb'
-    finalgdb = base_outpath + os.sep + 'UnionFiles_[year]\CriticalHabitat\CH_SpGroup' + file_suffix_clean + '.gdb'
+    out_inter_location = base_outpath + os.sep + '\CriticalHabitat\inter.gdb'
+    finalgdb = base_outpath + os.sep + 'CriticalHabitat\CH_SpGroup' + file_suffix_clean + '.gdb'
     # tracking csv will all species included in union - retain for record and perform secondary review to confirm all
     # species are accounted for
-    outcsv = base_outpath + os.sep + 'UnionFiles_[year]\CriticalHabitat\Species_included_inUnion' + file_suffix_clean + '.csv'
+    outcsv = base_outpath + os.sep + 'CriticalHabitat\Species_included_inUnion' + file_suffix_clean + '.csv'
 
 # ### FUNCTIONS
 
@@ -116,6 +116,7 @@ def union_sp_files(in_ws, out_inter, subset_group_bool, ent_list):
 # zone species and zoneid and export in arcmap; this is much faster look into coding this
 def clean_unionfiles(outfc, final, group, df):
     listfields = [f.name for f in arcpy.ListFields(outfc)]
+    print listfields
 
     ent_fields = []
     group_spe = []
@@ -128,12 +129,12 @@ def clean_unionfiles(outfc, final, group, df):
             ent_fields.append(field)
     # ent_fields.append('OBJECTID')
     ent_fields.append("ZoneID")
-    # print ent_fields
+    print ent_fields
 
     arcpy.AddField_management("out", 'ZoneSpecies', "TEXT", "", "", "1000", "", "NULLABLE", "NON_REQUIRED", "")
     arcpy.AddField_management(fc, "ZoneID", "DOUBLE")
 
-    with arcpy.da.UpdateCursor(fc, ['OBJECTID', 'ZoneID']) as cursor:
+    with arcpy.da.UpdateCursor(fc, ['OBJECTID', 'ZoneID']) as cursor:  #NOTE CONFIRM OBKECTID IS THE KEY ID FOR FILE
         for row in cursor:
             row[1] = row[0]
             cursor.updateRow(row)
@@ -201,7 +202,6 @@ def clean_unionfiles(outfc, final, group, df):
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
-print inlocation
 out_df = pd.DataFrame(index=(list(range(0, 1000))))
 
 # Make sure out location have been created based on input values
@@ -234,7 +234,6 @@ if start_union:
                 union_sp_files(ingdb, outfc_inter, subset_group, entlist)
     else:
         list_ws = os.listdir(inlocation)
-        print list_ws
         for v in list_ws:
             if v[-3:] == 'gdb':
                 sp_group = v[:-4]
@@ -269,6 +268,7 @@ if start_union:
 else:
     arcpy.env.workspace = out_inter_location
     fclist = arcpy.ListFeatureClasses()
+
     for fc in fclist:
         sp_group = fc.split('_')
         sp_group = sp_group[1]
