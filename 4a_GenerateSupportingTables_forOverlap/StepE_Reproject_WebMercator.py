@@ -13,20 +13,20 @@ import shutil
 #TODO is the regionindex doing anything? region is no longer in filename
 
 L48 = True
-FirstRun = True  # to determine if temp location was already create or should be be created
+FirstRun = False # to determine if temp location was already create or should be be created
 # in and out workspace
 # Use the 2 dissolve file from Step D - the one that has been exploded, regions assigned then dissolved - polygons in
 # regions are separate from each other
-ingdb = r'path\R_SpGroupComposite_DissolveRegion_Final_[date].gdb'
+ingdb = r'D:\Species\Composites_Spring2020\RegionalFiles\CriticalHabitat\CH_SpGroupComposite_DissolveRegion_Final_20200427.gdb'
 # out location
-outgdb = r'path\file name.gdb'
+outgdb = r'D:\Species\Composites_Spring2020\RegionalFiles\CriticalHabitat\CH_WebMercator.gdb'
 acres_field = "TotalAcres"
 # Projection location
-proj_Folder = "path\projections"
-desiredProject = 'path\WGS 1984 Web Mercator (auxiliary sphere).prj'
+proj_Folder = "D:\Species\projections"
+desiredProject = proj_Folder +os.sep+'WGS 1984 Web Mercator (auxiliary sphere).prj'
 prjABB = 'WebMercator'
 # temp worksapce
-templocation = r'path\temp_webmerc.gdb'
+templocation = r'D:\Species\Composites_Spring2020\RegionalFiles\CriticalHabitat\temp_webmerc.gdb'
 
 # Index position of the sp group name within the file name
 groupindex = 1
@@ -115,10 +115,12 @@ for fc in fclist:
         currentgroup = currentgroup + "_" + region
         group.append(currentgroup)
 
-print group
+# print group
 
 arcpy.env.workspace = ingdb
+print ingdb
 fclist = arcpy.ListFeatureClasses()
+print fclist
 totalfc = len(fclist)
 counter = 1
 for fc in fclist:

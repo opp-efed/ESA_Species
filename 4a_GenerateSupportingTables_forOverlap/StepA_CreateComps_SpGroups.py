@@ -13,20 +13,20 @@ import arcpy
 # script fails due to error
 
 # file suffix that will be added to fc name
-file_suffix = '_Composite_[date]'
+file_suffix = '_Composite_20200427'
 
 # Spatial library being used for union IE CritHab or Range; will loop by species group, or use can id a specific species
 # GDB
-inlocation ='path\Generalized files\CriticalHabitat'
+inlocation ='L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\CriticalHabitat'
 
 # Set inlocation for critical habitat
 if inlocation.endswith('CriticalHabitat'): # Confirm the folder for CH is CriticalHabitat
-    out_location = r'outpath\CH_SpGroupComposite.gdb'
+    out_location = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\CH_SpGroupComposite.gdb'
     filetype = 'CH_'
     # species group to skip because there are no GIS files, ie there is no crithab for any lichens
     skipgroup = []
 else:
-    out_location = r'outpath\R_SpGroupComposite.gdb'
+    out_location = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\R_SpGroupComposite.gdb'
     filetype = 'R_'
     skipgroup = []
 

@@ -9,26 +9,27 @@ import datetime
 # Title - Generates regional composites in correct projection to calc area of the species file found in each region
 
 # master list and location by index number base zero of species information
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"E:\No_Call_Species\NoCall_MasterListESA_Dec2018_20190130.csv"
 
-date = "_20190812"  # in yyyymmdd
+date = "_2020427"  # in yyyymmdd
 
 # col index values of species info cols in master list - CONFIRM BEFORE RUNNING
-ColIndexDict = dict(comname=6, sciname=7, spcode=12, vipcode=13, entid=1, group=16, popabb=9, status=8)
+ColIndexDict = dict(comname=6, sciname=7, spcode=12, vipcode=13, entid=1, group=15, popabb=9, status=8)
 
-# Index order of how the information is loaded into the species dict this is alpha order based on col name in fc
-# group is in pos 2 and is not included
-final_fieldsindex = dict(NAME=0, Name_sci=4, SPCode=5, VIPCode=7, EntityID=1, PopName=3, Status=6)
+# Index order of how the information is loaded into the species dict see load_species_info_from_master functions;
+# group is in pos 2 and is not included in dictionary because species group is in the composite name not the att table
+# confirm this is in the correct order using the print out right after the start timer
+final_fieldsindex = dict(NAME=2, Name_sci=3, SPCode=4, VIPCode=5, EntityID=1, PopName=7, Status=6)
 
 # input values and workspaces for range files
-Range = False # True the Range files are run, False the CH files are run
-intersect_fc = r'path\Boundaries.gdb\Regions_dissolve'  # regional polygons
+Range = True # True the Range files are run, False the CH files are run
+intersect_fc = r'E:\Workspace\StreamLine\ESA\Boundaries.gdb\Regions_dissolve'  # regional polygons
 # Confirm names and dictionary below and the name for  GSC WGS 1984 line 296
-prjFolder = "path\projections"  #prjfiles
-base_outpath = r'outpath'
+prjFolder = "E:\Workspace\StreamLine\projections\FinalBE"  #prjfiles
+base_outpath = r'E:\No_Call_Species\Composites_NoCall'
 
-if Range:
-    # in folder with species group composite with all species unprojections and location of region feature class
+if Range:  # output file structure set using parameters above
+    # in folder with species group composite with all species un-projected and location of region feature class
     infc_gdb = base_outpath + os.sep +'R_SpGroupComposite.gdb'
 
     root_outpath = base_outpath + os.sep + 'RegionalFiles\Range'
@@ -136,28 +137,29 @@ def load_species_info_from_master(col_index_dict, master_list):
 def updateFilesloop(infc, user_dissolve_field, spe_info_dict, final_fields_index):
     fc_list_field = [f.name for f in arcpy.ListFields(infc) if not f.required]
     update_field = [word for word in fc_list_field if str(word) in user_dissolve_field]
-
     with arcpy.da.UpdateCursor(infc, update_field) as lookup:
         for row in lookup:
-            entid = row[1]
-            listspecies = spe_info_dict[entid]
-
-            index = 2  # HARD CODE to start at field index 2; index 0 - filename,1- EnitityID neither of which are being
-            # Updated here
-            for field in update_field:
-                if field == 'Region' or field == 'EntityID' or field == 'FileName':
-                    pass
-                else:
-                    if row[index] is None:
-                        indexfield = final_fields_index[field]
-                        value = listspecies[indexfield]
-                        row[index] = value
-                        lookup.updateRow(row)
-                        index += 1
-                        print "     Updated {0} for files {1}".format(field, entid)
+            try:
+                entid = row[1]
+                listspecies = spe_info_dict[entid]
+                index = 2  # HARD CODE to start at field index 2; index 0 - filename,1- EnitityID neither of which are being
+                # Updated here
+                for field in update_field:
+                    if field == 'Region' or field == 'EntityID' or field == 'FileName':
+                        pass
                     else:
-                        index += 1
-                        continue
+                        if row[index] is None:
+                            indexfield = final_fields_index[field]
+                            value = listspecies[indexfield]
+                            row[index] = value
+                            lookup.updateRow(row)
+                            index += 1
+                            print "     Updated {0} for files {1}".format(field, entid)
+                        else:
+                            index += 1
+                            continue
+            except KeyError:
+                print ('Species {0} in composite {1} not in masterlist'.format(entid, infc))
 
 
 # explodes sp comps into singlepart polygons to extract the area found within each reagion
@@ -220,6 +222,7 @@ def intersect_analysis(intersect_fc_master, in_location, out_location, previous_
 # spatial join single part sp comp with regional fc
 def spatial_join(intersect_fc_master, in_location, out_location, spe_info_dict, final_fields_index, previous_suffix,
                  suffix):
+
     # Check if out location was already created
     if not arcpy.Exists(out_location):
         path, gdb_file = os.path.split(out_location)
@@ -238,17 +241,15 @@ def spatial_join(intersect_fc_master, in_location, out_location, spe_info_dict, 
         arcpy.Delete_management('intersect')
         arcpy.MakeFeatureLayer_management(in_features, "infc")
         arcpy.MakeFeatureLayer_management(intersect_fc_master, "intersect")
-        try:
-            if not arcpy.Exists(out_feature):
+
+        if not arcpy.Exists(out_feature):
                 arcpy.SpatialJoin_analysis("infc", "intersect", out_feature, 'JOIN_ONE_TO_MANY')
+                print fc
                 print 'Spatial Join CompFile {0}'.format(fc)
                 updateFilesloop(out_feature, DissolveFields, spe_info_dict, final_fields_index)
-            else:
+        else:
                 continue
 
-        except Exception as error:
-            print(error.args[0])
-            arcpy.Delete_management(out_feature)
 
 
 # clips sp composites to regional file so only area on land include
@@ -442,6 +443,7 @@ if not os.path.exists(root_outpath):
     os.mkdir(root_outpath)
 
 listKeys, speciesinfo_dict = load_species_info_from_master(ColIndexDict, masterlist)
+print "Data loaded for species {0} is {1}".format(speciesinfo_dict.keys()[0],speciesinfo_dict[speciesinfo_dict.keys()[0]])
 try:
     explode_polygons(infc_gdb, out_explode_location, " ", explode_suffix)
     clip_feature(out_explode_location, intersect_fc, out_clip_location, explode_suffix, clipped_suffix)

@@ -14,10 +14,10 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 
 # User input variable
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\NoCall_MasterListESA_Dec2018_20190130.csv"
 
 # Composite GDB generate in Step A not a folder - must be a GDB
-infolder = r'path\R_SpGroupComposite.gdb'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Composites_NoCall\CH_SpGroupComposite.gdb'
 group_fc_index = 1 # location of the sp group in the file name for the composite base 0
 # also need to set the hard code to the index number for the cols reference in loop species
 
@@ -45,6 +45,7 @@ def fcs_in_workspace(workspace):
 def loop_species(group, flag):
     print "\nWorking on {0}".format(group)
     masterlist_df = pd.read_csv(masterlist)
+    masterlist_df[entid_colindex]= masterlist_df[entid_colindex].astype(str)
     if flag =='CH': # filters list to just species with CH when working with CH files
         df_group = masterlist_df.loc[(masterlist_df[group_colindex] == group) & (masterlist_df[ch_gis_colindex] == "Yes")].copy()
 
@@ -52,6 +53,7 @@ def loop_species(group, flag):
         # filters out range files w/0 GIS files = these are mostly qualitative species
         df_group = masterlist_df.loc[(masterlist_df[group_colindex] == group)& (masterlist_df[not_considered_colindex] == "No")]
     group_entlist = df_group[entid_colindex].values.tolist()
+    print group_entlist
     return group_entlist
 
 
@@ -105,8 +107,8 @@ for group in alpha_group:
 
     # check for species not included in composite
     for value in entlist:
-        if value not in species_in_comp:
-            missing_files.append(value)
+        if str(value) not in species_in_comp:
+            missing_files.append(str(value))
         else:
             continue
 

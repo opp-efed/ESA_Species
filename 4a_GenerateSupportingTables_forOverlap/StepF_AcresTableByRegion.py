@@ -12,23 +12,23 @@ import datetime
 #       - Acres for a specific region uses the projection specified for that region - see UseList documentation
 #       - Total acres on land is the sum of the individual region value; Total NL48 is the sum of the NL48 regions
 
-# outpath and name of csv for acrs tables
-out_csv = 'L:\Workspace\StreamLine\ESA\CompositeFiles_Summer2019\R_Acres_by_region_20190812.csv'
+# outpath and name of csv for acres tables
+out_csv = 'D:\Species\Composites_Spring2020\RegionalFiles\CriticalHabitat\CH_Acres_by_region_20200427.csv'
 # out table
-# in GDB with projected comp files, regional and world projection for full spatial file
+# in GDB with projected comp files, regional and world projection for full spatial file; done for range and crithab
 inGDB_list = [
-    r'L:\Workspace\StreamLine\ESA\CompositeFiles_Summer2019\RegionalFiles\Range\R_SpGroupComposite_ProjectedtRegion_20190812.gdb',
-    r'L:\Workspace\StreamLine\ESA\CompositeFiles_Summer2019\RegionalFiles\Range\R_SpGroupComposite_WebMercator.gdb']
+    r'D:\Species\Composites_Spring2020\RegionalFiles\CriticalHabitat\CH_SpGroupComposite_ProjectedtRegion_20200427.gdb',
+    r'D:\Species\Composites_Spring2020\RegionalFiles\CriticalHabitat\CH_WebMercator.gdb']
 # current master for species info
-master_list = r"\MasterListESA_Feb2017_20190130.csv"
+master_list = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_June2020.csv"
 
 # Colums in Master that should be included
 col_included = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                 'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
-                'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+                'Source of Call final BE-Critical Habitat', 'Critical_Habitat_YesNo', 'Migratory', 'Migratory_YesNo',
                 'CH_Filename', 'Range_Filename', 'L48/NL48']
 # regional fc
-regional_fc = r'path\Boundaries.gdb\Regions_dissolve'  # regional polygons
+regional_fc = r'D:\Species\Boundaries.gdb\Regions_dissolve'  # regional polygons
 # header values that won't be added dynamically
 acres_total_headers = ['EntityID', 'TotalAcres']
 

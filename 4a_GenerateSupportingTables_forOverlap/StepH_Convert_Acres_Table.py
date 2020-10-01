@@ -1,11 +1,15 @@
 import pandas as pd
-import os
+
 import datetime
+
 # Title- convert acres table to a different area unit
+
+# Author J.Connolly
+# Internal deliberative, do not cite or distribute
 
 # User defined variables:
 # date in YYYYMMDD
-date = 20161216
+date = 20190812
 
 # Conversion value
 conversion = 0.0015625
@@ -14,11 +18,11 @@ sci_notation = str("{:.4E}".format(conversion))
 
 
 # Master table of acres
-in_table = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_Acres_by_region_20161216.csv'
-out_csv = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Tables\R_ConvertedAcres_SqMiles_' + str(
+in_table = 'L:\Workspace\StreamLine\ESA\CompositeFiles_Summer2019\CH_Acres_by_region_20190812.csv'
+out_csv = 'L:\Workspace\StreamLine\ESA\CompositeFiles_Summer2019\CH_ConvertedAcres_SqMiles_' + str(
     sci_notation) + '_byregion' + str(date) + '.csv'
 # number of cols with species info  base 0 found in the Acres table, these col do not need to be converted
-sp_col_count = 10
+sp_col_count = 20
 
 
 def calculation(in_df, conversion_val):
