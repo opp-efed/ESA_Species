@@ -1,0 +1,16 @@
+import pandas as pd
+
+df = pd.read_excel(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects"
+                   r"\Risk Assessments\GMOs\isoxaflutole\Counties-Spring2019\PlantsByCounty_CHByCounty_isoxaflutole.xlsx",sheet_name='PlantAndCHbyCounty')
+
+df ['EntityID'] = df['EntityID'].map(lambda x: x).astype(str)
+df['County, State'] = df['County Name'].str.cat(df['STUSPS'], sep =", ")
+df['Species Label'] = df['Common Name'].str.cat(df['EntityID'], sep ="-")
+
+group_cnty = df.groupby(['State','County Name'])['Species Label'].apply(lambda x: "%s" % ', '.join(x))
+group_spe = df.groupby(['EntityID','Common Name','Scientific Name','Listing Status_2017'])['County, State'].apply(lambda x: "%s" % '; '.join(x))
+
+group_cnty.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects'
+             r'\Risk Assessments\GMOs\isoxaflutole\Counties-Spring2019\species_by_county_appendix_w_ch.csv', encoding= 'utf-8')
+group_spe.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects'
+                 r'\Risk Assessments\GMOs\isoxaflutole\Counties-Spring2019\species_appendix_wch.csv', encoding= 'utf-8')

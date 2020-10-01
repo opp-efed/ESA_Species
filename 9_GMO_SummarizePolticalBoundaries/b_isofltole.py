@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 
-reg = pd.read_excel(r'C:\Users\JConno02\Documents\Counties-Spring2019\IFT Soy label states and counties.xlsx')
-range_df = pd.read_csv(r'C:\Users\JConno02\Documents\Counties-Spring2019\EPA_pivot_noplant.csv')
+reg = pd.read_excel(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\isoxaflutole\IFT Soy label states and counties.xlsx')
+range_df = pd.read_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\isoxaflutole\EPA_pivot_noplant.csv')
 list_st = range_df.columns.values.tolist()
 print list_st
 list_st.remove('Unnamed: 0')
@@ -43,5 +43,5 @@ for v in list_st:
 
     out_df_range[v] = series_range.values
 
-out_df_reg.to_csv(r'C:\Users\JConno02\Documents\Counties-Spring2019\InReg_notRange.csv')
-out_df_range.to_csv(r'C:\Users\JConno02\Documents\Counties-Spring2019\InRange_notReg.csv')
+out_df_reg.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\isoxaflutole\InReg_notRange.csv')
+out_df_range.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\isoxaflutole\InRange_notReg.csv')

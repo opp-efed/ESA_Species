@@ -3,8 +3,8 @@ import os
 import datetime
 
 
-in_tabulated = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Tabulated_Overlap'
-out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\Enlist Duo\Request_20190906\Tabulated County'
+in_tabulated = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Update Summer 2020\Tabulated_Overlap\CriticalHabitat'
+out_location = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\dicamba\Update Summer 2020\Tabulated County\CriticalHabitat'
 # grouping_col = ['EntityID', 'STUSPS']
 grouping_col = ['EntityID', 'GEOID', 'STUSPS']
 
@@ -33,8 +33,13 @@ for folder in list_results_directory:
 
         df_state = df_state.groupby(grouping_col)[val_col].sum().reset_index()
         df_state = df_state.reindex(columns = col_order)
-        merged_df = pd.concat([merged_df,df_state])
-        merged_df  = merged_df .reindex(columns = col_order)
+        if len(merged_df)== 0:
+            merged_df = df_state.copy()
+        else:
+            values_cols = [v for v in df_state.columns.values.tolist() if v.startswith(('VALUE'))]
+            merge_cols = grouping_col + values_cols
+            merged_df = pd.merge(merged_df,df_state,left_on= merge_cols ,right_on= merge_cols , how='outer')
+
     if len(grouping_col) == 3:
         merged_df.to_csv(out_location + os.sep + folder +'Cnty.csv')
     else:

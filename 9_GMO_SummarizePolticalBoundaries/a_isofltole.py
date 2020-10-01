@@ -10,8 +10,8 @@ df_states = df.loc[(df['STUSPS']).isin(state)]
 df_states.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects'
                  r'\Risk Assessments\GMOs\isoxaflutole\Counties-Spring2019\CH_Flowering_27state.csv')
 
-df = pd.read_csv(r'C:\Users\JConno02\Documents\Counties-Spring2019\Counties_Registration_EPA.csv')
+df = pd.read_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\isoxaflutole\Counties_Registration_EPA.csv')
 df_cnty = df[['State','NAME']]
 pivot = df_cnty.pivot(columns ='State')['NAME']
-pivot.to_csv(r'C:\Users\JConno02\Documents\Counties-Spring2019\EPA_pivot_noplant.csv')
+pivot.to_csv(r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\Risk Assessments\GMOs\isoxaflutole\EPA_pivot_noplant.csv')
 
