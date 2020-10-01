@@ -16,24 +16,26 @@ import arcpy
 # TODO see script Step3_ProjectRegionalFiles
 
 # in gdb from step 5 and 6
-InGDB = r"path\filename.gdb"
+InGDB = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\GDB\STD_ReNmFWS20190130_2020-05-12.gdb"
 
 # Location of prj files
-proj_Folder = r'path\folder'
+proj_Folder = r'L:\Workspace\StreamLine\projections'
 
 # Temp GDB for geo transformations
-middlegdb = r'path/file name.gdb'
+middlegdb = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\GDB\temp.gdb'
 
 # Workspace for copied and standardize files; stays static for the whole tool
-ws = "path"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "folder name"
-# in yyyymmdd received date
-receivedDate = 'date'
+name_dir = "No Call Species"
 
-# filenames for outputs
-ReProjectGDB = "gdb filesname"
-CSVName = "csv file name"
+# in yyyymmdd received date
+receivedDate = '20190130'
+
+# file names for outputs
+
+ReProjectGDB = "R_NoCallProjected"
+CSVName = "R_NoCallProjected"
 
 NADabb = 'NAD83'
 Unknowncsv = 'Unknown'

@@ -19,12 +19,12 @@ import pandas as pd
 
 # inputs
 # Master species list as .csv
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
 # folder or GDB from step 5
-infolder = r'path\filename.gdb'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\GDB'
 
 
-addition_gdb_filename = ''  # if the gdbs are not just the species group
+addition_gdb_filename = 'STD_ReNmFWS20190130_2020-05-12'  # if the gdbs are not just the species group
 # Species groups that do not need to be run because check was already completed
 skiplist = []
 
@@ -297,12 +297,13 @@ if singleGDB:
         DissolveFiles = False
 else:
     alpha_group = sorted(group_df.values.tolist())
+    alpha_group.append(addition_gdb_filename)
     for group in alpha_group:
         start_loop = datetime.datetime.now()
         if group in skiplist:
             continue
         print "\nWorking on {0}".format(group)
-        inGDB = infolder + os.sep + str(group) + str(addition_gdb_filename) + '.gdb'
+        inGDB = infolder + os.sep + str(group) + '.gdb'
         if not arcpy.Exists(inGDB):
             continue
         DissolveFiles, filename_needed_updated, ent_does_not_match_filename, do_not_update = CheckFieldOrder \

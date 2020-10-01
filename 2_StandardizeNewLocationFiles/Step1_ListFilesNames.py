@@ -13,17 +13,17 @@ import arcpy
 # ###Varibles to be set by user
 
 # # location of files/gdb/folder/workspace where new/updated files occur
-InFileLocations = r"path/workspace"
+InFileLocations = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Range"
 # desired name of output
-NameCSV = 'filename'
+NameCSV = 'R_Files_NoCall'
 
 # Workspace for copied and standardize files; stays static for the whole tool
-ws = "path"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "folder name"
+name_dir = "No Call Species"
 
 # in yyyymmdd received date
-receivedDate = 'date'
+receivedDate = '20190130'
 
 
 ##################################################################################################################

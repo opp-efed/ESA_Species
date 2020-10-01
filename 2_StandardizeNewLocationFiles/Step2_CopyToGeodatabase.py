@@ -20,27 +20,26 @@ import arcpy
 
 # True updates came in as a composite file, ie multiple species in one file and not individual files
 # False if individual files by species
-compfile = True
+compfile = False
 # column in the composite file used to identify a species typically the entityID, use '' if individual files
-entid_col_comp = "col name"  # typically entityid
-NmCSVCopied = 'csv file name'  # name for output table
-out_nameGDB = "gdb file nanme"  # name for staging gdb
+entid_col_comp = ""  # typically entityid
+NmCSVCopied = 'R_Copied_NoCall'  # name for output table
+out_nameGDB = "R_NoCall"  # name for staging gdb
 
 # location of new species files
 # ***this must be a folder not a .shp or .gdb
-InFileLocations = "path"
+InFileLocations = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Range"
 # master species list
-masterlist = r"r'path\MasterListESA_Dec2018_20190130.csv'"
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
 entityid_col_master = 'EntityID'  # col identifier
 
-# Workspace for copied and standardize files; stays static for the whole tool# Workspace
-
-ws = "path"
+# Workspace for copied and standardize files; stays static for the whole tool
+ws = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "folder"
+name_dir = "No Call Species"
 
 # in yyyymmdd received date
-receivedDate = 'date'
+receivedDate = '20190130'
 
 
 # FUNCTIONS

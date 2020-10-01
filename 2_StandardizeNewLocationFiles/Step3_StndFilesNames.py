@@ -20,16 +20,16 @@ import arcpy
 # Input File Locations
 # Set the workspace for the ListFeatureClass function
 # Gdb with copied files from step 2
-InGDB = r"path\filename.gdb"
+InGDB = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\GDB\R_NoCall_2020-05-12.gdb"
 abb = "FWS"  # FWS or NMFS
 
 # Workspace for copied and standardize files; stays static for the whole tool
-ws = "path"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "folder name"
+name_dir = "No Call Species"
 
 # in yyyymmdd received date
-receivedDate = 'date'
+receivedDate = '20190130'
 
 # NOTE prior to running the NmChange check the the concatenated specode and vipcode on the FWS file name and the
 # sci names match the master list.  Files were sometime received with typos
@@ -38,9 +38,83 @@ receivedDate = 'date'
 # TODO dynamically set up dictionary to the master list to make file name
 # Note date must be in in yyyymmdd in filename
 
-NmChangeDICT = {'original file name':'STD filename_yyyymmdd ',
+NmChangeDICT = {'PosExtinct_R_191_poly_190130_STD_NAD83_20190204':'R_191_poly_190130',
+                'Qual_R_193_poly_190130_STD_NAD83_20190204':'R_193_poly_190130',
+                'Extinct_R_68_poly_190130_STD_NAD83_20190204':'R_68_poly_190130',
+                'PosExtinct_R_78_poly_190130_STD_NAD83_20190204':'R_78_poly_190130',
+                'PosExtinct_R_91_poly_190130_STD_NAD83_20190204':'R_91_poly_190130',
+                'PosExtinct_R_93_poly_190130_STD_NAD83_20190204':'R_93_poly_190130',
+                'PosExtinct_R_100_poly_190130_STD_NAD83_20190204':'R_100_poly_190130',
+                'Qual_R_104_poly_190130_STD_NAD83_20190204':'R_104_poly_190130',
+                'Qual_R_106_poly_190130_STD_NAD83_20190204':'R_106_poly_190130',
+                'Qual_R_119_poly_190130_STD_NAD83_20190204':'R_119_poly_190130',
+                'Qual_R_146_poly_190130_STD_NAD83_20190204':'R_146_poly_190130',
+                'Qual_R_147_poly_190130_STD_NAD83_20190204':'R_147_poly_190130',
+                'Qual_R_347_poly_190130_STD_NAD83_20190204':'R_347_poly_190130',
+                'Qual_R_484_poly_190130_STD_NAD83_20190204':'R_484_poly_190130',
+                'Qual_R_485_poly_190130_STD_NAD83_20190204':'R_485_poly_190130',
+                'Qual_R_212_poly_190130_STD_NAD83_20190204':'R_212_poly_190130',
+                'Qual_R_314_poly_190130_STD_NAD83_20190204':'R_314_poly_190130',
+                'Qual_R_4881_poly_190130_STD_NAD83_20190204':'R_4881_poly_190130',
+                'R_10077_poly_20141216_STD_NAD83_20190130':'R_10077_poly_20141216',
+                'R_10300_poly_20141216_STD_NAD83_20190130':'R_10300_poly_20141216',
+                'R_1509_poly_20170420_STD_NAD83_20190130':'R_1509_poly_20170420',
+                'R_286_poly_20170328_STD_NAD8_HUC12_20190130':'R_286_poly_20170328',
+                'R_2448_poly_20170420_STD_NAD83_20190130':'R_2448_poly_20170420',
+                'R_2528_poly_20170420_STD_NAD83_20190130':'R_2528_poly_20170420',
+                'R_3398_poly_20170420_STD_NAD83_20190130':'R_3398_poly_20170420',
+                'R_3654_poly_20170420_STD_NAD83_20190130':'R_3654_poly_20170420',
+                'R_4093_poly_20140930_STD_NAD83_20190130':'R_4093_poly_20140930',
+                'R_4112_poly_20140613_STD_NAD83_20170420':'R_4112_poly_20140613',
+                'R_4300_poly_20170420_STD_NAD83_20190130':'R_4300_poly_20170420',
+                'R_4799_poly_20170420_STD_NAD83_20190130':'R_4799_poly_20170420',
+                'R_4992_poly_20170420_STD_NAD83_20190130':'R_4992_poly_20170420',
+                'R_5180_poly_20170420_STD_NAD83_20190130':'R_5180_poly_20170420',
+                'R_5265_poly_20170420_STD_NAD83_20190130':'R_5265_poly_20170420',
+                'R_5658_poly_20140613_STD_NAD83_20190130':'R_5658_poly_20140613',
+                'R_5815_poly_20170420_STD_NAD83_20190130':'R_5815_poly_20170420',
+                'R_6220_poly_20170420_STD_NAD83_20190130':'R_6220_poly_20170420',
+                'R_6578_poly_20170420_STD_NAD83_20190130':'R_6578_poly_20170420',
+                'R_6843_poly_20140613_STD_NAD83_20170420':'R_6843_poly_20140613',
+                'R_6966_poly_20170420_STD_NAD83_20190130':'R_6966_poly_20170420',
+                'R_7590_poly_20170420_STD_NAD83_20190130':'R_7590_poly_20170420',
+                'R_7834_poly_20170420_STD_NAD83_20190130':'R_7834_poly_20170420',
+                'R_7989_poly_20170420_STD_NAD83_20190130':'R_7989_poly_20170420',
+                'R_8241_poly_20170420_STD_NAD83_20190130':'R_8241_poly_20170420',
+                'R_8278_poly_20170420_STD_NAD83_20190130':'R_8278_poly_20170420',
+                'R_9432_poly_20160816_STD_NAD83_20190130':'R_9432_poly_20160816',
+                'Qual_R_538_poly_190130_STD_NAD83_20190204':'R_538_poly_190130',
+                'Qual_R_918_poly_190130_STD_NAD83_20190204':'R_918_poly_190130',
+                'Qual_R_1060_poly_190130_STD_NAD83_20190204':'R_1060_poly_190130',
+                'Qual_R_1187_poly_190130_STD_NAD83_20190204':'R_1187_poly_190130',
+                'Qual_R_4961_poly_190130_STD_NAD83_20190204':'R_4961_poly_190130',
+                'Qual_R_5104_poly_190130_STD_NAD83_20190204':'R_5104_poly_190130',
+                'Qual_R_5991_poly_190130_STD_NAD83_20190204':'R_5991_poly_190130',
+                'Qual_R_10230_poly_190130_STD_NAD83_20190204':'R_10230_poly_190130',
+                'Qual_R_10592_poly_190130_STD_NAD83_20190204':'R_10592_poly_190130',
+                'R_1100':'R_1100_poly_190130',
+                'R_10226':'R_10226_poly_190130',
+                'R_1102':'R_1102_poly_190130',
+                'R_8181_poly_20140613_STD_NAD83_20190130':'R_8181_poly_20140613',
+                'Qual_R_422_poly_190130_STD_NAD83_20190204':'R_422_poly_190130',
+                'PosExtinct_R_1953_poly_190130_STD_NAD83_20190204':'R_1953_poly_190130',
+                'PosExtinct_R_16_poly_190130_STD_NAD83_20190204':'R_16_poly_190130',
+                'Qual_R_22_poly_190130_STD_NAD83_20190204':'R_22_poly_190130',
+                'Qual_R_1240_poly_190130_STD_NAD83_20190204':'R_1240_poly_190130',
+                'PosExtinct_R_1302_poly_190130_STD_NAD83_20190204':'R_1302_poly_190130',
+                'R_OahuTreesSnails_9433':'R_9433_poly_190130',
+                'R_OahuTreesSnails_9437':'R_9437_poly_190130',
+                'R_OahuTreesSnails_9455':'R_9455_poly_190130',
+                'R_OahuTreesSnails_9435':'R_9435_poly_190130',
+                'R_OahuTreesSnails_9463':'R_9463_poly_190130',
+                'R_OahuTreesSnails_9445':'R_9445_poly_190130',
+                'R_OahuTreesSnails_9451':'R_9451_poly_190130',
+                'R_OahuTreesSnails_9447':'R_9447_poly_190130',
+                'R_OahuTreesSnails_9481':'R_9481_poly_190130',
 
                 }
+
+
 # recursively checks workspaces found within the inFileLocation and makes list of all feature class
 def fcs_in_workspace(workspace):
     arcpy.env.workspace = workspace

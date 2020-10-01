@@ -17,17 +17,17 @@ import arcpy
 maxrow = 5000000
 
 # Input File Locations from step 4
-InGDB = r"path\filename.gdb"
+InGDB = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\GDB\ReNm_FWS_20190130_2020-05-12.gdb"
 
 abb = "FWS"
 
 # Workspace for copied and standardize files; stays static for the whole tool
-ws = "path"
+ws = "L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles"
 # Folder in workspace where outputs will be saved
-name_dir = "folder name"
+name_dir = "No Call Species"
 
 # in yyyymmdd received date
-receivedDate = 'date'
+receivedDate = '20190130'
 
 # Field Names that will be kept in the dissolve
 Dissolve = "Dissolve"
