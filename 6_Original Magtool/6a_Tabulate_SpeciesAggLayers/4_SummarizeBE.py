@@ -24,7 +24,7 @@ import pandas as pd
 full_impact = True  # if drift values should include use + drift True if direct use and drift should be separate false
 
 # This should be one of the SprayInterval table from step 3- full, region, or NL48
-in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\Tabulated_TabArea_HUCAB\L48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501\R_SprayInterval_20180819_Region.csv'
+in_table = r"L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB\NL48\Range\Agg_Layers\SprayInterval_IntStep_30_MaxDistance_1501\R_SprayInterval_20190411_NL48Range.csv"
 
 # Columns from the master species list that should be included in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
@@ -34,13 +34,11 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
 
 # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
 # tables
-look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-              r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
-
+look_up_use = "C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Uses_lookup_20190409.csv"
 # meter conversion of 1000 and 2500 foot buffer round up to the nearest 5 per group discussion Fall 2016
 # Limits for AgDrift for ground and aerial
 
-bins = [0, 305, 792] # update to 792 from 765 3/19/2019
+bins = [0, 305, 792] # update to 792  from 765 3/19/2019
 # these can be adjust if we want to look at different bins, there can be more than 3
 # #############Static Variables
 today = datetime.datetime.today()
@@ -82,6 +80,7 @@ use_df = sp_table_df.loc[:, columns_uses]
 use_list = use_df.columns.values.tolist()
 
 uses = []
+
 for x in use_list:
     split_value = x.split("_")
     interval_value = split_value[len(split_value) - 1]
@@ -94,6 +93,7 @@ for x in use_list:
     uses.append(use_nm)
 
 collapsed_df = pd.DataFrame()
+
 
 for i in list_regional_uses:
     if i != 'none':

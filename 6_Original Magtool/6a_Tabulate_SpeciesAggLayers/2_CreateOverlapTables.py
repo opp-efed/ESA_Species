@@ -29,10 +29,10 @@ overwrite_inter_data = False
 # Changes include L48 v NL48  and Range and CriticalHabitat in the path
 
 # Location of raw results
-raw_results_csv = r'L:\Workspace\StreamLine\ESA\Results_HUCAB\NL48\Range\Agg_Layers'
+raw_results_csv = r'L:\Workspace\StreamLine\ESA\Results\NL48\Range\Agg_Layers'
 # Root location where the transformed tables should be saved; 'Tabulated' results this locations should be the same for
 # all steps
-out_root_dir = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea_HUCAB'
+out_root_dir = r'L:\Workspace\StreamLine\ESA\Tabulated_TabArea'
 
 # ########### Variables to be updated once per update
 # NOTE there is a limit to the number of characters in a path (255) be sure to save input files in a location where you
@@ -59,7 +59,7 @@ if 'Range' in find_file_type or 'range' in find_file_type:
     join_col = 'HUCID'  # typical vlaues ZoneID, InterID, HUCID
     # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
     # tables
-    look_up_use = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Malathion_Census_Uses_lookup_20181106_test.csv"
+    look_up_use = "C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Uses_lookup_20190409.csv"
     file_type = 'R_'  # R_ for Range runs
     species_file_type = 'Range'  # Range for  Range runs
     # Location of range acres tables to be use to calculate percent overlap
@@ -73,7 +73,7 @@ else:
     join_col = 'HUCID'
     # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
     # tables
-    look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+    look_up_use = "C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Uses_lookup_20190409.csv"
     species_file_type = 'CH'  # CH for critical habitat runs
     file_type = 'CH_'  # CH_ for critical habit
     # Location of critical habitat acres tables to be use to calculate percent overlap

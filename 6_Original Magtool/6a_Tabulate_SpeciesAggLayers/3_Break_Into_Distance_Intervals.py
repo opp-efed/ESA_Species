@@ -19,7 +19,7 @@ import pandas as pd
 
 # ###############user input variables
 # Species file type to tabulate
-species_file_type = 'Range'   # can be 'Range' or 'CH'
+species_file_type = 'CH'   # can be 'Range' or 'CH'
 # Region to include
 p_region = 'NL48'  # can be L48 or NL48
 # Merges tables to include MO_FullRange (overlap based on the area of full range) MO_Region (overlap based on the area
@@ -50,8 +50,7 @@ col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'p
 
 # Table will all of the uses, use layer, raster properties, usage columns and and final column headers for parent
 # tables
-look_up_use = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA' \
-                  r'\_ExternalDrive\_CurrentSupportingTables\Uses_lookup_20180430.csv'
+look_up_use = "C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\SupportingTables\Uses_lookup_20190409.csv"
 
 # ###########Static variables
 today = datetime.datetime.today()
