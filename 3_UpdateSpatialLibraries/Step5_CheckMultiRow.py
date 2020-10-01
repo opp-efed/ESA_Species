@@ -10,10 +10,10 @@ import datetime
 # TODO remove hard code to masterlist
 
 # User input variable
-masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+masterlist =  r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\NoCall_MasterListESA_Dec2018_20190130.csv"
 group_colindex = 16  # col index group
 # Spatial library for critical habitat files generalized or non
-infolder = 'path\Generalized files\CriticalHabitat'
+infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\CriticalHabitat'
 
 # species groups that can be skipped; some gdb can take a long time
 skiplist = []

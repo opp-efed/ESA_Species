@@ -33,8 +33,7 @@ MasterSpeFC = r"L:\Workspace\ESA_Species\Step3\ToolDevelopment\SpatialLibrary\Cr
 HUC2Field = "VPU_ID"
 HUC2_lwr48 = "L:\Workspace\ESA_Species\FinalBE_EucDis_CoOccur\Boundaries.gdb\VPU_Final"
 
-FWSaqu_species = [
-                  ]
+FWSaqu_species = ['484','485','347', '2932','11569','212','314','5288']
 
 # 'NMFS139',	'NMFS166',	'NMFS173',	'NMFS174'
 # NHD files

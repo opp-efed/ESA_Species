@@ -9,12 +9,12 @@ import pandas as pd
 
 # #################User input variable
 # in and out workspaces - spatial libraries generalize or non for \range or \criticalhabitat
-infolder = r'path\CriticalHabitat'
-archivefolder = 'path\CriticalHabitat\Archived'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\CriticalHabitat'
+archivefolder = infolder +os.sep+'Archived'
 
-masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+masterlist =  r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\NoCall_MasterListESA_Dec2018_20190130.csv"
 buffer_distance = "15 METERS"  # Buffer distance set by ESA team fall 2016 - 30 meter total
-date = 20190204  # date in yyyymmdd
+date = 20200427# date in yyyymmdd
 group_colindex = 16  # Index position of the group column in the master species list
 
 

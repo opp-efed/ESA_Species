@@ -21,8 +21,20 @@ masterlist_old = r"path\MasterListESA_old.csv"
 masterlist_current = r"\MasterListESA_Feb2017_20190130.csv"
 
 
-# Reasons = Qual_, Delisted_, Extinct_, UninhabIsland_, PosExtinct_, CaveDweller_, DraftBEOther_,MostlyOutsideUS_,
-# CaptivityOnly_, QualOther_
+# Reasons =
+# Qual_(qual write up), Delisted_(removed by delisting FR), Extinct_ (Documented as extinct),
+# UninhabIsland_ (Species on UninhabitedIsland and therefore likely outside use layer extent) ,
+# PosExtinct_(extirpated from the US or documented a likely extinct), CaveDweller_(Cave dwelling species qual write up,
+# MostlyOutsideUS_ (Species on Uninhabited Island and therefore likely outside use layer extent; Species found mostly
+# outside the US jurisdiction and therefore outside of the use layer extent; area of the whole range divided it by
+# the area found in US jurisdiction set a cut off of 25%),
+# Oceanic (Species found most in the ocean and therefore outside of the use layer extent; Species found most in the
+# ocean and therefore outside of the use layer extent; area of the whole range divided it by the area found in ocean
+# set a cut off of 25% )), Outside use (outside use layer extents
+
+# CaptivityOnly_ (on found in captivity), QualOther_ (Document and the BE as qualitative for other reason)
+# Qual_,Delisted_, Extinct_, UninhabIsland_  ,PosExtinct_, CaveDweller, MostlyOutsideUS_ , Oceanic , CaptivityOnly,
+# QualOther_, OutsideUse_
 reason_removed = 'Extinct_'  # Prefix is appended to the beginning of the file name
 
 today = datetime.datetime.today()

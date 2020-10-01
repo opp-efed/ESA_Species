@@ -16,9 +16,9 @@ import pandas as pd
 #CONFIRMED with ESA team that CH for qualtitave species should also be excluded from overlap # Fall 2017
 
 # User input variable
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20200427.csv"
 # Spatial library for critical habitat files generalized or non
-infolder = 'path\Generalized files\CriticalHabitat'
+infolder =  r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\CriticalHabitat'
 # also need to set the hard code to the index number for the cols reference in loop species
 
 

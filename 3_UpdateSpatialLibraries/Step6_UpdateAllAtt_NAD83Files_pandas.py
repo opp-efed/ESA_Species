@@ -18,14 +18,14 @@ import pandas as pd
 
 
 # inputs
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\NoCall_MasterListESA_Dec2018_20190130.csv"
 # folder or GDB with species spatial library
-infolder = 'path\Generalized files\CriticalHabitat'
+infolder = 'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\Range'
 
 
 addition_gdb_filename = ''  # if the gdbs are not just the species group
 # Species groups that do not need to be run because check was already completed
-skiplist = []
+skiplist = ['Amphibians','Birds','Clams','Crustaceans','Ferns and Allies']
 
 # cols from master that should be included use to pop att table
 col_included = ['EntityID', 'Common Name', 'Scientific Name', 'spcode', 'vipcode', 'Status', 'pop_abbrev']

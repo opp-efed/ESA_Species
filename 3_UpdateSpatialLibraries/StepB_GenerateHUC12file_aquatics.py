@@ -1,7 +1,7 @@
 import os
 import time
 import datetime
-
+import os
 import arcpy
 
 # Author J.Connolly
@@ -22,33 +22,21 @@ name_dir = "GDB"
 
 ###folder used as temp work space
 
-noNHDCSV = extractfiles + "_noNHD_20190204"
+noNHDCSV = extractfiles + "_R_noNHD_20200427"
 
 # GDB with all files to run
-MasterSpeFC = r"path\Generalized files\CriticalHabitat"
+MasterSpeFC = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\Range"
 # path to temp gdb for huc12 files
-out_location = r'path\HUC12'
+out_location = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\HUC12'
 # temp gdb  for huc12
-gdb_name = 'file name.gdb'
+gdb_name = 'R_HUC12.gdb'
 
 # Field id for HUC12 number
 HUC2Field = "HUC_12"
 # path to final location
-HUC2_lwr48 = "path\FilesAppended_ESA.gdb\HUC12_Merge"
+HUC2_lwr48 = "L:\Workspace\StreamLine\InfoAddedForESA\FilesAppended_ESA.gdb\HUC12_Merge"
 
-FWSaqu_species = ['209', '215', '228', '234', '235', '236', '237', '238', '239', '242', '243', '246', '247', '248',
-                  '249', '250', '251', '252', '253', '255', '256', '257', '258', '259', '262', '263', '264', '266',
-                  '272', '273', '274', '275', '276', '279', '280', '281', '282', '283', '284', '285', '286', '287',
-                  '288', '290', '291', '292', '293', '294', '296', '299', '301', '305', '306', '309', '311', '312',
-                  '316', '318', '344', '353', '354', '355', '357', '358', '365', '366', '367', '370', '371', '372',
-                  '373', '375', '377', '378', '379', '380', '381', '382', '383', '384', '385', '386', '1369', '1509',
-                  '1559', '1934', '2448', '2514', '2528', '2561', '2842', '3280', '3364', '3525', '3596', '3645',
-                  '3654', '3833', '4042', '4086', '4093', '4112', '4210', '4274', '4300', '4411', '4799', '4992',
-                  '5065', '5180', '5265', '5658', '5719', '5815', '5981', '6220', '6297', '6534', '6557', '6662',
-                  '6841', '6843', '7150', '7177', '7349', '7363', '7590', '7670', '7834', '7855', '7949', '7989',
-                  '8181', '8241', '9021', '9061', '9220', '9432', '9504', '10060', '10077',
-
-                  ]
+FWSaqu_species = ['484','485','347', '2932','11569','212','314','5288' ]
 
 
 def create_gdb(out_folder, out_name, out_path):

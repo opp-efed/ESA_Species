@@ -14,9 +14,9 @@ import pandas as pd
 # TODO Update cross check to pandas df so that the commas are no longer a problem
 # TODO update to filter qualitative species that are excluded from overlap out of the counts
 
-masterlist =  r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20200427.csv"
 # Spatial library for critical habitat files generalized or non
-infolder = r'path\Generalized files\Range'
+infolder = r'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\Generalized files\Range'
 
 # also need to set the hard code to the index number for the cols reference in loop species
 

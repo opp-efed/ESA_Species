@@ -9,11 +9,11 @@ import os
 # single gdb
 
 ind_sp_file = True  # set to false if using the tool on th composite files
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\NoCall_MasterListESA_Dec2018_20190130.csv"
 group_colindex = 16  # index position of the species 'group' from master list
 
 # folder or gdb for spatial library
-infolder = 'path\Generalized files\Range'
+infolder =  'L:\Workspace\StreamLine\Species Spatial Library\_CurrentFiles\No Call Species\Processed\Generalized files\Range'
 
 # Skip over species group gdb if you already repaired the geometry
 skiplist = []
