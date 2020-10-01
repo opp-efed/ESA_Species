@@ -11,28 +11,25 @@ import pandas as pd
 # #### user input variables
 # path final tables
 outlocation = r''
+outname = '' # name for output file
+
 # Master species list as .csv or .xlsx
 current_masterlist = r'path\MasterListESA_Dec2018_20190130.csv'
-# Output name
+# Output location of new species table
 new_master = outlocation + os.sep + 'Full_Merged_Listed_updated_20181203.csv'
 
-# removing inverted name and status
+# removed inverted name and status
 # columns in tables must be in the same order
 out_cols = ['EntityID', 'Updated date', 'Update description', 'Notes', 'Delisted', 'Update Agency', 'comname',
             'sciname', 'status_text', 'pop_abbrev', 'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country',
             'Group', 'Entid_Updated']
-# Columns to be added dynamically u'DD_Species_DraftBE',u'InBins',u'BinsAssigned', u'Range_Filename',u'CH_Filename',
-# Column must be updated dynamically u'CH_OriginalFileName',
+# Columns to be added dynamically  - tracking information by EFED ESA team
 col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',u'CH_Type', u'CH_OriginalFileName', u'Group b', u'Group c',
               u'Aqu_Species_20160819', u'Source of Call final BE-Range', u'WoE Summary Group',
               u'Source of Call final BE-Critical Habitat',u'Critical_Habitat_', u'Migratory', u'Migratory_',
               u'AddedAquWoe',	u'AddedTerrWoE']
-col_to_add = [u'NMFSID', u'Des_CH', u'CH_GIS',u'CH_Type', u'CH_OriginalFileName',
-              u'Aqu_Species_20160819', u'Source of Call final BE-Range', u'WoE Summary Group',
-              u'Source of Call final BE-Critical Habitat',u'Critical_Habitat_', u'Migratory', u'Migratory_',
-              u'AddedAquWoe',	u'AddedTerrWoE',u'L48/NL48', u'Multiple NL48 Regions',u'CH_Filename',u'Range_Filename'
-              ]
-# Species where the entity id has been updates
+
+# Species where the entity id has been updated
 entid_update = {'11356': '5623',
                 '11355': 'NMFS180',
                 '11353': 'NMFS181',
@@ -77,7 +74,7 @@ for value in col_to_add:
 
 current_listed_df.fillna('')
 
-current_listed_df.to_csv(outlocation + os.sep + 'MasterListESA_Feb2017_NeedCH_' + date + '.csv', encoding='utf-8')
+current_listed_df.to_csv(outlocation + os.sep + outname+'_' + date + '.csv', encoding='utf-8')
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

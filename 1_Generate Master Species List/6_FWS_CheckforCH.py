@@ -9,6 +9,7 @@ import pandas as pd
 
 # path final tables
 outlocation = r''
+outname = '' # name for output file
 
 # Download csv of critical habitat table from https://ecos.fws.gov/ecp/report/table/critical-habitat.html
 ch_table_ecos = outlocation + os.sep + 'Endangered Species Active Critical Habitat Report.csv'
@@ -99,7 +100,7 @@ master_list_df.apply(lambda row: update_ch_col_master(row, ch_table, master_list
 
 [master_list_df.drop(v, axis=1, inplace=True) for v in master_list_df.columns.values.tolist() if
  v.startswith('Unnamed')]
-master_list_df.to_csv(outlocation + os.sep + 'MasterListESA_Feb2017_' + date + '.csv', encoding='utf-8')
+master_list_df.to_csv(outlocation + os.sep + outname+'_' + date + '.csv', encoding='utf-8')
 
 end = datetime.datetime.now()
 print "End Time: " + end.ctime()

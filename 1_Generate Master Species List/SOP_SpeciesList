@@ -36,6 +36,7 @@ Notes:
 Load user variables - specifically the out location, a new folder will  be created in this location to store table
 User prompts will check in on which tags to use or to check for a change in the tags from the databases; changing
 the tag will change information extracted
+NMFS species id'ed as listed in TESS in error - canary rockfish (10151) delisted, Pavona diffluens (foreign)
 
 2_FWS_FilterTESSPandas
 outpath needs to remain the same as step 1

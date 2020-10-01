@@ -7,32 +7,31 @@ import pandas as pd
 
 
 # outpath used in 1_FWS_XQuery in format r'path_to_folder'
-outpath = r''
+outpath = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\MasterLists\Creation\Feb 2019'
 # Name of csv of the TESS Download r'name.csv'
-inpath_FULLTESS = r''
+inpath_FULLTESS = r"FullTess_20200219.csv"
 # Path to previous species list for comparison; this will identify changes; extension can be .csv or .xlsx; used to
 # load species that we assess but that do not get downloaded from TESS due to data entry issues
-previous_FWS = r""
+previous_FWS = "C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
 # Family group crosswalk from extracted from ECOS
-family_group_cross = r'path\Family_Group_crosswalk_20170325.csv'
+family_group_cross = "C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\MasterLists\Creation\Jan 2019_Dec 2018\Family_Group_crosswalk_20170325.csv"
 
 # These are the variables use within the xml, if FWS changes their variable this will need to be updated
 identifier = 'EntityID'  # unique ID
-# columns to be include in final tbales
+# columns to be include in final tables
 out_cols = ['EntityID', 'Notes', 'comname', 'sciname', 'invname', 'status', 'status_text', 'pop_abbrev',
             'pop_desc', 'family', 'spcode', 'vipcode', 'lead_agency', 'country', 'Group']
 # column index locations
 # index location must be in the same location in both lists
-entid_index = 1
-lead_agency_index = 13
-group_index = 14
-# column headers from tables in the previous_FWS tavkes
+entid_index = 1  # EntityID
+lead_agency_index = 13  # 'lead_agency'
+group_index = 14  # 'Group'
+# column headers from tables in the previous_FWS table; tables need to have the same col order
 current_master_col = [u'EntityID', u'Notes', u'comname', u'sciname', u'invname', u'status', u'status_text',
                       u'pop_abbrev', u'pop_desc', u'family', u'spcode', u'vipcode', u'Lead Agency', u'country',
                       u'Group']
 
-# Date entry issues notes in previous updates
-
+# Data entry issues notes in previous updates
 # Tess has species tagged to the wrong lead agency should be both (3)11191 green sea turtle, 1
 # 397 id the genus listing of the Oahu trees snail and the individual pops are consider, the are add at line 112 also
 # experimental wood bison add

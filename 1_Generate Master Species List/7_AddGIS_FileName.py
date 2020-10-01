@@ -9,19 +9,19 @@ import pandas as pd
 
 
 #out folder location
-outlocation = r''
-# out files name
-outfile_nm = 'filename.csv'
+outlocation = r'D:\Species\Species Spatial Library\_CurrentFiles'
+# out files name as a .csv
+outfile_nm = 'Range_MasterListESA_Dec2018_20200427.csv'
 # name of column to add
-addcol = 'col name'  # Name of column to add
+addcol = 'Range_Filename'  # Name of column to add
 # location of GIS species spatial library files to add table either \CriticalHabitat or \Range
-inlocation = r'path\CriticalHabitat'
+inlocation = r'D:\Species\Species Spatial Library\_CurrentFiles\Generalized files\Range'
 
 addinfo_dict = {}
 files_to_be_archived = []
 index_pos_entid = 0  # entity id index position
 # master species list
-masterlist = r"\MasterListESA_Feb2017_20190130.csv"
+masterlist = r"D:\Species\Species Spatial Library\_CurrentFiles\CH_MasterListESA_Dec2018_20200427.csv"
 outfile = outlocation +os.sep+ outfile_nm
 
 def loop_all_species_gis(in_path):

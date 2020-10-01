@@ -6,17 +6,15 @@ import datetime
 
 import pandas as pd
 
-import csv
-
-
 # Internal deliberative, do not cite or distribute
 # Author J. Connolly
 
 
 # Location where File will be saved r'path_to_folder'
-outpath = r'E:\Workspace'
+outpath = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\MasterLists\Creation\Sep 2020'
 # URL for FWS XQuery
 url = "https://ecos.fws.gov/services/TessQuery?request=query&xquery=/SPECIES_DETAIL"
+# https://ecos.fws.gov/ecp/report/adhoc-creator?catalogId=species&reportId=species&columns=%2Fspecies@cn,sn,status,desc,listing_date&sort=%2Fspecies@cn%20asc;%2Fspecies@sn%20asc
 
 # These are the variables use within the xml, if FWS changes their variable this will need to be updated
 # Tags use for information to retain
@@ -26,6 +24,7 @@ deafultTags = ['spcode', 'vipcode', 'sciname', 'comname', 'invname', 'pop_abbrev
 # columns to delete
 delcolumns = ['species_detail', 'results','tsn']
 
+# column order dictionary; matches format uses for Tags
 colOrder = {
     9: 'spcode',
     10: 'vipcode',
@@ -43,6 +42,8 @@ colOrder = {
     14: 'listing_date',
     15: 'dps',
     16: 'refuge_occurrence'}
+
+# FUNCTIONS
 
 # Date
 today = datetime.datetime.today()
@@ -143,7 +144,7 @@ def find_textxml(row, id, sp_info_need):
         (globals()[value])[id] = str((clean.replace(",", " ")))
 
 
-def CreateSpecisTable(species_entList, species_info_var, colOrder):
+def CreateSpeciesTable(species_entList, species_info_var, colOrder):
     list_cols = colOrder.values()
     list_index = colOrder.keys()
 
@@ -181,24 +182,6 @@ def CreateSpecisTable(species_entList, species_info_var, colOrder):
     return outlist, header
 
 
-def create_outtable(outInfo, csvname, header):
-    if type(outInfo) is dict:
-        with open(csvname, "wb") as output:
-            writer = csv.writer(output, lineterminator='\n')
-            writer.writerow(header)
-            for k, v in outInfo.items():
-                val = []
-                val.append(k)
-                val.append(outInfo[k])
-                writer.writerow(val)
-    elif type(outInfo) is list:
-        with open(csvname, "wb") as output:
-            writer = csv.writer(output, delimiter=",", quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(header)
-            for val in outInfo:
-                writer.writerow([val])
-
-
 def createdirectory(DBF_dir):
     if not os.path.exists(DBF_dir):
         os.mkdir(DBF_dir)
@@ -212,17 +195,16 @@ def main(out_loc, url):
 
     r = requests.get(url)
     reload(sys)
-    sys.setdefaultencoding('utf8')
+    sys.setdefaultencoding('utf8') # to address special characters used in species; esp in HI
 
-
-    createdirectory(out_loc+os.sep+'FWS')
+    # creates output location
+    createdirectory(out_loc+os.sep+'FWS') # executes createdirectory function
     outpath = out_loc+os.sep+'FWS'
 
     # Use Beautiful Soup to Parse the HTML
     soup = BeautifulSoup(r.content, 'html.parser')
-    tagslist, speciesbreak, identifier = CheckXML_changes(soup)
-
-    sp_info_need = list_dicts()
+    tagslist, speciesbreak, identifier = CheckXML_changes(soup) # executes CheckXML_changes function - with user prompts
+    sp_info_need = list_dicts() # executes list_dict function to get the specie into we will include
 
     print 'Downloading information from {0}...'.format(url)
     for row in soup.find_all(speciesbreak):
@@ -230,20 +212,20 @@ def main(out_loc, url):
         entid = row.find(identifier, recursive=False).text
         # print entid
         globals()[identifier].append(entid)
-        find_textxml(row, entid, sp_info_need)
+        find_textxml(row, entid, sp_info_need) # execute find_textxml function- pulls text from xml
 
     Full_list = globals()[identifier]
-    FullResults, header = CreateSpecisTable(Full_list, tagslist, colOrder)
+    # execute CreateSpeciesTable - generates table
+    FullResults, header = CreateSpeciesTable(Full_list, tagslist, colOrder)
 
-    finalheader = ['EntityID']
+    finalheader = ['EntityID'] # std col header of entity id
     for v in header:
         finalheader.append(v)
 
+    # saves output to out file path
     fulltable = outpath + os.sep + 'FullTess_' + str(date) + '.csv'
-
     outDF_Full = pd.DataFrame(FullResults, columns=finalheader)
     outDF_Full.to_csv(fulltable, encoding='utf-8')
-
 
 main(outpath, url)
 

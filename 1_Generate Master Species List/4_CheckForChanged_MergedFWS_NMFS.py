@@ -11,12 +11,12 @@ import pandas as pd
 # #### user input variables
 
 # path final tables
-outlocation = r''
+outlocation = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\MasterLists\Creation\Feb 2019\FWS'
 # Master species list as .csv or .xlsx
-current_masterlist = r'path\MasterListESA_Dec2018_20190130.csv'
+current_masterlist = "C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv"
 
 # file for filtered TESS if just updating FWS or the merged file from the updated NMFS and FWS
-new_master = outlocation +os.sep+ 'filename.csv'
+new_master = outlocation +os.sep+ 'FilteredTessPandas_20200219.csv'
 
 # removing inverted name and status
 # columns in tables must be in the same order
