@@ -66,14 +66,10 @@ def get_hab_ele_rast_path(region, raster_layers):
     raster_list_elev_habitat = arcpy.ListRasters()
     raster_list_combine = [elevation_habitat+ os.sep + v for v in raster_list_elev_habitat]
 
-    # UNCOMMENT FOR CONUS to remove impervious from list
+    # remove impervious from list in CONUS
     if region == 'CONUS':
         raster_list_combine.remove(u'E:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb\\Albers_Conical_Equal_Area_CONUS_nlcd_2011_impervious_2011_edition_2014_10_10')
-    # raster_list_combine = [
-    #     u'E:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb'
-    #     u'\\Albers_Conical_Equal_Area_CONUS_dem_sm10',
-    #     u'E:\\Workspace\\StreamLine\\ByProjection\\CONUS_HabitatElevation.gdb'
-    #     u'\\Albers_Conical_Equal_Area_CONUS_gap_landfire_nationalterrestrialecosystems2011']
+
 
     return raster_list_combine  # return list of raster to include in combine
 

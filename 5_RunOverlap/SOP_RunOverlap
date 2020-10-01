@@ -1,35 +1,62 @@
-# Author J.Connolly updated august 2019
+# Author J.Connolly updated Oct 2019, august 2019, Summer 2018
 # Internal deliberative, do not cite or distribute
 
-When union file are finalize and use layer have been moved to library in the correct projection
+When unioned species files are finalize and use layers have been moved to library in the correct projection
 the overlap runs can be started; output raw overlap for each use site by region, species group
 
 Key variable - Use layers and Species files are in the same projections; cell size for use layer is identified
 Updates will need to occur if: use  layer or species range files change, projection is off
 
-Key Tracking : Root folder for output file locations need to remain consistant for all runs.  File structure
+Key Tracking : Root folder for output file locations need to remain consistent for all runs.  File structure
 is automated.
 
-# TODO set up so output folder name is read in from table - making consistent folder name is tricky due to variation in
-# Use layer names
+Inputs:
+  Tables:
+	- Master species list
+	- Species acres tables by region
+	- Species/Zone Look-up tables
+	- Use Layer Look-up
+	- Usage Tables
+  Spatial Data:
+	- Projections
+	- Snap rasters (identified in dictionary)
+	- Species Unioned Composite Files
+	- Use Layer Library by region
+	- Region Boundaries
+	- NHDPlus - HUC12 (aquatic species only)
+  For Usage only:
 
-** Prior to running the overlap Symbology layers should be updated - this will be variable used in an number of place
+  Tables:
+	- Crop Name/Data source crosswalk
+	- Census of Ag tables
+		- presences/absences county masks
+		- Master crop/state combination table
+	- SUUM/ Aggregated PCT by State
+   Spatial Data:
+	- County Boundaries
+	- HUC boundaries
+	- Other GIS data to consider (elevation, habitat, on/off field layers, etc)
+
+Outputs: Note-  Root folder for output file locations need to remain consistent for all runs.  File structure
+is automated.
+	- Raw overlap by Zone
+
 ** Be sure to update the snap raster dictionary as well
-***KEY ASSUMPUTION All use layer must start with the projection name follow by the regions abbreviation or CDL and then
+***KEY ASSUMPTION All use layer must start with the projection name follow by the regions abbreviation or CDL and then
 the use with the _euc if is distance raster
 
-Step 1 - General overlap for species range and CH composites; can be used for varied unique IDs; ie ZoneID, InterID etc
+Step 1 - General overlap for species range and CH unioned files; can be used for varied unique IDs; ie ZoneID, InterID etc
     NOTE - Temp files will sometime save in the in_species location - these are grids that start with t_ - this can
-    cause the scrop to stop saving output - these files should be deleted )
-    - TODO figure out why these temp files are saved
+    cause the script to stop saving output - these files should be deleted )- TODO figure out why these temp files are saved
     - Runs by region
     - Run multiple regions at the same time - regions takes less time than CONUS ~ 1.5 hours per use for CONUS
         - To speed up CONUS runs use the sub-set use variable and run the uses in groups rather than the whole gdb
     - When running input files with habitat, elevation, states and HUC birds, fish, mammals, flowering plants amphibians
-    take a long time fish is the longest.  batch by regions and groups of species to minmize run time. sometimes these
+    take a long time; fish is the longest.
+    - Batch by regions and groups of species to minimize run time. sometimes these
     files require more memory than the computer has.  These runs can be done in the lab or try running only one
     instance at a time
-    TODO look at spliting input files into multiple grids with only 1,000,000 unique zone
+    TODO look at splitting input files into multiple grids with only 1,000,000 unique zone
     - Output is msq distance is row wise zone for species is column wise
 
 Step 2- Overlap for aquatic species based on catchment: - ON HOLD
@@ -46,9 +73,9 @@ Step 2b- Overlap for aquatic species based HUC12: - ON HOLD
         in this tool
 
 Step 3 - Run overlap against political boundaries used for usage :
-    - Only need for usage see ApplyUsage SOP
+    - Results are only needed for usage see ApplyUsage SOP
     -Note - when running the overlap for species and political boundaries at the same time, if the same use layer is
-    accessed, may cause a 99999 error
+    accessed at the same time a 99999 error may occur; re-start the script if this occurs
 
 Step 4 - Place holder for running a vector use:
     # TODO finished this script then update table automation to account for a vector use

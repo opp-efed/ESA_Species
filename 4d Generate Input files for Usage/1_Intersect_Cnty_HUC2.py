@@ -15,14 +15,14 @@ import datetime
 
 # Input files to be intersect with species must cover the extent of the regions, IE include AS, GU etc
 # HUC file includes EFEDs A/B split on the HUC2
-in_huc_vector = r'path\FilesAppended_ESA.gdb\HUC12_Merge'
-in_sum_file = r'path\Counties_all_overlap'
+in_huc_vector = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - PythonScript_SpatialTools\InputTables\FilesAppended_ESA.gdb\HUC12_Merge'
+in_sum_file = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - PythonScript_SpatialTools\InputTables\Boundaries.gdb\Counties_all_overlap'
 
 # Union species files in vector format from strep 4b.3
-invector_location = r'path\R_Clipped_Union_[date].gdb'
+invector_location = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\CriticalHabitat\CH_Clipped_Union_20191028.gdb'
 # Output location for union species files intersected with counties and HUC12 (both vector) used for usage
 # adjustments
-out_vector_projected = r'outpath\R_Clipped_Union_CntyInter_HUC2ABInter_[date].gdb'
+out_vector_projected = r'L:\Workspace\StreamLine\Demo\Answer Key\UnionFiles_2019\CriticalHabitat\CH_Clipped_Union_CntyInter_HUC2ABInter_20191028.gdb'
 
 
 # FUNCTIONS
@@ -76,6 +76,7 @@ for species_comp in list_species_vector:
         cnty_inter_completed = datetime.datetime.now()
         print 'Dissolving by political boundary for {0}...Intersect took {1}'.format(species_comp,
                                                                                      (cnty_inter_completed - state_sp))
+        arcpy.RepairGeometry_management(r"in_memory\\vector_" + str(species_comp))
         arcpy.Dissolve_management(r"in_memory\\vector_" + str(species_comp),
                                   r"in_memory\\vector_" + str(species_comp) + 'd',
                                   ['GEOID', 'ZoneID', 'STUSPS', 'Region'])

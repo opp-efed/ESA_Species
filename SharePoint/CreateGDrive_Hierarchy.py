@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 in_file_structure ='C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\SharePoint\Guid_Doc_Team\G_driveHierarchy.csv'
-out_location = 'G:\Guidance Document Review'
+out_location = 'L:\SharePoint'
 
 file_df = pd.read_csv(in_file_structure)
 count_row = len(file_df)-1

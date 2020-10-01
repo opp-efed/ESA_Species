@@ -14,13 +14,13 @@ from arcpy.sa import *
 
 
 # sub-directory folder where shapefile
-in_sum_file = r'path\Boundaries.gdb\Counties_all_overlap'
-region = 'CONUS'
-temp_file = 'table1'
+in_sum_file = r'D:\Species\Boundaries.gdb\Counties_all_overlap'
+region = 'AK'
+temp_file = 'table3'
 run_group = 'UseLayers'
 
 # # location of use sites to run
-use_location = 'path\ByProjection' + os.sep + str(region) + "_" + run_group + ".gdb"
+use_location = 'D:\ByProjection' + os.sep + str(region) + "_" + run_group + ".gdb"
 use_list = []  # runs specified layers in use location; blank runs all
 
 arcpy.env.workspace = use_location
@@ -28,21 +28,21 @@ if len(use_list) == 0:
     use_list = (arcpy.ListRasters())  # run all rasters in the input gdb
 
 # location of results
-out_results = r'outpath\PolBoundaries\Agg_layers'
+out_results = r'D:\Results_HUCAB\PolBoundaries\Agg_layers'
 
 # STATIC Variables
 # Symbology layer so that the unique values can be applied to use layer before running zonal stats
 
 # snap raster dictionary look up
-snap_raster_dict = {'CONUS': r'path'
+snap_raster_dict = {'CONUS': r'D:\\ByProjection\SnapRasters.gdb'
                              r'\Albers_Conical_Equal_Area_cultmask_2016',
-                    'HI': r'path\NAD_1983_UTM_Zone_4N_HI_Ag',
-                    'AK': r'path\WGS_1984_Albers_AK_Ag',
-                    'AS': r'path\WGS_1984_UTM_Zone_2S_AS_Ag',
-                    'CNMI': r'path\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-                    'GU': r'path\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-                    'PR': r'path\Albers_Conical_Equal_Area_PR_Ag',
-                    'VI': r'path\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+                    'HI': r'D:\\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+                    'AK': r'D:\\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+                    'AS': r'D:\\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+                    'CNMI': r'D:\\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+                    'GU': r'D:\\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+                    'PR': r'D:\\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+                    'VI': r'D:\\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 def zone(zone_lyr, raster_lyr, temp_table, snap, zone_headers):
@@ -63,8 +63,7 @@ def zone(zone_lyr, raster_lyr, temp_table, snap, zone_headers):
     return temp, start_zone
 
 
-def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, results_folder, temp_table, region_c, snap,
-               cnt):
+def zonal_hist(in_zone_data, in_value_raster, use_name, results_folder, temp_table, region_c, snap,cnt):
     # out paths
     break_use = os.path.basename(use_path).split("_")
     break_bool = False
@@ -105,7 +104,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
         if os.path.exists(csv):
             print ("Already completed run for {0}".format(run_id))
         elif not os.path.exists(csv):
-            print ("\nRunning Statistics...for {0} and raster {1}".format(zone_title, use_name))
+            print ("Running Statistics...for {0} and raster {1}".format(zone_title, use_name))
             arcpy.CheckOutExtension("Spatial")
             arcpy.Delete_management("rd_lyr")
             arcpy.Delete_management("pol_bnd_lyr")
@@ -128,7 +127,7 @@ def zonal_hist(in_zone_data, in_value_raster, set_raster_symbol, use_name, resul
             arcpy.Delete_management(temp_return)  # deletes temp table
             del att_df  # deletes df after saving output
 
-            print "Completed in {0}".format((datetime.datetime.now() - zone_time))
+            print "Completed in {0}\n".format((datetime.datetime.now() - zone_time))
 
 
 def create_directory(dbf_dir):

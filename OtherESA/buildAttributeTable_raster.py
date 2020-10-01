@@ -10,7 +10,7 @@
 import arcpy
 import os
 
-inlocation_species = 'L:\Workspace\ESA_Species\Step3\ToolDevelopment\TerrestrialGIS\Union\Range\SpCompRaster_byProjection\WGS_1984_Albers.gdb'
+inlocation_species = 'L:\Workspace\StreamLine\ByProjection\AS_UseLayers.gdb'
 
 if inlocation_species[-3:] != 'gdb':
     workspaces = os.listdir(inlocation_species)

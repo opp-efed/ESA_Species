@@ -1,0 +1,45 @@
+import pandas as pd
+
+
+
+df = pd.read_excel(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\Aquatic Species\Bins\attachment-1-10_posted_final_first3.xlsx", Sheet='Bins_FinalBE')
+df['ENTITYID']=df['ENTITYID'].map(lambda (n): str(n).split(".")[0])
+df['HUC_2']=df['HUC_2'].map(lambda (n): str(n).split(".")[0])
+df['HUC_2']=df['HUC_2'].map(lambda (n): str(n) if len(str(n)) >1 else '0' + str(n)).astype(str)
+conus_HUC = pd.read_csv(r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables\Aquatic\Range\CONUS_HUC_Overlap_20191119.csv")
+nl48_HUC = pd.read_csv(r"C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables\Aquatic\Range\NL48_HUC_Overlap_20191119.csv")
+master_species = pd.read_csv("C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\MasterListESA_Dec2018_20190130.csv")
+updated_entityid = {"NMFS88":'9432',
+                    "NMFS181" : '11353',
+                    "NMFS180": '11355',
+                    "5623": '11356',
+                    "NMFS125":'11378'}
+
+for k in updated_entityid.keys():
+    df['ENTITYID']=df['ENTITYID'].replace(k, updated_entityid[k])
+df = df.loc[df['ENTITYID'].isin(master_species["EntityID"].values.tolist())]
+conus_HUC = conus_HUC.loc[conus_HUC["HUC2_AB"]!='0']
+nl48_HUC = nl48_HUC.loc[nl48_HUC["HUC2_AB"]!='0']
+
+# identifies the species huc combos then combines from the two spreadsheets
+conus_HUC['Concat'] = conus_HUC['EntityID'] + "," +conus_HUC["HUC2_AB"]
+nl48_HUC['Concat'] = nl48_HUC['EntityID'] + "," +nl48_HUC["HUC2_AB"]
+df['Concat'] = df['ENTITYID'].astype(str) + "," + df["HUC_2"].astype(str)
+conus_combos = list(set(conus_HUC['Concat'].values.tolist()))
+nl48_combos = list(set(nl48_HUC['Concat'].values.tolist()))
+df_combos = list(set(df['Concat'].values.tolist()))
+all_combos = conus_combos + nl48_combos
+all_combos = list(set(all_combos))
+old_combos = list(set(df_combos))
+
+dropped_hucs = [v for v in old_combos if v not in all_combos]
+new_huc = [v for v in all_combos if v not in old_combos and v.split(",")[1]!='0']
+
+
+df = df.loc[~df['Concat'].isin(dropped_hucs)]
+df.to_csv(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\Aquatic Species\Bins\working_bins.csv")
+add_hucs_df= list(set(new_huc)-set(df['HUC_2']))
+df = df.append(pd.DataFrame({'HUC_2': add_hucs_df}), ignore_index=True)
+df['ENTITYID']=df['Concat'].map(lambda (n): str(n).split(",")[0])
+df['HUC_2']=df['Concat'].map(lambda (n): str(n).split(",")[1] if len(str(n).split(","))>1 else str(n))
+df.to_csv(r"C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\Aquatic Species\Bins\working_bins.csv")

@@ -15,9 +15,7 @@ prev_huc = 'ZZ'
 
 start_time = datetime.datetime.now()
 print "Start Time: " + start_time.ctime()
-skip_list =['R_Mammals_Composite_MAG_20161102','R_Flowering_Plants_Composite_MAG_20161102',
-            'R_Fishes_Composite_MAG_20161102','R_Reptiles_Composite_MAG_20161102','R_Mammals_Composite_MAG_20161102_DD',
-            'R_Reptiles_Composite_MAG_20161102_DD','R_Fishes_Composite_MAG_20161102_DD']
+skip_list =[]
 out_df_final = pd.DataFrame(columns=['HUC_12', 'Count'])
 final_long_df = pd.DataFrame(columns=['EntityID', 'HUC_12'])
 for fc in fc_list:

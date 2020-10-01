@@ -3,7 +3,6 @@ import os
 
 
 def main():
-
     # path = r'C:\Users\JConno02\Environmental Protection Agency (EPA)\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables\Carbaryl\Range\ParentTables\no adjustment'
     path = r'E:\Workspace\StreamLine\ESA\Tabulated_UsageHUCAB\Methomyl\Range\SprayInterval_IntStep_30_MaxDistance_1501\ParentTables\min'
     final_order = ['Unnamed: 0', 'EntityID', 'STATEFP', 'VALUE_0', 'VALUE_30', 'VALUE_42', 'VALUE_60',

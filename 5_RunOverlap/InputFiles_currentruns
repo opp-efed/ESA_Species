@@ -1,39 +1,61 @@
 NOTE: there is a limitation on how may characters can be in a path when syncing to OneDrive or SharePoint; if you hit
 the limit you will receive a permission denied error
 
-All results, tabulated folders, and look up directory are stored on OneDrive under Projects\ESA\_ED_results
+All current results, tabulated folders, and look up directory are stored on OneDrive under Projects\ESA\_ED_results
+Back-up - J. Connolly F drive
+- species input files - Updated with information from USFWS and Nov 2017
+    - confirm look-ups are on F with these files
+    -F:\Union Composites_ESA\Spring 2018\Range
+    -F:\Union Composites_ESA\Spring 2018\CriticalHabitat
+- overlap results
+    - Confirm location
 
-Run completed on 7/30/2018 for overlap: just species location
-species:
+
+Run completed on 4/8/2019 for overlap: just species location:
+
 L48 - ~40-45 minutes per species/use
 NL48 ~ 5-10 minutes per species/use except AK ~20-25
-F:\Union Composites_ESA\Spring 2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+Back-up input files: F:\Union Composites_ESA\Spring 2018\Range\SpCompRaster_byProjection\Grids_byProjection'
+
+Outputs
     - All files in the range folders
     - Lookup Directory: Lookup_R_Clipped_Union_20180110
+        -KEY: ZoneID
     - Results Folder : Results_TabArea
     - Tabulated Folder: Tabulated_TabArea
-F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection
+    - Back-up outputs:
+
+Back-up input files: F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpCompRaster_byProjection\Grids_byProjection
+
+Outputs
     - All files in the critical habitat folders
     - Lookup Directory: Lookup_R_Clipped_Union_20180110
-        -KEY:
+        -KEY: ZoneID
     - Results Folder : Results_TabArea
     - Tabulated Folder: Tabulated_TabArea
+    - Back-up outputs:
 
-Run completed on 8/7/2018 for usage and aquatic tables: includes states, counties, HUC2 AB splits
+Run completed on 4/7/2018 for overlap for usage and aquatic tables: includes states, counties, HUC2 AB splits
 species:
+# Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
+# AK, AS, CNMI and HI
+# NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
+# scripts
+
 L48 - ~45-50 minutes per species/use
 NL48 ~ 1-15 minutes per species/use
-F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
-    # Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
-    # AK, AS, CNMI and HI
-    # NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
-    # scripts
+
+Back-up input files: F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
+
+Output:
      - All files in the range folders
     - Lookup Directory Lookup_R_Clipped_Union_CntyInter_HUC2ABInter_20180612
-        -KEY:
+        -KEY: INTERID
     - Results Folder : Results_HUCAB
     - Tabulated Folder: Tabulated_TabArea_HUCAB
-F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
+    - Back-up outputs:
+
+Back-up input files: F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
 L48 - ~45-60 minutes per species/use
 NL48 ~  minutes per species/use
         - All files in the critical habitat folders
@@ -41,28 +63,33 @@ NL48 ~  minutes per species/use
             -KEY:
         - Results Folder: Results_Usage
         - Tabulated Folder: Tabulated_TabArea_HUCAB
+        - Back-up outputs:
 
-Run completed on 8/19/2018 for usage, aquatic table  elevation and habitat:  includes states, counties,
+Run completed on 4/24/19  for usage, aquatic table  elevation and habitat:  includes states, counties,
 HUC2 AB splits, elevation, habitat
-species:
-F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
+# Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
+# AK, AS, CNMI and HI
+# NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
+# scripts
+# Habitat and elevation files download from sources May 2018 - see use layer tracker for more detail
+Remaining - habitat runs CONUS for birds, flowering plant, fish and mammals
+
+Back-up input files: F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection_2\Grid_byProjections_Combined
 L48 - ~60-90 minutes per species/use
 NL48 ~  minutes per species/use
     # Species HUC files supplements with county boundaries where the seamless NHD extent exclude islands specific to
     # AK, AS, CNMI and HI
     # NHD files also included the A/B splits for the PWC updated to include HI - see SOP_StepA_A_B_Splits and associated
     # scripts
+Back-up input files: F:\Union Composites_ESA\Spring 2018\Range\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
      - All files in the range folders
     - Lookup Directory LookUp_Grid_byProjections_Combined
-        -KEY:
+        -KEY:HUCID
     - Results Folder : Results_Usage
     - Tabulated Folder: Tabulated_Usage
-F:\Union Composites_ESA\Spring 2018\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined
-        - All files in the critical habitat folders
-        - Lookup Directory LookUp_Grid_byProjections_Combined
-            -KEY:
-        - Results Folder : Results_Usage
-        - Tabulated Folder: Tabulated_Usage
+Run not complete for critical habitat because we will not adjust CH for habitat and elevation
+
+Other input files used for overlap
 
 Tiger files used as input:
 F:\SpatialLibrary_ESA\Boundaries.gdb\Counties_all_overlap
@@ -72,3 +99,19 @@ F:\AquaticTables_ESA\Spring 2018\InfoAddedForESA\FilesAppended_ESA.gdb
 
 Use Layers, On Off Field Layers, Habitat Layers, and Elevation Layers used as inputs:
 F:\UseSite_ESA\May 2018\ByProjection
+- Habitat layers download May 2018
+- Elevation layers download May 2018
+- NHDPlus - downloaded May 2018
+
+Federal Lands
+confirm look-ups are on F
+- Federal land layer download December 2014
+
+Updated range:
+ran all uses in CONUS night 1 - finished ~5 uses in 6 hour
+split remaining - finished 11 in 19.5
+16 uses - in 27 hours
+
+range night 1 ran all finished ~ 3 in 6
+14 uses in 28  hour running at the same time as 5 other instances
+16 uses 33.5 hours running at the same time as 5 other instances

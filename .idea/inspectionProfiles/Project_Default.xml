@@ -15,6 +15,12 @@
           <option value="arcpy.da.*" />
           <option value="_abcoll.Iterable.*" />
           <option value="type.reindex" />
+          <option value="type.groupby" />
+          <option value="object.ix" />
+          <option value="object.__getitem__" />
+          <option value="object.fillna" />
+          <option value="type.to_csv" />
+          <option value="type.drop_duplicates" />
         </list>
       </option>
     </inspection_tool>

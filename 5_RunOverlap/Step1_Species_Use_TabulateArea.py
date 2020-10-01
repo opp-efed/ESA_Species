@@ -1,7 +1,8 @@
-import os
 import datetime
-import pandas as pd
+import os
+
 import arcpy
+import pandas as pd
 from arcpy.sa import *
 
 # Author J.Connolly
@@ -9,50 +10,57 @@ from arcpy.sa import *
 
 # Title- Runs overlap using Tabulate Area for all RASTER to RASTER analyses including:
 #           1) Species zone rasters to aggregated layers, AA, Ag and NonAG
-#           2) Species zone raster to non euc distance individual years of the CDL
-#           3) Species zone raster to on/off field
+#           2) Species zone raster to non euc distance individual years of the CDL (currently on hold/not used)
+#           3) Species zone raster to on/off field (currently on hold/not used)
 #           4) HUCID zone to incorporate usage, habitat, elevation and HUC breaks into overlap tables
 #           Archived
-#               3) Pilot GAP species to aggregated layers and non euc distance individual years -
+#               5) Pilot GAP species to aggregated layers and non euc distance individual years -
 #           TODO Set up a way to update single species
 
 # Assumptions
-#   1) folder with species composite must start with region abb
-#   2) temp file name should not use the same temp file name when running multiple instances at the same time
-#   3) Snap raster and symbology dictionaries have been updated for current use layers
+#   1) folder with species unioned composite must start with region abb
+#   2) variable temp_file should not use file name when running multiple instances at the same time
+#   3) Snap raster dictionaries have been updated for current use layers
 
 # #### User input variables
 # location of use layer library
-use_location_base = r'path\ByProjection'
+use_location_base = r'D:\ByProjection'
 # Results - location - there should be one folder for each run type, no adjustment, usage only, and habitat/elevation
-out_results = r'path\Results_[suffix]'
 
-# Species union input files - as ESRI Grids
-in_location_species_base = r'path\folder'
+# out_results = r'D:\Results_HUCAB'
+out_results = r'D:\Results_Habitat'
+# Species union input files - as ESRI Grids;range or crithab
 
-# species groups to skip to batch runs or because they are complete
-skip_species = [ ]
+# in_location_species_base = r'D:\Species\UnionFile_Spring2020\Range\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
+in_location_species_base = r'D:\Species\UnionFile_Spring2020\Range\SpComp_UsageHUCAB_byProjection\Grid_byProjections_Combined'
 
+# species groups to skip; run multiple instances to speed up processing time or species group is complete
+# format for this variable is a list, must use the species file names printed when script run
+# see line 183 print (list_raster)
+skip_species = []
+# [u'r_amphib',  u'r_ferns',  u'r_insect', u'r_rept
 # regional species composite folder to be run
-in_location_species_folder = 'CONUS_Albers_Conical_Equal_Area'
+in_location_species_folder = 'CNMI_WGS_1984_UTM_Zone_55N'
 # name used to temp table
-temp_file = "temp_table1"  # Should not use the same temp file name when running multiple instances at the same time
+temp_file = "temp_table"  # Should not use the same temp file name when running multiple instances at the same time
 # use layer run group - name of regional GDB
-run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField
+run_group = 'UseLayers'  # UseLayers, Yearly, OnOffField - NOTE - Currently only using UseLayers
 
 # Manually sub-set layers to be run: complete region run faster by splitting run into several instances
+# format for this variable is a list, must use the use file names printed when script runs
+# see line 162 print use_list
 uselist = []
 
 # snap rasters by region for zones
-snap_raster_dict = {'CONUS': r'path.gdb'
-                             r'\Albers_Conical_Equal_Area_cultmask_2016',
-                    'HI': r'path.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-                    'AK': r'path.gdb\WGS_1984_Albers_AK_Ag',
-                    'AS': r'path.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-                    'CNMI': r'path.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-                    'GU': r'path.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-                    'PR': r'path.gdb\Albers_Conical_Equal_Area_PR_Ag',
-                    'VI': r'path.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+snap_raster_dict = {
+    'CONUS': r'D:\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_cultmask_2016',
+    'HI': r'D:\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+    'AK': r'D:\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+    'AS': r'D:\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+    'CNMI': r'D:\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+    'GU': r'D:\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+    'PR': r'D:\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+    'VI': r'D:\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 # ################Functions
@@ -110,7 +118,7 @@ def zonal_hist(sp_path, in_value_raster, region_c, use_name, temp_table, final_f
     out_path_final = out_tables  # final path
     csv = run_id + '.csv'  # out csv name
     if os.path.exists(out_path_final + os.sep + csv):  # checks for an existing output; use/species run previously
-        print ("   Already completed run for {0}".format(run_id))
+        print ("   Already completed run for {0}: {1}".format(run_id, out_path_final + os.sep + csv))
     elif not os.path.exists(out_path_final + os.sep + csv):
         print ("   Running Statistics...for species group {0} and raster {1}".format(sp_group, use_name))
         # arcpy.CheckOutExtension("Spatial")
@@ -140,11 +148,6 @@ def create_directory(dbf_dir):
 def main(out_res, in_spe, use_list, spe_folder):
     start_time = datetime.datetime.now()
     print "Start Time: " + start_time.ctime()
-    # set up output folders if they don't exists
-    create_directory(os.path.dirname(os.path.dirname(out_res)))
-    create_directory(os.path.dirname(out_res))
-    create_directory(out_res)
-
     arcpy.CheckOutExtension("Spatial")  # checks out licenses
     in_location_species = in_spe + os.sep + spe_folder  # full in path to species
     region = os.path.basename(in_location_species).split("_")[0]  # folder with species composite starts with region abb
@@ -171,7 +174,10 @@ def main(out_res, in_spe, use_list, spe_folder):
 
         else:
             out_res = out_res + os.sep + 'NL48' + os.sep + 'CriticalHabitat'
-
+    # set up output folders if they don't exists
+    create_directory(os.path.dirname(os.path.dirname(out_res)))
+    create_directory(os.path.dirname(out_res))
+    create_directory(out_res)
     # get a list of the input species files based on path set by user
     arcpy.env.workspace = in_location_species
     list_raster = (arcpy.ListRasters())

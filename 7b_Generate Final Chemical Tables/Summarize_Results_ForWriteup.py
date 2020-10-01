@@ -1,11 +1,9 @@
 import pandas as pd
 import os
 
-in_table = r"C:\Users\JConno02\Environmental Protection Agency (EPA)" \
-           r"\Endangered Species Pilot Assessments - OverlapTables\ChemicalTables\Methomyl\Summarized Tables" \
-           r"\2_PCT\max\Upper\R_PCT_GIS_Step2_Methomyl.csv"
-out_name = 'R_metho_Mean_PCTRedOnOff.csv'
-out_path = r'E:\Workspace\StreamLine\ESA\Tabulated_UsageHUCABHabitat\result_summary\Methomyl'
+in_table = r"D:\Tabulated_Habitat\Propazine\R_On_Off_Field_GIS_Step2_PropazineHAB.csv"
+out_name = 'R_On_Off_Field_GIS_Step2_PropazineHAB.csv'
+out_path = r'D:\Tabulated_Habitat\Propazine\summary for appendix'
 
 def mean_std(df):
     mean = df.mean(axis = 0, skipna = True)

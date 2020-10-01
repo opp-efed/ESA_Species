@@ -8,17 +8,17 @@ import datetime
 # Internal deliberative, do not cite or distribute
 
 # look up directory
-look_up_fc_ab = r'path look ups'
+look_up_fc_ab = r"E:\Species\UnionFile_Spring2020\CriticalHabitat\Lookup_CH_Clipped_Union_CntyInter_HUC2ABInter_20200427"
 # path species grid files
-in_directory_grids = r'path\Grids_byProjection'
-out_path = r'outpath\Range'  #\Critical Habitat
+in_directory_grids = r'E:\Species\UnionFile_Spring2020\CriticalHabitat\SpComp_UsageHUCAB_byProjection\Grids_byProjection'
+out_path = r'E:\HUC_Overlap_Tables\CriticalHabitat'  #\Critical Habitat or Range
 
-master_list = r"\MasterListESA_Feb2017_20190130.csv"
+master_list = r"E:\HUC_Overlap_Tables\MasterListESA_Dec2018_June2020.csv"
 
 # Columns from the master species list that should be included in the output tables
 col_include_output = ['EntityID', 'Common Name', 'Scientific Name', 'Status', 'pop_abbrev', 'family', 'Lead Agency',
                       'Group', 'Des_CH', 'CH_GIS', 'Source of Call final BE-Range', 'WoE Summary Group',
-                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_', 'Migratory', 'Migratory_',
+                      'Source of Call final BE-Critical Habitat', 'Critical_Habitat_YesNo', 'Migratory', 'Migratory_YesNo',
                       'CH_Filename', 'Range_Filename', 'L48/NL48']
 
 start_time = datetime.datetime.now()
@@ -28,6 +28,8 @@ print "Start Time: " + start_time.ctime()
 today = datetime.datetime.today()
 date = today.strftime('%Y%m%d')
 
+if not os.path.exists(out_path):
+    os.mkdir(out_path)
 species_df = pd.read_csv(master_list, dtype=object)
 [species_df.drop(m, axis=1, inplace=True) for m in species_df.columns.values.tolist() if m.startswith('Unnamed')]
 base_sp_df = species_df.loc[:, col_include_output]
@@ -47,7 +49,7 @@ for folder in list_folder:
         if not arcpy.Raster(in_directory_grids + os.sep + folder +os.sep+species).hasRAT:
             arcpy.BuildRasterAttributeTable_management(in_directory_grids + os.sep + folder +os.sep+species)
         par_zone_array = arcpy.da.TableToNumPyArray(in_directory_grids + os.sep + folder +os.sep+species,
-                                                ['VALUE','COUNT'])
+                                                    ['VALUE','COUNT'])
 
         par_zone_df = pd.DataFrame(data=par_zone_array, dtype=object)
         par_zone_df['VALUE'] = par_zone_df['VALUE'].map(lambda n: str(n).split('.')[0]).astype(str)
@@ -58,7 +60,7 @@ for folder in list_folder:
 
         df_sum = copy_df.groupby(['EntityID', 'HUC2_AB', 'STUSPS'], as_index=False).sum().reset_index()
         out_df = pd.concat([out_df,df_sum])
-
+    out_df['HUC 2 surrogate'] = out_df['HUC2_AB'].map(lambda (n): '20' if str(n).startswith('22') else str(n)).astype(str)
     out_df.to_csv(out_path + os.sep + folder+  "_HUC2.csv")
     print ("Exported {0}".format(out_path + os.sep + folder+ "_HUC2.csv"))
 

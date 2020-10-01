@@ -9,25 +9,25 @@ import arcpy
 
 # Title - Re-projects union raster into projection by region
 # in and out location in a lookup table as a csv
-in_table = r'path\UseLayers_20190222.csv'
+in_table = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_CurrentSupportingTables\UseLayer_Tables\UseLayers_20191104.csv'
 
-midGDB = r'L:\Workspace\StreamLine\ByProjection\scratch.gdb'
+midGDB = r'E:\Workspace\StreamLine\ByProjection\scratch.gdb'
 
 # projection folder - check all values in Final Projection columns have a corresponding file with the same name
-prjFolder = r'path\projections'
+prjFolder = r'C:\Users\JConno02\OneDrive - Environmental Protection Agency (EPA)\Documents_C_drive\Projects\ESA\_ED_results\_SpeciesSpatialFiles_Inputs\projections'
 # regions to run
-run_regions = ['CONUS']
+run_regions = ['PR']
 
 # snap raster must be in desired projection with the desired cell size
-SnapRaster_Dict = {'CONUS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb'
+SnapRaster_Dict = {'CONUS': r'E:\Workspace\StreamLine\ByProjection'
                             r'\Albers_Conical_Equal_Area_cultmask_2016',
-                   'HI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
-                   'AK': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
-                   'AS': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
-                   'CNMI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
-                   'GU': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
-                   'PR': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
-                   'VI': r'L:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
+                   'HI': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\NAD_1983_UTM_Zone_4N_HI_Ag',
+                   'AK': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_Albers_AK_Ag',
+                   'AS': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_2S_AS_Ag',
+                   'CNMI': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_CNMI_Ag',
+                   'GU': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_55N_GU_Ag_30',
+                   'PR': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\Albers_Conical_Equal_Area_PR_Ag',
+                   'VI': r'E:\Workspace\StreamLine\ByProjection\SnapRasters.gdb\WGS_1984_UTM_Zone_20N_VI_Ag_30'}
 
 
 def create_gdb(out_folder, out_name, outpath):  # Create a new GDB
@@ -36,7 +36,7 @@ def create_gdb(out_folder, out_name, outpath):  # Create a new GDB
 
 
 # loop through use raster and projections into final regional project
-def raster_project(inraster, prj_file, prj_folder, region_dict, region, outraster, cellsize):
+def raster_project(inraster, prj_file, prj_folder, outraster, cellsize):
     start_raster = datetime.datetime.now()
 
     in_raster = Raster(inraster)
@@ -150,7 +150,7 @@ for v in list_raster:
         cell_size = in_df.loc[in_df['Current Path'] == v, 'Cell Size'].iloc[0].split(',')[0].replace("(u", "")
 
         try:
-            raster_project(v, prj_nm, prjFolder, SnapRaster_Dict, region_abb, out_raster, cell_size)
+            raster_project(v, prj_nm, prjFolder, out_raster, cell_size)
         except Exception as error:
             print(error.args[0])
 

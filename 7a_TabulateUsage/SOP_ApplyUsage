@@ -35,7 +35,7 @@ Scripts in 5_RunOverlap - use TabulalteArea scripts not Zonal - Zonal scripts ar
 
         run step 2 - adjust the species by state based on PCT - pulls in parent species table and political usage
         overlap
-            #TODO do we need to adjust for redunacy first; I can pull the factors from the unadjust table then apply them
+
         Step 3: generated parent drift tables for each filter category
         Step 4: generates the 'all uses' table for each filter category
         Step 5 Merged the AQU tables into one with the use layers across the top and species in the cols include % ares
@@ -66,7 +66,7 @@ Just Usage Tables notes
          still by species - only need to run 1 of the step 2 scripts
             -2 - just applies PCT
             2b - applies PCT, excluding counties from the PCT application if there are no registered crops in the
-            county; set
+            county; set for both species and state
                 using the pre_abs table
             2c - LOOK AT DIFFERENT -making too many assumptions about where usage is occurring
         - Summarize to drift intervals = generate the drift folder

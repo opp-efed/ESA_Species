@@ -1,0 +1,13 @@
+# example of DELETED PIVOTS
+# df_pivot_cnty = out_sp_table[['EntityID', 'GEOID', 'VALUE_0']].copy()
+# df_pivot_cnty.ix[:, ["VALUE_0"]] = df_pivot_cnty.ix[:, ["VALUE_0"]].apply(pd.to_numeric)
+# df_pivot_cnty = df_pivot_cnty.groupby(['EntityID', 'GEOID'], as_index=False).sum()
+# cnty_pivot_w = df_pivot_cnty.pivot(index='EntityID', columns='GEOID')['VALUE_0']
+# out_all_cnty = pd.concat([out_all_cnty, cnty_pivot_w])
+#
+#
+# df_pivot_st = out_sp_table[['EntityID', 'STATEFP', 'VALUE_0']].copy()
+# df_pivot_st.ix[:, ["VALUE_0"]] = df_pivot_st.ix[:, ["VALUE_0"]].apply(pd.to_numeric)
+# df_pivot_st = df_pivot_st.groupby(['EntityID', 'STATEFP'], as_index=False).sum()
+# sta_pivot = df_pivot_st.pivot(index='EntityID', columns='STATEFP')['VALUE_0']
+# out_all_state = pd.concat([out_all_state, sta_pivot])
